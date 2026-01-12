@@ -50,6 +50,57 @@
       });
 
       console.log('🔍 Error capture hooks installed');
+
+      // Intercept console methods to send to Render logs
+      this.interceptConsole();
+    },
+
+    interceptConsole: function() {
+      const self = this;
+      const methods = ['log', 'warn', 'error', 'info', 'debug'];
+
+      methods.forEach(method => {
+        const original = console[method];
+
+        console[method] = function(...args) {
+          // Call original console method (so browser console still works)
+          original.apply(console, args);
+
+          // Send to Render logs (only in production, not localhost)
+          if (window.location.hostname !== 'localhost' &&
+              window.location.hostname !== '127.0.0.1') {
+
+            // Convert arguments to strings
+            const message = args.map(arg => {
+              if (typeof arg === 'object') {
+                try {
+                  return JSON.stringify(arg, null, 2);
+                } catch (e) {
+                  return String(arg);
+                }
+              }
+              return String(arg);
+            }).join(' ');
+
+            // Don't log our own error reporter messages (avoid loops)
+            if (message.includes('Error reporting') ||
+                message.includes('Error capture')) {
+              return;
+            }
+
+            // Send to backend
+            self.logError({
+              type: 'CONSOLE_' + method.toUpperCase(),
+              message: message,
+              level: method,
+              url: window.location.href,
+              timestamp: new Date().toISOString()
+            });
+          }
+        };
+      });
+
+      console.log('📊 Console interception enabled - All console output logged to Render');
     },
 
     logError: function(errorData) {

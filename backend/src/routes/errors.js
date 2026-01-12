@@ -26,8 +26,17 @@ router.post('/log', (req, res) => {
       timestamp
     } = req.body;
 
+    // Choose appropriate log method based on type
+    const logMethod = type?.startsWith('CONSOLE_') ? 'log' : 'error';
+    const icon = type?.startsWith('CONSOLE_LOG') ? '📝' :
+                 type?.startsWith('CONSOLE_WARN') ? '⚠️' :
+                 type?.startsWith('CONSOLE_ERROR') ? '❌' :
+                 type?.startsWith('CONSOLE_INFO') ? 'ℹ️' :
+                 type?.startsWith('CONSOLE_DEBUG') ? '🔍' :
+                 '🚨';
+
     // Structured logging for easy parsing in Render logs
-    console.error('🚨 FRONTEND ERROR:', JSON.stringify({
+    console[logMethod](`${icon} FRONTEND ${type || 'ERROR'}:`, JSON.stringify({
       type: type || 'UNKNOWN',
       message: message || 'No message provided',
       stack: stack?.substring(0, 1000), // Truncate long stacks
