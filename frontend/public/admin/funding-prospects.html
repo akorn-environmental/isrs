@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funding Prospects - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <link rel="stylesheet" href="/admin/claude-ai-dropdown.css">
+  <style>
+    /* Page-specific styles that extend admin-unified.css */
+    .container { max-width: 1800px; margin: 0 auto; padding: 2rem; }
+    .data-table { background: var(--admin-surface); border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); overflow: hidden; border: 1px solid var(--admin-border); }
+
+    .table-header { padding: 1.5rem; border-bottom: 1px solid var(--admin-border); }
+    .table-header h1 { font-family: 'Marcellus', Georgia, serif; font-size: 2rem; margin: 0 0 1rem 0; color: var(--admin-primary); }
+
+    .toolbar { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .toolbar-left, .toolbar-right { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .search-box { padding: 0.75rem; border: 1px solid var(--admin-border); border-radius: 4px; width: 300px; font-family: inherit; background: var(--admin-surface); color: var(--admin-text); }
+    .search-box:focus { outline: none; border-color: var(--admin-primary); box-shadow: 0 0 0 3px var(--admin-primary-light); }
+
+    /* Modern Button Styles */
+    .btn { display: inline-flex; align-items: center; gap: 0.375rem; justify-content: center; padding: 0.375rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 500; transition: all 0.2s ease; border: 1px solid; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+    .btn:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .btn-reset { background: var(--admin-surface); border-color: var(--admin-border); color: var(--admin-text-muted); }
+    .btn-reset:hover { background: var(--admin-hover); border-color: var(--admin-text-muted); }
+
+    .btn-columns { background: linear-gradient(to right, #eef2ff, #e0e7ff); border-color: #a5b4fc; color: #4f46e5; }
+    .btn-columns:hover { background: linear-gradient(to right, #e0e7ff, #c7d2fe); border-color: #818cf8; }
+
+    .btn-export { background: linear-gradient(to right, #ecfdf5, #d1fae5); border-color: #6ee7b7; color: #059669; }
+    .btn-export:hover { background: linear-gradient(to right, #d1fae5, #a7f3d0); border-color: #34d399; }
+
+    .btn-import { background: linear-gradient(to right, #fef3c7, #fde68a); border-color: #fbbf24; color: #92400e; }
+    .btn-import:hover { background: linear-gradient(to right, #fde68a, #fcd34d); border-color: #f59e0b; }
+
+    .btn-primary { background: var(--admin-primary); border-color: var(--admin-primary); color: white; }
+    .btn-primary:hover { background: var(--admin-primary-dark); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
+
+    .btn-success { background: var(--admin-success); border-color: var(--admin-success); color: white; }
+    .btn-success:hover { opacity: 0.9; }
+
+    .btn-danger { background: var(--admin-danger); border-color: var(--admin-danger); color: white; }
+    .btn-danger:hover { opacity: 0.9; }
+
+    .btn-edit { background: var(--admin-success); border-color: var(--admin-success); color: white; }
+    .btn-edit:hover { opacity: 0.9; }
+
+    .btn-enhance { background: linear-gradient(to right, #9333ea, #7e22ce); border-color: #a855f7; color: white; }
+    .btn-enhance:hover { background: linear-gradient(to right, #7e22ce, #6b21a8); }
+
+    .btn-delete { background: var(--admin-danger); border-color: var(--admin-danger); color: white; }
+    .btn-delete:hover { opacity: 0.9; }
+
+    .btn-select-all { background: linear-gradient(to right, #f0fdf4, #dcfce7); border-color: #86efac; color: #166534; }
+    .btn-select-all:hover { background: linear-gradient(to right, #dcfce7, #bbf7d0); border-color: #4ade80; }
+
+    .btn-quick-add { background: linear-gradient(to right, #dbeafe, #bfdbfe); border-color: #60a5fa; color: #1e40af; }
+    .btn-quick-add:hover { background: linear-gradient(to right, #bfdbfe, #93c5fd); border-color: #3b82f6; }
+
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.7rem; }
+
+    .bulk-actions { background: var(--admin-info-bg); padding: 1rem; border-bottom: 1px solid var(--admin-border); display: none; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .bulk-actions.show { display: flex; }
+    .bulk-actions-count { font-weight: 600; color: var(--admin-text); }
+
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1400px; }
+    thead { background: var(--admin-gray-100); position: sticky; top: 0; z-index: 10; }
+    th { padding: 0.75rem; text-align: left; font-weight: 600; color: var(--admin-text); border-bottom: 2px solid var(--admin-border); white-space: nowrap; cursor: pointer; user-select: none; }
+    th:hover { background: var(--admin-hover); }
+    th.sortable::after { content: ' \21C5'; opacity: 0.3; }
+    th.sort-asc::after { content: ' \25B2'; opacity: 1; }
+    th.sort-desc::after { content: ' \25BC'; opacity: 1; }
+    td { padding: 0.75rem; border-bottom: 1px solid var(--admin-border); color: var(--admin-text); }
+    tr:hover { background: var(--admin-hover); }
+    tr.funded { background-color: var(--admin-success-bg) !important; }
+    tr.application_submitted { background-color: var(--admin-info-bg) !important; }
+    tr.interested { background-color: var(--admin-warning-bg) !important; }
+    .checkbox-cell { width: 40px; text-align: center; }
+
+    .status-badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .status-prospect { background: var(--admin-gray-100); color: var(--admin-text-muted); }
+    .status-contacted { background: var(--admin-info-bg); color: var(--admin-info); }
+    .status-interested { background: var(--admin-warning-bg); color: var(--admin-warning); }
+    .status-application_submitted { background: var(--admin-success-bg); color: var(--admin-success); }
+    .status-funded { background: var(--admin-success-bg); color: var(--admin-success); }
+    .status-declined { background: var(--admin-danger-bg); color: var(--admin-danger); }
+
+    .tier-badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .tier-1 { background: var(--admin-danger); color: white; }
+    .tier-2 { background: var(--admin-warning); color: #000; }
+    .tier-3 { background: var(--admin-text-muted); color: white; }
+
+    .flag-icon { cursor: pointer; font-size: 1.2rem; }
+    .flag-icon.flagged { color: var(--admin-danger); }
+    .flag-icon.unflagged { color: var(--admin-border); }
+
+    .column-toggle { position: relative; display: inline-block; }
+    .column-toggle-menu { display: none; position: absolute; right: 0; top: 100%; background: var(--admin-surface); border: 1px solid var(--admin-border); border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 0.5rem; min-width: 200px; z-index: 100; max-height: 400px; overflow-y: auto; }
+    .column-toggle-menu.show { display: block; }
+    .column-toggle-item { padding: 0.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--admin-text); }
+    .column-toggle-item:hover { background: var(--admin-hover); }
+
+    .export-dropdown { position: relative; display: inline-block; }
+    .export-menu { display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background: var(--admin-surface); border: 1px solid var(--admin-border); border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); min-width: 200px; z-index: 100; }
+    .export-menu.show { display: block; }
+    .export-menu-item { display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; font-size: 0.875rem; color: var(--admin-text); transition: background 0.2s; }
+    .export-menu-item:hover { background: var(--admin-hover); }
+
+    .stats-bar { padding: 1rem 1.5rem; background: var(--admin-gray-100); display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: var(--admin-text); flex-wrap: wrap; gap: 1rem; }
+
+    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--admin-border); background: var(--admin-surface); }
+    .pagination-info { color: var(--admin-text-muted); font-size: 0.9rem; }
+    .pagination-controls { display: flex; gap: 0.5rem; }
+
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow-y: auto; }
+    .modal.show { display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: var(--admin-surface); padding: 2rem; border-radius: 8px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h2 { margin: 0; font-family: 'Marcellus', Georgia, serif; color: var(--admin-primary); }
+    .close-btn { font-size: 1.5rem; cursor: pointer; border: none; background: none; color: var(--admin-text-muted); }
+    .close-btn:hover { color: var(--admin-text); }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--admin-text); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--admin-border); border-radius: 4px; font-family: inherit; background: var(--admin-surface); color: var(--admin-text); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--admin-primary); box-shadow: 0 0 0 3px var(--admin-primary-light); }
+    .form-group textarea { min-height: 100px; resize: vertical; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .loading { text-align: center; padding: 3rem; color: var(--admin-text-muted); }
+    .message-toast { position: fixed; top: 20px; right: 20px; min-width: 300px; padding: 1rem; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); z-index: 2000; animation: slideIn 0.3s; }
+    .message-toast.success { background: var(--admin-success-bg); color: var(--admin-success); border: 1px solid var(--admin-success); }
+    .message-toast.error { background: var(--admin-danger-bg); color: var(--admin-danger); border: 1px solid var(--admin-danger); }
+    @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+    /* Keyboard shortcut hints */
+    .kbd { display: inline-block; padding: 0.1rem 0.4rem; font-size: 0.7rem; font-family: monospace; background: var(--admin-gray-100); border: 1px solid var(--admin-border); border-radius: 3px; color: var(--admin-text-muted); margin-left: 0.5rem; }
+
+    /* Quick Add Modal */
+    #quickAddModal .modal-content { max-width: 500px; }
+    #quickAddModal .form-row { grid-template-columns: 1fr; }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar-left, .toolbar-right { flex-wrap: wrap; justify-content: center; }
+      .search-box { width: 100%; }
+      .form-row { grid-template-columns: 1fr; }
+      .col-type, .col-contact, .col-funding-type, .col-assigned, .col-next-followup { display: none; }
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <div class="admin-nav">
+    <div>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/contacts.html">Contacts</a>
+      <a href="/admin/organizations.html">Organizations</a>
+      <a href="/admin/funding-prospects.html" class="active">Funding Prospects</a>
+      <a href="/admin/import.html">Import</a>
+      <a href="/admin/votes.html">Board Votes</a>
+      <a href="/admin/conferences.html">Conferences</a>
+    </div>
+    <div>
+      <span id="userRole" style="margin-right: 1rem; color: #666;"></span>
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="data-table">
+      <div class="table-header">
+        <h1>Funding Prospects Management</h1>
+        
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search prospects...">
+            <select id="statusFilter" class="search-box" style="width: 200px;">
+              <option value="">All Statuses</option>
+              <option value="prospect">Prospect</option>
+              <option value="contacted">Contacted</option>
+              <option value="interested">Interested</option>
+              <option value="application_submitted">Application Submitted</option>
+              <option value="under_review">Under Review</option>
+              <option value="funded">Funded</option>
+              <option value="declined">Declined</option>
+              <option value="withdrawn">Withdrawn</option>
+            </select>
+            <select id="pageSizeSelect" class="search-box" style="width: 130px;">
+              <option value="20">Show 20</option>
+              <option value="50">Show 50</option>
+              <option value="100">Show 100</option>
+              <option value="999999">Show ALL</option>
+            </select>
+          </div>
+
+          <div class="toolbar-right">
+            <button class="btn btn-select-all" onclick="selectAllVisible()" title="Select all visible prospects (Ctrl+A)">
+              <span style="font-size: 0.9rem;">&#10003;</span> Select All Visible
+            </button>
+            <button class="btn btn-quick-add" onclick="showQuickAddModal()" title="Quick add a new prospect (Ctrl+N)">
+              <span style="font-size: 0.9rem;">+</span> Quick Add
+            </button>
+            <button class="btn btn-reset" onclick="handleReset()" title="Reset filters, sorting, and selection">
+              <span style="font-size: 0.9rem;">&#8635;</span> Reset
+            </button>
+            <button class="btn btn-columns" onclick="toggleColumnMenu()" title="Show/hide table columns">
+              <span style="font-size: 0.9rem;">&#9881;</span> Columns
+            </button>
+            <div class="column-toggle">
+              <div class="column-toggle-menu" id="columnMenu">
+                <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color); font-weight: 600; font-size: 0.875rem;">
+                  Show/Hide Columns
+                </div>
+                <div class="column-toggle-item">
+                  <input type="checkbox" id="col-type" checked onchange="toggleColumn('type')">
+                  <label for="col-type">Type</label>
+                </div>
+                <div class="column-toggle-item">
+                  <input type="checkbox" id="col-contact" checked onchange="toggleColumn('contact')">
+                  <label for="col-contact">Contact</label>
+                </div>
+                <div class="column-toggle-item">
+                  <input type="checkbox" id="col-funding-type" checked onchange="toggleColumn('funding-type')">
+                  <label for="col-funding-type">Funding Type</label>
+                </div>
+                <div class="column-toggle-item">
+                  <input type="checkbox" id="col-amount" checked onchange="toggleColumn('amount')">
+                  <label for="col-amount">Est. Amount</label>
+                </div>
+                <div class="column-toggle-item">
+                  <input type="checkbox" id="col-assigned" checked onchange="toggleColumn('assigned')">
+                  <label for="col-assigned">Assigned To</label>
+                </div>
+                <div class="column-toggle-item">
+                  <input type="checkbox" id="col-next-followup" checked onchange="toggleColumn('next-followup')">
+                  <label for="col-next-followup">Next Follow-up</label>
+                </div>
+              </div>
+            </div>
+            <div class="export-dropdown">
+              <button class="btn btn-export" onclick="toggleExportMenu()" title="Export prospects to file">
+                <span style="font-size: 0.9rem;">⬇</span> Export
+              </button>
+              <div class="export-menu" id="exportMenu">
+                <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-light);">
+                  <span id="exportCount"></span>
+                </div>
+                <button onclick="exportToCSV()" class="export-menu-item">CSV Format (.csv)</button>
+                <button onclick="exportToExcel()" class="export-menu-item">Excel Format (.xls)</button>
+              </div>
+            </div>
+            <a href="/admin/import.html" class="btn btn-import" title="Import contacts, organizations, and funding prospects">
+              <span style="font-size: 0.9rem;">⬆</span> Import
+            </a>
+            <button class="btn btn-primary" onclick="showAddProspectModal()">➕ Add Prospect</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bulk-actions" id="bulkActions">
+        <span class="bulk-actions-count"><span id="selectedCount">0</span> selected</span>
+        <button class="btn btn-sm btn-primary" onclick="composeEmail()" id="composeBtn" title="Compose email to selected prospects">
+          <span style="font-size: 0.85rem;">✉</span> Compose (1)
+        </button>
+        <button class="btn btn-sm btn-edit" onclick="editSelected()" id="editBtn" title="Edit selected prospect">
+          <span style="font-size: 0.85rem;">✎</span> Edit (1)
+        </button>
+        <button class="btn btn-sm btn-enhance" onclick="enhanceSelected()" id="enhanceBtn" title="Enhance selected prospects with AI">
+          <span style="font-size: 0.85rem;">★</span> Enhance AI (1)
+        </button>
+        <button class="btn btn-sm btn-delete" onclick="deleteSelected()" id="deleteBtn" title="Delete selected prospects">
+          <span style="font-size: 0.85rem;">×</span> Delete (1)
+        </button>
+        <button class="btn btn-sm btn-reset" onclick="clearSelection()" title="Clear selection">Clear</button>
+      </div>
+
+      <div class="table-wrapper">
+        <div id="tableContent">
+          <div class="loading">Loading prospects...</div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <span>Total: <strong id="totalCount">0</strong> prospects</span>
+        <span>Showing: <strong id="filteredCount">0</strong> prospects</span>
+        <span>Total Est. Funding: <strong id="totalFunding">$0</strong></span>
+      </div>
+
+      <div class="pagination" id="pagination" style="display: none;">
+        <div class="pagination-info">
+          Page <strong id="currentPageNum">1</strong> of <strong id="totalPages">1</strong>
+        </div>
+        <div class="pagination-controls">
+          <button class="btn btn-sm" id="prevPageBtn" onclick="previousPage()" disabled>← Previous</button>
+          <button class="btn btn-sm" id="nextPageBtn" onclick="nextPage()" disabled>Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Prospect Modal -->
+  <div id="prospectModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2 id="prospectModalTitle">Add Funding Prospect</h2>
+        <button class="close-btn" onclick="closeProspectModal()">&times;</button>
+      </div>
+      <form id="prospectForm" onsubmit="saveProspect(event)">
+        <input type="hidden" id="prospectId">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prospectType">Prospect Type *</label>
+            <select id="prospectType" required>
+              <option value="organization">Organization</option>
+              <option value="individual">Individual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="status">Status *</label>
+            <select id="status" required>
+              <option value="prospect">Prospect</option>
+              <option value="contacted">Contacted</option>
+              <option value="interested">Interested</option>
+              <option value="application_submitted">Application Submitted</option>
+              <option value="under_review">Under Review</option>
+              <option value="funded">Funded</option>
+              <option value="declined">Declined</option>
+              <option value="withdrawn">Withdrawn</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="organizationName">Organization Name *</label>
+            <input type="text" id="organizationName" required>
+          </div>
+          <div class="form-group">
+            <label for="organizationType">Organization Type</label>
+            <select id="organizationType">
+              <option value="">Select type...</option>
+              <option value="Foundation">Foundation</option>
+              <option value="Government">Government Agency</option>
+              <option value="Corporate">Corporate</option>
+              <option value="Individual">Individual Donor</option>
+              <option value="NGO">NGO/Nonprofit</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contactName">Contact Name</label>
+            <input type="text" id="contactName">
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Contact Email</label>
+            <input type="email" id="contactEmail">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contactPhone">Contact Phone</label>
+            <input type="tel" id="contactPhone">
+          </div>
+          <div class="form-group">
+            <label for="contactTitle">Contact Title</label>
+            <input type="text" id="contactTitle">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fundingType">Funding Type</label>
+            <select id="fundingType">
+              <option value="">Select type...</option>
+              <option value="Grant">Grant</option>
+              <option value="Donation">Donation</option>
+              <option value="Sponsorship">Sponsorship</option>
+              <option value="Partnership">Partnership</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fundingFocus">Funding Focus</label>
+            <input type="text" id="fundingFocus" placeholder="e.g., Research, Operations, Conference">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="estimatedAmount">Estimated Amount</label>
+            <input type="number" id="estimatedAmount" step="0.01" min="0">
+          </div>
+          <div class="form-group">
+            <label for="fundingCycle">Funding Cycle</label>
+            <select id="fundingCycle">
+              <option value="">Select cycle...</option>
+              <option value="One-time">One-time</option>
+              <option value="Annual">Annual</option>
+              <option value="Quarterly">Quarterly</option>
+              <option value="Multi-year">Multi-year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tier">Tier</label>
+            <select id="tier">
+              <option value="1">Tier 1 (Highest)</option>
+              <option value="2" selected>Tier 2 (Medium)</option>
+              <option value="3">Tier 3 (Lower)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="assignedTo">Assigned To (Email)</label>
+            <input type="email" id="assignedTo">
+          </div>
+          <div class="form-group">
+            <label for="nextFollowUpDate">Next Follow-up Date</label>
+            <input type="date" id="nextFollowUpDate">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="websiteUrl">Website URL</label>
+          <input type="url" id="websiteUrl">
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea id="notes"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="internalNotes">Internal Notes (Private)</label>
+          <textarea id="internalNotes"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeProspectModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Prospect</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Import Modal (same as contacts) -->
+  <div id="importModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2>📤 Import Prospects</h2>
+        <button class="close-btn" onclick="closeImportModal()">&times;</button>
+      </div>
+      <div id="importContent">
+        <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+          <div class="file-upload-icon">📁</div>
+          <div class="file-upload-text">
+            <p><strong>Click to upload or drag and drop</strong></p>
+            <p>CSV, Excel, PDF, or Word files (max 50MB)</p>
+          </div>
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.tsv,.pdf,.docx,.doc" style="display: none;" onchange="handleFileUpload(event)">
+        </div>
+        <div id="importStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    const sessionToken = localStorage.getItem('isrs_session_token');
+    
+    let allProspects = [];
+    let filteredProspects = [];
+    let paginatedProspects = [];
+    let selectedProspects = new Set();
+    let currentSort = { column: null, direction: 'asc' };
+    let currentPage = 1;
+    let pageSize = 20;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      await loadUserRole();
+      await loadProspects();
+      setupEventListeners();
+    });
+
+    async function loadUserRole() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+          document.getElementById('userRole').textContent = `Role: ${(data.role || 'viewer').toUpperCase()}`;
+        }
+      } catch (error) {
+        console.error('Failed to load user role:', error);
+      }
+    }
+
+    async function loadProspects() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/funding-prospects`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          allProspects = data.data;
+          filteredProspects = [...allProspects];
+          updatePagination();
+          updateStats();
+        } else {
+          showToast(data.error || 'Failed to load prospects', 'error');
+        }
+      } catch (error) {
+        showToast('Error connecting to server', 'error');
+      }
+    }
+
+    function displayProspects() {
+      const html = `
+        <table>
+          <thead>
+            <tr>
+              <th class="checkbox-cell">
+                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+              </th>
+              <th class="sortable" onclick="sortBy('organization_name')">Organization</th>
+              <th class="sortable col-type" onclick="sortBy('prospect_type')">Type</th>
+              <th class="col-contact">Contact</th>
+              <th class="sortable" onclick="sortBy('status')">Status</th>
+              <th class="sortable" onclick="sortBy('tier')">Tier</th>
+              <th class="col-funding-type">Funding Type</th>
+              <th class="sortable col-amount" onclick="sortBy('estimated_amount')">Est. Amount</th>
+              <th class="col-assigned">Assigned To</th>
+              <th class="sortable col-next-followup" onclick="sortBy('next_follow_up_date')">Next Follow-up</th>
+              <th>Flag</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${paginatedProspects.map(prospect => `
+              <tr class="${prospect.status}" data-id="${prospect.id}">
+                <td class="checkbox-cell">
+                  <input type="checkbox" class="prospect-checkbox" value="${prospect.id}"
+                         ${selectedProspects.has(prospect.id) ? 'checked' : ''}
+                         onchange="toggleProspect(${prospect.id})">
+                </td>
+                <td style="cursor: pointer;" onclick="editProspect(${prospect.id})">
+                  <strong>${prospect.organization_name || '-'}</strong>
+                </td>
+                <td class="col-type">${prospect.prospect_type || '-'}</td>
+                <td class="col-contact">
+                  ${prospect.contact_name || '-'}<br>
+                  <small style="color: #6c757d;">${prospect.contact_email || ''}</small>
+                </td>
+                <td>
+                  <span class="status-badge status-${prospect.status}">${prospect.status?.replace(/_/g, ' ')}</span>
+                </td>
+                <td>
+                  <span class="tier-badge tier-${prospect.tier}">Tier ${prospect.tier}</span>
+                </td>
+                <td class="col-funding-type">${prospect.funding_type || '-'}</td>
+                <td class="col-amount">$${(prospect.estimated_amount || 0).toLocaleString()}</td>
+                <td class="col-assigned">${prospect.assigned_to || '-'}</td>
+                <td class="col-next-followup">${prospect.next_follow_up_date || '-'}</td>
+                <td>
+                  <span class="flag-icon ${prospect.follow_up_flag ? 'flagged' : 'unflagged'}" 
+                        onclick="toggleFlag(${prospect.id}, ${!prospect.follow_up_flag})">
+                    🚩
+                  </span>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      document.getElementById('tableContent').innerHTML = html;
+      updateBulkActionsBar();
+    }
+
+    function setupEventListeners() {
+      document.getElementById('searchBox').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        filteredProspects = allProspects.filter(p =>
+          JSON.stringify(p).toLowerCase().includes(term)
+        );
+        currentPage = 1;
+        updatePagination();
+      });
+
+      document.getElementById('statusFilter').addEventListener('change', (e) => {
+        const status = e.target.value;
+        if (status) {
+          filteredProspects = allProspects.filter(p => p.status === status);
+        } else {
+          filteredProspects = [...allProspects];
+        }
+        currentPage = 1;
+        updatePagination();
+      });
+
+      document.getElementById('pageSizeSelect').addEventListener('change', (e) => {
+        pageSize = parseInt(e.target.value);
+        currentPage = 1;
+        updatePagination();
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.column-toggle')) {
+          document.getElementById('columnMenu').classList.remove('show');
+        }
+        if (!e.target.closest('.export-dropdown')) {
+          document.getElementById('exportMenu').classList.remove('show');
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // Escape to close modals
+        if (e.key === 'Escape') {
+          closeProspectModal();
+          closeImportModal();
+          closeQuickAddModal();
+        }
+        // Ctrl+F to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+          e.preventDefault();
+          document.getElementById('searchBox').focus();
+        }
+        // Ctrl+A to select all visible (when not in input)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'a' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          selectAllVisible();
+        }
+        // Ctrl+N to quick add
+        if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+          e.preventDefault();
+          showQuickAddModal();
+        }
+      });
+
+      // Click outside modal to close
+      document.getElementById('prospectModal').addEventListener('click', (e) => {
+        if (e.target.id === 'prospectModal') closeProspectModal();
+      });
+      document.getElementById('importModal').addEventListener('click', (e) => {
+        if (e.target.id === 'importModal') closeImportModal();
+      });
+      document.getElementById('quickAddModal').addEventListener('click', (e) => {
+        if (e.target.id === 'quickAddModal') closeQuickAddModal();
+      });
+    }
+
+    // Select all visible prospects
+    function selectAllVisible() {
+      paginatedProspects.forEach(p => selectedProspects.add(p.id));
+      displayProspects();
+      showToast(`Selected ${paginatedProspects.length} visible prospects`, 'success');
+    }
+
+    // Quick Add Modal functions
+    function showQuickAddModal() {
+      document.getElementById('quickAddForm').reset();
+      document.getElementById('quickAddModal').classList.add('show');
+      document.getElementById('qapOrgName').focus();
+    }
+
+    function closeQuickAddModal() {
+      document.getElementById('quickAddModal').classList.remove('show');
+    }
+
+    async function executeQuickAdd(event) {
+      event.preventDefault();
+
+      const prospectData = {
+        organization_name: document.getElementById('qapOrgName').value.trim(),
+        prospect_type: document.getElementById('qapType').value,
+        funding_type: document.getElementById('qapFundingType').value || null,
+        estimated_amount: document.getElementById('qapAmount').value || null,
+        status: document.getElementById('qapStatus').value,
+        notes: document.getElementById('qapNotes').value.trim() || null,
+        tier: 2,
+        priority: 'medium'
+      };
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/funding-prospects`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify(prospectData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showToast('Prospect added successfully!', 'success');
+          closeQuickAddModal();
+          await loadProspects();
+        } else {
+          showToast(data.error || 'Failed to add prospect', 'error');
+        }
+      } catch (error) {
+        console.error('Quick add error:', error);
+        showToast('Error adding prospect', 'error');
+      }
+    }
+
+    function updatePagination() {
+      const start = (currentPage - 1) * pageSize;
+      const end = pageSize >= 999999 ? filteredProspects.length : start + pageSize;
+      paginatedProspects = filteredProspects.slice(start, end);
+
+      const totalPages = pageSize >= 999999 ? 1 : Math.ceil(filteredProspects.length / pageSize);
+
+      document.getElementById('currentPageNum').textContent = currentPage;
+      document.getElementById('totalPages').textContent = totalPages;
+      document.getElementById('prevPageBtn').disabled = currentPage === 1;
+      document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+
+      const paginationEl = document.getElementById('pagination');
+      paginationEl.style.display = totalPages > 1 ? 'flex' : 'none';
+
+      displayProspects();
+    }
+
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(filteredProspects.length / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+      }
+    }
+
+    function sortBy(column) {
+      if (currentSort.column === column) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.column = column;
+        currentSort.direction = 'asc';
+      }
+
+      filteredProspects.sort((a, b) => {
+        let aVal = a[column] || '';
+        let bVal = b[column] || '';
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (currentSort.direction === 'asc') {
+          return aVal > bVal ? 1 : -1;
+        } else {
+          return aVal < bVal ? 1 : -1;
+        }
+      });
+
+      currentPage = 1;
+      updatePagination();
+      updateSortIndicators();
+    }
+
+    function updateSortIndicators() {
+      document.querySelectorAll('th.sortable').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+      });
+      if (currentSort.column) {
+        const ths = document.querySelectorAll('th.sortable');
+        ths.forEach(th => {
+          if (th.textContent.toLowerCase().includes(currentSort.column.split('_')[0])) {
+            th.classList.add(`sort-${currentSort.direction}`);
+          }
+        });
+      }
+    }
+
+    function toggleSelectAll() {
+      const checked = document.getElementById('selectAll').checked;
+      if (checked) {
+        paginatedProspects.forEach(p => selectedProspects.add(p.id));
+      } else {
+        selectedProspects.clear();
+      }
+      displayProspects();
+    }
+
+    function toggleProspect(id) {
+      if (selectedProspects.has(id)) {
+        selectedProspects.delete(id);
+      } else {
+        selectedProspects.add(id);
+      }
+      updateBulkActionsBar();
+    }
+
+    function updateBulkActionsBar() {
+      const count = selectedProspects.size;
+      document.getElementById('selectedCount').textContent = count;
+      document.getElementById('bulkActions').classList.toggle('show', count > 0);
+      
+      const singleSelect = count === 1;
+      document.getElementById('composeBtn').textContent = singleSelect ? '✉️ Compose (1)' : `✉️ Compose (${count})`;
+      document.getElementById('editBtn').textContent = singleSelect ? '✏️ Edit (1)' : `✏️ Edit (${count})`;
+      document.getElementById('enhanceBtn').textContent = singleSelect ? '✨ Enhance AI (1)' : `✨ Enhance AI (${count})`;
+      document.getElementById('deleteBtn').textContent = singleSelect ? '🗑️ Delete (1)' : `🗑️ Delete (${count})`;
+      
+      document.getElementById('editBtn').disabled = count !== 1;
+    }
+
+    function clearSelection() {
+      selectedProspects.clear();
+      document.getElementById('selectAll').checked = false;
+      displayProspects();
+    }
+
+    function updateStats() {
+      document.getElementById('totalCount').textContent = allProspects.length;
+      document.getElementById('filteredCount').textContent = paginatedProspects.length;
+      
+      const totalFunding = allProspects
+        .filter(p => !['declined', 'withdrawn'].includes(p.status))
+        .reduce((sum, p) => sum + (parseFloat(p.estimated_amount) || 0), 0);
+      document.getElementById('totalFunding').textContent = '$' + totalFunding.toLocaleString();
+    }
+
+    function handleReset() {
+      document.getElementById('searchBox').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('pageSizeSelect').value = '20';
+      pageSize = 20;
+      currentPage = 1;
+      currentSort = { column: null, direction: 'asc' };
+      selectedProspects.clear();
+      filteredProspects = [...allProspects];
+      updatePagination();
+      updateStats();
+    }
+
+    function toggleColumnMenu() {
+      document.getElementById('columnMenu').classList.toggle('show');
+    }
+
+    function toggleColumn(column) {
+      const cells = document.querySelectorAll(`.col-${column}`);
+      const checkbox = document.getElementById(`col-${column}`);
+      cells.forEach(cell => {
+        cell.style.display = checkbox.checked ? '' : 'none';
+      });
+    }
+
+    function toggleExportMenu() {
+      const menu = document.getElementById('exportMenu');
+      menu.classList.toggle('show');
+      const count = selectedProspects.size > 0 ? selectedProspects.size : filteredProspects.length;
+      const text = selectedProspects.size > 0 ? `Export ${count} selected` : `Export all ${count} prospects`;
+      document.getElementById('exportCount').textContent = text;
+    }
+
+    function exportToCSV() {
+      const prospects = selectedProspects.size > 0 ?
+        allProspects.filter(p => selectedProspects.has(p.id)) :
+        filteredProspects;
+      const headers = ['Organization', 'Type', 'Contact Name', 'Contact Email', 'Status', 'Tier', 'Funding Type', 'Estimated Amount', 'Assigned To'];
+      const rows = prospects.map(p => [
+        p.organization_name || '',
+        p.prospect_type || '',
+        p.contact_name || '',
+        p.contact_email || '',
+        p.status || '',
+        p.tier || '',
+        p.funding_type || '',
+        p.estimated_amount || '',
+        p.assigned_to || ''
+      ]);
+      const csv = [headers, ...rows]
+        .map(row => row.map(cell => `"${(cell || '').toString().replace(/"/g, '""')}"`).join(','))
+        .join('\n');
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'isrs_funding_prospects_' + new Date().toISOString().split('T')[0] + '.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.getElementById('exportMenu').classList.remove('show');
+      showToast('Exported ' + prospects.length + ' prospects as CSV', 'success');
+    }
+
+    function exportToExcel() {
+      const prospects = selectedProspects.size > 0 ?
+        allProspects.filter(p => selectedProspects.has(p.id)) :
+        filteredProspects;
+      const headers = ['Organization', 'Type', 'Contact Name', 'Contact Email', 'Status', 'Tier', 'Funding Type', 'Estimated Amount', 'Assigned To'];
+      const rows = prospects.map(p => [
+        p.organization_name || '',
+        p.prospect_type || '',
+        p.contact_name || '',
+        p.contact_email || '',
+        p.status || '',
+        p.tier || '',
+        p.funding_type || '',
+        p.estimated_amount || '',
+        p.assigned_to || ''
+      ]);
+
+      const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
+        <head><meta charset="UTF-8">  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+        <body>
+          <table>
+            <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+            <tbody>
+              ${rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'isrs_funding_prospects_' + new Date().toISOString().split('T')[0] + '.xls';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.getElementById('exportMenu').classList.remove('show');
+      showToast('Exported ' + prospects.length + ' prospects as Excel', 'success');
+    }
+
+    function showAddProspectModal() {
+      document.getElementById('prospectModalTitle').textContent = 'Add Funding Prospect';
+      document.getElementById('prospectForm').reset();
+      document.getElementById('prospectId').value = '';
+      document.getElementById('prospectModal').classList.add('show');
+    }
+
+    async function editProspect(id) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/funding-prospects/${id}`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+          const prospect = data.data;
+          document.getElementById('prospectModalTitle').textContent = 'Edit Funding Prospect';
+          document.getElementById('prospectId').value = prospect.id;
+          document.getElementById('prospectType').value = prospect.prospect_type || 'organization';
+          document.getElementById('organizationName').value = prospect.organization_name || '';
+          document.getElementById('organizationType').value = prospect.organization_type || '';
+          document.getElementById('contactName').value = prospect.contact_name || '';
+          document.getElementById('contactEmail').value = prospect.contact_email || '';
+          document.getElementById('contactPhone').value = prospect.contact_phone || '';
+          document.getElementById('contactTitle').value = prospect.contact_title || '';
+          document.getElementById('fundingType').value = prospect.funding_type || '';
+          document.getElementById('fundingFocus').value = prospect.funding_focus || '';
+          document.getElementById('estimatedAmount').value = prospect.estimated_amount || '';
+          document.getElementById('fundingCycle').value = prospect.funding_cycle || '';
+          document.getElementById('status').value = prospect.status || 'prospect';
+          document.getElementById('priority').value = prospect.priority || 'medium';
+          document.getElementById('tier').value = prospect.tier || 2;
+          document.getElementById('assignedTo').value = prospect.assigned_to || '';
+          document.getElementById('nextFollowUpDate').value = prospect.next_follow_up_date || '';
+          document.getElementById('websiteUrl').value = prospect.website_url || '';
+          document.getElementById('notes').value = prospect.notes || '';
+          document.getElementById('internalNotes').value = prospect.internal_notes || '';
+          document.getElementById('prospectModal').classList.add('show');
+        }
+      } catch (error) {
+        showToast('Error loading prospect', 'error');
+      }
+    }
+
+    async function saveProspect(event) {
+      event.preventDefault();
+      
+      const id = document.getElementById('prospectId').value;
+      const prospectData = {
+        prospect_type: document.getElementById('prospectType').value,
+        organization_name: document.getElementById('organizationName').value,
+        organization_type: document.getElementById('organizationType').value,
+        contact_name: document.getElementById('contactName').value,
+        contact_email: document.getElementById('contactEmail').value,
+        contact_phone: document.getElementById('contactPhone').value,
+        contact_title: document.getElementById('contactTitle').value,
+        funding_type: document.getElementById('fundingType').value,
+        funding_focus: document.getElementById('fundingFocus').value,
+        estimated_amount: document.getElementById('estimatedAmount').value || null,
+        funding_cycle: document.getElementById('fundingCycle').value,
+        status: document.getElementById('status').value,
+        priority: document.getElementById('priority').value,
+        tier: parseInt(document.getElementById('tier').value),
+        assigned_to: document.getElementById('assignedTo').value,
+        next_follow_up_date: document.getElementById('nextFollowUpDate').value || null,
+        website_url: document.getElementById('websiteUrl').value,
+        notes: document.getElementById('notes').value,
+        internal_notes: document.getElementById('internalNotes').value
+      };
+
+      try {
+        const url = id ? `${API_BASE_URL}/api/funding-prospects/${id}` : `${API_BASE_URL}/api/funding-prospects`;
+        const method = id ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify(prospectData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showToast(id ? 'Prospect updated successfully' : 'Prospect created successfully', 'success');
+          closeProspectModal();
+          await loadProspects();
+        } else {
+          showToast(data.error || 'Failed to save prospect', 'error');
+        }
+      } catch (error) {
+        showToast('Error saving prospect', 'error');
+      }
+    }
+
+    function closeProspectModal() {
+      document.getElementById('prospectModal').classList.remove('show');
+    }
+
+    function closeImportModal() {
+      document.getElementById('importModal').classList.remove('show');
+    }
+
+    async function toggleFlag(id, setFlagged) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/funding-prospects/${id}/follow-up`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify({
+            follow_up_flag: setFlagged,
+            follow_up_assigned_to: sessionToken, // Current user
+            follow_up_notes: setFlagged ? 'Flagged for follow-up' : '',
+            next_follow_up_date: setFlagged ? new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0] : null
+          })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          await loadProspects();
+          showToast('Follow-up flag updated', 'success');
+        }
+      } catch (error) {
+        showToast('Error updating flag', 'error');
+      }
+    }
+
+    function composeEmail() {
+      showToast('Email compose feature coming soon', 'success');
+    }
+
+    function editSelected() {
+      if (selectedProspects.size === 1) {
+        const id = Array.from(selectedProspects)[0];
+        editProspect(id);
+      }
+    }
+
+    function enhanceSelected() {
+      showToast('AI enhancement feature available via Claude AI dropdown', 'success');
+    }
+
+    async function deleteSelected() {
+      if (!confirm(`Are you sure you want to delete ${selectedProspects.size} prospect(s)? This cannot be undone.`)) {
+        return;
+      }
+
+      try {
+        const deletePromises = Array.from(selectedProspects).map(id =>
+          fetch(`${API_BASE_URL}/api/funding-prospects/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${sessionToken}` }
+          })
+        );
+
+        await Promise.all(deletePromises);
+        showToast('Prospects deleted successfully', 'success');
+        selectedProspects.clear();
+        await loadProspects();
+      } catch (error) {
+        showToast('Error deleting prospects', 'error');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('isrs_session_token');
+      window.location.href = '/admin/';
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `message-toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
+
+  <!-- Quick Add Prospect Modal -->
+  <div id="quickAddModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Quick Add Prospect</h2>
+        <button class="close-btn" onclick="closeQuickAddModal()">&times;</button>
+      </div>
+      <form id="quickAddForm" onsubmit="executeQuickAdd(event)">
+        <div class="form-group">
+          <label for="qapOrgName">Organization Name *</label>
+          <input type="text" id="qapOrgName" required placeholder="e.g., National Science Foundation">
+        </div>
+        <div class="form-group">
+          <label for="qapType">Prospect Type</label>
+          <select id="qapType">
+            <option value="organization">Organization</option>
+            <option value="individual">Individual</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="qapFundingType">Funding Type</label>
+          <select id="qapFundingType">
+            <option value="">Select type...</option>
+            <option value="Grant">Grant</option>
+            <option value="Donation">Donation</option>
+            <option value="Sponsorship">Sponsorship</option>
+            <option value="Partnership">Partnership</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="qapAmount">Estimated Amount ($)</label>
+          <input type="number" id="qapAmount" step="0.01" min="0" placeholder="e.g., 50000">
+        </div>
+        <div class="form-group">
+          <label for="qapStatus">Initial Status</label>
+          <select id="qapStatus">
+            <option value="prospect">Prospect</option>
+            <option value="contacted">Contacted</option>
+            <option value="interested">Interested</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="qapNotes">Notes</label>
+          <textarea id="qapNotes" rows="2" placeholder="Brief notes about this prospect..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-reset" onclick="closeQuickAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Prospect</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/admin/claude-ai-dropdown.js"></script>
+</body>
+</html>

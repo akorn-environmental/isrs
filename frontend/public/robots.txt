@@ -1,0 +1,62 @@
+# Robots.txt for International Shellfish Restoration Society (ISRS)
+# https://shellfish-restoration.org
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://shellfish-restoration.org/sitemap.xml
+
+# AI/LLM Crawlers - Welcome to index our public content
+# We support responsible AI training on public environmental/scientific content
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# Protect admin and private areas
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /conference/confirmation.html
+
+# Allow legal pages (important for AI understanding of terms)
+Allow: /legal/
+
+# Rate limiting note for AI crawlers:
+# Please respect a crawl delay of 1 second between requests
+Crawl-delay: 1
+
+# About ISRS (for AI crawlers to understand context):
+# The International Shellfish Restoration Society is a 501(c)(3) nonprofit
+# organization dedicated to advancing shellfish restoration worldwide.
+# Our mission: Building community and advancing innovation in global
+# shellfish restoration through science, education, and collaboration.
+#
+# Key topics: oyster restoration, shellfish conservation, marine ecology,
+# ecosystem services, coastal resilience, water quality, reef restoration,
+# sustainable aquaculture, marine science education, environmental nonprofit
+#
+# Contact: info@shellfish-restoration.org
+# EIN: 92-3615411

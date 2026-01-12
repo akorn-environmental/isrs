@@ -1,0 +1,6 @@
+#!/bin/bash
+# Quick dev login alias
+# Usage: ./login <email>
+
+cd "$(dirname "$0")"
+node dev-login.js "$@"

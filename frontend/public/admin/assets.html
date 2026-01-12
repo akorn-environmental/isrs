@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Library - ISRS Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/theme.js"></script>
+  <style>
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .asset-card {
+      background: var(--card-bg, #fff);
+      border: 1px solid var(--border-color, #e1e1e1);
+      border-radius: 8px;
+      padding: 1rem;
+      transition: all 0.3s;
+    }
+
+    .asset-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+
+    .asset-preview {
+      width: 100%;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+
+    .asset-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .asset-info {
+      font-size: 0.875rem;
+    }
+
+    .asset-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      word-break: break-word;
+    }
+
+    .asset-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .asset-actions button {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-copy:hover {
+      background: var(--secondary-blue);
+    }
+
+    .btn-download {
+      background: #546d7d;
+      color: white;
+    }
+
+    .btn-download:hover {
+      background: #6b8694;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .section-header h2 {
+      margin: 0;
+    }
+
+    .stats {
+      display: flex;
+      gap: 2rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #1e5a8e, #2980b9);
+      border-radius: 8px;
+      color: white;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    .copied-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #28a745;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+      animation: slideIn 0.3s;
+    }
+
+    .copied-toast.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 1400px; margin: 2rem auto; padding: 2rem;">
+      <h1>🎨 Asset Library</h1>
+      <p style="color: var(--text-light); margin-bottom: 2rem;">
+        Manage logos, backgrounds, and other visual assets for the ISRS website
+      </p>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="logoCount">0</div>
+          <div class="stat-label">Logos</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="backgroundCount">0</div>
+          <div class="stat-label">Backgrounds</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="totalCount">0</div>
+          <div class="stat-label">Total Assets</div>
+        </div>
+      </div>
+
+      <!-- Logos Section -->
+      <div class="section-header">
+        <h2>📝 Logos</h2>
+      </div>
+      <div class="asset-grid" id="logosGrid"></div>
+
+      <!-- Backgrounds Section -->
+      <div class="section-header">
+        <h2>🖼️ Background Images</h2>
+      </div>
+      <div class="asset-grid" id="backgroundsGrid"></div>
+
+    </div>
+  </main>
+
+  <!-- Copied Toast -->
+  <div class="copied-toast" id="copiedToast">
+    ✓ Path copied to clipboard!
+  </div>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    const assets = {
+      logos: [
+        'image001.jpg',
+        'LOGO - ICSR.png',
+        'LOGO - ICSR2024 - blue shellfish.png',
+        'LOGO - ICSR2024.png',
+        'LOGO - ICSR2024.svg',
+        'LOGO - ISRS - round - blue.png',
+        'LOGO - ISRS - round - green.png',
+        'LOGO - ISRS - wide - green.png',
+        'LOGO - ISRS - wide.png'
+      ],
+      backgrounds: [
+        'FB_IMG_1742420117715_edit_1742421317577.jpg',
+        'IMAGE - pixlr - Boys looking over bay.png',
+        'IMAGE - pixlr - Seaweed farmer.png'
+      ]
+    };
+
+    function createAssetCard(filename, category) {
+      const path = `/images/assets/${category}/${filename}`;
+
+      return `
+        <div class="asset-card">
+          <div class="asset-preview">
+            <img src="${path}" alt="${filename}" loading="lazy">
+          </div>
+          <div class="asset-info">
+            <div class="asset-name">${filename}</div>
+            <div class="asset-actions">
+              <button class="btn-copy" onclick="copyPath('${path}')">
+                📋 Copy Path
+              </button>
+              <button class="btn-download" onclick="downloadAsset('${path}', '${filename}')">
+                ⬇️ Download
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyPath(path) {
+      navigator.clipboard.writeText(path).then(() => {
+        const toast = document.getElementById('copiedToast');
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
+      });
+    }
+
+    function downloadAsset(path, filename) {
+      const link = document.createElement('a');
+      link.href = path;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function loadAssets() {
+      // Render logos
+      const logosGrid = document.getElementById('logosGrid');
+      logosGrid.innerHTML = assets.logos.map(file =>
+        createAssetCard(file, 'logos')
+      ).join('');
+
+      // Render backgrounds
+      const backgroundsGrid = document.getElementById('backgroundsGrid');
+      backgroundsGrid.innerHTML = assets.backgrounds.map(file =>
+        createAssetCard(file, 'backgrounds')
+      ).join('');
+
+      // Update stats
+      document.getElementById('logoCount').textContent = assets.logos.length;
+      document.getElementById('backgroundCount').textContent = assets.backgrounds.length;
+      document.getElementById('totalCount').textContent = assets.logos.length + assets.backgrounds.length;
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', loadAssets);
+  </script>
+</body>
+</html>

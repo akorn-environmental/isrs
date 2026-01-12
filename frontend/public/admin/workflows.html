@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Workflows - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    .workflow-section {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      margin-bottom: var(--admin-space-xl);
+      overflow: hidden;
+    }
+    .workflow-header {
+      background: var(--admin-gray-50);
+      padding: var(--admin-space-lg) var(--admin-space-xl);
+      border-bottom: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-md);
+      flex-wrap: wrap;
+    }
+    .workflow-header-icon {
+      font-size: 1.5rem;
+    }
+    .workflow-header h3 {
+      margin: 0;
+      font-size: var(--admin-text-lg);
+      color: var(--admin-text);
+    }
+    .workflow-header .role-badges {
+      margin-left: auto;
+      display: flex;
+      gap: var(--admin-space-sm);
+      flex-wrap: wrap;
+    }
+    .role-badge {
+      font-size: var(--admin-text-xs);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .role-super-admin { background: #fecaca; color: #991b1b; }
+    .role-admin { background: #fef3c7; color: #92400e; }
+    .role-board { background: #dbeafe; color: #1e40af; }
+    .role-advisory { background: #e9d5ff; color: #6b21a8; }
+    .role-planner { background: #fbcfe8; color: #9d174d; }
+    .role-member { background: #d1fae5; color: #065f46; }
+    .role-student { background: #fef08a; color: #854d0e; }
+    .role-attendee { background: #ccfbf1; color: #0f766e; }
+    .role-presenter { background: #c7d2fe; color: #3730a3; }
+    .role-exhibitor { background: #fed7aa; color: #c2410c; }
+    .role-sponsor { background: #fcd34d; color: #92400e; }
+    .role-guest { background: #f3f4f6; color: #374151; }
+    .workflow-body {
+      padding: var(--admin-space-xl);
+    }
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: var(--admin-space-lg);
+    }
+    .workflow-step {
+      display: flex;
+      gap: var(--admin-space-lg);
+      align-items: flex-start;
+    }
+    .step-number {
+      width: 2rem;
+      height: 2rem;
+      background: var(--admin-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: var(--admin-text-sm);
+      flex-shrink: 0;
+    }
+    .step-content {
+      flex: 1;
+    }
+    .step-title {
+      font-weight: 600;
+      color: var(--admin-text);
+      margin-bottom: 0.25rem;
+    }
+    .step-description {
+      color: var(--admin-text-secondary);
+      font-size: var(--admin-text-sm);
+      line-height: 1.5;
+    }
+    .workflow-features {
+      margin-top: var(--admin-space-lg);
+      padding-top: var(--admin-space-lg);
+      border-top: 1px solid var(--admin-border);
+    }
+    .workflow-features h4 {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--admin-space-md);
+    }
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--admin-space-sm);
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-sm);
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-secondary);
+    }
+    .feature-item::before {
+      content: '✓';
+      color: var(--admin-success-text);
+      font-weight: 700;
+    }
+    .intro-card {
+      background: linear-gradient(135deg, var(--admin-primary) 0%, #5BC0BE 100%);
+      color: white;
+      border-radius: 8px;
+      padding: var(--admin-space-xl);
+      margin-bottom: var(--admin-space-xl);
+    }
+    .intro-card h2 {
+      font-size: var(--admin-text-xl);
+      margin-bottom: var(--admin-space-md);
+    }
+    .intro-card p {
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+    .role-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--admin-space-md);
+      margin-top: var(--admin-space-lg);
+    }
+    .role-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: var(--admin-space-md);
+      text-align: center;
+    }
+    .role-card-icon {
+      font-size: 1.5rem;
+      margin-bottom: var(--admin-space-sm);
+    }
+    .role-card-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      font-size: var(--admin-text-sm);
+    }
+    .role-card-count {
+      font-size: var(--admin-text-xs);
+      opacity: 0.8;
+    }
+    .multi-role-note {
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: var(--admin-space-md);
+      margin-top: var(--admin-space-lg);
+      font-size: var(--admin-text-sm);
+    }
+    .multi-role-note strong {
+      display: block;
+      margin-bottom: var(--admin-space-xs);
+    }
+    .section-divider {
+      text-align: center;
+      margin: var(--admin-space-xl) 0;
+      color: var(--admin-text-muted);
+      font-size: var(--admin-text-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      display: inline-block;
+      width: 50px;
+      height: 1px;
+      background: var(--admin-border);
+      vertical-align: middle;
+      margin: 0 var(--admin-space-md);
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <!-- Introduction Card -->
+    <div class="intro-card">
+      <h2>ISRS User Types & Workflows</h2>
+      <p>The International Society for Reef Studies (ISRS) system supports multiple user types, each with specific roles and capabilities. Many users will have multiple roles (e.g., a Board Member who is also a Conference Presenter and ISRS Member).</p>
+      <div class="role-overview">
+        <div class="role-card">
+          <div class="role-card-icon">🌐</div>
+          <div class="role-card-title">Guest</div>
+          <div class="role-card-count">Website visitor</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">👤</div>
+          <div class="role-card-title">Member</div>
+          <div class="role-card-count">Society member</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">🎓</div>
+          <div class="role-card-title">Student</div>
+          <div class="role-card-count">Student member</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">🎫</div>
+          <div class="role-card-title">Attendee</div>
+          <div class="role-card-count">Conference goer</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">🎤</div>
+          <div class="role-card-title">Presenter</div>
+          <div class="role-card-count">Speaker/poster</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">🏪</div>
+          <div class="role-card-title">Exhibitor</div>
+          <div class="role-card-count">Trade show</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">💎</div>
+          <div class="role-card-title">Sponsor</div>
+          <div class="role-card-count">Financial supporter</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">📋</div>
+          <div class="role-card-title">Planner</div>
+          <div class="role-card-count">Conf. organizer</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">🎓</div>
+          <div class="role-card-title">Advisory</div>
+          <div class="role-card-count">Expert panel</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">📊</div>
+          <div class="role-card-title">Board</div>
+          <div class="role-card-count">Governance</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">⚙️</div>
+          <div class="role-card-title">Admin</div>
+          <div class="role-card-count">Staff</div>
+        </div>
+        <div class="role-card">
+          <div class="role-card-icon">👑</div>
+          <div class="role-card-title">Super Admin</div>
+          <div class="role-card-count">Full access</div>
+        </div>
+      </div>
+      <div class="multi-role-note">
+        <strong>Multiple Roles</strong>
+        Users often have multiple roles. For example, a Board Member is typically also an ISRS Member and may register as a Conference Presenter. The system supports these overlapping identities.
+      </div>
+    </div>
+
+    <div class="section-divider">Public / Guest Access</div>
+
+    <!-- Guest Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🌐</span>
+        <h3>Guest / Website Visitor</h3>
+        <div class="role-badges">
+          <span class="role-badge role-guest">Guest</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Browse Public Website</div>
+              <div class="step-description">Access all public pages including About ISRS, Conferences, Publications, and News without logging in.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Learn About ISRS</div>
+              <div class="step-description">Read about the society's mission, principles, history, and current initiatives for coral reef conservation.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">View Conference Information</div>
+              <div class="step-description">See upcoming conference dates, locations, and general information. Detailed schedules may require registration.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Join or Register</div>
+              <div class="step-description">Click "Become a Member" to join ISRS or "Register" to sign up for a conference.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Guest Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Browse public pages</div>
+            <div class="feature-item">View conference info</div>
+            <div class="feature-item">Read news & updates</div>
+            <div class="feature-item">Contact ISRS</div>
+            <div class="feature-item">Multilingual support</div>
+            <div class="feature-item">Join mailing list</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Membership</div>
+
+    <!-- ISRS Member Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">👤</span>
+        <h3>ISRS Member</h3>
+        <div class="role-badges">
+          <span class="role-badge role-member">Member</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Join ISRS</div>
+              <div class="step-description">Complete the membership application form and pay annual dues. Receive confirmation email with member credentials.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Access Member Portal</div>
+              <div class="step-description">Login via magic link authentication. View personalized dashboard with membership status and benefits.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Manage Profile</div>
+              <div class="step-description">Update contact information, research interests, institutional affiliation, and communication preferences.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Access Member Benefits</div>
+              <div class="step-description">Use member directory, access publications, receive discounted conference rates, and participate in elections.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Member Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Member directory access</div>
+            <div class="feature-item">Profile management</div>
+            <div class="feature-item">Conference discounts</div>
+            <div class="feature-item">Publication access</div>
+            <div class="feature-item">Voting rights</div>
+            <div class="feature-item">Networking tools</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Member Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🎓</span>
+        <h3>Student Member</h3>
+        <div class="role-badges">
+          <span class="role-badge role-student">Student</span>
+          <span class="role-badge role-member">Member</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Apply as Student</div>
+              <div class="step-description">Select student membership tier and provide proof of enrollment (student ID or enrollment letter).</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Pay Reduced Dues</div>
+              <div class="step-description">Student members pay reduced annual dues. Some conferences offer additional student discounts.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Access Student Resources</div>
+              <div class="step-description">View student-specific opportunities including grants, mentorship programs, and early career networking events.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Apply for Travel Grants</div>
+              <div class="step-description">Submit applications for conference travel grants and student presentation awards.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Student Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">All member benefits</div>
+            <div class="feature-item">Reduced membership dues</div>
+            <div class="feature-item">Travel grant eligibility</div>
+            <div class="feature-item">Mentorship programs</div>
+            <div class="feature-item">Student networking events</div>
+            <div class="feature-item">Award competitions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Conference Participation</div>
+
+    <!-- Conference Attendee Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🎫</span>
+        <h3>Conference Attendee</h3>
+        <div class="role-badges">
+          <span class="role-badge role-attendee">Attendee</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Register for Conference</div>
+              <div class="step-description">Select registration type (Early Bird, Standard, Student). ISRS members receive discounted rates.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Complete Payment</div>
+              <div class="step-description">Pay via credit card, PayPal, or bank transfer. Receive confirmation email with registration details.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Select Sessions & Events</div>
+              <div class="step-description">Choose workshops, field trips, social events, and dietary preferences. Build your personal schedule.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Attend Conference</div>
+              <div class="step-description">Check in at registration desk. Access conference app for schedules, maps, and networking.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Attendee Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Session registration</div>
+            <div class="feature-item">Field trip booking</div>
+            <div class="feature-item">Social event signup</div>
+            <div class="feature-item">Conference app access</div>
+            <div class="feature-item">Networking tools</div>
+            <div class="feature-item">Certificate of attendance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Presenter Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🎤</span>
+        <h3>Conference Presenter</h3>
+        <div class="role-badges">
+          <span class="role-badge role-presenter">Presenter</span>
+          <span class="role-badge role-attendee">Attendee</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Submit Abstract</div>
+              <div class="step-description">Submit abstract during call for papers. Select presentation type: oral, poster, or symposium.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Abstract Review</div>
+              <div class="step-description">Abstract reviewed by scientific committee. Receive acceptance notification with session assignment.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Register & Pay</div>
+              <div class="step-description">Complete conference registration (required for all presenters). Upload final abstract and presentation files.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Present at Conference</div>
+              <div class="step-description">Deliver presentation at assigned time slot. Access speaker-ready room for AV check.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Presenter Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Abstract submission</div>
+            <div class="feature-item">File upload portal</div>
+            <div class="feature-item">Speaker-ready room access</div>
+            <div class="feature-item">Session scheduling</div>
+            <div class="feature-item">Presentation guidelines</div>
+            <div class="feature-item">All attendee benefits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exhibitor Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🏪</span>
+        <h3>Conference Exhibitor</h3>
+        <div class="role-badges">
+          <span class="role-badge role-exhibitor">Exhibitor</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Review Exhibitor Prospectus</div>
+              <div class="step-description">Download exhibitor package with booth options, pricing, and floor plan. Contact organizers for custom packages.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Reserve Booth Space</div>
+              <div class="step-description">Select booth size and location. Submit company information and logo for conference materials.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Complete Payment</div>
+              <div class="step-description">Pay booth fee and additional services (electricity, internet, furniture). Receive exhibitor badges.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Setup & Exhibit</div>
+              <div class="step-description">Access venue during setup hours. Staff booth during conference. Receive attendee list post-conference.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Exhibitor Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Booth space selection</div>
+            <div class="feature-item">Early venue access</div>
+            <div class="feature-item">Exhibitor badges</div>
+            <div class="feature-item">Marketing materials inclusion</div>
+            <div class="feature-item">Lead capture tools</div>
+            <div class="feature-item">Attendee list access</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sponsor Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">💎</span>
+        <h3>Sponsor</h3>
+        <div class="role-badges">
+          <span class="role-badge role-sponsor">Sponsor</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Review Sponsorship Levels</div>
+              <div class="step-description">Review sponsorship tiers (Platinum, Gold, Silver, Bronze) and associated benefits in sponsorship prospectus.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Contact Development Team</div>
+              <div class="step-description">Work with ISRS development team or assigned board liaison to customize sponsorship package.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Execute Agreement</div>
+              <div class="step-description">Sign sponsorship agreement and submit payment. Provide logo and promotional materials.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Receive Recognition</div>
+              <div class="step-description">Logo displayed on website, conference materials, and venue signage. Attend VIP sponsor events.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Sponsor Benefits</h4>
+          <div class="feature-list">
+            <div class="feature-item">Brand visibility</div>
+            <div class="feature-item">Complimentary registrations</div>
+            <div class="feature-item">VIP events access</div>
+            <div class="feature-item">Speaking opportunities</div>
+            <div class="feature-item">Booth space (upper tiers)</div>
+            <div class="feature-item">Website recognition</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Conference Planning</div>
+
+    <!-- Conference Planner Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">📋</span>
+        <h3>Conference Planner / Organizer</h3>
+        <div class="role-badges">
+          <span class="role-badge role-planner">Planner</span>
+          <span class="role-badge role-board">Board</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Configure Conference</div>
+              <div class="step-description">Set up conference in system: dates, venue, registration types, pricing tiers, and deadlines.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Manage Registration</div>
+              <div class="step-description">Monitor registrations, process payments, handle special requests, and manage waitlists.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Abstract Management</div>
+              <div class="step-description">Configure abstract submission, assign reviewers, manage decisions, and build program schedule.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Communications</div>
+              <div class="step-description">Send bulk emails to registrants. Manage announcements, reminders, and post-conference surveys.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <div class="step-title">Reports & Analytics</div>
+              <div class="step-description">Generate registration reports, financial summaries, and attendance analytics.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Planner Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Conference configuration</div>
+            <div class="feature-item">Registration management</div>
+            <div class="feature-item">Abstract system</div>
+            <div class="feature-item">Email communications</div>
+            <div class="feature-item">Financial reports</div>
+            <div class="feature-item">Badge generation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Governance & Leadership</div>
+
+    <!-- Advisory Panel Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🎓</span>
+        <h3>Advisory Panel Member</h3>
+        <div class="role-badges">
+          <span class="role-badge role-advisory">Advisory</span>
+          <span class="role-badge role-member">Member</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Access Advisory Portal</div>
+              <div class="step-description">Login to view advisory-specific content, consultation requests, and pending reviews.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Review Consultation Requests</div>
+              <div class="step-description">Board may request expert input on specific topics. Review materials and provide recommendations.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Funding Support</div>
+              <div class="step-description">May be assigned as leads for funding prospects within area of expertise. Track outreach activities.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Attend Advisory Meetings</div>
+              <div class="step-description">Participate in periodic advisory panel meetings (virtual or in-person at conferences).</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Advisory Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Expert consultation</div>
+            <div class="feature-item">Document review</div>
+            <div class="feature-item">Funding lead support</div>
+            <div class="feature-item">Committee participation</div>
+            <div class="feature-item">All member benefits</div>
+            <div class="feature-item">Board communication</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board Member Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">📊</span>
+        <h3>Board Member</h3>
+        <div class="role-badges">
+          <span class="role-badge role-board">Board</span>
+          <span class="role-badge role-member">Member</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Access Board Portal</div>
+              <div class="step-description">Login to see board-specific dashboard with upcoming votes, motions, and governance documents.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Review & Vote on Motions</div>
+              <div class="step-description">Review pending motions with supporting documents. Cast votes (Yes/No/Abstain) before deadlines.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Funding Outreach</div>
+              <div class="step-description">View assigned funding prospects. Track outreach activities and report outcomes.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Board Meetings</div>
+              <div class="step-description">Attend scheduled board meetings. Review minutes and action items.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Board Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Voting system access</div>
+            <div class="feature-item">Motion management</div>
+            <div class="feature-item">Board documents</div>
+            <div class="feature-item">Funding assignments</div>
+            <div class="feature-item">Financial reports</div>
+            <div class="feature-item">All member benefits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Administration</div>
+
+    <!-- Admin Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">⚙️</span>
+        <h3>Administrator</h3>
+        <div class="role-badges">
+          <span class="role-badge role-admin">Admin</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Access Admin Portal</div>
+              <div class="step-description">Login to full admin dashboard with system statistics, recent activity, and alerts.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Manage Data</div>
+              <div class="step-description">Full CRUD operations on contacts, organizations, conferences, votes, and funding prospects.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Import/Export</div>
+              <div class="step-description">Bulk import data from CSV/Excel. Export reports in multiple formats.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Communications</div>
+              <div class="step-description">Send email notifications, manage templates, and track delivery status.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Admin Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">Full CRUD operations</div>
+            <div class="feature-item">Bulk import/export</div>
+            <div class="feature-item">Email management</div>
+            <div class="feature-item">Report generation</div>
+            <div class="feature-item">User management</div>
+            <div class="feature-item">AI data enrichment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Super Admin Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">👑</span>
+        <h3>Super Administrator</h3>
+        <div class="role-badges">
+          <span class="role-badge role-super-admin">Super Admin</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">System Configuration</div>
+              <div class="step-description">Access system settings, API configurations, and integration management.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">User Role Management</div>
+              <div class="step-description">Assign and modify user roles. Grant/revoke admin access. Manage authentication settings.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Database Operations</div>
+              <div class="step-description">Access advanced database tools. Perform data migrations and cleanup operations.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Audit & Security</div>
+              <div class="step-description">View audit logs, monitor security events, and manage access controls.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Super Admin Capabilities</h4>
+          <div class="feature-list">
+            <div class="feature-item">All admin capabilities</div>
+            <div class="feature-item">System configuration</div>
+            <div class="feature-item">Role management</div>
+            <div class="feature-item">API settings</div>
+            <div class="feature-item">Audit logs</div>
+            <div class="feature-item">Security controls</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Authentication</div>
+
+    <!-- Authentication Workflow -->
+    <div class="workflow-section">
+      <div class="workflow-header">
+        <span class="workflow-header-icon">🔐</span>
+        <h3>Authentication (All Users)</h3>
+        <div class="role-badges">
+          <span class="role-badge role-guest">All Roles</span>
+        </div>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Navigate to Login</div>
+              <div class="step-description">Go to <code>/admin/</code> for admin portal or click "Member Portal" link on the main website.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Enter Email Address</div>
+              <div class="step-description">Enter your registered email address. The system uses passwordless authentication via magic links.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Check Email</div>
+              <div class="step-description">You'll receive an email with a secure magic link (expires in 15 minutes). Click the link to authenticate.</div>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Access Granted</div>
+              <div class="step-description">Based on your role(s), you'll see the appropriate portal with features matching your permissions.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-features">
+          <h4>Security Features</h4>
+          <div class="feature-list">
+            <div class="feature-item">Passwordless authentication</div>
+            <div class="feature-item">Magic link expiration (15 min)</div>
+            <div class="feature-item">Session management</div>
+            <div class="feature-item">Role-based access control</div>
+            <div class="feature-item">Multi-role support</div>
+            <div class="feature-item">Secure token storage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Admin Layout -->
+  <script src="/js/admin-layout.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      loadAdminLayout('workflows');
+    });
+  </script>
+
+  <!-- Feedback Widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    initFeedbackWidget({ isAdminPortal: true });
+  </script>
+</body>
+</html>

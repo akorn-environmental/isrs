@@ -1,0 +1,537 @@
+/* Claude AI Dropdown Styles - SAFMC-inspired */
+
+.claude-ai-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Main Button - Purple Gradient (matches admin-btn-sm sizing) */
+.claude-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: center;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%); /* purple-600 to purple-700 */
+  padding: 0.375rem 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.claude-ai-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.claude-ai-btn:hover {
+  background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%); /* darker */
+  box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3);
+}
+
+.claude-ai-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
+}
+
+/* Dropdown Menu */
+.claude-ai-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  min-width: 18rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.claude-ai-menu-header {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280; /* gray-500 */
+  border-bottom: 1px solid #e5e7eb; /* gray-200 */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.selected-count {
+  color: #9333ea; /* purple-600 */
+  margin-left: 0.5rem;
+}
+
+/* Menu Items */
+.claude-ai-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  color: #374151; /* gray-700 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.claude-ai-menu-item:last-of-type {
+  border-bottom: none;
+}
+
+.claude-ai-menu-item:hover {
+  background: #f9fafb; /* gray-50 */
+}
+
+.claude-ai-menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menu-item-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.menu-item-description {
+  font-size: 0.75rem;
+  color: #6b7280; /* gray-500 */
+  margin-top: 0.25rem;
+  margin-left: 1.5rem;
+}
+
+.claude-ai-disclaimer {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  line-height: 1.4;
+}
+
+/* Loading Modal */
+.claude-ai-loading-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.claude-ai-loading-content {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 28rem;
+  text-align: center;
+}
+
+.claude-ai-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid #e5e7eb;
+  border-top-color: #9333ea;
+  border-radius: 50%;
+  animation: claude-spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes claude-spin {
+  to { transform: rotate(360deg); }
+}
+
+.claude-ai-loading-text h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.claude-ai-loading-text p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Results Modal */
+.claude-ai-results-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.claude-ai-results-content {
+  background: white;
+  border-radius: 8px;
+  max-width: 60rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.claude-ai-results-inner {
+  padding: 2rem;
+}
+
+.claude-ai-results-inner h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 1.5rem 0;
+}
+
+.claude-ai-results-inner h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 1.5rem 0 0.75rem 0;
+}
+
+.claude-ai-close-results {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #9333ea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.claude-ai-close-results:hover {
+  background: #7e22ce;
+}
+
+/* Duplicates Results */
+.duplicates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.duplicate-group {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #f9fafb;
+}
+
+.duplicate-group-header {
+  margin-bottom: 1rem;
+}
+
+.confidence-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+  color: white;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.duplicate-contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.duplicate-contact-card {
+  background: white;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.merge-btn {
+  padding: 0.5rem 1rem;
+  background: #9333ea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.merge-btn:hover {
+  background: #7e22ce;
+}
+
+/* Review Results */
+.health-score-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #22c55e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.health-score-number {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #16a34a;
+  line-height: 1;
+}
+
+.health-score-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.priority-section {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.priority-contact {
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.priority-contact:last-child {
+  margin-bottom: 0;
+}
+
+.recommendations-section {
+  background: #f0f9ff;
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.recommendations-section ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.recommendations-section li {
+  color: #374151;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Enhancement Results */
+.current-contact-card {
+  background: #eff6ff;
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.current-contact-card h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e40af;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quality-score-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.issues-section {
+  background: #fef2f2;
+  border: 1px solid #f87171;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.issues-section ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.issues-section li {
+  color: #991b1b;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.suggestions-section {
+  background: #f0fdf4;
+  border: 2px solid #22c55e;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.suggestions-table {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 0.75rem;
+}
+
+.suggestion-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.suggestion-row:last-child {
+  border-bottom: none;
+}
+
+.suggestion-field {
+  font-weight: 600;
+  color: #166534;
+}
+
+.suggestion-value {
+  color: #15803d;
+}
+
+.apply-suggestions-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.apply-suggestions-btn:hover {
+  background: #16a34a;
+}
+
+/* Error Modal */
+.claude-ai-error-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.claude-ai-error-content {
+  background: white;
+  border-radius: 8px;
+  max-width: 28rem;
+  width: 100%;
+}
+
+.claude-ai-error-inner {
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-icon {
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.claude-ai-error-inner h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ef4444;
+  margin: 0 0 1rem 0;
+}
+
+.error-message {
+  color: #374151;
+  margin: 0 0 1.5rem 0;
+}
+
+.claude-ai-close-error {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.claude-ai-close-error:hover {
+  background: #e5e7eb;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .claude-ai-menu {
+    right: auto;
+    left: 0;
+    min-width: 16rem;
+  }
+
+  .duplicate-contacts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .suggestion-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .claude-ai-results-content {
+    max-width: 100%;
+  }
+
+  .claude-ai-results-inner {
+    padding: 1rem;
+  }
+}

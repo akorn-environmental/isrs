@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to your ISRS member profile">
+  <title>Member Login - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/member-auth.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 600px; margin: 4rem auto; padding: 2rem;">
+      <!-- Login Form -->
+      <div id="loginForm" style="text-align: center;">
+        <h1 style="margin-bottom: 1rem;">Member Login</h1>
+        <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem;">
+          Enter your email address and we'll send you a secure login link
+        </p>
+
+        <form id="magicLinkForm" style="max-width: 500px; margin: 0 auto;">
+          <div class="form-group">
+            <label for="email" style="display: block; text-align: left; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="your.email@example.com"
+              style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;"
+              autofocus
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem;"
+          >
+            Send Magic Link
+          </button>
+
+          <div id="error" style="display: none; margin-top: 1rem; padding: 1rem; background: #fee; border: 1px solid #fcc; border-radius: 4px; color: #c00;"></div>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+          <p style="color: var(--text-light); margin-bottom: 0.5rem;">
+            Don't have an account yet?
+          </p>
+          <p style="font-size: 0.95rem; color: var(--text-light);">
+            If you've attended a past ICSR conference, you already have an account! Just enter the email you used for registration.
+          </p>
+          <p style="margin-top: 1rem;">
+            <a href="/icsr2026.html" class="btn btn-secondary">Learn About ICSR2026</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div id="successMessage" style="display: none; text-align: center;">
+        <div style="font-size: 4rem; color: var(--primary-blue); margin-bottom: 1rem;">✓</div>
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Check Your Email!</h2>
+        <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+          We've sent a secure login link to <strong id="sentEmail"></strong>
+        </p>
+        <p style="color: var(--text-light); font-size: 0.95rem;">
+          Click the link in the email to access your member profile. The link will expire in 15 minutes.
+        </p>
+        <p style="margin-top: 2rem;">
+          <button onclick="showLoginForm()" class="btn btn-secondary">Send Another Link</button>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    // Check if already logged in
+    if (MemberAuth.isAuthenticated()) {
+      // Get redirect URL from query params or default to profile
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirect = urlParams.get('redirect') || '/member/profile.html';
+      window.location.href = redirect;
+    }
+
+    const form = document.getElementById('magicLinkForm');
+    const emailInput = document.getElementById('email');
+    const errorDiv = document.getElementById('error');
+    const loginForm = document.getElementById('loginForm');
+    const successMessage = document.getElementById('successMessage');
+    const sentEmailSpan = document.getElementById('sentEmail');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = emailInput.value.trim();
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      // Clear previous error
+      errorDiv.style.display = 'none';
+
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await MemberAuth.login(email);
+
+        if (response.success) {
+          // Show success message
+          sentEmailSpan.textContent = email;
+          loginForm.style.display = 'none';
+          successMessage.style.display = 'block';
+        } else {
+          throw new Error(response.error || 'Failed to send magic link');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        errorDiv.textContent = error.message || 'Failed to send magic link. Please try again.';
+        errorDiv.style.display = 'block';
+
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Magic Link';
+      }
+    });
+
+    function showLoginForm() {
+      loginForm.style.display = 'block';
+      successMessage.style.display = 'none';
+      emailInput.value = '';
+      errorDiv.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Press Kit Management - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    .press-kit-section {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      padding: var(--admin-space-xl);
+      margin-bottom: var(--admin-space-xl);
+    }
+    .press-kit-section h3 {
+      font-size: var(--admin-text-lg);
+      margin-bottom: var(--admin-space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .edit-btn {
+      font-size: var(--admin-text-sm);
+      padding: var(--admin-space-sm) var(--admin-space-lg);
+      background: var(--admin-gray-100);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-sm);
+      color: var(--admin-text);
+    }
+    .edit-btn:hover {
+      background: var(--admin-gray-200);
+    }
+    .content-preview {
+      background: var(--admin-gray-50);
+      border: 1px solid var(--admin-gray-200);
+      border-radius: var(--admin-radius-md);
+      padding: var(--admin-space-lg);
+      font-size: var(--admin-text-sm);
+      line-height: 1.6;
+    }
+    .content-preview p {
+      margin-bottom: var(--admin-space-md);
+    }
+    .content-preview p:last-child {
+      margin-bottom: 0;
+    }
+    .content-preview ul {
+      margin: var(--admin-space-md) 0;
+      padding-left: var(--admin-space-xl);
+    }
+    .content-preview li {
+      margin-bottom: var(--admin-space-sm);
+    }
+    .suggestion-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .suggestion-modal.active {
+      display: flex;
+    }
+    .suggestion-modal-content {
+      background: var(--admin-surface);
+      border-radius: var(--admin-radius-lg);
+      padding: var(--admin-space-2xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .suggestion-modal h3 {
+      margin-bottom: var(--admin-space-lg);
+    }
+    .suggestion-textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: var(--admin-space-lg);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-md);
+      font-family: inherit;
+      font-size: var(--admin-text-sm);
+      resize: vertical;
+      margin-bottom: var(--admin-space-lg);
+      background: var(--admin-surface);
+      color: var(--admin-text);
+    }
+    .modal-actions {
+      display: flex;
+      gap: var(--admin-space-md);
+      justify-content: flex-end;
+    }
+    .quick-facts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--admin-space-md);
+    }
+    .quick-fact {
+      background: var(--admin-gray-50);
+      padding: var(--admin-space-md);
+      border-radius: var(--admin-radius-md);
+      border: 1px solid var(--admin-gray-200);
+    }
+    .quick-fact label {
+      font-size: var(--admin-text-xs);
+      color: var(--admin-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .quick-fact p {
+      font-size: var(--admin-text-sm);
+      font-weight: 600;
+      margin-top: var(--admin-space-xs);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--admin-space-xs);
+      padding: var(--admin-space-xs) var(--admin-space-md);
+      background: var(--admin-success-bg);
+      color: var(--admin-success-text);
+      border-radius: var(--admin-radius-full);
+      font-size: var(--admin-text-xs);
+      font-weight: 600;
+    }
+    .view-public-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--admin-space-sm);
+      padding: var(--admin-space-md) var(--admin-space-lg);
+      background: var(--admin-primary);
+      color: var(--admin-surface);
+      border-radius: var(--admin-radius-md);
+      text-decoration: none;
+      font-size: var(--admin-text-sm);
+      font-weight: 600;
+    }
+    .view-public-btn:hover {
+      background: var(--admin-primary-hover);
+      text-decoration: none;
+    }
+    .suggestions-list {
+      margin-top: var(--admin-space-lg);
+    }
+    .suggestion-item {
+      background: var(--admin-warning-bg);
+      border: 1px solid var(--admin-warning);
+      border-radius: var(--admin-radius-md);
+      padding: var(--admin-space-lg);
+      margin-bottom: var(--admin-space-md);
+    }
+    .suggestion-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--admin-space-sm);
+    }
+    .suggestion-item-meta {
+      font-size: var(--admin-text-xs);
+      color: var(--admin-text-muted);
+    }
+    .no-suggestions {
+      text-align: center;
+      color: var(--admin-text-muted);
+      padding: var(--admin-space-2xl);
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--admin-space-2xl);
+      padding-bottom: var(--admin-space-xl);
+      border-bottom: 1px solid var(--admin-border);
+    }
+    .page-header h1 {
+      font-size: var(--admin-text-2xl);
+      margin-bottom: var(--admin-space-xs);
+    }
+    .page-header p {
+      color: var(--admin-text-muted);
+      font-size: var(--admin-text-md);
+    }
+    .header-actions {
+      display: flex;
+      gap: var(--admin-space-lg);
+      align-items: center;
+    }
+    .admin-btn-sm {
+      padding: var(--admin-space-xs) var(--admin-space-md);
+      font-size: var(--admin-text-xs);
+    }
+    .admin-btn-success {
+      background: var(--admin-success);
+      color: var(--admin-surface);
+      border: none;
+      cursor: pointer;
+      border-radius: var(--admin-radius-md);
+    }
+    .admin-btn-success:hover {
+      opacity: 0.9;
+    }
+    .admin-btn-danger {
+      background: var(--admin-danger);
+      color: var(--admin-surface);
+      border: none;
+      cursor: pointer;
+      border-radius: var(--admin-radius-md);
+    }
+    .admin-btn-danger:hover {
+      opacity: 0.9;
+    }
+    .admin-btn-primary {
+      background: var(--admin-primary);
+      color: var(--admin-surface);
+      border: none;
+      cursor: pointer;
+      padding: var(--admin-space-md) var(--admin-space-lg);
+      border-radius: var(--admin-radius-md);
+      font-weight: 600;
+    }
+    .admin-btn-primary:hover {
+      background: var(--admin-primary-hover);
+    }
+    .admin-btn-secondary {
+      background: var(--admin-gray-100);
+      color: var(--admin-text);
+      border: 1px solid var(--admin-border);
+      cursor: pointer;
+      padding: var(--admin-space-md) var(--admin-space-lg);
+      border-radius: var(--admin-radius-md);
+    }
+    .admin-btn-secondary:hover {
+      background: var(--admin-gray-200);
+    }
+    .admin-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      z-index: 9999;
+      font-size: var(--admin-text-sm);
+      font-weight: 500;
+      animation: fadeIn 0.3s;
+    }
+    .admin-toast-success {
+      background: var(--admin-success);
+      color: var(--admin-surface);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <!-- Page Content - Will be wrapped by admin-layout.js -->
+  <div class="page-header">
+    <div>
+      <h1>Press Kit Management</h1>
+      <p>View and suggest changes to press kit content</p>
+    </div>
+    <div class="header-actions">
+      <span class="status-badge">
+        <span style="width: 8px; height: 8px; background: var(--admin-success); border-radius: 50%;"></span>
+        Published
+      </span>
+      <a href="/press-kit.html" target="_blank" class="view-public-btn">
+        <span>View Public Page</span>
+        <span>↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="press-kit-section">
+    <h3>
+      <span>About ISRS (Boilerplate)</span>
+      <button class="edit-btn" onclick="openSuggestionModal('about')">
+        <span>✏️</span>
+        <span>Suggest Edit</span>
+      </button>
+    </h3>
+    <div class="content-preview" id="about-content">
+      <p>The <strong>International Shellfish Restoration Society (ISRS)</strong> is a 501(c)(3) nonprofit organization established in 2024 to support the global shellfish restoration community. Born from the International Conference on Shellfish Restoration (ICSR), which has convened restoration practitioners since 1996, ISRS builds community, facilitates communication, and promotes innovation within the shellfish restoration community worldwide.</p>
+    </div>
+  </div>
+
+  <!-- Quick Facts -->
+  <div class="press-kit-section">
+    <h3>
+      <span>Quick Facts</span>
+      <button class="edit-btn" onclick="openSuggestionModal('quickfacts')">
+        <span>✏️</span>
+        <span>Suggest Edit</span>
+      </button>
+    </h3>
+    <div class="quick-facts-grid">
+      <div class="quick-fact">
+        <label>Founded</label>
+        <p>2024</p>
+      </div>
+      <div class="quick-fact">
+        <label>Organization Type</label>
+        <p>501(c)(3) Nonprofit</p>
+      </div>
+      <div class="quick-fact">
+        <label>Tax ID (EIN)</label>
+        <p>39-2829151</p>
+      </div>
+      <div class="quick-fact">
+        <label>Headquarters</label>
+        <p>United States</p>
+      </div>
+      <div class="quick-fact">
+        <label>Primary Event</label>
+        <p>ICSR (biennial since 1996)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Messages -->
+  <div class="press-kit-section">
+    <h3>
+      <span>Key Messages</span>
+      <button class="edit-btn" onclick="openSuggestionModal('keymessages')">
+        <span>✏️</span>
+        <span>Suggest Edit</span>
+      </button>
+    </h3>
+    <div class="content-preview">
+      <p><strong>Why Shellfish Restoration Matters:</strong> Shellfish like oysters, mussels, and clams are ecosystem engineers that provide critical services: filtering water, creating habitat for hundreds of species, protecting shorelines from erosion, and sequestering carbon. Once abundant, many shellfish populations have declined by 85% or more due to overharvesting, habitat loss, pollution, and disease.</p>
+      <p><strong>The Global Restoration Movement:</strong> Shellfish restoration is one of the fastest-growing areas of marine conservation. Projects now span six continents, from oyster reef restoration in the Chesapeake Bay to mussel restoration in New Zealand. ISRS connects this global community, sharing knowledge and best practices to accelerate restoration success.</p>
+      <p><strong>ICSR: The Premier Gathering:</strong> The International Conference on Shellfish Restoration (ICSR) is the world's leading forum for shellfish restoration science and practice. Held biennially since 1996, ICSR brings together scientists, practitioners, policymakers, and industry to share research, showcase projects, and forge collaborations.</p>
+    </div>
+  </div>
+
+  <!-- Media Contact -->
+  <div class="press-kit-section">
+    <h3>
+      <span>Media Contact</span>
+      <button class="edit-btn" onclick="openSuggestionModal('contact')">
+        <span>✏️</span>
+        <span>Suggest Edit</span>
+      </button>
+    </h3>
+    <div class="content-preview">
+      <p><strong>Media Inquiries:</strong></p>
+      <p>Aaron Kornbluth<br>Executive Director<br><a href="mailto:aaron.kornbluth@gmail.com">aaron.kornbluth@gmail.com</a></p>
+    </div>
+  </div>
+
+  <!-- Pending Suggestions -->
+  <div class="press-kit-section">
+    <h3>
+      <span>Pending Suggestions</span>
+    </h3>
+    <div id="suggestionsList" class="suggestions-list">
+      <div class="no-suggestions">
+        <p>No pending suggestions</p>
+        <p style="font-size: var(--admin-text-xs);">Click "Suggest Edit" on any section above to propose changes</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestion Modal -->
+  <div class="suggestion-modal" id="suggestionModal">
+    <div class="suggestion-modal-content">
+      <h3>Suggest Changes to <span id="sectionName">Section</span></h3>
+      <p style="font-size: var(--admin-text-sm); color: var(--admin-text-muted); margin-bottom: var(--admin-space-lg);">
+        Describe your suggested changes below. Your suggestion will be saved for review.
+      </p>
+      <textarea class="suggestion-textarea" id="suggestionText" placeholder="Describe your suggested changes..."></textarea>
+      <div class="modal-actions">
+        <button class="admin-btn-secondary" onclick="closeSuggestionModal()">Cancel</button>
+        <button class="admin-btn-primary" onclick="submitSuggestion()">Submit Suggestion</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin-layout.js"></script>
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    let currentSection = '';
+    let suggestions = JSON.parse(localStorage.getItem('pressKitSuggestions') || '[]');
+
+    // Initialize admin layout
+    loadAdminLayout('press-kit');
+
+    // Check authentication
+    async function checkAuth() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          window.location.href = 'index.html';
+          return;
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        window.location.href = 'index.html';
+      }
+    }
+
+    function openSuggestionModal(section) {
+      currentSection = section;
+      const sectionNames = {
+        'about': 'About ISRS',
+        'quickfacts': 'Quick Facts',
+        'keymessages': 'Key Messages',
+        'contact': 'Media Contact'
+      };
+      document.getElementById('sectionName').textContent = sectionNames[section] || section;
+      document.getElementById('suggestionText').value = '';
+      document.getElementById('suggestionModal').classList.add('active');
+    }
+
+    function closeSuggestionModal() {
+      document.getElementById('suggestionModal').classList.remove('active');
+      currentSection = '';
+    }
+
+    function submitSuggestion() {
+      const text = document.getElementById('suggestionText').value.trim();
+      if (!text) {
+        alert('Please enter your suggestion');
+        return;
+      }
+
+      const userData = JSON.parse(localStorage.getItem('isrs_user_data') || '{}');
+      const suggestion = {
+        id: Date.now(),
+        section: currentSection,
+        text: text,
+        submittedBy: userData.email || 'Unknown',
+        submittedAt: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      suggestions.push(suggestion);
+      localStorage.setItem('pressKitSuggestions', JSON.stringify(suggestions));
+
+      renderSuggestions();
+      closeSuggestionModal();
+      showToast('Suggestion submitted successfully');
+    }
+
+    function renderSuggestions() {
+      const container = document.getElementById('suggestionsList');
+      const pending = suggestions.filter(s => s.status === 'pending');
+
+      if (pending.length === 0) {
+        container.innerHTML = `
+          <div class="no-suggestions">
+            <p>No pending suggestions</p>
+            <p style="font-size: var(--admin-text-xs);">Click "Suggest Edit" on any section above to propose changes</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sectionNames = {
+        'about': 'About ISRS',
+        'quickfacts': 'Quick Facts',
+        'keymessages': 'Key Messages',
+        'contact': 'Media Contact'
+      };
+
+      container.innerHTML = pending.map(s => `
+        <div class="suggestion-item">
+          <div class="suggestion-item-header">
+            <strong>${sectionNames[s.section] || s.section}</strong>
+            <span class="suggestion-item-meta">${s.submittedBy} - ${new Date(s.submittedAt).toLocaleDateString()}</span>
+          </div>
+          <p style="font-size: var(--admin-text-sm);">${s.text}</p>
+          <div style="margin-top: var(--admin-space-md); display: flex; gap: var(--admin-space-sm);">
+            <button class="admin-btn-sm admin-btn-success" onclick="approveSuggestion(${s.id})">Approve</button>
+            <button class="admin-btn-sm admin-btn-danger" onclick="rejectSuggestion(${s.id})">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function approveSuggestion(id) {
+      const suggestion = suggestions.find(s => s.id === id);
+      if (suggestion) {
+        suggestion.status = 'approved';
+        localStorage.setItem('pressKitSuggestions', JSON.stringify(suggestions));
+        showToast('Suggestion approved! Please update the press-kit.html file manually.');
+        renderSuggestions();
+      }
+    }
+
+    function rejectSuggestion(id) {
+      suggestions = suggestions.filter(s => s.id !== id);
+      localStorage.setItem('pressKitSuggestions', JSON.stringify(suggestions));
+      showToast('Suggestion removed');
+      renderSuggestions();
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'admin-toast admin-toast-success';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Close modal on outside click
+    document.getElementById('suggestionModal').addEventListener('click', (e) => {
+      if (e.target.id === 'suggestionModal') {
+        closeSuggestionModal();
+      }
+    });
+
+    // Initialize
+    checkAuth();
+    renderSuggestions();
+  </script>
+</body>
+</html>

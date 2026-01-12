@@ -1,0 +1,65 @@
+services:
+  - type: web
+    name: isrs-database-backend
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install
+    startCommand: node src/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: isrs-database
+          property: connectionString
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-4-5-20250929
+      - key: GOOGLE_SHEET_ID
+        value: 1o1dG8fBCIKb1_pNAqZmlmOhQHjNIIwwJzUT5s_BQ3OA
+      - key: GOOGLE_SERVICE_ACCOUNT_EMAIL
+        sync: false
+      - key: GOOGLE_PRIVATE_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+
+  - type: cron
+    name: feedback-digest-cron
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "0 9 * * *"  # Daily at 9 AM UTC (4 AM EST / 1 AM PST)
+    buildCommand: npm install
+    startCommand: node scripts/send-feedback-digest.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: isrs-database
+          property: connectionString
+      - key: FEEDBACK_ADMIN_EMAIL
+        value: aaron.kornbluth@gmail.com
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GOOGLE_SERVICE_ACCOUNT_EMAIL
+        sync: false
+      - key: GOOGLE_PRIVATE_KEY
+        sync: false
+
+databases:
+  - name: isrs-database
+    databaseName: isrs_database
+    user: isrs_user
+    plan: basic_256mb
+    region: oregon

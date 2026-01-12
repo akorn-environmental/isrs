@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ICSR2026 - International Conference on Shellfish Restoration in Puget Sound, Washington, October 4-8, 2026">
+  <title>ICSR2026 - Puget Sound, Washington</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <!-- Preload critical images -->
+  <link rel="preload" as="image" href="/images/coastal-ecosystem.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="/images/logo-wide-blue.png">
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <!-- Hero Section -->
+  <section class="hero" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/coastal-ecosystem.jpg');">
+    <div class="hero-content">
+      <h1 data-i18n="icsr2026HeroHeading">ICSR2026</h1>
+      <p style="font-size: 1.5rem; font-weight: 600;" class="hero-subtitle" data-i18n="icsr2026HostedBy">Hosted by Puget Sound Restoration Foundation</p>
+      <p class="hero-subtitle" data-i18n="icsr2026LocationDates">Puget Sound, Washington State<br>October 4-8, 2026</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Conference Overview -->
+    <section class="section compact-section">
+      <h2 class="text-center" data-i18n="icsr2026OverviewHeading">Join Us in the Pacific Northwest</h2>
+      <div style="display: flex; align-items: center; gap: 2rem; max-width: 1100px; margin: 0 auto;">
+        <div style="flex: 1;">
+          <p style="font-size: 1rem; line-height: 1.5; margin: 0 0 0.75rem 0;" data-i18n="icsr2026OverviewText1">
+            The 2026 International Conference on Shellfish Restoration will bring together the global restoration community for <strong class="highlight">four days of cutting-edge research, practical workshops, and invaluable networking</strong> with restoration practitioners from around the world.
+          </p>
+          <p style="font-size: 0.95rem; line-height: 1.5; margin: 0;" data-i18n="icsr2026OverviewText2">
+            Set in the spectacular Puget Sound region, ICSR2026 will explore the intersection of traditional ecological knowledge, modern restoration science, and community-based conservation. The conference will be held at the Little Creek Resort and Conference Center in Shelton, Washington, operated by the <strong><a href="https://squaxinisland.org/" target="_blank" rel="noopener noreferrer" style="color: inherit;">Squaxin Island Tribe</a></strong>.
+          </p>
+        </div>
+        <div style="flex-shrink: 0;">
+          <button onclick="openMailingListModal()" class="btn btn-primary" style="white-space: nowrap;" data-i18n="icsr2026JoinMailingList">Join Mailing List for Updates</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Dates -->
+    <section class="section" style="background-color: #ecf0f1; padding: 1.5rem; border-radius: 8px;">
+      <h2 data-i18n="icsr2026DatesHeading">Important Dates</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 style="color: #1e5a8e; font-size: 1.1rem;" data-i18n="icsr2026ConferenceDates">📅 Conference Dates</h3>
+          <p style="font-size: 1.1rem; font-weight: 600; color: var(--primary-blue); margin-bottom: 0.75rem;" data-i18n="icsr2026DateRange">October 4-8, 2026</p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+            <button onclick="downloadICS()" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 0.75rem;" data-i18n="icsr2026DownloadICS">
+              📅 Download .ics
+            </button>
+            <button onclick="addToGoogleCalendar()" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 0.75rem;" data-i18n="icsr2026GoogleCalendar">
+              📅 Google Calendar
+            </button>
+            <button onclick="addToOutlook()" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 0.75rem;" data-i18n="icsr2026Outlook">
+              📅 Outlook
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="color: #1e5a8e; font-size: 1.1rem;" data-i18n="icsr2026AbstractDeadline">📝 Abstract Deadline</h3>
+          <p style="font-size: 1rem;" data-i18n="icsr2026ComingSoon">Coming Soon</p>
+        </div>
+        <div class="card">
+          <h3 style="color: #1e5a8e; font-size: 1.1rem;" data-i18n="icsr2026EarlyBird">🎫 Early Bird Registration</h3>
+          <p style="font-size: 1rem;" data-i18n="icsr2026Early2026">Early 2026</p>
+        </div>
+        <div class="card">
+          <h3 style="color: #1e5a8e; font-size: 1.1rem;" data-i18n="icsr2026HotelBooking">🏨 Hotel Booking</h3>
+          <p style="font-size: 1rem;" data-i18n="icsr2026InfoTBA">Information TBA</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- What to Expect -->
+    <section class="section compact-section" style="padding: 1rem 0;">
+      <h2 class="text-center" style="margin-bottom: 1rem;" data-i18n="icsr2026WhatToExpect">What to Expect</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
+        <div class="feature-item">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔬</div>
+          <h3 data-i18n="icsr2026ExpectResearch">Cutting-Edge Research</h3>
+          <p data-i18n="icsr2026ExpectResearchDesc">Oral presentations and lightning talks on oyster dynamics, habitat monitoring, urban restoration, species interactions, reef structures, and climate adaptation</p>
+        </div>
+        <div class="feature-item">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎓</div>
+          <h3 data-i18n="icsr2026ExpectWorkshops">Hands-On Workshops</h3>
+          <p data-i18n="icsr2026ExpectWorkshopsDesc">Interactive sessions on restoration planning, monitoring protocols, community engagement, traditional knowledge, funding, and data analysis</p>
+        </div>
+        <div class="feature-item">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗺️</div>
+          <h3 data-i18n="icsr2026ExpectFieldTrips">Field Trips</h3>
+          <p data-i18n="icsr2026ExpectFieldTripsDesc">Site visits to Tribal restoration sites, Puget Sound oyster reefs, urban shoreline projects, Olympia oyster recovery, and geoduck restoration</p>
+        </div>
+        <div class="feature-item">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤝</div>
+          <h3 data-i18n="icsr2026ExpectNetworking">Networking</h3>
+          <p data-i18n="icsr2026ExpectNetworkingDesc">Welcome reception, poster sessions, conference banquet, regional network meetings, and informal gatherings throughout the week</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conference Venue & Squaxin Island Tribe -->
+    <section class="section" style="background-color: #ecf0f1; padding: 1.5rem; border-radius: 8px;">
+      <h2 data-i18n="icsr2026VenueHeading">Conference Venue at <a href="https://squaxinisland.org/" target="_blank" rel="noopener noreferrer" style="color: inherit;">Squaxin Island Tribe</a> Territory</h2>
+      <p style="font-size: 1.05rem; line-height: 1.6; max-width: 800px; margin: 0 auto;" data-i18n="icsr2026VenueText1">
+        ICSR2026 will be held at the Little Creek Resort and Conference Center, operated by the <strong class="highlight"><a href="https://squaxinisland.org/" target="_blank" rel="noopener noreferrer" style="color: inherit;">Squaxin Island Tribe</a></strong> in Shelton, Washington. The <a href="https://squaxinisland.org/" target="_blank" rel="noopener noreferrer" style="color: inherit;">Squaxin Island people's</a> ancestral territory includes much of southern Puget Sound, and they have been stewards of shellfish resources for thousands of years, maintaining deep cultural and spiritual connections to clams, oysters, and other shellfish.
+      </p>
+      <p style="font-size: 1.05rem; line-height: 1.6; max-width: 800px; margin: 1rem auto 0;" data-i18n="icsr2026VenueText2">
+        Today, the Tribe continues this tradition through active shellfish management, restoration programs, and aquaculture operations, integrating traditional ecological knowledge with modern conservation science. ICSR2026 will provide unique opportunities to learn from Tribal restoration practitioners and experience Indigenous approaches to&nbsp;shellfish&nbsp;stewardship.
+      </p>
+    </section>
+
+    <!-- Why Puget Sound -->
+    <section class="section">
+      <h2 data-i18n="icsr2026WhyPugetSound">Why Puget Sound?</h2>
+      <p style="font-size: 1rem; line-height: 1.6; max-width: 800px; margin: 0 auto 1.25rem;" data-i18n="icsr2026WhyPugetSoundIntro">
+        Puget Sound is a global hotspot for shellfish restoration innovation<br>with deep cultural connections to shellfish:
+      </p>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3 data-i18n="icsr2026WhyDiverseSpecies">🌊 Diverse Species</h3>
+          <p data-i18n="icsr2026WhyDiverseSpeciesDesc">Home to native Olympia oysters, Pacific oysters, geoduck clams, Manila clams, and numerous other shellfish species.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="icsr2026WhyResearch">🔬 Research Excellence</h3>
+          <p data-i18n="icsr2026WhyResearchDesc">Leading universities and research institutions advancing shellfish science and restoration techniques.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="icsr2026WhyTribal">🏛️ Tribal Leadership</h3>
+          <p data-i18n="icsr2026WhyTribalDesc">Coast Salish Tribes leading innovative restoration programs rooted in traditional knowledge.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="icsr2026WhyActiveRestoration">🦪 Active Restoration</h3>
+          <p data-i18n="icsr2026WhyActiveRestorationDesc">Dozens of ongoing restoration projects addressing water quality, habitat loss, and climate change.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="icsr2026WhyPolicy">🌏 Policy Innovation</h3>
+          <p data-i18n="icsr2026WhyPolicyDesc">Progressive shellfish management and restoration policies serving as models for other regions.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="icsr2026WhyEcosystem">🌿 Ecosystem Focus</h3>
+          <p data-i18n="icsr2026WhyEcosystemDesc">Holistic approaches integrating shellfish restoration with broader coastal ecosystem recovery.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expected Attendance -->
+    <section class="section compact-section text-center">
+      <h2 data-i18n="icsr2026ExpectedAttendance">Expected Attendance</h2>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap; max-width: 900px; margin: 0 auto;">
+        <div class="stat-item">
+          <h3 data-i18n="icsr2026ExpectedParticipants">350+</h3>
+          <p data-i18n="icsr2026ParticipantsLabel">Participants</p>
+        </div>
+        <div class="stat-item">
+          <h3 data-i18n="icsr2026ExpectedCountries">25+</h3>
+          <p data-i18n="icsr2026CountriesLabel">Countries</p>
+        </div>
+        <div class="stat-item">
+          <h3 data-i18n="icsr2026ExpectedPresentations">150+</h3>
+          <p data-i18n="icsr2026PresentationsLabel">Presentations</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration & Sponsorship -->
+    <section class="section compact-section">
+      <div class="grid grid-2" style="gap: 1.5rem;">
+        <div id="registration" style="background: linear-gradient(135deg, #1e5a8e, #2980b9); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+          <h2 style="color: white; margin-bottom: 0.5rem; font-size: 1.5rem;" data-i18n="icsr2026RegistrationHeading">Registration</h2>
+          <p style="font-size: 0.95rem; margin-bottom: 1rem; opacity: 0.95;" data-i18n="icsr2026RegistrationText">
+            Registration will open in early&nbsp;2026. Sign up for updates to be notified when registration becomes&nbsp;available.
+          </p>
+          <a href="mailto:info@shellfish-society.org?subject=ICSR2026 Updates" class="btn btn-primary" style="background-color: #546d7d;" data-i18n="icsr2026RequestUpdates">Request Updates</a>
+        </div>
+        <div style="background: linear-gradient(135deg, #546d7d, #6b8694); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+          <h2 style="color: white; margin-bottom: 0.5rem; font-size: 1.5rem;" data-i18n="icsr2026SponsorshipHeading">Sponsorship Opportunities</h2>
+          <p style="font-size: 0.95rem; margin-bottom: 1rem; opacity: 0.95;" data-i18n="icsr2026SponsorshipText">
+            Support ICSR2026 and connect with the global shellfish restoration community. Sponsorship opportunities include event support (field trips, reception, banquet) and student travel grants.
+          </p>
+          <a href="mailto:info@shellfish-society.org?subject=ICSR2026 Sponsorship" class="btn btn-primary" style="background-color: #1e5a8e;" data-i18n="icsr2026InquireSponsorship">Inquire About Sponsorship</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sponsors -->
+    <section class="section compact-section" style="background-color: #f8f9fa; padding: 2rem 1rem; border-radius: 8px;">
+      <h2 class="text-center" style="margin-bottom: 1.5rem;" data-i18n="icsr2026SponsorsHeading">Conference Sponsors</h2>
+      <p class="text-center" style="font-size: 1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;" data-i18n="icsr2026SponsorsIntro">
+        We gratefully acknowledge our sponsors who make ICSR2026 possible through their generous support.
+      </p>
+      <div class="grid grid-2" style="gap: 2rem; max-width: 800px; margin: 0 auto;">
+        <div class="card" style="text-align: center; padding: 2rem;">
+          <h3 style="color: var(--primary-blue); font-size: 1.3rem; margin-bottom: 0.75rem;" data-i18n="icsr2026SponsorPSRF">Puget Sound Restoration Foundation</h3>
+          <p style="font-size: 0.95rem; color: var(--text-light);" data-i18n="icsr2026HostOrganization">Host Organization</p>
+        </div>
+        <div class="card" style="text-align: center; padding: 2rem;">
+          <h3 style="color: var(--primary-blue); font-size: 1.3rem; margin-bottom: 0.75rem;" data-i18n="icsr2026SponsorTNC">The Nature Conservancy - California</h3>
+          <p style="font-size: 0.95rem; color: var(--text-light);" data-i18n="icsr2026SponsorLabel">Sponsor</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code of Conduct -->
+    <section class="section compact-section" style="background-color: #ecf0f1; padding: 1.25rem; border-radius: 8px;">
+      <h2 class="text-center" data-i18n="icsr2026CodeOfConduct">Code of Conduct</h2>
+      <p style="font-size: 0.95rem; line-height: 1.5; max-width: 900px; margin: 0 auto;" data-i18n="icsr2026CodeText">
+        ICSR2026 is committed to providing a <strong>respectful, inclusive, and&nbsp;welcoming environment</strong> for all participants. We maintain a <strong>zero-tolerance policy for&nbsp;harassment</strong> and inappropriate behavior. All attendees are expected to treat each other with respect, welcome diverse perspectives, and refrain from unauthorized photography or&nbsp;recording.
+      </p>
+      <p style="font-size: 0.95rem; line-height: 1.5; max-width: 900px; margin: 0.75rem auto 0; text-align: center;" data-i18n="icsr2026CodeContact">
+        <strong>Questions or concerns?</strong> Contact us at <a href="mailto:info@shellfish-society.org" style="color: var(--primary-blue);">info@shellfish-society.org</a>
+      </p>
+    </section>
+  </div>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- Mailing List Modal -->
+  <div id="mailingListModal" class="modal" role="dialog" aria-labelledby="mailingListModalTitle" aria-modal="true" onclick="if(event.target === this) closeMailingListModal()">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeMailingListModal()" data-i18n-aria-label="icsr2026ModalCloseAriaLabel" aria-label="Close mailing list modal">&times;</span>
+      <h2 id="mailingListModalTitle" style="margin-top: 0;" data-i18n="icsr2026ModalTitle">Join Our Mailing List</h2>
+      <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="icsr2026ModalSubtitle">Stay updated on ICSR2026 registration, abstract submissions, and conference details.</p>
+      <form id="mailingListForm" onsubmit="submitMailingList(event)">
+        <div class="form-group">
+          <label for="ml_firstName" data-i18n="icsr2026ModalFirstName">First Name <span class="required">*</span></label>
+          <input type="text" id="ml_firstName" name="firstName" required />
+        </div>
+        <div class="form-group">
+          <label for="ml_lastName" data-i18n="icsr2026ModalLastName">Last Name <span class="required">*</span></label>
+          <input type="text" id="ml_lastName" name="lastName" required />
+        </div>
+        <div class="form-group">
+          <label for="ml_email" data-i18n="icsr2026ModalEmail">Email <span class="required">*</span></label>
+          <input type="email" id="ml_email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="ml_organization" data-i18n="icsr2026ModalOrganization">Organization <span class="required">*</span></label>
+          <input type="text" id="ml_organization" name="organization" required />
+        </div>
+        <div class="form-group">
+          <label for="ml_note" data-i18n="icsr2026ModalNote">Note (Optional)</label>
+          <textarea id="ml_note" name="note" rows="3" data-i18n-placeholder="icsr2026ModalNotePlaceholder"></textarea>
+        </div>
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeMailingListModal()" data-i18n="icsr2026ModalCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="icsr2026ModalSubmit">Join Mailing List</button>
+        </div>
+      </form>
+      <div id="mailingListSuccess" style="display: none; text-align: center; padding: 2rem;">
+        <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;" data-i18n="icsr2026ModalSuccess">✓ Success!</h3>
+        <p data-i18n="icsr2026ModalSuccessText">Thank you for joining our mailing list. We'll keep you updated on ICSR2026.</p>
+        <button onclick="closeMailingListModal()" class="btn btn-primary" style="margin-top: 1rem;" data-i18n="icsr2026ModalClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/feedback-widget.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    function openMailingListModal() {
+      document.getElementById('mailingListModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMailingListModal() {
+      document.getElementById('mailingListModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      document.getElementById('mailingListForm').reset();
+      document.getElementById('mailingListForm').style.display = 'block';
+      document.getElementById('mailingListSuccess').style.display = 'none';
+    }
+
+    async function submitMailingList(event) {
+      event.preventDefault();
+
+      const formData = {
+        firstName: document.getElementById('ml_firstName').value,
+        lastName: document.getElementById('ml_lastName').value,
+        email: document.getElementById('ml_email').value,
+        organization: document.getElementById('ml_organization').value,
+        note: document.getElementById('ml_note').value,
+        source: 'ICSR2026',
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        // TODO: Replace with actual backend endpoint
+        const response = await fetch('/api/mailing-list', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          // Show success message
+          document.getElementById('mailingListForm').style.display = 'none';
+          document.getElementById('mailingListSuccess').style.display = 'block';
+        } else {
+          alert(t('icsr2026ModalErrorMessage'));
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert(t('icsr2026ModalErrorMessage'));
+      }
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeMailingListModal();
+      }
+    });
+
+    // Calendar event details
+    const calendarEvent = {
+      title: 'ICSR2026 - International Conference on Shellfish Restoration',
+      location: 'Puget Sound, Washington State',
+      description: 'Join us for the International Conference on Shellfish Restoration hosted by Puget Sound Restoration Foundation. Visit https://www.shellfish-society.org/icsr2026.html for details.',
+      startDate: '20261004',
+      endDate: '20261009',
+      startDateFormatted: '2026-10-04',
+      endDateFormatted: '2026-10-08'
+    };
+
+    // Download ICS file (works with Apple Calendar, Outlook, etc.)
+    function downloadICS() {
+      const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//ISRS//ICSR2026//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        'UID:icsr2026-' + timestamp + '@shellfish-society.org',
+        'DTSTAMP:' + timestamp,
+        'DTSTART;VALUE=DATE:' + calendarEvent.startDate,
+        'DTEND;VALUE=DATE:' + calendarEvent.endDate,
+        'SUMMARY:' + calendarEvent.title,
+        'DESCRIPTION:' + calendarEvent.description.replace(/\n/g, '\\n'),
+        'LOCATION:' + calendarEvent.location,
+        'STATUS:CONFIRMED',
+        'SEQUENCE:0',
+        'BEGIN:VALARM',
+        'TRIGGER:-P7D',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:ICSR2026 is one week away!',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', 'ICSR2026.ics');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Add to Google Calendar
+    function addToGoogleCalendar() {
+      const googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(calendarEvent.title) +
+        '&dates=' + calendarEvent.startDate + '/' + calendarEvent.endDate +
+        '&details=' + encodeURIComponent(calendarEvent.description) +
+        '&location=' + encodeURIComponent(calendarEvent.location) +
+        '&sf=true&output=xml';
+      window.open(googleUrl, '_blank');
+    }
+
+    // Add to Outlook (web version)
+    function addToOutlook() {
+      const outlookUrl = 'https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent' +
+        '&subject=' + encodeURIComponent(calendarEvent.title) +
+        '&startdt=' + calendarEvent.startDateFormatted +
+        '&enddt=' + calendarEvent.endDateFormatted +
+        '&body=' + encodeURIComponent(calendarEvent.description) +
+        '&location=' + encodeURIComponent(calendarEvent.location);
+      window.open(outlookUrl, '_blank');
+    }
+  </script>
+</body>
+</html>

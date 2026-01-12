@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Widget Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { color: #2E5A8A; }
+    .test-info {
+      background: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Feedback Widget Test Page</h1>
+
+  <div class="test-info">
+    <h2>Instructions:</h2>
+    <ol>
+      <li>Look for a floating button on the right side of the window</li>
+      <li>It should say "Feedback" and be rotated vertically</li>
+      <li>Click it to open the feedback modal</li>
+      <li>Fill out the form and submit</li>
+    </ol>
+
+    <h3>Expected Behavior:</h3>
+    <ul>
+      <li>Button appears on right side, centered vertically</li>
+      <li>Button has ISRS gradient colors (blue to teal)</li>
+      <li>Hovering reverses the gradient</li>
+      <li>Clicking opens a modal dialog</li>
+      <li>Form includes: name, email, component, type, rating, message</li>
+      <li>Submitting shows success message</li>
+    </ul>
+  </div>
+
+  <div class="test-info">
+    <h2>Debug Console:</h2>
+    <p>Open browser DevTools (F12) and check Console for any errors</p>
+    <button onclick="console.log('initFeedbackWidget exists:', typeof initFeedbackWidget); console.log('Button element:', document.getElementById('isrs-feedback-widget'));">
+      Debug Widget
+    </button>
+  </div>
+
+  <!-- Load feedback widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    console.log('Test page loaded');
+    console.log('initFeedbackWidget available:', typeof initFeedbackWidget);
+
+    // Initialize widget
+    if (typeof initFeedbackWidget !== 'undefined') {
+      console.log('Initializing feedback widget...');
+      initFeedbackWidget({ isAdminPortal: false });
+
+      // Check after a delay
+      setTimeout(() => {
+        const button = document.getElementById('isrs-feedback-widget');
+        console.log('Button element:', button);
+        if (button) {
+          console.log('✅ Button found!');
+          console.log('Button styles:', window.getComputedStyle(button));
+        } else {
+          console.error('❌ Button not found!');
+        }
+      }, 1000);
+    } else {
+      console.error('❌ initFeedbackWidget not defined');
+    }
+  </script>
+</body>
+</html>

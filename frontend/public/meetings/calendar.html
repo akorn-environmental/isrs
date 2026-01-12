@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Calendar - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .calendar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .calendar-header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .calendar-header h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2.5rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .calendar-controls {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-group label {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .filter-group select {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary-blue);
+      transform: translateY(-2px);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--light-gray);
+      padding: 0.25rem;
+      border-radius: 6px;
+    }
+
+    .view-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .view-btn.active {
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .meetings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .meeting-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .meeting-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .meeting-type-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .meeting-type-board {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .meeting-type-advisory_panel {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    .meeting-type-standing {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .meeting-type-ad_hoc {
+      background: #fef3c7;
+      color: #a16207;
+    }
+
+    .meeting-date {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .date-block {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .date-block .month {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .date-block .day {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .date-block .year {
+      font-size: 0.75rem;
+    }
+
+    .time-info {
+      flex: 1;
+    }
+
+    .time-info .time {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .time-info .duration {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+
+    .meeting-title {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 1.25rem;
+      color: var(--primary-blue);
+      margin: 0 0 0.5rem 0;
+      padding-right: 80px;
+    }
+
+    .meeting-committee {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .meeting-location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-dark);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .meeting-location svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .meeting-stats {
+      display: flex;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.875rem;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: var(--text-light);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .no-meetings {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: white;
+      border-radius: 8px;
+    }
+
+    .no-meetings svg {
+      width: 80px;
+      height: 80px;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .calendar-header h1 {
+        font-size: 1.75rem;
+      }
+
+      .calendar-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .meetings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <h1>📅 ISRS Meeting Calendar</h1>
+      <p>View upcoming Board, Committee, and Advisory Panel meetings</p>
+    </div>
+
+    <div class="calendar-controls">
+      <div class="filter-group">
+        <label for="committeeFilter">Committee:</label>
+        <select id="committeeFilter">
+          <option value="">All Committees</option>
+        </select>
+
+        <label for="monthFilter">Month:</label>
+        <select id="monthFilter">
+          <option value="">All Upcoming</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <button class="btn btn-primary" onclick="window.location.href='/meetings/schedule.html'">
+          Schedule New Meeting
+        </button>
+
+        <div class="view-toggle">
+          <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">Grid</button>
+          <button class="view-btn" onclick="setView('list')" id="listViewBtn">List</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="loadingState" class="loading">
+      <div class="spinner"></div>
+      <p>Loading meetings...</p>
+    </div>
+
+    <div id="noMeetingsState" class="no-meetings" style="display: none;">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+      </svg>
+      <h2>No Meetings Scheduled</h2>
+      <p>There are no upcoming meetings matching your filters.</p>
+    </div>
+
+    <div id="meetingsGrid" class="meetings-grid" style="display: none;"></div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    let allMeetings = [];
+    let allCommittees = [];
+
+    // Fetch committees for filter
+    async function fetchCommittees() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/committees`);
+        const data = await response.json();
+
+        if (data.success) {
+          allCommittees = data.data;
+          populateCommitteeFilter();
+        }
+      } catch (error) {
+        console.error('Error fetching committees:', error);
+      }
+    }
+
+    // Populate committee filter dropdown
+    function populateCommitteeFilter() {
+      const select = document.getElementById('committeeFilter');
+      allCommittees.forEach(committee => {
+        const option = document.createElement('option');
+        option.value = committee.id;
+        option.textContent = committee.name;
+        select.appendChild(option);
+      });
+    }
+
+    // Fetch meetings
+    async function fetchMeetings() {
+      try {
+        showLoading();
+        const response = await fetch(`${API_BASE_URL}/api/meetings`);
+        const data = await response.json();
+
+        if (data.success) {
+          allMeetings = data.data;
+          populateMonthFilter();
+          displayMeetings(allMeetings);
+        } else {
+          showNoMeetings();
+        }
+      } catch (error) {
+        console.error('Error fetching meetings:', error);
+        showNoMeetings();
+      }
+    }
+
+    // Populate month filter
+    function populateMonthFilter() {
+      const select = document.getElementById('monthFilter');
+      const months = new Set();
+
+      allMeetings.forEach(meeting => {
+        const date = new Date(meeting.scheduled_start);
+        const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        months.add(monthYear);
+      });
+
+      Array.from(months).sort().forEach(monthYear => {
+        const [year, month] = monthYear.split('-');
+        const date = new Date(year, parseInt(month) - 1);
+        const option = document.createElement('option');
+        option.value = monthYear;
+        option.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        select.appendChild(option);
+      });
+    }
+
+    // Display meetings
+    function displayMeetings(meetings) {
+      const grid = document.getElementById('meetingsGrid');
+
+      if (meetings.length === 0) {
+        showNoMeetings();
+        return;
+      }
+
+      hideLoading();
+      hideNoMeetings();
+      grid.style.display = 'grid';
+      grid.innerHTML = '';
+
+      meetings.forEach(meeting => {
+        grid.appendChild(createMeetingCard(meeting));
+      });
+    }
+
+    // Create meeting card
+    function createMeetingCard(meeting) {
+      const card = document.createElement('div');
+      card.className = 'meeting-card';
+      card.onclick = () => viewMeeting(meeting.id);
+
+      const startDate = new Date(meeting.scheduled_start);
+      const endDate = new Date(meeting.scheduled_end);
+      const duration = Math.round((endDate - startDate) / 60000); // minutes
+
+      const committeeTypeClass = `meeting-type-${meeting.committee_type}`;
+      const committeeTypeLabel = meeting.committee_type.replace('_', ' ').toUpperCase();
+
+      card.innerHTML = `
+        <div class="meeting-type-badge ${committeeTypeClass}">
+          ${committeeTypeLabel}
+        </div>
+
+        <div class="meeting-date">
+          <div class="date-block">
+            <div class="month">${startDate.toLocaleDateString('en-US', { month: 'short' })}</div>
+            <div class="day">${startDate.getDate()}</div>
+            <div class="year">${startDate.getFullYear()}</div>
+          </div>
+          <div class="time-info">
+            <div class="time">${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
+            <div class="duration">${duration} minutes</div>
+          </div>
+        </div>
+
+        <h3 class="meeting-title">${meeting.title}</h3>
+        <div class="meeting-committee">${meeting.committee_name}</div>
+
+        <div class="meeting-location">
+          ${meeting.is_virtual ? `
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+            </svg>
+            <span>Virtual Meeting</span>
+          ` : `
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span>${meeting.location || 'TBD'}</span>
+          `}
+        </div>
+
+        <div class="meeting-stats">
+          <div class="stat">
+            <span>👥</span>
+            <span>${meeting.accepted_count || 0}/${meeting.total_invites || 0} attending</span>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    // View meeting details
+    function viewMeeting(meetingId) {
+      window.location.href = `/meetings/view.html?id=${meetingId}`;
+    }
+
+    // Filter meetings
+    function filterMeetings() {
+      const committeeFilter = document.getElementById('committeeFilter').value;
+      const monthFilter = document.getElementById('monthFilter').value;
+
+      let filtered = allMeetings;
+
+      if (committeeFilter) {
+        filtered = filtered.filter(m => m.committee_id === committeeFilter);
+      }
+
+      if (monthFilter) {
+        const [year, month] = monthFilter.split('-');
+        filtered = filtered.filter(m => {
+          const date = new Date(m.scheduled_start);
+          const meetingMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+          return meetingMonth === monthFilter;
+        });
+      }
+
+      displayMeetings(filtered);
+    }
+
+    // View toggle
+    function setView(view) {
+      document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+      document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+
+      const grid = document.getElementById('meetingsGrid');
+      if (view === 'list') {
+        grid.style.gridTemplateColumns = '1fr';
+      } else {
+        grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(350px, 1fr))';
+      }
+    }
+
+    // UI helpers
+    function showLoading() {
+      document.getElementById('loadingState').style.display = 'block';
+      document.getElementById('meetingsGrid').style.display = 'none';
+      document.getElementById('noMeetingsState').style.display = 'none';
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingState').style.display = 'none';
+    }
+
+    function showNoMeetings() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('meetingsGrid').style.display = 'none';
+      document.getElementById('noMeetingsState').style.display = 'block';
+    }
+
+    function hideNoMeetings() {
+      document.getElementById('noMeetingsState').style.display = 'none';
+    }
+
+    // Event listeners
+    document.getElementById('committeeFilter').addEventListener('change', filterMeetings);
+    document.getElementById('monthFilter').addEventListener('change', filterMeetings);
+
+    // Initialize
+    async function init() {
+      await fetchCommittees();
+      await fetchMeetings();
+    }
+
+    init();
+  </script>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+</body>
+</html>

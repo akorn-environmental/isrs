@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting to New Portal - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <meta http-equiv="refresh" content="3;url=/login.html">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #2e5a8a 0%, #4a7ab5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    .redirect-container {
+      max-width: 700px;
+    }
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+    .btn {
+      display: inline-block;
+      background: white;
+      color: #2e5a8a;
+      padding: 1rem 2.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+    .feature {
+      background: rgba(255,255,255,0.1);
+      padding: 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .feature-desc {
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+    .countdown {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 2rem;
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <div class="redirect-container">
+    <div class="icon">🚀</div>
+    <h1>Welcome to the New Portal!</h1>
+    <p class="subtitle">We've upgraded to a more secure authentication system</p>
+
+    <p>
+      The legacy admin dashboard has been replaced with a modern, role-based portal
+      featuring passwordless authentication and enhanced security.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-title">Magic Link Login</div>
+        <div class="feature-desc">No passwords to remember - secure email verification</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🍪</div>
+        <div class="feature-title">Secure Cookies</div>
+        <div class="feature-desc">HTTP-only, SameSite protection against attacks</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">👥</div>
+        <div class="feature-title">Role-Based Access</div>
+        <div class="feature-desc">Granular permissions for different user types</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⏱️</div>
+        <div class="feature-title">24-Hour Sessions</div>
+        <div class="feature-desc">Improved security with shorter session lifetimes</div>
+      </div>
+    </div>
+
+    <a href="/login.html" class="btn">Go to Secure Login →</a>
+
+    <div class="countdown">
+      Redirecting automatically in <span id="countdown">3</span> seconds...
+    </div>
+  </div>
+
+  <script>
+    let seconds = 3;
+    const countdownEl = document.getElementById('countdown');
+
+    const interval = setInterval(() => {
+      seconds--;
+      countdownEl.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = '/login.html';
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

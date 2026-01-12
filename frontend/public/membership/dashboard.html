@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Dashboard - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <script src="/js/analytics.js?v=2.0"></script>
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .dashboard-header h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .dashboard-header .welcome-text {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .dashboard-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-card {
+      background: linear-gradient(135deg, #f6f8fc 0%, #eef2f7 100%);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .info-card.status-active {
+      border-color: var(--accent-teal);
+      border-left-width: 6px;
+    }
+
+    .info-card.status-expiring {
+      border-color: #f59e0b;
+      border-left-width: 6px;
+    }
+
+    .info-card.status-expired {
+      border-color: #dc2626;
+      border-left-width: 6px;
+    }
+
+    .info-card h3 {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .info-value {
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-expiring {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-expired {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .section-title {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      font-size: 1.75rem;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .donation-history {
+      background: white;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .donation-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .donation-table th {
+      background: var(--primary-blue);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .donation-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .donation-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .donation-table tr:hover {
+      background: var(--light-gray);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.875rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(46, 90, 138, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-accent {
+      background: var(--accent-teal);
+      color: white;
+    }
+
+    .btn-accent:hover {
+      background: #50b8b7;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(91, 192, 190, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-light);
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--light-gray);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+      border-left: 4px solid #c33;
+    }
+
+    .alert-box {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .alert-box strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .donation-table {
+        font-size: 0.875rem;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div>
+        <h1>Member Dashboard</h1>
+        <p class="welcome-text" id="welcomeText">Welcome back!</p>
+      </div>
+      <div>
+        <a href="/membership/join.html" class="btn btn-secondary">Update Profile</a>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Loading State -->
+      <div id="loadingContainer" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your dashboard...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorContainer" style="display: none;">
+        <div class="error-message">
+          <strong>Error Loading Dashboard</strong>
+          <p id="errorMessage"></p>
+          <div style="margin-top: 1rem;">
+            <button onclick="window.location.href='/membership/join.html'" class="btn btn-primary">
+              Join ISRS
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div id="dashboardContainer" style="display: none;">
+        <!-- Expiration Alert -->
+        <div id="expirationAlert" style="display: none;" class="alert-box">
+          <strong>⚠️ Membership Expiring Soon</strong>
+          <p id="expirationMessage"></p>
+        </div>
+
+        <!-- Membership Info Grid -->
+        <div class="dashboard-grid">
+          <!-- Membership Status Card -->
+          <div class="info-card" id="membershipCard">
+            <h3>🎫 Membership Status</h3>
+            <div class="info-item">
+              <span class="info-label">Type</span>
+              <span class="info-value" id="membershipType">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Status</span>
+              <span class="info-value"><span class="status-badge" id="membershipStatus">-</span></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Member Since</span>
+              <span class="info-value" id="memberSince">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Expires</span>
+              <span class="info-value" id="expiryDate">-</span>
+            </div>
+          </div>
+
+          <!-- Personal Info Card -->
+          <div class="info-card">
+            <h3>👤 Personal Information</h3>
+            <div class="info-item">
+              <span class="info-label">Name</span>
+              <span class="info-value" id="memberName">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <span class="info-value" id="memberEmail">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Organization</span>
+              <span class="info-value" id="memberOrg">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Location</span>
+              <span class="info-value" id="memberLocation">-</span>
+            </div>
+          </div>
+
+          <!-- Donation Summary Card -->
+          <div class="info-card">
+            <h3>💚 Giving Summary</h3>
+            <div class="info-item">
+              <span class="info-label">Total Donations</span>
+              <span class="info-value" id="totalDonations">$0</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Total Contributions</span>
+              <span class="info-value" id="totalContributions">$0</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Last Donation</span>
+              <span class="info-value" id="lastDonation">Never</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+          <button onclick="renewMembership()" class="btn btn-primary" id="renewButton" style="display: none;">
+            Renew Membership
+          </button>
+          <button onclick="makeDonation()" class="btn btn-accent">
+            Make a Donation
+          </button>
+          <a href="/conference/register.html" class="btn btn-secondary">
+            Register for Conference
+          </a>
+        </div>
+
+        <!-- Donation History -->
+        <h2 class="section-title">Donation History</h2>
+        <div id="donationHistoryContainer">
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p>No donation history yet</p>
+            <p style="font-size: 0.875rem; margin-top: 0.5rem;">Your donations help support global shellfish restoration efforts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    let memberData = null;
+
+    // Get member ID from URL parameter or localStorage
+    function getMemberId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const memberId = urlParams.get('id') || localStorage.getItem('isrs_member_id');
+      return memberId;
+    }
+
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount);
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    // Calculate days until expiry
+    function daysUntilExpiry(expiryDate) {
+      if (!expiryDate) return null;
+      const today = new Date();
+      const expiry = new Date(expiryDate);
+      const diffTime = expiry - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+
+    // Load member dashboard
+    async function loadDashboard() {
+      const memberId = getMemberId();
+
+      if (!memberId) {
+        showError('No member ID provided. Please log in or join ISRS.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/membership/dashboard/${memberId}`);
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to load dashboard');
+        }
+
+        memberData = result.data;
+        displayDashboard(memberData);
+
+        // Track page view
+        if (window.ISRSAnalytics) {
+          window.ISRSAnalytics.trackPageView('member_dashboard');
+        }
+
+      } catch (error) {
+        console.error('Dashboard error:', error);
+        showError(error.message);
+      }
+    }
+
+    // Display dashboard data
+    function displayDashboard(data) {
+      document.getElementById('loadingContainer').style.display = 'none';
+      document.getElementById('dashboardContainer').style.display = 'block';
+
+      // Welcome text
+      document.getElementById('welcomeText').textContent = `Welcome back, ${data.first_name}!`;
+
+      // Membership info
+      const membershipTypes = {
+        regular: 'Regular Member',
+        student: 'Student Member',
+        lifetime: 'Lifetime Member',
+        corporate: 'Corporate Member'
+      };
+      document.getElementById('membershipType').textContent = membershipTypes[data.membership_type] || data.membership_type;
+      document.getElementById('memberSince').textContent = formatDate(data.membership_start_date);
+
+      // Status badge
+      const statusBadge = document.getElementById('membershipStatus');
+      const membershipCard = document.getElementById('membershipCard');
+
+      if (data.membership_status === 'active') {
+        statusBadge.textContent = 'Active';
+        statusBadge.className = 'status-badge status-active';
+        membershipCard.classList.add('status-active');
+      } else if (data.membership_status === 'expired') {
+        statusBadge.textContent = 'Expired';
+        statusBadge.className = 'status-badge status-expired';
+        membershipCard.classList.add('status-expired');
+        document.getElementById('renewButton').style.display = 'inline-block';
+      }
+
+      // Expiry date
+      if (data.membership_type === 'lifetime') {
+        document.getElementById('expiryDate').textContent = 'Never';
+      } else {
+        document.getElementById('expiryDate').textContent = formatDate(data.membership_expiry_date);
+
+        // Check if expiring soon
+        const daysLeft = daysUntilExpiry(data.membership_expiry_date);
+        if (daysLeft !== null && daysLeft > 0 && daysLeft <= 60) {
+          const alert = document.getElementById('expirationAlert');
+          const message = document.getElementById('expirationMessage');
+          alert.style.display = 'block';
+          message.textContent = `Your membership expires in ${daysLeft} days. Renew now to continue enjoying member benefits.`;
+          membershipCard.classList.add('status-expiring');
+          document.getElementById('renewButton').style.display = 'inline-block';
+        }
+      }
+
+      // Personal info
+      document.getElementById('memberName').textContent = `${data.first_name} ${data.last_name}`;
+      document.getElementById('memberEmail').textContent = data.email;
+      document.getElementById('memberOrg').textContent = data.organization_name || 'Not specified';
+
+      const location = [data.city, data.state_province, data.country]
+        .filter(Boolean)
+        .join(', ') || 'Not specified';
+      document.getElementById('memberLocation').textContent = location;
+
+      // Donation summary
+      const donations = data.donations || [];
+      const totalDonations = donations.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
+      const totalContributions = totalDonations + (data.membership_dues_paid || 0);
+
+      document.getElementById('totalDonations').textContent = formatCurrency(totalDonations);
+      document.getElementById('totalContributions').textContent = formatCurrency(totalContributions);
+
+      if (donations.length > 0) {
+        const lastDonationDate = new Date(Math.max(...donations.map(d => new Date(d.donation_date))));
+        document.getElementById('lastDonation').textContent = formatDate(lastDonationDate);
+      }
+
+      // Donation history table
+      if (donations.length > 0) {
+        const historyContainer = document.getElementById('donationHistoryContainer');
+        historyContainer.innerHTML = `
+          <div class="donation-history">
+            <table class="donation-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Type</th>
+                  <th>In Honor Of</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${donations.map(d => `
+                  <tr>
+                    <td>${formatDate(d.donation_date)}</td>
+                    <td><strong>${formatCurrency(d.amount)}</strong></td>
+                    <td>${d.donation_type === 'one_time' ? 'One-Time' : d.donation_type}</td>
+                    <td>${d.in_honor_of || '-'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    }
+
+    // Show error
+    function showError(message) {
+      document.getElementById('loadingContainer').style.display = 'none';
+      document.getElementById('errorContainer').style.display = 'block';
+      document.getElementById('errorMessage').textContent = message;
+    }
+
+    // Renew membership
+    function renewMembership() {
+      // Redirect to join page with renewal parameter
+      window.location.href = `/membership/join.html?renew=${getMemberId()}`;
+    }
+
+    // Make donation
+    function makeDonation() {
+      // Open Zeffy donation form
+      alert('Donation form will open here (integrate Zeffy donation widget)');
+    }
+
+    // Initialize dashboard on page load
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+  </script>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+</body>
+</html>

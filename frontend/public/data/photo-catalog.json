@@ -1,0 +1,4050 @@
+{
+  "generated": "2025-12-15T15:24:27.359Z",
+  "version": "1.0",
+  "total_photos": 260,
+  "categories": {
+    "conference": {
+      "name": "Conferences",
+      "description": "Photos from ICSR conferences and events",
+      "defaultTags": [
+        "conference"
+      ],
+      "count": 92
+    },
+    "historic": {
+      "name": "Historic",
+      "description": "Historic photos from past ICSR conferences",
+      "defaultTags": [
+        "historic",
+        "archive"
+      ],
+      "count": 57
+    },
+    "headshots": {
+      "name": "People",
+      "description": "Professional headshots of ISRS members and speakers",
+      "defaultTags": [
+        "headshot",
+        "people"
+      ],
+      "count": 12
+    },
+    "logos": {
+      "name": "Logos",
+      "description": "Organization logos and branding assets",
+      "defaultTags": [
+        "logo",
+        "branding"
+      ],
+      "count": 62
+    },
+    "backgrounds": {
+      "name": "Backgrounds",
+      "description": "Background images and scenic photos",
+      "defaultTags": [
+        "background",
+        "scenic"
+      ],
+      "count": 37
+    }
+  },
+  "photos": [
+    {
+      "id": "conference-1",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-1.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-1.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 1",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-1.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-2",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-10.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-10.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 10",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-10.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-3",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-11.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-11.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 11",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-11.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-4",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-12.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-12.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 12",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-12.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-5",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-13.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-13.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 13",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-13.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-6",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-14.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-14.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 14",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-14.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-7",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-15.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-15.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 15",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-15.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-8",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-16.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-16.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 16",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-16.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-9",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-17.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-17.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 17",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-17.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-10",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-18.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-18.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 18",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-18.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-11",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-2.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-2.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 2",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-2.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-12",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-3.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-3.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 3",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-3.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-13",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-4.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-4.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 4",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-4.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-14",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-5.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-5.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 5",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-5.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-15",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-6.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-6.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 6",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-6.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-16",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-7.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-7.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 7",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-7.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-17",
+      "url": "/images/conference/2024-ICSR-Welcome Reception-9.jpg",
+      "thumbnail_url": "/images/conference/2024-ICSR-Welcome Reception-9.jpg",
+      "caption": "ICSR 2024 Welcome Reception - Photo 9",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference"
+      ],
+      "original_filename": "2024-ICSR-Welcome Reception-9.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia"
+    },
+    {
+      "id": "conference-18",
+      "url": "/images/conference/ICSR-2024-1.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-1.jpg",
+      "caption": "ICSR 2024 - Photo 1",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-1.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-19",
+      "url": "/images/conference/ICSR-2024-10.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-10.jpg",
+      "caption": "ICSR 2024 - Photo 10",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-10.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-20",
+      "url": "/images/conference/ICSR-2024-11.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-11.jpg",
+      "caption": "ICSR 2024 - Photo 11",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-11.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-21",
+      "url": "/images/conference/ICSR-2024-12.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-12.jpg",
+      "caption": "ICSR 2024 - Photo 12",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-12.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-22",
+      "url": "/images/conference/ICSR-2024-13.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-13.jpg",
+      "caption": "ICSR 2024 - Photo 13",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-13.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-23",
+      "url": "/images/conference/ICSR-2024-14.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-14.jpg",
+      "caption": "ICSR 2024 - Photo 14",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-14.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-24",
+      "url": "/images/conference/ICSR-2024-15.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-15.jpg",
+      "caption": "ICSR 2024 - Photo 15",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-15.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-25",
+      "url": "/images/conference/ICSR-2024-16.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-16.jpg",
+      "caption": "ICSR 2024 - Photo 16",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-16.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-26",
+      "url": "/images/conference/ICSR-2024-17.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-17.jpg",
+      "caption": "ICSR 2024 - Photo 17",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-17.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-27",
+      "url": "/images/conference/ICSR-2024-18.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-18.jpg",
+      "caption": "ICSR 2024 - Photo 18",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-18.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-28",
+      "url": "/images/conference/ICSR-2024-19.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-19.jpg",
+      "caption": "ICSR 2024 - Photo 19",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-19.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-29",
+      "url": "/images/conference/ICSR-2024-2.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-2.jpg",
+      "caption": "ICSR 2024 - Photo 2",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-2.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-30",
+      "url": "/images/conference/ICSR-2024-20.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-20.jpg",
+      "caption": "ICSR 2024 - Photo 20",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-20.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-31",
+      "url": "/images/conference/ICSR-2024-21.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-21.jpg",
+      "caption": "ICSR 2024 - Photo 21",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-21.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-32",
+      "url": "/images/conference/ICSR-2024-22.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-22.jpg",
+      "caption": "ICSR 2024 - Photo 22",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-22.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-33",
+      "url": "/images/conference/ICSR-2024-23.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-23.jpg",
+      "caption": "ICSR 2024 - Photo 23",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-23.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-34",
+      "url": "/images/conference/ICSR-2024-24.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-24.jpg",
+      "caption": "ICSR 2024 - Photo 24",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-24.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-35",
+      "url": "/images/conference/ICSR-2024-25.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-25.jpg",
+      "caption": "ICSR 2024 - Photo 25",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-25.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-36",
+      "url": "/images/conference/ICSR-2024-26.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-26.jpg",
+      "caption": "ICSR 2024 - Photo 26",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-26.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-37",
+      "url": "/images/conference/ICSR-2024-27.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-27.jpg",
+      "caption": "ICSR 2024 - Photo 27",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-27.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-38",
+      "url": "/images/conference/ICSR-2024-28.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-28.jpg",
+      "caption": "ICSR 2024 - Photo 28",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-28.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-39",
+      "url": "/images/conference/ICSR-2024-29.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-29.jpg",
+      "caption": "ICSR 2024 - Photo 29",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-29.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-40",
+      "url": "/images/conference/ICSR-2024-3.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-3.jpg",
+      "caption": "ICSR 2024 - Photo 3",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-3.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-41",
+      "url": "/images/conference/ICSR-2024-30.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-30.jpg",
+      "caption": "ICSR 2024 - Photo 30",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-30.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-42",
+      "url": "/images/conference/ICSR-2024-31.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-31.jpg",
+      "caption": "ICSR 2024 - Photo 31",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-31.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-43",
+      "url": "/images/conference/ICSR-2024-32.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-32.jpg",
+      "caption": "ICSR 2024 - Photo 32",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-32.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-44",
+      "url": "/images/conference/ICSR-2024-33.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-33.jpg",
+      "caption": "ICSR 2024 - Photo 33",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-33.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-45",
+      "url": "/images/conference/ICSR-2024-34.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-34.jpg",
+      "caption": "ICSR 2024 - Photo 34",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-34.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-46",
+      "url": "/images/conference/ICSR-2024-35.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-35.jpg",
+      "caption": "ICSR 2024 - Photo 35",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-35.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-47",
+      "url": "/images/conference/ICSR-2024-36.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-36.jpg",
+      "caption": "ICSR 2024 - Photo 36",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-36.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-48",
+      "url": "/images/conference/ICSR-2024-37.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-37.jpg",
+      "caption": "ICSR 2024 - Photo 37",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-37.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-49",
+      "url": "/images/conference/ICSR-2024-38.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-38.jpg",
+      "caption": "ICSR 2024 - Photo 38",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-38.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-50",
+      "url": "/images/conference/ICSR-2024-39.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-39.jpg",
+      "caption": "ICSR 2024 - Photo 39",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-39.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-51",
+      "url": "/images/conference/ICSR-2024-4.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-4.jpg",
+      "caption": "ICSR 2024 - Photo 4",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-4.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-52",
+      "url": "/images/conference/ICSR-2024-40.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-40.jpg",
+      "caption": "ICSR 2024 - Photo 40",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-40.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-53",
+      "url": "/images/conference/ICSR-2024-41.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-41.jpg",
+      "caption": "ICSR 2024 - Photo 41",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-41.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-54",
+      "url": "/images/conference/ICSR-2024-42.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-42.jpg",
+      "caption": "ICSR 2024 - Photo 42",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-42.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-55",
+      "url": "/images/conference/ICSR-2024-43.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-43.jpg",
+      "caption": "ICSR 2024 - Photo 43",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-43.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-56",
+      "url": "/images/conference/ICSR-2024-44.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-44.jpg",
+      "caption": "ICSR 2024 - Photo 44",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-44.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-57",
+      "url": "/images/conference/ICSR-2024-45.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-45.jpg",
+      "caption": "ICSR 2024 - Photo 45",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-45.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-58",
+      "url": "/images/conference/ICSR-2024-46.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-46.jpg",
+      "caption": "ICSR 2024 - Photo 46",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-46.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-59",
+      "url": "/images/conference/ICSR-2024-47.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-47.jpg",
+      "caption": "ICSR 2024 - Photo 47",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-47.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-60",
+      "url": "/images/conference/ICSR-2024-48.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-48.jpg",
+      "caption": "ICSR 2024 - Photo 48",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-48.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-61",
+      "url": "/images/conference/ICSR-2024-49.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-49.jpg",
+      "caption": "ICSR 2024 - Photo 49",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-49.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-62",
+      "url": "/images/conference/ICSR-2024-5.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-5.jpg",
+      "caption": "ICSR 2024 - Photo 5",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-5.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-63",
+      "url": "/images/conference/ICSR-2024-50.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-50.jpg",
+      "caption": "ICSR 2024 - Photo 50",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-50.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-64",
+      "url": "/images/conference/ICSR-2024-51.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-51.jpg",
+      "caption": "ICSR 2024 - Photo 51",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-51.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-65",
+      "url": "/images/conference/ICSR-2024-52.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-52.jpg",
+      "caption": "ICSR 2024 - Photo 52",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-52.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-66",
+      "url": "/images/conference/ICSR-2024-53.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-53.jpg",
+      "caption": "ICSR 2024 - Photo 53",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-53.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-67",
+      "url": "/images/conference/ICSR-2024-54.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-54.jpg",
+      "caption": "ICSR 2024 - Photo 54",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-54.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-68",
+      "url": "/images/conference/ICSR-2024-55.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-55.jpg",
+      "caption": "ICSR 2024 - Photo 55",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-55.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-69",
+      "url": "/images/conference/ICSR-2024-56.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-56.jpg",
+      "caption": "ICSR 2024 - Photo 56",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-56.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-70",
+      "url": "/images/conference/ICSR-2024-57.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-57.jpg",
+      "caption": "ICSR 2024 - Photo 57",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-57.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-71",
+      "url": "/images/conference/ICSR-2024-58.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-58.jpg",
+      "caption": "ICSR 2024 - Photo 58",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-58.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-72",
+      "url": "/images/conference/ICSR-2024-59.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-59.jpg",
+      "caption": "ICSR 2024 - Photo 59",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-59.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-73",
+      "url": "/images/conference/ICSR-2024-6.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-6.jpg",
+      "caption": "ICSR 2024 - Photo 6",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-6.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-74",
+      "url": "/images/conference/ICSR-2024-60.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-60.jpg",
+      "caption": "ICSR 2024 - Photo 60",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-60.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-75",
+      "url": "/images/conference/ICSR-2024-61.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-61.jpg",
+      "caption": "ICSR 2024 - Photo 61",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-61.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-76",
+      "url": "/images/conference/ICSR-2024-62.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-62.jpg",
+      "caption": "ICSR 2024 - Photo 62",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-62.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-77",
+      "url": "/images/conference/ICSR-2024-63.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-63.jpg",
+      "caption": "ICSR 2024 - Photo 63",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-63.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-78",
+      "url": "/images/conference/ICSR-2024-64.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-64.jpg",
+      "caption": "ICSR 2024 - Photo 64",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-64.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-79",
+      "url": "/images/conference/ICSR-2024-65.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-65.jpg",
+      "caption": "ICSR 2024 - Photo 65",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-65.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-80",
+      "url": "/images/conference/ICSR-2024-66.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-66.jpg",
+      "caption": "ICSR 2024 - Photo 66",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-66.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-81",
+      "url": "/images/conference/ICSR-2024-67.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-67.jpg",
+      "caption": "ICSR 2024 - Photo 67",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-67.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-82",
+      "url": "/images/conference/ICSR-2024-68.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-68.jpg",
+      "caption": "ICSR 2024 - Photo 68",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-68.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-83",
+      "url": "/images/conference/ICSR-2024-69.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-69.jpg",
+      "caption": "ICSR 2024 - Photo 69",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-69.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-84",
+      "url": "/images/conference/ICSR-2024-7.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-7.jpg",
+      "caption": "ICSR 2024 - Photo 7",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-7.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-85",
+      "url": "/images/conference/ICSR-2024-70.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-70.jpg",
+      "caption": "ICSR 2024 - Photo 70",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-70.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-86",
+      "url": "/images/conference/ICSR-2024-71.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-71.jpg",
+      "caption": "ICSR 2024 - Photo 71",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-71.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-87",
+      "url": "/images/conference/ICSR-2024-72.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-72.jpg",
+      "caption": "ICSR 2024 - Photo 72",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-72.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-88",
+      "url": "/images/conference/ICSR-2024-73.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-73.jpg",
+      "caption": "ICSR 2024 - Photo 73",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-73.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-89",
+      "url": "/images/conference/ICSR-2024-74.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-74.jpg",
+      "caption": "ICSR 2024 - Photo 74",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-74.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-90",
+      "url": "/images/conference/ICSR-2024-75.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-75.jpg",
+      "caption": "ICSR 2024 - Photo 75",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-75.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-91",
+      "url": "/images/conference/ICSR-2024-8.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-8.jpg",
+      "caption": "ICSR 2024 - Photo 8",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-8.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "conference-92",
+      "url": "/images/conference/ICSR-2024-9.jpg",
+      "thumbnail_url": "/images/conference/ICSR-2024-9.jpg",
+      "caption": "ICSR 2024 - Photo 9",
+      "description": "Photos from ICSR conferences and events",
+      "category": "conference",
+      "tags": [
+        "conference",
+        "icsr-2024",
+        "jekyll-island"
+      ],
+      "original_filename": "ICSR-2024-9.jpg",
+      "license_type": "ISRS",
+      "location_name": "Jekyll Island, Georgia",
+      "event": "ICSR 2024",
+      "photographer_name": "Trey Cooper"
+    },
+    {
+      "id": "historic-1",
+      "url": "/images/historic/20DH2344.JPG",
+      "thumbnail_url": "/images/historic/20DH2344.JPG",
+      "caption": "20DH2344",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2344.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-2",
+      "url": "/images/historic/20DH2358.JPG",
+      "thumbnail_url": "/images/historic/20DH2358.JPG",
+      "caption": "20DH2358",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2358.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-3",
+      "url": "/images/historic/20DH2378.JPG",
+      "thumbnail_url": "/images/historic/20DH2378.JPG",
+      "caption": "20DH2378",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2378.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-4",
+      "url": "/images/historic/20DH2383.JPG",
+      "thumbnail_url": "/images/historic/20DH2383.JPG",
+      "caption": "20DH2383",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2383.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-5",
+      "url": "/images/historic/20DH2388.JPG",
+      "thumbnail_url": "/images/historic/20DH2388.JPG",
+      "caption": "20DH2388",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2388.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-6",
+      "url": "/images/historic/20DH2403.JPG",
+      "thumbnail_url": "/images/historic/20DH2403.JPG",
+      "caption": "20DH2403",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2403.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-7",
+      "url": "/images/historic/20DH2405.JPG",
+      "thumbnail_url": "/images/historic/20DH2405.JPG",
+      "caption": "20DH2405",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2405.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-8",
+      "url": "/images/historic/20DH2415.JPG",
+      "thumbnail_url": "/images/historic/20DH2415.JPG",
+      "caption": "20DH2415",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2415.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-9",
+      "url": "/images/historic/20DH2417.JPG",
+      "thumbnail_url": "/images/historic/20DH2417.JPG",
+      "caption": "20DH2417",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2417.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-10",
+      "url": "/images/historic/20DH2421.JPG",
+      "thumbnail_url": "/images/historic/20DH2421.JPG",
+      "caption": "20DH2421",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2421.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-11",
+      "url": "/images/historic/20DH2426.JPG",
+      "thumbnail_url": "/images/historic/20DH2426.JPG",
+      "caption": "20DH2426",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH2426.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-12",
+      "url": "/images/historic/20DH3442.JPG",
+      "thumbnail_url": "/images/historic/20DH3442.JPG",
+      "caption": "20DH3442",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH3442.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-13",
+      "url": "/images/historic/20DH3447.JPG",
+      "thumbnail_url": "/images/historic/20DH3447.JPG",
+      "caption": "20DH3447",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH3447.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-14",
+      "url": "/images/historic/20DH3461.JPG",
+      "thumbnail_url": "/images/historic/20DH3461.JPG",
+      "caption": "20DH3461",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH3461.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-15",
+      "url": "/images/historic/20DH3464.JPG",
+      "thumbnail_url": "/images/historic/20DH3464.JPG",
+      "caption": "20DH3464",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH3464.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-16",
+      "url": "/images/historic/20DH4940.JPG",
+      "thumbnail_url": "/images/historic/20DH4940.JPG",
+      "caption": "20DH4940",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4940.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-17",
+      "url": "/images/historic/20DH4964.JPG",
+      "thumbnail_url": "/images/historic/20DH4964.JPG",
+      "caption": "20DH4964",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4964.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-18",
+      "url": "/images/historic/20DH4976.JPG",
+      "thumbnail_url": "/images/historic/20DH4976.JPG",
+      "caption": "20DH4976",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4976.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-19",
+      "url": "/images/historic/20DH4980.JPG",
+      "thumbnail_url": "/images/historic/20DH4980.JPG",
+      "caption": "20DH4980",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4980.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-20",
+      "url": "/images/historic/20DH4985.JPG",
+      "thumbnail_url": "/images/historic/20DH4985.JPG",
+      "caption": "20DH4985",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4985.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-21",
+      "url": "/images/historic/20DH4993.JPG",
+      "thumbnail_url": "/images/historic/20DH4993.JPG",
+      "caption": "20DH4993",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4993.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-22",
+      "url": "/images/historic/20DH4995.JPG",
+      "thumbnail_url": "/images/historic/20DH4995.JPG",
+      "caption": "20DH4995",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH4995.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-23",
+      "url": "/images/historic/20DH5000.JPG",
+      "thumbnail_url": "/images/historic/20DH5000.JPG",
+      "caption": "20DH5000",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5000.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-24",
+      "url": "/images/historic/20DH5013.JPG",
+      "thumbnail_url": "/images/historic/20DH5013.JPG",
+      "caption": "20DH5013",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5013.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-25",
+      "url": "/images/historic/20DH5017.JPG",
+      "thumbnail_url": "/images/historic/20DH5017.JPG",
+      "caption": "20DH5017",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5017.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-26",
+      "url": "/images/historic/20DH5021.JPG",
+      "thumbnail_url": "/images/historic/20DH5021.JPG",
+      "caption": "20DH5021",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5021.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-27",
+      "url": "/images/historic/20DH5024.JPG",
+      "thumbnail_url": "/images/historic/20DH5024.JPG",
+      "caption": "20DH5024",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5024.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-28",
+      "url": "/images/historic/20DH5031.JPG",
+      "thumbnail_url": "/images/historic/20DH5031.JPG",
+      "caption": "20DH5031",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5031.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-29",
+      "url": "/images/historic/20DH5033.JPG",
+      "thumbnail_url": "/images/historic/20DH5033.JPG",
+      "caption": "20DH5033",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5033.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-30",
+      "url": "/images/historic/20DH5039.JPG",
+      "thumbnail_url": "/images/historic/20DH5039.JPG",
+      "caption": "20DH5039",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "20DH5039.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-31",
+      "url": "/images/historic/DSC_0158.JPG",
+      "thumbnail_url": "/images/historic/DSC_0158.JPG",
+      "caption": "DSC 0158",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0158.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-32",
+      "url": "/images/historic/DSC_0159.JPG",
+      "thumbnail_url": "/images/historic/DSC_0159.JPG",
+      "caption": "DSC 0159",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0159.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-33",
+      "url": "/images/historic/DSC_0160.JPG",
+      "thumbnail_url": "/images/historic/DSC_0160.JPG",
+      "caption": "DSC 0160",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0160.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-34",
+      "url": "/images/historic/DSC_0164.JPG",
+      "thumbnail_url": "/images/historic/DSC_0164.JPG",
+      "caption": "DSC 0164",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0164.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-35",
+      "url": "/images/historic/DSC_0165.JPG",
+      "thumbnail_url": "/images/historic/DSC_0165.JPG",
+      "caption": "DSC 0165",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0165.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-36",
+      "url": "/images/historic/DSC_0166.JPG",
+      "thumbnail_url": "/images/historic/DSC_0166.JPG",
+      "caption": "DSC 0166",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0166.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-37",
+      "url": "/images/historic/DSC_0169.JPG",
+      "thumbnail_url": "/images/historic/DSC_0169.JPG",
+      "caption": "DSC 0169",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0169.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-38",
+      "url": "/images/historic/DSC_0170.JPG",
+      "thumbnail_url": "/images/historic/DSC_0170.JPG",
+      "caption": "DSC 0170",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0170.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-39",
+      "url": "/images/historic/DSC_0172.JPG",
+      "thumbnail_url": "/images/historic/DSC_0172.JPG",
+      "caption": "DSC 0172",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0172.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-40",
+      "url": "/images/historic/DSC_0176.JPG",
+      "thumbnail_url": "/images/historic/DSC_0176.JPG",
+      "caption": "DSC 0176",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0176.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-41",
+      "url": "/images/historic/DSC_0180.JPG",
+      "thumbnail_url": "/images/historic/DSC_0180.JPG",
+      "caption": "DSC 0180",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "DSC_0180.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-42",
+      "url": "/images/historic/EKRDatICSRreception.JPG",
+      "thumbnail_url": "/images/historic/EKRDatICSRreception.JPG",
+      "caption": "EKRDatICSRreception",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "EKRDatICSRreception.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-43",
+      "url": "/images/historic/France 09 023.jpg",
+      "thumbnail_url": "/images/historic/France 09 023.jpg",
+      "caption": "France 09 023",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 023.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-44",
+      "url": "/images/historic/France 09 035.jpg",
+      "thumbnail_url": "/images/historic/France 09 035.jpg",
+      "caption": "France 09 035",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 035.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-45",
+      "url": "/images/historic/France 09 037.jpg",
+      "thumbnail_url": "/images/historic/France 09 037.jpg",
+      "caption": "France 09 037",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 037.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-46",
+      "url": "/images/historic/France 09 039.jpg",
+      "thumbnail_url": "/images/historic/France 09 039.jpg",
+      "caption": "France 09 039",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 039.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-47",
+      "url": "/images/historic/France 09 066.jpg",
+      "thumbnail_url": "/images/historic/France 09 066.jpg",
+      "caption": "France 09 066",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 066.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-48",
+      "url": "/images/historic/France 09 071.jpg",
+      "thumbnail_url": "/images/historic/France 09 071.jpg",
+      "caption": "France 09 071",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 071.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-49",
+      "url": "/images/historic/France 09 073.jpg",
+      "thumbnail_url": "/images/historic/France 09 073.jpg",
+      "caption": "France 09 073",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 073.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-50",
+      "url": "/images/historic/France 09 079.jpg",
+      "thumbnail_url": "/images/historic/France 09 079.jpg",
+      "caption": "France 09 079",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 079.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-51",
+      "url": "/images/historic/France 09 080.jpg",
+      "thumbnail_url": "/images/historic/France 09 080.jpg",
+      "caption": "France 09 080",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 080.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-52",
+      "url": "/images/historic/France 09 081.jpg",
+      "thumbnail_url": "/images/historic/France 09 081.jpg",
+      "caption": "France 09 081",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 081.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-53",
+      "url": "/images/historic/France 09 095.jpg",
+      "thumbnail_url": "/images/historic/France 09 095.jpg",
+      "caption": "France 09 095",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "France 09 095.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-54",
+      "url": "/images/historic/IMG_0340.jpg",
+      "thumbnail_url": "/images/historic/IMG_0340.jpg",
+      "caption": "IMG 0340",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "IMG_0340.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-55",
+      "url": "/images/historic/gigas oysters in France.jpg",
+      "thumbnail_url": "/images/historic/gigas oysters in France.jpg",
+      "caption": "gigas oysters in France",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "gigas oysters in France.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-56",
+      "url": "/images/historic/photo-Janet&Sandy-by-Joseph-Mazurie.JPG",
+      "thumbnail_url": "/images/historic/photo-Janet&Sandy-by-Joseph-Mazurie.JPG",
+      "caption": "photo Janet&Sandy by Joseph Mazurie",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "photo-Janet&Sandy-by-Joseph-Mazurie.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "historic-57",
+      "url": "/images/historic/whatareyoulookingat-photo-by-Joseph.JPG",
+      "thumbnail_url": "/images/historic/whatareyoulookingat-photo-by-Joseph.JPG",
+      "caption": "whatareyoulookingat photo by Joseph",
+      "description": "Historic photos from past ICSR conferences",
+      "category": "historic",
+      "tags": [
+        "historic",
+        "archive",
+        "icsr-history"
+      ],
+      "original_filename": "whatareyoulookingat-photo-by-Joseph.JPG",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-1",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Danielle Kreeger 01.webp",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Danielle Kreeger 01.webp",
+      "caption": "Danielle Kreeger",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Danielle Kreeger 01.webp",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-2",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Danielle Kreeger 02.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Danielle Kreeger 02.jpg",
+      "caption": "Danielle Kreeger",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Danielle Kreeger 02.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-3",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Hunt Revell.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Hunt Revell.jpg",
+      "caption": "Hunt Revell",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Hunt Revell.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-4",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Jeb Byers.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Jeb Byers.jpg",
+      "caption": "Jeb Byers",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Jeb Byers.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-5",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Mark Risse.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Mark Risse.jpg",
+      "caption": "Mark Risse",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Mark Risse.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-6",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Matthew Raiford 01.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Matthew Raiford 01.jpg",
+      "caption": "Matthew Raiford",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Matthew Raiford 01.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-7",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Matthew Raiford 02.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Matthew Raiford 02.jpg",
+      "caption": "Matthew Raiford",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Matthew Raiford 02.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-8",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Pete Malinowski.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Pete Malinowski.jpg",
+      "caption": "Pete Malinowski",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Pete Malinowski.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-9",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Ryan Bethea 01.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Ryan Bethea 01.jpg",
+      "caption": "Ryan Bethea",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Ryan Bethea 01.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-10",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Ryan Bethea 02.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Ryan Bethea 02.jpg",
+      "caption": "Ryan Bethea",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Ryan Bethea 02.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-11",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Ryan Bethea 03.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Ryan Bethea 03.jpg",
+      "caption": "Ryan Bethea",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Ryan Bethea 03.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "headshots-12",
+      "url": "/images/headshots/IMAGE - HEADSHOT - Simon Branigan.jpg",
+      "thumbnail_url": "/images/headshots/IMAGE - HEADSHOT - Simon Branigan.jpg",
+      "caption": "Simon Branigan",
+      "description": "Professional headshots of ISRS members and speakers",
+      "category": "headshots",
+      "tags": [
+        "headshot",
+        "people"
+      ],
+      "original_filename": "IMAGE - HEADSHOT - Simon Branigan.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-1",
+      "url": "/images/logos/FB_IMG_1742420117715_edit_1742421317577.jpg",
+      "thumbnail_url": "/images/logos/FB_IMG_1742420117715_edit_1742421317577.jpg",
+      "caption": "FB IMG 1742420117715 edit 1742421317577",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "FB_IMG_1742420117715_edit_1742421317577.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-2",
+      "url": "/images/logos/IMAGE - pixlr - Boys looking over bay.png",
+      "thumbnail_url": "/images/logos/IMAGE - pixlr - Boys looking over bay.png",
+      "caption": "pixlr   Boys looking over bay",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "IMAGE - pixlr - Boys looking over bay.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-3",
+      "url": "/images/logos/IMAGE - pixlr - Seaweed farmer.png",
+      "thumbnail_url": "/images/logos/IMAGE - pixlr - Seaweed farmer.png",
+      "caption": "pixlr   Seaweed farmer",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "IMAGE - pixlr - Seaweed farmer.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-4",
+      "url": "/images/logos/LOGO - BESE.png",
+      "thumbnail_url": "/images/logos/LOGO - BESE.png",
+      "caption": "BESE",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - BESE.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-5",
+      "url": "/images/logos/LOGO - BESE.svg",
+      "thumbnail_url": "/images/logos/LOGO - BESE.svg",
+      "caption": "BESE",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - BESE.svg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-6",
+      "url": "/images/logos/LOGO - Builders Initiative.jpeg",
+      "thumbnail_url": "/images/logos/LOGO - Builders Initiative.jpeg",
+      "caption": "Builders Initiative",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Builders Initiative.jpeg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-7",
+      "url": "/images/logos/LOGO - Builders Initiative.png",
+      "thumbnail_url": "/images/logos/LOGO - Builders Initiative.png",
+      "caption": "Builders Initiative",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Builders Initiative.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-8",
+      "url": "/images/logos/LOGO - Creature Comforts Breewing.png",
+      "thumbnail_url": "/images/logos/LOGO - Creature Comforts Breewing.png",
+      "caption": "Creature Comforts Breewing",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Creature Comforts Breewing.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-9",
+      "url": "/images/logos/LOGO - ECSGA.png",
+      "thumbnail_url": "/images/logos/LOGO - ECSGA.png",
+      "caption": "ECSGA",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ECSGA.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-10",
+      "url": "/images/logos/LOGO - Florida Marine Aquaculture Coalition.png",
+      "thumbnail_url": "/images/logos/LOGO - Florida Marine Aquaculture Coalition.png",
+      "caption": "Florida Marine Aquaculture Coalition",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Florida Marine Aquaculture Coalition.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-11",
+      "url": "/images/logos/LOGO - GASG-HORIZONTAL-CW.png",
+      "thumbnail_url": "/images/logos/LOGO - GASG-HORIZONTAL-CW.png",
+      "caption": "GASG-HORIZONTAL-CW",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - GASG-HORIZONTAL-CW.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-12",
+      "url": "/images/logos/LOGO - GASG-HORIZONTAL-FC.png",
+      "thumbnail_url": "/images/logos/LOGO - GASG-HORIZONTAL-FC.png",
+      "caption": "GASG-HORIZONTAL-FC",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - GASG-HORIZONTAL-FC.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-13",
+      "url": "/images/logos/LOGO - Georgia Sea Grant.jpg",
+      "thumbnail_url": "/images/logos/LOGO - Georgia Sea Grant.jpg",
+      "caption": "Georgia Sea Grant",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Georgia Sea Grant.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-14",
+      "url": "/images/logos/LOGO - HTH FULL SPECTRUM AQUACULTURE.png",
+      "thumbnail_url": "/images/logos/LOGO - HTH FULL SPECTRUM AQUACULTURE.png",
+      "caption": "HTH FULL SPECTRUM AQUACULTURE",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - HTH FULL SPECTRUM AQUACULTURE.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-15",
+      "url": "/images/logos/LOGO - ICSR.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR.png",
+      "caption": "ICSR",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-16",
+      "url": "/images/logos/LOGO - ICSR2024 - Registration image.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024 - Registration image.png",
+      "caption": "ICSR2024 - Registration image",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024 - Registration image.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-17",
+      "url": "/images/logos/LOGO - ICSR2024 - angled lines.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024 - angled lines.png",
+      "caption": "ICSR2024 - angled lines",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024 - angled lines.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-18",
+      "url": "/images/logos/LOGO - ICSR2024 - blue clam.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024 - blue clam.png",
+      "caption": "ICSR2024 - blue clam",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024 - blue clam.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-19",
+      "url": "/images/logos/LOGO - ICSR2024 - blue mussel.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024 - blue mussel.png",
+      "caption": "ICSR2024 - blue mussel",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024 - blue mussel.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-20",
+      "url": "/images/logos/LOGO - ICSR2024 - blue oyster.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024 - blue oyster.png",
+      "caption": "ICSR2024 - blue oyster",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024 - blue oyster.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-21",
+      "url": "/images/logos/LOGO - ICSR2024 - blue shellfish.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024 - blue shellfish.png",
+      "caption": "ICSR2024 - blue shellfish",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024 - blue shellfish.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-22",
+      "url": "/images/logos/LOGO - ICSR2024.png",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024.png",
+      "caption": "ICSR2024",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-23",
+      "url": "/images/logos/LOGO - ICSR2024.svg",
+      "thumbnail_url": "/images/logos/LOGO - ICSR2024.svg",
+      "caption": "ICSR2024",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ICSR2024.svg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-24",
+      "url": "/images/logos/LOGO - ISRS - round - blue.png",
+      "thumbnail_url": "/images/logos/LOGO - ISRS - round - blue.png",
+      "caption": "ISRS - round - blue",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ISRS - round - blue.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-25",
+      "url": "/images/logos/LOGO - ISRS - round - green.png",
+      "thumbnail_url": "/images/logos/LOGO - ISRS - round - green.png",
+      "caption": "ISRS - round - green",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ISRS - round - green.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-26",
+      "url": "/images/logos/LOGO - ISRS - wide - green.png",
+      "thumbnail_url": "/images/logos/LOGO - ISRS - wide - green.png",
+      "caption": "ISRS - wide - green",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ISRS - wide - green.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-27",
+      "url": "/images/logos/LOGO - ISRS - wide.png",
+      "thumbnail_url": "/images/logos/LOGO - ISRS - wide.png",
+      "caption": "ISRS - wide",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ISRS - wide.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-28",
+      "url": "/images/logos/LOGO - Integrated Aqua Sytems Inc.png",
+      "thumbnail_url": "/images/logos/LOGO - Integrated Aqua Sytems Inc.png",
+      "caption": "Integrated Aqua Sytems Inc",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Integrated Aqua Sytems Inc.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-29",
+      "url": "/images/logos/LOGO - Jacobs RGB Black.png",
+      "thumbnail_url": "/images/logos/LOGO - Jacobs RGB Black.png",
+      "caption": "Jacobs RGB Black",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Jacobs RGB Black.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-30",
+      "url": "/images/logos/LOGO - Jacobs.png",
+      "thumbnail_url": "/images/logos/LOGO - Jacobs.png",
+      "caption": "Jacobs",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Jacobs.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-31",
+      "url": "/images/logos/LOGO - MAREX GASG - horizontal.png",
+      "thumbnail_url": "/images/logos/LOGO - MAREX GASG - horizontal.png",
+      "caption": "MAREX GASG - horizontal",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - MAREX GASG - horizontal.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-32",
+      "url": "/images/logos/LOGO - MAREX GASG - vertical CW.png",
+      "thumbnail_url": "/images/logos/LOGO - MAREX GASG - vertical CW.png",
+      "caption": "MAREX GASG - vertical CW",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - MAREX GASG - vertical CW.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-33",
+      "url": "/images/logos/LOGO - MAREX GASG - vertical FC.png",
+      "thumbnail_url": "/images/logos/LOGO - MAREX GASG - vertical FC.png",
+      "caption": "MAREX GASG - vertical FC",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - MAREX GASG - vertical FC.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-34",
+      "url": "/images/logos/LOGO - Moffat & Nichol.png",
+      "thumbnail_url": "/images/logos/LOGO - Moffat & Nichol.png",
+      "caption": "Moffat & Nichol",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Moffat & Nichol.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-35",
+      "url": "/images/logos/LOGO - NOAA Fisheries.png",
+      "thumbnail_url": "/images/logos/LOGO - NOAA Fisheries.png",
+      "caption": "NOAA Fisheries",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - NOAA Fisheries.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-36",
+      "url": "/images/logos/LOGO - NOAA Sea Grant.png",
+      "thumbnail_url": "/images/logos/LOGO - NOAA Sea Grant.png",
+      "caption": "NOAA Sea Grant",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - NOAA Sea Grant.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-37",
+      "url": "/images/logos/LOGO - NOAA.png",
+      "thumbnail_url": "/images/logos/LOGO - NOAA.png",
+      "caption": "NOAA",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - NOAA.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-38",
+      "url": "/images/logos/LOGO - Native Shorelines - a Davey company - black.png",
+      "thumbnail_url": "/images/logos/LOGO - Native Shorelines - a Davey company - black.png",
+      "caption": "Native Shorelines - a Davey company - black",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Native Shorelines - a Davey company - black.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-39",
+      "url": "/images/logos/LOGO - Native Shorelines - a Davey company white.png",
+      "thumbnail_url": "/images/logos/LOGO - Native Shorelines - a Davey company white.png",
+      "caption": "Native Shorelines - a Davey company white",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Native Shorelines - a Davey company white.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-40",
+      "url": "/images/logos/LOGO - Native Shorelines - a Davey company.png",
+      "thumbnail_url": "/images/logos/LOGO - Native Shorelines - a Davey company.png",
+      "caption": "Native Shorelines - a Davey company",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Native Shorelines - a Davey company.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-41",
+      "url": "/images/logos/LOGO - ONSET.png",
+      "thumbnail_url": "/images/logos/LOGO - ONSET.png",
+      "caption": "ONSET",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - ONSET.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-42",
+      "url": "/images/logos/LOGO - Oysters Carolina.png",
+      "thumbnail_url": "/images/logos/LOGO - Oysters Carolina.png",
+      "caption": "Oysters Carolina",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Oysters Carolina.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-43",
+      "url": "/images/logos/LOGO - Puget Sound Restoration Fund.jpg",
+      "thumbnail_url": "/images/logos/LOGO - Puget Sound Restoration Fund.jpg",
+      "caption": "Puget Sound Restoration Fund",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Puget Sound Restoration Fund.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-44",
+      "url": "/images/logos/LOGO - Puget Sound Restoration Fund.png",
+      "thumbnail_url": "/images/logos/LOGO - Puget Sound Restoration Fund.png",
+      "caption": "Puget Sound Restoration Fund",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Puget Sound Restoration Fund.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-45",
+      "url": "/images/logos/LOGO - Reef Ball Foundation.png",
+      "thumbnail_url": "/images/logos/LOGO - Reef Ball Foundation.png",
+      "caption": "Reef Ball Foundation",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Reef Ball Foundation.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-46",
+      "url": "/images/logos/LOGO - Sandbar Oyster Company.png",
+      "thumbnail_url": "/images/logos/LOGO - Sandbar Oyster Company.png",
+      "caption": "Sandbar Oyster Company",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Sandbar Oyster Company.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-47",
+      "url": "/images/logos/LOGO - Sapelo Sea Farms.png",
+      "thumbnail_url": "/images/logos/LOGO - Sapelo Sea Farms.png",
+      "caption": "Sapelo Sea Farms",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Sapelo Sea Farms.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-48",
+      "url": "/images/logos/LOGO - Schmidt Marine Technology Partners.png",
+      "thumbnail_url": "/images/logos/LOGO - Schmidt Marine Technology Partners.png",
+      "caption": "Schmidt Marine Technology Partners",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Schmidt Marine Technology Partners.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-49",
+      "url": "/images/logos/LOGO - Sea Grant - MS-AL.png",
+      "thumbnail_url": "/images/logos/LOGO - Sea Grant - MS-AL.png",
+      "caption": "Sea Grant - MS-AL",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Sea Grant - MS-AL.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-50",
+      "url": "/images/logos/LOGO - Sea Grant Georgia.png",
+      "thumbnail_url": "/images/logos/LOGO - Sea Grant Georgia.png",
+      "caption": "Sea Grant Georgia",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Sea Grant Georgia.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-51",
+      "url": "/images/logos/LOGO - Sea Grant National.png",
+      "thumbnail_url": "/images/logos/LOGO - Sea Grant National.png",
+      "caption": "Sea Grant National",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Sea Grant National.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-52",
+      "url": "/images/logos/LOGO - Society of Ecological Restoration.png",
+      "thumbnail_url": "/images/logos/LOGO - Society of Ecological Restoration.png",
+      "caption": "Society of Ecological Restoration",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Society of Ecological Restoration.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-53",
+      "url": "/images/logos/LOGO - South Carolina Sea Grant.png",
+      "thumbnail_url": "/images/logos/LOGO - South Carolina Sea Grant.png",
+      "caption": "South Carolina Sea Grant",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - South Carolina Sea Grant.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-54",
+      "url": "/images/logos/LOGO - Tarpon Blue Insurance Advisors v2.png",
+      "thumbnail_url": "/images/logos/LOGO - Tarpon Blue Insurance Advisors v2.png",
+      "caption": "Tarpon Blue Insurance Advisors v2",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Tarpon Blue Insurance Advisors v2.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-55",
+      "url": "/images/logos/LOGO - Tarpon Blue Insurance Advisors v2.svg",
+      "thumbnail_url": "/images/logos/LOGO - Tarpon Blue Insurance Advisors v2.svg",
+      "caption": "Tarpon Blue Insurance Advisors v2",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Tarpon Blue Insurance Advisors v2.svg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-56",
+      "url": "/images/logos/LOGO - Toadfish.png",
+      "thumbnail_url": "/images/logos/LOGO - Toadfish.png",
+      "caption": "Toadfish",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Toadfish.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-57",
+      "url": "/images/logos/LOGO - Toadfish.svg",
+      "thumbnail_url": "/images/logos/LOGO - Toadfish.svg",
+      "caption": "Toadfish",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - Toadfish.svg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-58",
+      "url": "/images/logos/LOGO - WSP.png",
+      "thumbnail_url": "/images/logos/LOGO - WSP.png",
+      "caption": "WSP",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - WSP.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-59",
+      "url": "/images/logos/LOGO - intermas.png",
+      "thumbnail_url": "/images/logos/LOGO - intermas.png",
+      "caption": "intermas",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - intermas.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-60",
+      "url": "/images/logos/LOGO - intermas.svg",
+      "thumbnail_url": "/images/logos/LOGO - intermas.svg",
+      "caption": "intermas",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "LOGO - intermas.svg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-61",
+      "url": "/images/logos/Sea-Grant-NOAA-Lg.svg",
+      "thumbnail_url": "/images/logos/Sea-Grant-NOAA-Lg.svg",
+      "caption": "Sea Grant NOAA Lg",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "Sea-Grant-NOAA-Lg.svg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "logos-62",
+      "url": "/images/logos/image001.jpg",
+      "thumbnail_url": "/images/logos/image001.jpg",
+      "caption": "image001",
+      "description": "Organization logos and branding assets",
+      "category": "logos",
+      "tags": [
+        "logo",
+        "branding"
+      ],
+      "original_filename": "image001.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-1",
+      "url": "/images/backgrounds/IMAGE - 2023 Jekyll Island Visitor Guide Cover.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - 2023 Jekyll Island Visitor Guide Cover.jpg",
+      "caption": "2023 Jekyll Island Visitor Guide Cover",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - 2023 Jekyll Island Visitor Guide Cover.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-2",
+      "url": "/images/backgrounds/IMAGE - 6883593f-6f18-4414-b3b2-70310cddedef.png",
+      "thumbnail_url": "/images/backgrounds/IMAGE - 6883593f-6f18-4414-b3b2-70310cddedef.png",
+      "caption": "6883593f 6f18 4414 b3b2 70310cddedef",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - 6883593f-6f18-4414-b3b2-70310cddedef.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-3",
+      "url": "/images/backgrounds/IMAGE - AntennaUnsplash.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - AntennaUnsplash.jpg",
+      "caption": "AntennaUnsplash",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - AntennaUnsplash.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-4",
+      "url": "/images/backgrounds/IMAGE - CumberlandOysterBeds.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - CumberlandOysterBeds.jpg",
+      "caption": "CumberlandOysterBeds",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - CumberlandOysterBeds.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-5",
+      "url": "/images/backgrounds/IMAGE - GeorgiaOysterBeds.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - GeorgiaOysterBeds.jpg",
+      "caption": "GeorgiaOysterBeds",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - GeorgiaOysterBeds.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-6",
+      "url": "/images/backgrounds/IMAGE - GeorgiaWildOysters.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - GeorgiaWildOysters.jpg",
+      "caption": "GeorgiaWildOysters",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - GeorgiaWildOysters.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-7",
+      "url": "/images/backgrounds/IMAGE - Golf tournament image of oyster and golf ball - pixlr v1.png",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Golf tournament image of oyster and golf ball - pixlr v1.png",
+      "caption": "Golf tournament image of oyster and golf ball   pixlr v1",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Golf tournament image of oyster and golf ball - pixlr v1.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-8",
+      "url": "/images/backgrounds/IMAGE - Golf tournament image of oyster and golf ball - pixlr v2.png",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Golf tournament image of oyster and golf ball - pixlr v2.png",
+      "caption": "Golf tournament image of oyster and golf ball   pixlr v2",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Golf tournament image of oyster and golf ball - pixlr v2.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-9",
+      "url": "/images/backgrounds/IMAGE - Great Dunes Park Pavilion.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Great Dunes Park Pavilion.jpg",
+      "caption": "Great Dunes Park Pavilion",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Great Dunes Park Pavilion.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-10",
+      "url": "/images/backgrounds/IMAGE - Jekyll Island Convention Center Floor Plan.jpeg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Jekyll Island Convention Center Floor Plan.jpeg",
+      "caption": "Jekyll Island Convention Center Floor Plan",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Jekyll Island Convention Center Floor Plan.jpeg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-11",
+      "url": "/images/backgrounds/IMAGE - Jekyll Island Convention Center.jpeg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Jekyll Island Convention Center.jpeg",
+      "caption": "Jekyll Island Convention Center",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Jekyll Island Convention Center.jpeg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-12",
+      "url": "/images/backgrounds/IMAGE - Jekyll Island Path.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Jekyll Island Path.jpg",
+      "caption": "Jekyll Island Path",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Jekyll Island Path.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-13",
+      "url": "/images/backgrounds/IMAGE - Jopwell-1325681.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Jopwell-1325681.jpg",
+      "caption": "Jopwell 1325681",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Jopwell-1325681.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-14",
+      "url": "/images/backgrounds/IMAGE - Oyster Restoration in Georgia.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - Oyster Restoration in Georgia.jpg",
+      "caption": "Oyster Restoration in Georgia",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - Oyster Restoration in Georgia.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-15",
+      "url": "/images/backgrounds/IMAGE - pexels -stasknop-5194059.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pexels -stasknop-5194059.jpg",
+      "caption": "pexels  stasknop 5194059",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pexels -stasknop-5194059.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-16",
+      "url": "/images/backgrounds/IMAGE - pexels-belle-co-847393.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pexels-belle-co-847393.jpg",
+      "caption": "pexels belle co 847393",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pexels-belle-co-847393.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-17",
+      "url": "/images/backgrounds/IMAGE - pexels-guillaume-meurice-994473.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pexels-guillaume-meurice-994473.jpg",
+      "caption": "pexels guillaume meurice 994473",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pexels-guillaume-meurice-994473.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-18",
+      "url": "/images/backgrounds/IMAGE - pikist -  Empty mussels.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist -  Empty mussels.jpg",
+      "caption": "pikist    Empty mussels",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist -  Empty mussels.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-19",
+      "url": "/images/backgrounds/IMAGE - pikist - Clam on SAV.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Clam on SAV.jpg",
+      "caption": "pikist   Clam on SAV",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Clam on SAV.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-20",
+      "url": "/images/backgrounds/IMAGE - pikist - Clamming.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Clamming.jpg",
+      "caption": "pikist   Clamming",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Clamming.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-21",
+      "url": "/images/backgrounds/IMAGE - pikist - Mixed shell colorful.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Mixed shell colorful.jpg",
+      "caption": "pikist   Mixed shell colorful",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Mixed shell colorful.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-22",
+      "url": "/images/backgrounds/IMAGE - pikist - Mixed shells closeup.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Mixed shells closeup.jpg",
+      "caption": "pikist   Mixed shells closeup",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Mixed shells closeup.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-23",
+      "url": "/images/backgrounds/IMAGE - pikist - Mussels in sand.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Mussels in sand.jpg",
+      "caption": "pikist   Mussels in sand",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Mussels in sand.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-24",
+      "url": "/images/backgrounds/IMAGE - pikist - Mussels.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Mussels.jpg",
+      "caption": "pikist   Mussels",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Mussels.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-25",
+      "url": "/images/backgrounds/IMAGE - pikist - Open clams.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Open clams.jpg",
+      "caption": "pikist   Open clams",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Open clams.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-26",
+      "url": "/images/backgrounds/IMAGE - pikist - Open mussels on seafloor.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Open mussels on seafloor.jpg",
+      "caption": "pikist   Open mussels on seafloor",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Open mussels on seafloor.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-27",
+      "url": "/images/backgrounds/IMAGE - pikist - Open scallop.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Open scallop.jpg",
+      "caption": "pikist   Open scallop",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Open scallop.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-28",
+      "url": "/images/backgrounds/IMAGE - pikist - Oysters closed.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Oysters closed.jpg",
+      "caption": "pikist   Oysters closed",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Oysters closed.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-29",
+      "url": "/images/backgrounds/IMAGE - pikist - Raw oysters.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Raw oysters.jpg",
+      "caption": "pikist   Raw oysters",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Raw oysters.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-30",
+      "url": "/images/backgrounds/IMAGE - pikist - Scallops.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pikist - Scallops.jpg",
+      "caption": "pikist   Scallops",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pikist - Scallops.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-31",
+      "url": "/images/backgrounds/IMAGE - pixlr - People working in an estuary.png",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pixlr - People working in an estuary.png",
+      "caption": "pixlr   People working in an estuary",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pixlr - People working in an estuary.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-32",
+      "url": "/images/backgrounds/IMAGE - pixlr - Raw oysters.png",
+      "thumbnail_url": "/images/backgrounds/IMAGE - pixlr - Raw oysters.png",
+      "caption": "pixlr   Raw oysters",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - pixlr - Raw oysters.png",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-33",
+      "url": "/images/backgrounds/IMAGE - the-tampa-bay-estuary-program-IcUQNzaHrvg-unsplash.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE - the-tampa-bay-estuary-program-IcUQNzaHrvg-unsplash.jpg",
+      "caption": "the tampa bay estuary program IcUQNzaHrvg unsplash",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE - the-tampa-bay-estuary-program-IcUQNzaHrvg-unsplash.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-34",
+      "url": "/images/backgrounds/IMAGE -julia-khalimova-3649208.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE -julia-khalimova-3649208.jpg",
+      "caption": "IMAGE  julia khalimova 3649208",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE -julia-khalimova-3649208.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-35",
+      "url": "/images/backgrounds/IMAGE-jonathan-reynaga-5022721.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE-jonathan-reynaga-5022721.jpg",
+      "caption": "IMAGE jonathan reynaga 5022721",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE-jonathan-reynaga-5022721.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-36",
+      "url": "/images/backgrounds/IMAGE-kindel-media-7148447.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE-kindel-media-7148447.jpg",
+      "caption": "IMAGE kindel media 7148447",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE-kindel-media-7148447.jpg",
+      "license_type": "ISRS"
+    },
+    {
+      "id": "backgrounds-37",
+      "url": "/images/backgrounds/IMAGE-tom-swinnen-2347462.jpg",
+      "thumbnail_url": "/images/backgrounds/IMAGE-tom-swinnen-2347462.jpg",
+      "caption": "IMAGE tom swinnen 2347462",
+      "description": "Background images and scenic photos",
+      "category": "backgrounds",
+      "tags": [
+        "background",
+        "scenic"
+      ],
+      "original_filename": "IMAGE-tom-swinnen-2347462.jpg",
+      "license_type": "ISRS"
+    }
+  ]
+}

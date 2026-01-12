@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Upload Test - ISRS</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/theme.js"></script>
+  <script src="/js/photo-uploader.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 900px; margin: 3rem auto; padding: 2rem;">
+      <h1 style="margin-bottom: 0.5rem;">Photo Upload Test</h1>
+      <p style="color: #666; margin-bottom: 2rem;">Test the photo upload component with AI analysis</p>
+
+      <div id="photo-uploader"></div>
+
+      <div id="uploadResults" style="display: none; margin-top: 2rem;">
+        <h2>Upload Results</h2>
+        <div id="resultsList"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    // Initialize photo uploader
+    const uploader = new PhotoUploader('photo-uploader', {
+      maxFiles: 5,
+      maxFileSize: 25,
+      onUploadStart: (count) => {
+        console.log(`Starting upload of ${count} files...`);
+      },
+      onUploadProgress: (uploaded, total) => {
+        console.log(`Progress: ${uploaded}/${total}`);
+      },
+      onUploadComplete: (photos) => {
+        console.log('Upload complete!', photos);
+        displayResults(photos);
+      },
+      onUploadError: (filename, error) => {
+        console.error(`Error uploading ${filename}:`, error);
+      }
+    });
+
+    function displayResults(photos) {
+      const resultsContainer = document.getElementById('uploadResults');
+      const resultsList = document.getElementById('resultsList');
+
+      resultsContainer.style.display = 'block';
+      resultsList.innerHTML = '';
+
+      photos.forEach(photo => {
+        const card = document.createElement('div');
+        card.style.cssText = 'background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;';
+
+        const aiAnalysis = photo.ai_analysis;
+        const species = aiAnalysis?.species?.length > 0 ? aiAnalysis.species.join(', ') : 'None detected';
+        const keywords = aiAnalysis?.keywords?.length > 0 ? aiAnalysis.keywords.join(', ') : 'None';
+
+        card.innerHTML = `
+          <div style="display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem;">
+            <div>
+              <img src="${photo.thumbnail_url}" alt="${photo.filename}" style="width: 100%; border-radius: 6px;">
+            </div>
+            <div>
+              <h3 style="margin: 0 0 0.5rem;">${photo.original_filename}</h3>
+              <p style="margin: 0.25rem 0;"><strong>File:</strong> ${photo.filename}</p>
+              <p style="margin: 0.25rem 0;"><strong>Size:</strong> ${photo.file_size_bytes / 1024 / 1024).toFixed(2)} MB</p>
+              <p style="margin: 0.25rem 0;"><strong>Dimensions:</strong> ${photo.width}×${photo.height}</p>
+
+              ${aiAnalysis ? `
+                <hr style="margin: 1rem 0; border: none; border-top: 1px solid #ddd;">
+                <h4 style="margin: 0 0 0.5rem; color: #2E5A8A;">🤖 AI Analysis</h4>
+                <p style="margin: 0.25rem 0;"><strong>Species:</strong> ${species}</p>
+                <p style="margin: 0.25rem 0;"><strong>Description:</strong> ${aiAnalysis.description || 'N/A'}</p>
+                <p style="margin: 0.25rem 0;"><strong>Keywords:</strong> ${keywords}</p>
+                <p style="margin: 0.25rem 0;"><strong>Habitat:</strong> ${aiAnalysis.habitat_type || 'Unknown'}</p>
+                <p style="margin: 0.25rem 0;"><strong>Technique:</strong> ${aiAnalysis.restoration_technique || 'Unknown'}</p>
+                <p style="margin: 0.25rem 0;"><strong>Suggested License:</strong> ${aiAnalysis.suggested_license || 'Unknown'}</p>
+              ` : '<p style="margin-top: 1rem; color: #999;">AI analysis not available</p>'}
+
+              <hr style="margin: 1rem 0; border: none; border-top: 1px solid #ddd;">
+              <p style="margin: 0.25rem 0;"><strong>License:</strong> ${photo.license_type}</p>
+              <p style="margin: 0.25rem 0;"><strong>Public:</strong> ${photo.is_public ? 'Yes' : 'No'}</p>
+            </div>
+          </div>
+        `;
+
+        resultsList.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Details - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .meeting-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    .meeting-header {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .meeting-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-board {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .badge-advisory_panel {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    .badge-standing {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .badge-ad_hoc {
+      background: #fef3c7;
+      color: #a16207;
+    }
+
+    .badge-virtual {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .meeting-title {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2rem;
+      color: var(--primary-blue);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .meeting-committee {
+      color: var(--text-light);
+      font-size: 1.125rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meeting-datetime {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #f6f8fc 0%, #eef2f7 100%);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .datetime-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .datetime-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-blue);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .datetime-info label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .datetime-info .value {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .meeting-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary-blue);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-success {
+      background: #15803d;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+    }
+
+    .description {
+      color: var(--text-dark);
+      line-height: 1.8;
+    }
+
+    .agenda-item {
+      padding: 1rem;
+      border-left: 4px solid var(--primary-blue);
+      background: #f9fafb;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .agenda-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+    }
+
+    .agenda-item-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      flex: 1;
+    }
+
+    .agenda-item-duration {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+
+    .agenda-item-description {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+
+    .agenda-item-presenter {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--primary-blue);
+    }
+
+    .attendee-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .attendee-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: #f9fafb;
+      border-radius: 6px;
+    }
+
+    .attendee-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .attendee-info {
+      flex: 1;
+    }
+
+    .attendee-name {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .attendee-org {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+
+    .rsvp-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .rsvp-accepted {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .rsvp-declined {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .rsvp-tentative {
+      background: #fef3c7;
+      color: #a16207;
+    }
+
+    .rsvp-pending {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 6px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+    }
+
+    .meeting-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .meeting-link svg {
+      width: 24px;
+      height: 24px;
+      color: var(--primary-blue);
+    }
+
+    .meeting-link-info {
+      flex: 1;
+    }
+
+    .meeting-link-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .meeting-link-url {
+      font-weight: 600;
+      color: var(--primary-blue);
+      word-break: break-all;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 968px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <div class="meeting-container">
+    <a href="/meetings/calendar.html" class="back-link">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Calendar
+    </a>
+
+    <div id="loadingState" class="loading">
+      <div class="spinner"></div>
+      <p>Loading meeting details...</p>
+    </div>
+
+    <div id="meetingContent" style="display: none;">
+      <div class="meeting-header">
+        <div class="meeting-meta" id="meetingMeta"></div>
+        <h1 class="meeting-title" id="meetingTitle"></h1>
+        <div class="meeting-committee" id="meetingCommittee"></div>
+        <div class="meeting-datetime" id="meetingDatetime"></div>
+        <div class="meeting-actions" id="meetingActions"></div>
+      </div>
+
+      <div class="content-grid">
+        <div class="main-content">
+          <div class="card">
+            <h3>📝 Description</h3>
+            <div class="description" id="meetingDescription">
+              No description provided.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>📋 Agenda</h3>
+            <div id="meetingAgenda">
+              <p style="color: var(--text-light);">No agenda items yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar">
+          <div class="card">
+            <h3>📊 Attendance</h3>
+            <div class="stats-grid" id="attendanceStats"></div>
+            <div id="meetingLink"></div>
+          </div>
+
+          <div class="card">
+            <h3>👥 Attendees</h3>
+            <div class="attendee-list" id="attendeeList">
+              <p style="color: var(--text-light);">No attendees yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    const urlParams = new URLSearchParams(window.location.search);
+    const meetingId = urlParams.get('id');
+
+    let currentMeeting = null;
+
+    async function fetchMeetingDetails() {
+      if (!meetingId) {
+        alert('No meeting ID provided');
+        window.location.href = '/meetings/calendar.html';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/meetings/${meetingId}`);
+        const data = await response.json();
+
+        if (data.success) {
+          currentMeeting = data.data;
+          displayMeeting(currentMeeting);
+        } else {
+          alert('Meeting not found');
+          window.location.href = '/meetings/calendar.html';
+        }
+      } catch (error) {
+        console.error('Error fetching meeting:', error);
+        alert('Error loading meeting details');
+      }
+    }
+
+    function displayMeeting(meeting) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('meetingContent').style.display = 'block';
+
+      // Meta badges
+      const meta = document.getElementById('meetingMeta');
+      const committeeTypeClass = `badge-${meeting.committee_type}`;
+      const committeeTypeLabel = meeting.committee_type.replace('_', ' ').toUpperCase();
+
+      meta.innerHTML = `
+        <span class="badge ${committeeTypeClass}">${committeeTypeLabel}</span>
+        ${meeting.is_virtual ? '<span class="badge badge-virtual">Virtual</span>' : '<span class="badge" style="background: #f3f4f6; color: #6b7280;">In-Person</span>'}
+        <span class="badge" style="background: #f3f4f6; color: #6b7280;">${meeting.status.toUpperCase()}</span>
+      `;
+
+      // Title and committee
+      document.getElementById('meetingTitle').textContent = meeting.title;
+      document.getElementById('meetingCommittee').textContent = meeting.committee_name;
+
+      // Date/time info
+      const startDate = new Date(meeting.scheduled_start);
+      const endDate = new Date(meeting.scheduled_end);
+      const duration = Math.round((endDate - startDate) / 60000);
+
+      document.getElementById('meetingDatetime').innerHTML = `
+        <div class="datetime-item">
+          <div class="datetime-icon">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2z"/>
+            </svg>
+          </div>
+          <div class="datetime-info">
+            <label>Date</label>
+            <div class="value">${startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          </div>
+        </div>
+
+        <div class="datetime-item">
+          <div class="datetime-icon">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
+            </svg>
+          </div>
+          <div class="datetime-info">
+            <label>Time</label>
+            <div class="value">${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
+          </div>
+        </div>
+
+        <div class="datetime-item">
+          <div class="datetime-icon">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+            </svg>
+          </div>
+          <div class="datetime-info">
+            <label>Duration</label>
+            <div class="value">${duration} minutes</div>
+          </div>
+        </div>
+
+        ${!meeting.is_virtual ? `
+        <div class="datetime-item">
+          <div class="datetime-icon">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          </div>
+          <div class="datetime-info">
+            <label>Location</label>
+            <div class="value">${meeting.location || 'TBD'}</div>
+          </div>
+        </div>
+        ` : ''}
+      `;
+
+      // Actions
+      const actions = document.getElementById('meetingActions');
+      actions.innerHTML = `
+        <button class="btn btn-success" onclick="rsvp('accepted')">✓ Accept</button>
+        <button class="btn btn-danger" onclick="rsvp('declined')">✗ Decline</button>
+        <button class="btn btn-secondary" onclick="rsvp('tentative')">? Tentative</button>
+        ${meeting.meeting_url ? `<button class="btn btn-primary" onclick="window.open('${meeting.meeting_url}', '_blank')">Join Meeting</button>` : ''}
+      `;
+
+      // Description
+      if (meeting.description) {
+        document.getElementById('meetingDescription').innerHTML = meeting.description.replace(/\n/g, '<br>');
+      }
+
+      // Agenda
+      if (meeting.agenda && meeting.agenda.length > 0) {
+        const agendaHtml = meeting.agenda.map(item => `
+          <div class="agenda-item">
+            <div class="agenda-item-header">
+              <div class="agenda-item-title">${item.title}</div>
+              ${item.duration_minutes ? `<div class="agenda-item-duration">${item.duration_minutes} min</div>` : ''}
+            </div>
+            ${item.description ? `<div class="agenda-item-description">${item.description}</div>` : ''}
+            ${item.presenter_name ? `
+              <div class="agenda-item-presenter">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Presenter: ${item.presenter_name}
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+        document.getElementById('meetingAgenda').innerHTML = agendaHtml;
+      }
+
+      // Attendance stats
+      const acceptedCount = meeting.attendees ? meeting.attendees.filter(a => a.rsvp_status === 'accepted').length : 0;
+      const declinedCount = meeting.attendees ? meeting.attendees.filter(a => a.rsvp_status === 'declined').length : 0;
+      const totalCount = meeting.attendees ? meeting.attendees.length : 0;
+
+      document.getElementById('attendanceStats').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-value">${acceptedCount}</div>
+          <div class="stat-label">Accepted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${totalCount}</div>
+          <div class="stat-label">Invited</div>
+        </div>
+      `;
+
+      // Meeting link
+      if (meeting.is_virtual && meeting.meeting_url) {
+        document.getElementById('meetingLink').innerHTML = `
+          <div class="meeting-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            <div class="meeting-link-info">
+              <div class="meeting-link-label">Meeting Link</div>
+              <a href="${meeting.meeting_url}" target="_blank" class="meeting-link-url">${meeting.meeting_url}</a>
+            </div>
+          </div>
+          ${meeting.meeting_password ? `
+            <p style="font-size: 0.875rem; color: var(--text-light);">
+              <strong>Password:</strong> ${meeting.meeting_password}
+            </p>
+          ` : ''}
+        `;
+      }
+
+      // Attendees
+      if (meeting.attendees && meeting.attendees.length > 0) {
+        const attendeesHtml = meeting.attendees.map(attendee => {
+          const initials = `${attendee.first_name.charAt(0)}${attendee.last_name.charAt(0)}`;
+          const rsvpClass = `rsvp-${attendee.rsvp_status}`;
+          return `
+            <div class="attendee-item">
+              <div class="attendee-avatar">${initials}</div>
+              <div class="attendee-info">
+                <div class="attendee-name">${attendee.first_name} ${attendee.last_name}</div>
+                ${attendee.organization_name ? `<div class="attendee-org">${attendee.organization_name}</div>` : ''}
+              </div>
+              <span class="rsvp-badge ${rsvpClass}">${attendee.rsvp_status.replace('_', ' ')}</span>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('attendeeList').innerHTML = attendeesHtml;
+      }
+    }
+
+    async function rsvp(status) {
+      // For now, just show a message. In a real app, you'd get the current user's ID
+      const note = prompt(`RSVP as "${status}". Add a note (optional):`);
+
+      alert('RSVP feature requires user authentication. This will be implemented in Phase 2!');
+
+      // Example of how it would work:
+      // const userId = getCurrentUserId(); // would come from auth system
+      // const response = await fetch(`${API_BASE_URL}/api/meetings/${meetingId}/rsvp`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     attendee_id: userId,
+      //     rsvp_status: status,
+      //     rsvp_note: note
+      //   })
+      // });
+    }
+
+    // Initialize
+    fetchMeetingDetails();
+  </script>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+ORGANIZATION OVERVIEW:
+The International Shellfish Restoration Society (ISRS) is a 501(c)(3) nonprofit organization (EIN: 39-2829151) established in 2024 to support the global shellfish restoration community. We emerged from the International Conference on Shellfish Restoration (ICSR), which has convened restoration professionals, scientists, and practitioners since 1996. Our network includes 2,600+ researchers, government agencies, and conservation organizations across six continents working to restore vital oyster, mussel, and clam ecosystems.
+
+Website: https://shellfish-society.org
+Domain: shellfish-society.org (verified with SPF, DKIM, DMARC)
+
+HOW WE PLAN TO USE AMAZON SES:
+
+1. EMAIL TYPES & FREQUENCY
+
+A. Conference Registration Confirmations (Transactional)
+- Sent when attendees register for our biennial ICSR conference
+- Volume: 300-400 total registrations expected for ICSR2026 (Oct 4-8, 2026)
+- Timing: Primarily Sept-Oct 2025 as registration opens
+- Content: Registration confirmation, payment receipt from Zeffy processor, venue details, confirmation number
+
+B. Membership Communications (Transactional)
+- Welcome emails when people join ISRS as members
+- Renewal reminders (annual/lifetime memberships)
+- Volume: 10-20 per month
+- Recipients: Only those who explicitly sign up via our membership forms
+
+C. Board & Admin Notifications (Internal)
+- Meeting reminders for 20 board members and key personnel
+- Vote notifications, document sharing
+- Volume: 5-10 per week during active periods
+- Recipients: Fixed list of 20 internal team members only
+
+D. Occasional Community Updates (Opt-in)
+- Quarterly newsletters to opted-in community (2-3 per year maximum)
+- Conference announcements
+- Volume: 500-1,000 emails per quarter to explicit opt-ins only
+- Clear unsubscribe in every email
+
+TOTAL ESTIMATED VOLUME:
+- Daily: 5-15 emails (mostly transactional)
+- Monthly: 150-300 emails average
+- Peak periods: Sept-Oct 2025 (conference season) may reach 20-30 emails/day
+- Annual: Under 5,000 emails total
+
+2. RECIPIENT LIST MAINTENANCE
+
+Data Collection Methods:
+- Conference registration forms (explicit consent with checkbox)
+- Membership application forms (consent to receive communications)
+- Website contact forms (permission checkbox required)
+- Newsletter signup with double opt-in
+- ZERO purchased, rented, or third-party lists - 100% organic opt-ins
+
+Database Management:
+- PostgreSQL database with email validation at entry point
+- Regular data quality audits to remove invalid/inactive addresses
+- Email verification checks before adding to database
+- Segmented lists by communication type (transactional vs updates)
+- Automatic suppression list for bounces and complaints
+
+List Hygiene:
+- Remove hard bounces immediately
+- Remove soft bounces after 3 failed attempts
+- Regular cleanup of inactive subscribers (no engagement in 12 months)
+- Quarterly list review and validation
+- Maintain separate suppression list integrated with SES
+
+3. BOUNCE & COMPLAINT MANAGEMENT
+
+Technical Implementation:
+- SNS topics configured for bounce and complaint notifications
+- Webhook endpoints to process feedback in real-time
+- Automated suppression list updates
+- Dashboard monitoring of email health metrics
+- Alerts if bounce rate exceeds 2% or complaint rate exceeds 0.1%
+
+Bounce Handling:
+- Hard bounces: Immediate removal from all mailing lists
+- Soft bounces: Retry 3 times over 72 hours, then remove
+- Bounce rate monitoring with alerts
+- Monthly bounce rate reports and analysis
+- Investigation of patterns to identify systemic issues
+
+Complaint Handling:
+- Immediate removal upon complaint notification
+- Complaint rate monitoring (target <0.1%)
+- Root cause investigation for all complaints
+- Feedback loop integration with AWS SES
+- Manual review process for recurring issues
+
+Unsubscribe Process:
+- One-click unsubscribe link in every email footer
+- Unsubscribe requests honored within 24 hours
+- Separate preference management for different email types
+- Users can opt out of updates while keeping transactional emails
+- Confirmation email sent when unsubscribed
+
+4. EXAMPLE EMAILS
+
+Example 1 - Conference Registration:
+Subject: ICSR2026 Registration Confirmation - October 4-8, 2026
+Content: Thank you for registering for ICSR2026 in Puget Sound, WA. Your confirmation number is [#]. Please complete payment via [Zeffy link]. Conference dates: October 4-8, 2026 at Little Creek Casino Resort. Questions? Email info@shellfish-society.org
+
+Example 2 - Payment Receipt:
+Subject: Payment Receipt - ICSR2026 Registration
+Content: Payment received: $475 for ICSR2026 conference registration. Receipt #[number]. Payment processed via Zeffy. Contact: info@shellfish-society.org
+
+Example 3 - Board Meeting Reminder:
+Subject: ISRS Board Meeting - November 15, 2025
+Content: Reminder: ISRS Board meeting scheduled for Nov 15, 2025 at 2pm EST via Zoom. Agenda attached. [Zoom link]
+
+All emails include: Physical address, clear sender identification (ISRS), one-click unsubscribe link, privacy policy link.
+
+5. COMPLIANCE & BEST PRACTICES
+
+CAN-SPAM Compliance:
+- Clear identification of sender (ISRS)
+- Accurate subject lines (no deceptive practices)
+- Physical mailing address in footer
+- One-click unsubscribe mechanism
+- Honor opt-out requests within 24 hours
+- No false or misleading header information
+
+Additional Practices:
+- GDPR compliant for EU contacts (data protection, right to be forgotten)
+- Documented privacy policy on website
+- Data retention policies (emails kept for 7 years per nonprofit requirements)
+- Regular compliance audits
+- Staff training on email best practices
+- Accessible email design (WCAG compliant)
+
+Sender Reputation Management:
+- Gradual volume ramp-up (warm-up period)
+- Monitor sender reputation scores
+- Maintain low bounce/complaint rates
+- Responsive to feedback
+- Regular list hygiene
+- Quality content relevant to recipients
+
+WHY WE NEED AMAZON SES:
+- Reliable infrastructure for time-sensitive conference confirmations
+- Cost-effective solution for nonprofit budget
+- Excellent deliverability reputation
+- Detailed analytics and monitoring capabilities
+- Integration with our Node.js/PostgreSQL backend
+- Compliance tools and best practices support
+
+We are a legitimate scientific nonprofit organization with minimal email needs - primarily transactional communications for our conference and internal operations. We're committed to being responsible email senders and maintaining AWS SES's excellent reputation.
+
+Thank you for reconsidering our request.

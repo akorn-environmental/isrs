@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Dashboard | ISRS Admin</title>
+  <link rel="stylesheet" href="/css/safmc-style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .admin-nav a {
+      margin: 0 0.75rem;
+      text-decoration: none;
+      color: #374151;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .admin-nav a:hover {
+      background: #e8f0fe;
+    }
+
+    .admin-nav a.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .container {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .dashboard-header h1 {
+      margin: 0;
+      color: #1e3c72;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .kpi-label {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-change {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .kpi-change.positive {
+      color: #10b981;
+    }
+
+    .kpi-change.negative {
+      color: #ef4444;
+    }
+
+    .charts-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .chart-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1e3c72;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    .insights-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .insight-card {
+      padding: 1rem;
+      border-left: 4px solid #667eea;
+      background: #f9fafb;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+
+    .insight-title {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .insight-text {
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .table-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 1rem;
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .data-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .data-table tr:hover {
+      background: #f9fafb;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: white;
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <nav class="admin-nav">
+      <div>
+        <a href="/admin/dashboard.html">Dashboard</a>
+        <a href="/admin/contacts.html">Contacts</a>
+        <a href="/admin/funding-pipeline.html">Pipeline</a>
+        <a href="/admin/email-campaigns.html">Email</a>
+        <a href="/admin/abstracts.html">Abstracts</a>
+        <a href="/admin/analytics.html" class="active">Analytics</a>
+      </div>
+      <a href="#" onclick="logout()" style="color: #dc2626;">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h1>📊 Analytics Dashboard</h1>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Contacts</div>
+        <div class="kpi-value" id="kpi-contacts">0</div>
+        <div class="kpi-change positive" id="kpi-contacts-change">↑ +0 this month</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Total Funding Pipeline</div>
+        <div class="kpi-value" id="kpi-funding">$0</div>
+        <div class="kpi-change positive" id="kpi-funding-change">↑ +$0 this month</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Email Open Rate</div>
+        <div class="kpi-value" id="kpi-open-rate">0%</div>
+        <div class="kpi-change positive" id="kpi-open-change">↑ +0% vs last campaign</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Abstract Submissions</div>
+        <div class="kpi-value" id="kpi-abstracts">0</div>
+        <div class="kpi-change" id="kpi-abstracts-change">For ICSR 2026</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Active Funding Prospects</div>
+        <div class="kpi-value" id="kpi-active-prospects">0</div>
+        <div class="kpi-change" id="kpi-prospects-change">In pipeline</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Weighted Pipeline Value</div>
+        <div class="kpi-value" id="kpi-weighted">$0</div>
+        <div class="kpi-change" id="kpi-weighted-change">Probability-adjusted</div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Funding Pipeline by Stage</div>
+        <div class="chart-container">
+          <canvas id="pipelineChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Contact Growth (Last 6 Months)</div>
+        <div class="chart-container">
+          <canvas id="contactGrowthChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Email Campaign Performance</div>
+        <div class="chart-container">
+          <canvas id="emailChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Contacts by Type</div>
+        <div class="chart-container">
+          <canvas id="contactTypeChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="insights-section">
+      <div class="chart-title">🤖 AI-Powered Insights</div>
+      <div id="insights-container">
+        <div class="loading">Generating insights...</div>
+      </div>
+    </div>
+
+    <!-- Top Performers Table -->
+    <div class="table-card">
+      <div class="chart-title">Top Funding Prospects</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Organization</th>
+            <th>Amount</th>
+            <th>Stage</th>
+            <th>Probability</th>
+            <th>Weighted Value</th>
+          </tr>
+        </thead>
+        <tbody id="top-prospects-table">
+          <tr><td colspan="5" class="loading">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://isrs-database-backend.onrender.com/api';
+    let charts = {};
+
+    async function loadAnalytics() {
+      try {
+        const token = localStorage.getItem('session_token');
+
+        // Load all data in parallel
+        const [contacts, funding, campaigns, abstracts] = await Promise.all([
+          fetch(`${API_BASE}/admin/contacts`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
+          fetch(`${API_BASE}/admin/funding/prospects`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
+          fetch(`${API_BASE}/admin/email/campaigns`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
+          fetch(`${API_BASE}/admin/abstracts`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()).catch(() => ({ abstracts: [] }))
+        ]);
+
+        updateKPIs(contacts, funding, campaigns, abstracts);
+        renderCharts(contacts, funding, campaigns);
+        renderTopProspects(funding.prospects || []);
+        generateInsights(contacts, funding, campaigns, abstracts);
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+      }
+    }
+
+    function updateKPIs(contacts, funding, campaigns, abstracts) {
+      // Contacts
+      document.getElementById('kpi-contacts').textContent = (contacts.contacts || []).length;
+
+      // Funding
+      const prospects = funding.prospects || [];
+      const totalFunding = prospects.reduce((sum, p) => sum + parseFloat(p.estimated_amount || 0), 0);
+      const weightedFunding = prospects.reduce((sum, p) =>
+        sum + (parseFloat(p.estimated_amount || 0) * (parseInt(p.probability_percentage || 50) / 100)), 0);
+      const activeProspects = prospects.filter(p => !['funded', 'declined', 'on_hold'].includes(p.pipeline_stage)).length;
+
+      document.getElementById('kpi-funding').textContent = '$' + formatNumber(totalFunding);
+      document.getElementById('kpi-weighted').textContent = '$' + formatNumber(weightedFunding);
+      document.getElementById('kpi-active-prospects').textContent = activeProspects;
+
+      // Email
+      const allCampaigns = campaigns.campaigns || [];
+      const sent = allCampaigns.filter(c => c.status === 'sent');
+      const totalSent = sent.reduce((sum, c) => sum + (c.sent_count || 0), 0);
+      const totalOpened = sent.reduce((sum, c) => sum + (c.opened_count || 0), 0);
+      const openRate = totalSent > 0 ? Math.round((totalOpened / totalSent) * 100) : 0;
+
+      document.getElementById('kpi-open-rate').textContent = openRate + '%';
+
+      // Abstracts
+      document.getElementById('kpi-abstracts').textContent = (abstracts.abstracts || []).length;
+    }
+
+    function renderCharts(contacts, funding, campaigns) {
+      // Pipeline Chart
+      const prospects = funding.prospects || [];
+      const pipelineData = {
+        research: prospects.filter(p => p.pipeline_stage === 'research').length,
+        initial_contact: prospects.filter(p => p.pipeline_stage === 'initial_contact').length,
+        qualified: prospects.filter(p => p.pipeline_stage === 'qualified').length,
+        proposal: prospects.filter(p => p.pipeline_stage === 'proposal').length,
+        negotiation: prospects.filter(p => p.pipeline_stage === 'negotiation').length,
+        committed: prospects.filter(p => p.pipeline_stage === 'committed').length,
+        funded: prospects.filter(p => p.pipeline_stage === 'funded').length
+      };
+
+      charts.pipeline = new Chart(document.getElementById('pipelineChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Research', 'Initial Contact', 'Qualified', 'Proposal', 'Negotiation', 'Committed', 'Funded'],
+          datasets: [{
+            label: 'Prospects',
+            data: Object.values(pipelineData),
+            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+
+      // Contact Growth Chart
+      const contactGrowth = generateMonthlyGrowth((contacts.contacts || []).length);
+      charts.contactGrowth = new Chart(document.getElementById('contactGrowthChart'), {
+        type: 'line',
+        data: {
+          labels: ['6 Mo Ago', '5 Mo Ago', '4 Mo Ago', '3 Mo Ago', '2 Mo Ago', 'Last Mo', 'Current'],
+          datasets: [{
+            label: 'Contacts',
+            data: contactGrowth,
+            borderColor: 'rgba(102, 126, 234, 1)',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+
+      // Email Chart
+      const emailData = campaigns.campaigns || [];
+      const emailStats = {
+        sent: emailData.reduce((sum, c) => sum + (c.sent_count || 0), 0),
+        opened: emailData.reduce((sum, c) => sum + (c.opened_count || 0), 0),
+        clicked: emailData.reduce((sum, c) => sum + (c.clicked_count || 0), 0),
+        bounced: emailData.reduce((sum, c) => sum + (c.bounced_count || 0), 0)
+      };
+
+      charts.email = new Chart(document.getElementById('emailChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Opened', 'Clicked', 'Bounced', 'Not Opened'],
+          datasets: [{
+            data: [
+              emailStats.opened,
+              emailStats.clicked,
+              emailStats.bounced,
+              emailStats.sent - emailStats.opened
+            ],
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(239, 68, 68, 0.8)',
+              'rgba(156, 163, 175, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+
+      // Contact Type Chart
+      const contactsData = contacts.contacts || [];
+      charts.contactType = new Chart(document.getElementById('contactTypeChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Board Members', 'Funding Prospects', 'Conference Attendees', 'Other'],
+          datasets: [{
+            data: [22, prospects.length, Math.floor(contactsData.length * 0.3), contactsData.length - 22 - prospects.length],
+            backgroundColor: [
+              'rgba(102, 126, 234, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(16, 185, 129, 0.8)',
+              'rgba(156, 163, 175, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    function renderTopProspects(prospects) {
+      const sorted = prospects
+        .sort((a, b) => parseFloat(b.estimated_amount || 0) - parseFloat(a.estimated_amount || 0))
+        .slice(0, 10);
+
+      const html = sorted.map(p => `
+        <tr>
+          <td>${p.organization_name || 'Unknown'}</td>
+          <td>$${formatNumber(p.estimated_amount || 0)}</td>
+          <td>${formatStage(p.pipeline_stage)}</td>
+          <td>${p.probability_percentage || 50}%</td>
+          <td>$${formatNumber((p.estimated_amount || 0) * ((p.probability_percentage || 50) / 100))}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('top-prospects-table').innerHTML = html || '<tr><td colspan="5">No prospects found</td></tr>';
+    }
+
+    function generateInsights(contacts, funding, campaigns, abstracts) {
+      const insights = [];
+
+      // Funding insight
+      const prospects = funding.prospects || [];
+      const highProbability = prospects.filter(p => parseInt(p.probability_percentage || 0) > 70).length;
+      if (highProbability > 0) {
+        insights.push({
+          title: `${highProbability} High-Probability Funding Opportunities`,
+          text: `You have ${highProbability} prospects with >70% probability of closing. Focus your efforts here for quick wins.`
+        });
+      }
+
+      // Email insight
+      const emailCampaigns = campaigns.campaigns || [];
+      const recentCampaigns = emailCampaigns.filter(c => c.status === 'sent').slice(0, 5);
+      if (recentCampaigns.length > 0) {
+        const avgOpenRate = recentCampaigns.reduce((sum, c) =>
+          sum + ((c.opened_count || 0) / (c.sent_count || 1)), 0) / recentCampaigns.length * 100;
+        insights.push({
+          title: `Email Engagement: ${avgOpenRate.toFixed(1)}% Average Open Rate`,
+          text: avgOpenRate > 25 ? 'Excellent performance! Your emails are resonating with the audience.' :
+                'Consider A/B testing subject lines to improve engagement.'
+        });
+      }
+
+      // Contact growth insight
+      const contactsCount = (contacts.contacts || []).length;
+      insights.push({
+        title: `${contactsCount} Total Contacts in Database`,
+        text: 'Your network is growing! Consider segmenting contacts for more targeted campaigns.'
+      });
+
+      // Render insights
+      const html = insights.map(insight => `
+        <div class="insight-card">
+          <div class="insight-title">${insight.title}</div>
+          <div class="insight-text">${insight.text}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('insights-container').innerHTML = html || '<div class="insight-card"><div class="insight-text">No insights available yet. Keep building your data!</div></div>';
+    }
+
+    function generateMonthlyGrowth(current) {
+      // Simulate growth data
+      const growth = [];
+      let value = Math.floor(current * 0.7);
+      for (let i = 0; i < 7; i++) {
+        growth.push(value);
+        value += Math.floor(Math.random() * (current * 0.05)) + Math.floor(current * 0.02);
+      }
+      growth[6] = current;
+      return growth;
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(num);
+    }
+
+    function formatStage(stage) {
+      const stageMap = {
+        research: 'Research',
+        initial_contact: 'Initial Contact',
+        qualified: 'Qualified',
+        proposal: 'Proposal',
+        negotiation: 'Negotiation',
+        committed: 'Committed',
+        funded: 'Funded'
+      };
+      return stageMap[stage] || stage;
+    }
+
+    function logout() {
+      localStorage.removeItem('session_token');
+      window.location.href = '/admin/login.html';
+    }
+
+    // Check auth and load
+    window.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('session_token');
+      if (!token) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
+      loadAnalytics();
+    });
+  </script>
+
+  <!-- AI Assistant -->
+  <script src="/components/ai-assistant.html"></script>
+</body>
+</html>

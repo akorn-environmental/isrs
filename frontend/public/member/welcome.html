@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete your ISRS member profile">
+  <title>Welcome to ISRS - Complete Your Profile</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/member-auth.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 800px; margin: 2rem auto 4rem; padding: 2rem;">
+
+      <!-- Welcome Header -->
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="color: var(--primary-blue); margin-bottom: 1rem;">Welcome to ISRS!</h1>
+        <p id="welcomeMessage" style="font-size: 1.2rem; line-height: 1.6; color: var(--text-color);"></p>
+      </div>
+
+      <!-- Profile Completion Progress -->
+      <div style="background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1.5rem; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span style="font-weight: 600; color: var(--text-color);">Profile Completion</span>
+          <span id="completionPercent" style="font-weight: 600; color: var(--primary-blue);">0%</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
+          <div id="completionBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal)); transition: width 0.3s ease;"></div>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem; margin-bottom: 0;">
+          Complete your profile to connect with other members and unlock all features
+        </p>
+      </div>
+
+      <form id="profileForm">
+
+        <!-- Basic Information -->
+        <section style="margin-bottom: 2.5rem;">
+          <h2 style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
+            Basic Information
+          </h2>
+
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group">
+              <label for="firstName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                First Name <span style="color: #c00;">*</span>
+              </label>
+              <input type="text" id="firstName" name="firstName" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+            </div>
+            <div class="form-group">
+              <label for="lastName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                Last Name <span style="color: #c00;">*</span>
+              </label>
+              <input type="text" id="lastName" name="lastName" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+            <input type="email" id="email" name="email" disabled style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem; background: #f5f5f5; color: var(--text-light);">
+            <small style="color: var(--text-light); display: block; margin-top: 0.25rem;">Email cannot be changed</small>
+          </div>
+
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group">
+              <label for="country" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                Country <span style="color: #c00;">*</span>
+              </label>
+              <input type="text" id="country" name="country" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+            </div>
+            <div class="form-group">
+              <label for="city" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">City</label>
+              <input type="text" id="city" name="city" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+            </div>
+          </div>
+        </section>
+
+        <!-- Professional Information -->
+        <section style="margin-bottom: 2.5rem;">
+          <h2 style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
+            Professional Information
+          </h2>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="organizationName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              Organization <span style="color: #c00;">*</span>
+            </label>
+            <input type="text" id="organizationName" name="organizationName" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+          </div>
+
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group">
+              <label for="position" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Position/Title</label>
+              <input type="text" id="position" name="position" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+            </div>
+            <div class="form-group">
+              <label for="department" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Department</label>
+              <input type="text" id="department" name="department" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="bio" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Bio / About Me</label>
+            <textarea id="bio" name="bio" rows="4" placeholder="Tell us about your work in shellfish restoration..." style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem; font-family: inherit; resize: vertical;"></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="researchAreas" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Research Areas</label>
+            <textarea id="researchAreas" name="researchAreas" rows="3" placeholder="E.g., oyster reef restoration, water quality, habitat assessment..." style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem; font-family: inherit; resize: vertical;"></textarea>
+            <small style="color: var(--text-light); display: block; margin-top: 0.25rem;">Separate multiple areas with commas</small>
+          </div>
+        </section>
+
+        <!-- Conference History (Read-only) -->
+        <section id="conferenceHistorySection" style="margin-bottom: 2.5rem; display: none;">
+          <h2 style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
+            Your ICSR Conference History
+          </h2>
+          <div id="conferenceHistory" style="background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1rem;">
+            <!-- Will be populated dynamically -->
+          </div>
+        </section>
+
+        <!-- Privacy & Directory Settings -->
+        <section style="margin-bottom: 2.5rem;">
+          <h2 style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
+            Privacy & Directory Settings
+          </h2>
+
+          <div style="background: #f0f8ff; border: 1px solid #d0e8ff; border-radius: 4px; padding: 1.5rem; margin-bottom: 1.5rem;">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--primary-blue);">Member Directory</h3>
+            <p style="margin-bottom: 1rem; line-height: 1.6;">
+              The ISRS member directory helps connect researchers, practitioners, and stakeholders working in shellfish restoration worldwide.
+            </p>
+            <div class="form-group">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" id="directoryOptIn" name="directoryOptIn" style="width: 20px; height: 20px; margin-right: 0.75rem; cursor: pointer;">
+                <span style="font-weight: 600;">Include me in the public member directory</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="visibilitySettings" style="display: none; background: #fafafa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1.5rem; margin-bottom: 1.5rem;">
+            <h4 style="margin-top: 0; margin-bottom: 1rem;">Choose what information to show in the directory:</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="name" checked disabled style="margin-right: 0.5rem;">
+                <span>Name (required)</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="organization" checked style="margin-right: 0.5rem;">
+                <span>Organization</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="position" checked style="margin-right: 0.5rem;">
+                <span>Position/Title</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="country" checked style="margin-right: 0.5rem;">
+                <span>Country</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="city" style="margin-right: 0.5rem;">
+                <span>City</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="bio" checked style="margin-right: 0.5rem;">
+                <span>Bio</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="research_areas" checked style="margin-right: 0.5rem;">
+                <span>Research Areas</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" class="visibility-field" data-field="conference_history" checked style="margin-right: 0.5rem;">
+                <span>Conference History</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Privacy Consent (Required) -->
+        <section style="margin-bottom: 2.5rem;">
+          <h2 style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
+            Privacy & Terms <span style="color: #c00;">*</span>
+          </h2>
+
+          <div style="background: #fff; border: 2px solid var(--border-color); border-radius: 4px; padding: 1.5rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="display: flex; align-items: start; cursor: pointer;">
+                <input type="checkbox" id="privacyConsent" name="privacyConsent" required style="width: 20px; height: 20px; margin-right: 0.75rem; margin-top: 0.25rem; cursor: pointer; flex-shrink: 0;">
+                <span style="line-height: 1.6;">
+                  I have read and agree to the <a href="/privacy-policy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Privacy Policy</a> and consent to ISRS collecting and processing my personal data as described.
+                </span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label style="display: flex; align-items: start; cursor: pointer;">
+                <input type="checkbox" id="termsConsent" name="termsConsent" required style="width: 20px; height: 20px; margin-right: 0.75rem; margin-top: 0.25rem; cursor: pointer; flex-shrink: 0;">
+                <span style="line-height: 1.6;">
+                  I agree to the ISRS Terms of Service and understand that this profile will be used for networking and conference purposes.
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div style="background: #f9f9f9; border-left: 4px solid var(--primary-blue); padding: 1rem; margin-bottom: 1rem;">
+            <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--text-color);">
+              <strong>Your Privacy Rights:</strong> You can request a copy of your data, update your information, or request account deletion at any time from your profile settings. We will never sell your data to third parties.
+            </p>
+          </div>
+        </section>
+
+        <!-- Error Display -->
+        <div id="errorDisplay" style="display: none; background: #fee; border: 1px solid #fcc; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem; color: #c00;"></div>
+
+        <!-- Submit Button -->
+        <div style="text-align: center;">
+          <button type="submit" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 250px;">
+            Complete Profile & Continue
+          </button>
+          <p style="margin-top: 1rem; color: var(--text-light); font-size: 0.9rem;">
+            Fields marked with <span style="color: #c00;">*</span> are required
+          </p>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    // Require authentication
+    if (!MemberAuth.requireAuth()) {
+      // Will redirect to login
+      throw new Error('Not authenticated');
+    }
+
+    let profileData = null;
+
+    // Load profile data
+    async function loadProfile() {
+      try {
+        const response = await MemberAuth.getProfile();
+
+        if (!response.success) {
+          throw new Error('Failed to load profile');
+        }
+
+        profileData = response.data;
+        const profile = profileData.profile;
+        const conferenceHistory = profileData.conferenceHistory || [];
+
+        // Set welcome message
+        const years = conferenceHistory.map(c => c.year).sort().join(', ');
+        const welcomeMsg = conferenceHistory.length > 0
+          ? `We're so glad you're here! We have your information from ICSR ${years}. Please review and complete your profile below.`
+          : `We're excited to have you join the ISRS community! Please complete your profile to get started.`;
+        document.getElementById('welcomeMessage').textContent = welcomeMsg;
+
+        // Populate form fields
+        document.getElementById('firstName').value = profile.first_name || '';
+        document.getElementById('lastName').value = profile.last_name || '';
+        document.getElementById('email').value = profile.user_email || '';
+        document.getElementById('country').value = profile.country || '';
+        document.getElementById('city').value = profile.city || '';
+        document.getElementById('organizationName').value = profile.organization_name || '';
+        document.getElementById('position').value = profile.position || '';
+        document.getElementById('department').value = profile.department || '';
+        document.getElementById('bio').value = profile.bio || '';
+
+        // Handle research areas (could be array or text)
+        if (profile.research_areas) {
+          const areas = Array.isArray(profile.research_areas)
+            ? profile.research_areas.join(', ')
+            : profile.research_areas;
+          document.getElementById('researchAreas').value = areas;
+        }
+
+        // Set directory opt-in
+        document.getElementById('directoryOptIn').checked = profile.directory_opt_in || false;
+        toggleVisibilitySettings();
+
+        // Display conference history if exists
+        if (conferenceHistory.length > 0) {
+          const historySection = document.getElementById('conferenceHistorySection');
+          const historyDiv = document.getElementById('conferenceHistory');
+
+          historyDiv.innerHTML = conferenceHistory.map(conf => `
+            <div style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); last-of-type:border-bottom: none;">
+              <strong>${conf.year} - ${conf.name}</strong><br>
+              <span style="color: var(--text-light);">${conf.location}</span>
+              ${conf.attendance_type ? `<br><em>${conf.attendance_type}</em>` : ''}
+            </div>
+          `).join('');
+
+          historySection.style.display = 'block';
+        }
+
+        // Update completion score
+        updateCompletionScore();
+
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        showError('Failed to load your profile. Please try again.');
+      }
+    }
+
+    // Toggle visibility settings based on directory opt-in
+    function toggleVisibilitySettings() {
+      const optIn = document.getElementById('directoryOptIn').checked;
+      document.getElementById('visibilitySettings').style.display = optIn ? 'block' : 'none';
+    }
+
+    document.getElementById('directoryOptIn').addEventListener('change', toggleVisibilitySettings);
+
+    // Calculate and update profile completion score
+    function updateCompletionScore() {
+      const form = document.getElementById('profileForm');
+      const totalFields = 15; // Approximate total important fields
+      let completedFields = 0;
+
+      // Check each field
+      if (form.firstName.value.trim()) completedFields++;
+      if (form.lastName.value.trim()) completedFields++;
+      if (form.country.value.trim()) completedFields++;
+      if (form.city.value.trim()) completedFields++;
+      if (form.organizationName.value.trim()) completedFields++;
+      if (form.position.value.trim()) completedFields++;
+      if (form.department.value.trim()) completedFields++;
+      if (form.bio.value.trim()) completedFields++;
+      if (form.researchAreas.value.trim()) completedFields++;
+      if (form.directoryOptIn.checked) completedFields++;
+      if (form.privacyConsent.checked) completedFields += 2; // Privacy worth more
+      if (form.termsConsent.checked) completedFields += 2;
+      if (profileData?.conferenceHistory?.length > 0) completedFields++;
+
+      const percentage = Math.round((completedFields / totalFields) * 100);
+      document.getElementById('completionPercent').textContent = percentage + '%';
+      document.getElementById('completionBar').style.width = percentage + '%';
+    }
+
+    // Update score when fields change
+    document.getElementById('profileForm').addEventListener('input', updateCompletionScore);
+    document.getElementById('profileForm').addEventListener('change', updateCompletionScore);
+
+    // Handle form submission
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const errorDisplay = document.getElementById('errorDisplay');
+
+      // Hide previous errors
+      errorDisplay.style.display = 'none';
+
+      // Validate required checkboxes
+      if (!form.privacyConsent.checked || !form.termsConsent.checked) {
+        showError('You must accept the Privacy Policy and Terms of Service to continue.');
+        return;
+      }
+
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving Profile...';
+
+      try {
+        // Gather visibility settings
+        const visibilityFields = {};
+        document.querySelectorAll('.visibility-field').forEach(checkbox => {
+          visibilityFields[checkbox.dataset.field] = checkbox.checked;
+        });
+
+        // Prepare profile updates
+        const updates = {
+          first_name: form.firstName.value.trim(),
+          last_name: form.lastName.value.trim(),
+          country: form.country.value.trim(),
+          city: form.city.value.trim(),
+          organization_name: form.organizationName.value.trim(),
+          position: form.position.value.trim(),
+          department: form.department.value.trim(),
+          bio: form.bio.value.trim(),
+          research_areas: form.researchAreas.value.trim(),
+          directory_opt_in: form.directoryOptIn.checked,
+          directory_visible_fields: visibilityFields,
+          privacy_consent_given: true, // This is the key flag
+          notification_preferences: {
+            conference_announcements: true,
+            newsletter: true,
+            member_messages: true
+          }
+        };
+
+        // Update profile
+        const response = await MemberAuth.updateProfile(updates);
+
+        if (!response.success) {
+          throw new Error(response.error || 'Failed to update profile');
+        }
+
+        // Success! Redirect to profile page
+        window.location.href = '/member/profile.html';
+
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        showError(error.message || 'Failed to save your profile. Please try again.');
+
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Complete Profile & Continue';
+      }
+    });
+
+    function showError(message) {
+      const errorDisplay = document.getElementById('errorDisplay');
+      errorDisplay.textContent = message;
+      errorDisplay.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Load profile when page loads
+    document.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+</body>
+</html>

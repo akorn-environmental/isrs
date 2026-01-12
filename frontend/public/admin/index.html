@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .dashboard-card {
+      background: var(--admin-surface, white);
+      border-radius: var(--admin-radius-lg, 12px);
+      padding: 1rem;
+      box-shadow: var(--admin-shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid var(--admin-border, #e5e7eb);
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--admin-shadow-md);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      gap: 0.625rem;
+    }
+
+    .card-icon {
+      font-size: 1.75rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--admin-text, #1f2937);
+      margin: 0;
+    }
+
+    .card-description {
+      color: var(--admin-text-secondary, #6b7280);
+      margin-bottom: 0;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-card {
+      background: var(--admin-surface, white);
+      border-radius: var(--admin-radius-md, 8px);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--admin-shadow-sm);
+      border: 1px solid var(--admin-border, #e5e7eb);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--admin-primary, #2e5a8a);
+      margin: 0.375rem 0;
+      line-height: 1;
+    }
+
+    .stat-label {
+      color: var(--admin-text-secondary, #6b7280);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .user-info-banner {
+      background: linear-gradient(135deg, var(--admin-primary, #2e5a8a), var(--admin-primary-dark, #1e3a5f));
+      color: white;
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--admin-radius-lg, 12px);
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--admin-shadow-md);
+    }
+
+    .user-details h1 {
+      margin: 0 0 0.375rem 0;
+      font-size: 1.375rem;
+      font-weight: 600;
+    }
+
+    .user-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.25rem;
+    }
+
+    .user-role-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      backdrop-filter: blur(10px);
+    }
+
+    .access-level-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .user-metadata {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.8125rem;
+      opacity: 0.9;
+      margin-top: 0.25rem;
+    }
+
+    .metadata-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .metadata-icon {
+      font-size: 0.875rem;
+    }
+
+    .permission-info {
+      text-align: right;
+    }
+
+    .permission-level-large {
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.125rem;
+    }
+
+    .permission-label {
+      font-size: 0.6875rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .admin-capabilities {
+      margin-top: 0.375rem;
+      font-size: 0.75rem;
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+    .capability-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      margin-top: 0.25rem;
+    }
+
+    .section-header {
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--admin-border, #e5e7eb);
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--admin-text, #1f2937);
+      font-weight: 600;
+    }
+
+    /* Loading state */
+    #loadingState {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--admin-text-secondary);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--admin-border);
+      border-top-color: var(--admin-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .user-info-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      .permission-info {
+        text-align: center;
+      }
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+
+  <div id="loadingState">
+    <div class="spinner"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <div id="dashboardContent" style="display: none;">
+
+    <!-- User Info Banner -->
+    <div class="user-info-banner">
+      <div class="user-details">
+        <h1>Welcome, <span id="userName">Admin</span>!</h1>
+        <div class="user-badges">
+          <span class="user-role-badge" id="userRole">Loading...</span>
+          <span class="access-level-badge" id="accessLevel" style="display: none;"></span>
+        </div>
+        <div class="user-metadata" id="userMetadata" style="display: none;"></div>
+      </div>
+      <div class="permission-info" id="permissionInfo">
+        <div class="permission-label">Permission Level</div>
+        <div class="permission-level-large" id="permissionLevel">—</div>
+        <div class="admin-capabilities" id="adminCapabilities" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- System Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value" id="totalUsers">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Sessions</div>
+        <div class="stat-value" id="activeSessions">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Roles Defined</div>
+        <div class="stat-value" id="totalRoles">18</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Permissions</div>
+        <div class="stat-value" id="totalPermissions">64+</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Grid -->
+    <div class="section-header">
+      <h2>Quick Actions</h2>
+    </div>
+    <div class="dashboard-grid" id="quickActionsGrid">
+      <!-- Dynamically populated based on user permissions -->
+    </div>
+
+  </div>
+
+  <script src="/js/admin-layout.js"></script>
+  <script>
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://isrs-database-backend.onrender.com';
+
+    console.log('🔐 Admin Dashboard - API Backend:', API_BASE_URL);
+
+    let userPermissions = {};
+    let userPermissionLevel = 0;
+
+    async function checkAuth() {
+      try {
+        // Check for exchange token in URL (from magic link redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const exchangeToken = urlParams.get('auth');
+
+        if (exchangeToken) {
+          console.log('🔄 Exchange token found, swapping for session...');
+
+          // Exchange token for session
+          const exchangeResponse = await fetch(`${API_BASE_URL}/api/auth/exchange`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ token: exchangeToken })
+          });
+
+          const exchangeData = await exchangeResponse.json();
+
+          // Clean URL (remove auth parameter)
+          window.history.replaceState({}, '', window.location.pathname);
+
+          if (!exchangeResponse.ok || !exchangeData.success) {
+            console.error('Token exchange failed:', exchangeData.error);
+            window.location.href = '/login.html';
+            return;
+          }
+
+          // Store session token in localStorage for cross-origin compatibility
+          if (exchangeData.data && exchangeData.data.sessionToken) {
+            localStorage.setItem('isrs_session_token', exchangeData.data.sessionToken);
+            console.log('✅ Session token stored');
+          }
+        }
+
+        // Get session token from localStorage
+        const sessionToken = localStorage.getItem('isrs_session_token');
+
+        // Check session (try cookie-based first, fall back to token-based)
+        let response;
+        if (sessionToken) {
+          response = await fetch(`${API_BASE_URL}/api/auth/session?sessionToken=${sessionToken}`, {
+            credentials: 'include'
+          });
+        } else {
+          response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+            credentials: 'include'
+          });
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          console.log('No active session, redirecting to login...');
+          localStorage.removeItem('isrs_session_token');
+          window.location.href = '/login.html';
+          return;
+        }
+
+        console.log('✅ Authenticated user:', data.data.user);
+        console.log('Primary role:', data.data.primaryRole);
+        console.log('All roles:', data.data.roles);
+
+        // Store user permissions for filtering
+        userPermissions = data.data.permissions || {};
+        userPermissionLevel = data.data.primaryRole.level || 0;
+
+        // Check if user has minimum admin access (level 50+)
+        if (userPermissionLevel < 50) {
+          alert('Access denied. Admin or member access required.');
+          window.location.href = '/login.html';
+          return;
+        }
+
+        // Display user info
+        const userName = data.data.user.fullName || data.data.user.firstName || 'User';
+        const userEmail = data.data.user.email || data.data.user.user_email;
+        document.getElementById('userName').textContent = userName;
+        document.getElementById('userRole').textContent = data.data.primaryRole.displayName || 'Member';
+        document.getElementById('permissionLevel').textContent = userPermissionLevel;
+
+        // Store user data in localStorage for sidebar to use
+        localStorage.setItem('isrs_user_data', JSON.stringify({
+          first_name: data.data.user.firstName || data.data.user.first_name,
+          last_name: data.data.user.lastName || data.data.user.last_name,
+          email: userEmail,
+          role: data.data.primaryRole.name,
+          displayRole: data.data.primaryRole.displayName,
+          permissionLevel: userPermissionLevel
+        }));
+
+        // Build comprehensive user info based on permission level
+        buildUserInfoBanner(data.data, userPermissionLevel);
+
+        // Load sidebar with current page marker
+        loadAdminLayout('dashboard', userPermissionLevel);
+
+        // Populate dashboard content based on permissions
+        populateQuickActions();
+        loadStats();
+
+        // Show dashboard
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashboardContent').style.display = 'block';
+
+      } catch (error) {
+        console.error('Authentication error:', error);
+        localStorage.removeItem('isrs_session_token');
+        window.location.href = '/login.html';
+      }
+    }
+
+    function populateQuickActions() {
+      const actionsGrid = document.getElementById('quickActionsGrid');
+      const actions = [];
+
+      // Data Management (level 50+)
+      if (userPermissionLevel >= 50) {
+        actions.push({
+          icon: '👥',
+          title: 'Contacts',
+          description: 'Manage contacts, members, and attendees',
+          link: '/admin/contacts.html'
+        });
+        actions.push({
+          icon: '🏢',
+          title: 'Organizations',
+          description: 'Manage institutions and organizations',
+          link: '/admin/organizations.html'
+        });
+        actions.push({
+          icon: '📅',
+          title: 'Conferences',
+          description: 'Manage conference editions and registrations',
+          link: '/admin/conferences.html'
+        });
+      }
+
+      // Content Management (level 60+)
+      if (userPermissionLevel >= 60) {
+        actions.push({
+          icon: '📷',
+          title: 'Photos',
+          description: 'Manage photo gallery and albums',
+          link: '/admin/photos.html'
+        });
+        actions.push({
+          icon: '📰',
+          title: 'Press Kit',
+          description: 'Manage press materials and media assets',
+          link: '/admin/press-kit.html'
+        });
+      }
+
+      // Governance (level 70+)
+      if (userPermissionLevel >= 70) {
+        actions.push({
+          icon: '📄',
+          title: 'Board Documents',
+          description: 'Manage board documents and files',
+          link: '/admin/board-documents.html'
+        });
+        actions.push({
+          icon: '🗳️',
+          title: 'Board Votes',
+          description: 'Record and track board votes',
+          link: '/admin/votes.html'
+        });
+        actions.push({
+          icon: '💰',
+          title: 'Funding',
+          description: 'Manage funding prospects and pipeline',
+          link: '/admin/funding.html'
+        });
+      }
+
+      // System Administration (level 80+)
+      if (userPermissionLevel >= 80) {
+        actions.push({
+          icon: '📥',
+          title: 'Import Data',
+          description: 'Bulk import contacts and data',
+          link: '/admin/import.html'
+        });
+        actions.push({
+          icon: '💬',
+          title: 'Feedback',
+          description: 'View and manage user feedback',
+          link: '/admin/feedback.html'
+        });
+        actions.push({
+          icon: '⚙️',
+          title: 'Settings',
+          description: 'System configuration and settings',
+          link: '/admin/settings.html'
+        });
+      }
+
+      // Render action cards
+      actionsGrid.innerHTML = actions.map(action => `
+        <div class="dashboard-card" onclick="location.href='${action.link}'" style="cursor: pointer;">
+          <div class="card-header">
+            <span class="card-icon">${action.icon}</span>
+            <h3 class="card-title">${action.title}</h3>
+          </div>
+          <p class="card-description">${action.description}</p>
+        </div>
+      `).join('');
+    }
+
+    function buildUserInfoBanner(userData, permissionLevel) {
+      const user = userData.user;
+      const primaryRole = userData.primaryRole;
+      const roles = userData.roles || [];
+
+      // Determine access level name based on permission level
+      let accessLevelName = '';
+      if (permissionLevel >= 90) accessLevelName = 'Full System Access';
+      else if (permissionLevel >= 80) accessLevelName = 'Board Member Access';
+      else if (permissionLevel >= 70) accessLevelName = 'Administrative Access';
+      else if (permissionLevel >= 60) accessLevelName = 'Content Manager Access';
+      else if (permissionLevel >= 50) accessLevelName = 'Member Access';
+      else accessLevelName = 'Guest Access';
+
+      // For regular members (level < 70), show membership info instead of permission level
+      if (permissionLevel < 70) {
+        // Hide numeric permission level for regular members
+        document.querySelector('.permission-info').style.display = 'none';
+
+        // Show access level badge
+        const accessBadge = document.getElementById('accessLevel');
+        accessBadge.textContent = accessLevelName;
+        accessBadge.style.display = 'inline-block';
+
+        // Build metadata section for members
+        const metadataEl = document.getElementById('userMetadata');
+        let metadataHTML = '';
+
+        // 1. Membership status - check if user has created_at or joined date
+        if (user.created_at) {
+          const joinYear = new Date(user.created_at).getFullYear();
+          metadataHTML += `
+            <div class="metadata-item">
+              <span class="metadata-icon">👤</span>
+              <span>Member Since ${joinYear}</span>
+            </div>
+          `;
+        } else {
+          metadataHTML += `
+            <div class="metadata-item">
+              <span class="metadata-icon">✓</span>
+              <span>Active Membership</span>
+            </div>
+          `;
+        }
+
+        // 2. Conference attendance - check for conference role
+        const conferenceRole = roles.find(r =>
+          r.name && (r.name.includes('conference') || r.name.includes('attendee') || r.name.includes('presenter'))
+        );
+        if (conferenceRole) {
+          metadataHTML += `
+            <div class="metadata-item">
+              <span class="metadata-icon">📅</span>
+              <span>ICSR 2026 Attendee</span>
+            </div>
+          `;
+        }
+
+        // 3. Show total roles count if more than 1
+        if (roles.length > 1) {
+          metadataHTML += `
+            <div class="metadata-item">
+              <span class="metadata-icon">🎭</span>
+              <span>${roles.length} Roles</span>
+            </div>
+          `;
+        }
+
+        metadataEl.innerHTML = metadataHTML;
+        metadataEl.style.display = 'flex';
+      }
+      // For admins/board (level >= 70), show ALL the info!
+      else {
+        // Keep permission info visible
+        document.querySelector('.permission-info').style.display = 'block';
+
+        // Add access badge below role
+        const accessBadge = document.getElementById('accessLevel');
+        accessBadge.textContent = accessLevelName;
+        accessBadge.style.display = 'inline-block';
+
+        // Build admin capabilities section
+        const capabilitiesEl = document.getElementById('adminCapabilities');
+        let capHTML = '';
+
+        // Count available features based on permission level
+        let featureCount = 0;
+        if (permissionLevel >= 50) featureCount += 3; // Data Management
+        if (permissionLevel >= 60) featureCount += 2; // Content
+        if (permissionLevel >= 70) featureCount += 3; // Governance
+        if (permissionLevel >= 80) featureCount += 3; // System
+        featureCount += 1; // Help
+
+        capHTML += `
+          <div class="capability-item">
+            <span>✓</span>
+            <span>${featureCount} Admin Sections</span>
+          </div>
+        `;
+
+        // Show role count
+        if (roles.length > 1) {
+          capHTML += `
+            <div class="capability-item">
+              <span>🎭</span>
+              <span>${roles.length} Active Roles</span>
+            </div>
+          `;
+        }
+
+        capabilitiesEl.innerHTML = capHTML;
+        capabilitiesEl.style.display = 'block';
+
+        // Add metadata for admins too
+        const metadataEl = document.getElementById('userMetadata');
+        let metadataHTML = '';
+
+        // Member since
+        if (user.created_at) {
+          const joinYear = new Date(user.created_at).getFullYear();
+          metadataHTML += `
+            <div class="metadata-item">
+              <span class="metadata-icon">👤</span>
+              <span>Member Since ${joinYear}</span>
+            </div>
+          `;
+        }
+
+        // Last login (would need to come from session data)
+        metadataHTML += `
+          <div class="metadata-item">
+            <span class="metadata-icon">🕐</span>
+            <span>Active Session</span>
+          </div>
+        `;
+
+        metadataEl.innerHTML = metadataHTML;
+        metadataEl.style.display = 'flex';
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const sessionToken = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load stats');
+        }
+
+        const data = await response.json();
+
+        // Update stats with real data
+        document.getElementById('totalUsers').textContent = data.totalUsers || 0;
+        document.getElementById('activeSessions').textContent = data.activeSessions || 0;
+
+        console.log('✅ Stats loaded:', data);
+      } catch (error) {
+        console.error('❌ Error loading stats:', error);
+        // Keep placeholders on error
+        document.getElementById('totalUsers').textContent = '—';
+        document.getElementById('activeSessions').textContent = '—';
+
+        // Log error to backend for Render visibility
+        if (window.ErrorReporter) {
+          window.ErrorReporter.captureException(error, { context: 'loadStats' });
+        }
+      }
+    }
+
+    // Check authentication on page load
+    window.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+</body>
+</html>

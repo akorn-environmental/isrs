@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join ISRS - Become a Member</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <script src="/js/analytics.js?v=2.0"></script>
+  <!-- Zeffy Payment Integration -->
+  <script src="https://www.zeffy.com/embed/v1.js"></script>
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .join-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .join-header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+    }
+
+    .join-header h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .join-header p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+    }
+
+    .benefits-section {
+      background: var(--white);
+      padding: 2rem;
+      border-left: 4px solid var(--accent-teal);
+      margin: 2rem 0;
+      border-radius: 4px;
+    }
+
+    .benefits-section h3 {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      margin-bottom: 1rem;
+    }
+
+    .benefits-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: start;
+      gap: 0.75rem;
+    }
+
+    .benefit-item svg {
+      width: 24px;
+      height: 24px;
+      color: var(--accent-teal);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .join-form {
+      background: var(--white);
+      padding: 2.5rem;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .form-section {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 2px solid var(--light-gray);
+    }
+
+    .form-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .membership-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .membership-card {
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .membership-card:hover {
+      border-color: var(--primary-blue);
+      box-shadow: 0 4px 12px rgba(46, 90, 138, 0.1);
+    }
+
+    .membership-card.selected {
+      border-color: var(--primary-blue);
+      background: linear-gradient(135deg, rgba(46, 90, 138, 0.05) 0%, rgba(91, 192, 190, 0.05) 100%);
+    }
+
+    .membership-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .membership-card .type-name {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 1.25rem;
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .membership-card .type-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-teal);
+      margin-bottom: 0.5rem;
+    }
+
+    .membership-card .type-description {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .donation-section {
+      background: linear-gradient(135deg, #f6f8fc 0%, #eef2f7 100%);
+      padding: 2rem;
+      border-radius: 8px;
+      border: 2px dashed var(--accent-teal);
+    }
+
+    .donation-amounts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .donation-button {
+      padding: 1rem;
+      border: 2px solid var(--border-color);
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .donation-button:hover {
+      border-color: var(--accent-teal);
+      background: rgba(91, 192, 190, 0.1);
+    }
+
+    .donation-button.selected {
+      border-color: var(--accent-teal);
+      background: var(--accent-teal);
+      color: white;
+    }
+
+    .custom-donation {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .custom-donation input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .required {
+      color: #dc2626;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .checkbox-group {
+      margin-top: 1.5rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: start;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: auto;
+      margin-top: 0.25rem;
+    }
+
+    .submit-section {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .btn-submit {
+      padding: 1.25rem 3rem;
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.125rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(46, 90, 138, 0.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--light-gray);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #c33;
+    }
+
+    .success-message {
+      background: #efe;
+      color: #363;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      border-left: 4px solid #363;
+    }
+
+    @media (max-width: 768px) {
+      .join-header h1 {
+        font-size: 2rem;
+      }
+
+      .membership-types {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <div class="join-container">
+    <div class="join-header">
+      <h1>Join the International Shellfish Restoration Society</h1>
+      <p>Be part of a global community advancing shellfish restoration and marine conservation</p>
+    </div>
+
+    <div class="benefits-section">
+      <h3>🌊 Member Benefits</h3>
+      <div class="benefits-list">
+        <div class="benefit-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Access to exclusive research and publications</span>
+        </div>
+        <div class="benefit-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Discounted conference registration</span>
+        </div>
+        <div class="benefit-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Networking opportunities worldwide</span>
+        </div>
+        <div class="benefit-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Monthly newsletter and updates</span>
+        </div>
+        <div class="benefit-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Voting rights in board elections</span>
+        </div>
+        <div class="benefit-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Support global restoration efforts</span>
+        </div>
+      </div>
+    </div>
+
+    <form class="join-form" id="membershipForm" style="display: block;">
+      <div id="errorContainer"></div>
+      <div id="loadingContainer" style="display: none;" class="loading">
+        <div class="spinner"></div>
+        <p>Processing your membership...</p>
+      </div>
+      <div id="successContainer" style="display: none;" class="success-message">
+        <h2>🎉 Welcome to ISRS!</h2>
+        <p>Your membership has been created successfully.</p>
+        <p>Check your email for confirmation and next steps.</p>
+      </div>
+
+      <!-- Membership Type -->
+      <div class="form-section">
+        <h2 class="section-title">Select Your Membership</h2>
+        <div class="membership-types">
+          <label class="membership-card">
+            <input type="radio" name="membership_type" value="regular" required>
+            <div class="type-name">Regular Member</div>
+            <div class="type-price">$50/year</div>
+            <div class="type-description">For professionals and researchers</div>
+          </label>
+          <label class="membership-card">
+            <input type="radio" name="membership_type" value="student" required>
+            <div class="type-name">Student Member</div>
+            <div class="type-price">$25/year</div>
+            <div class="type-description">For students with valid ID</div>
+          </label>
+          <label class="membership-card">
+            <input type="radio" name="membership_type" value="lifetime" required>
+            <div class="type-name">Lifetime Member</div>
+            <div class="type-price">$1,000</div>
+            <div class="type-description">One-time payment, lifetime access</div>
+          </label>
+          <label class="membership-card">
+            <input type="radio" name="membership_type" value="corporate" required>
+            <div class="type-name">Corporate</div>
+            <div class="type-price">$500/year</div>
+            <div class="type-description">For organizations (5 members)</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h2 class="section-title">Personal Information</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name <span class="required">*</span></label>
+            <input type="text" id="firstName" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span class="required">*</span></label>
+            <input type="text" id="lastName" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email <span class="required">*</span></label>
+          <input type="email" id="email" required>
+          <small>This will be your login email</small>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Organization</label>
+            <input type="text" id="organization">
+          </div>
+          <div class="form-group">
+            <label>Position/Title</label>
+            <input type="text" id="position">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Country <span class="required">*</span></label>
+            <select id="country" required>
+              <option value="">Select country...</option>
+              <option value="United States">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Australia">Australia</option>
+              <option value="New Zealand">New Zealand</option>
+              <!-- Add more countries as needed -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>State/Province</label>
+            <input type="text" id="state">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="city">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="phone">
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Information -->
+      <div class="form-section">
+        <h2 class="section-title">Professional Background</h2>
+
+        <div class="form-group">
+          <label>Research Areas/Interests</label>
+          <input type="text" id="researchAreas" placeholder="e.g., Oyster Restoration, Marine Ecology, Water Quality">
+          <small>Separate multiple areas with commas</small>
+        </div>
+
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="bio" rows="4" placeholder="Tell us about your work and interests in shellfish restoration..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Website URL</label>
+            <input type="url" id="website" placeholder="https://">
+          </div>
+          <div class="form-group">
+            <label>LinkedIn Profile</label>
+            <input type="url" id="linkedin" placeholder="https://linkedin.com/in/">
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Donation -->
+      <div class="form-section donation-section">
+        <h2 class="section-title">💚 Support Our Mission (Optional)</h2>
+        <p style="margin-bottom: 1rem;">Your membership dues help us operate. An additional donation helps us grow our impact on global shellfish restoration.</p>
+
+        <div class="donation-amounts">
+          <button type="button" class="donation-button" data-amount="25">$25</button>
+          <button type="button" class="donation-button" data-amount="50">$50</button>
+          <button type="button" class="donation-button" data-amount="100">$100</button>
+          <button type="button" class="donation-button" data-amount="250">$250</button>
+          <button type="button" class="donation-button" data-amount="500">$500</button>
+          <button type="button" class="donation-button" data-amount="0">No Donation</button>
+        </div>
+
+        <div class="custom-donation">
+          <label style="white-space: nowrap;">Custom Amount:</label>
+          <input type="number" id="customDonation" placeholder="Enter amount" min="0">
+        </div>
+
+        <div class="form-group" style="margin-top: 1.5rem;">
+          <label>In Honor/Memory Of (Optional)</label>
+          <input type="text" id="inHonorOf" placeholder="Dedicate this donation">
+        </div>
+
+        <input type="hidden" id="donationAmount" value="0">
+      </div>
+
+      <!-- Communication Preferences -->
+      <div class="form-section">
+        <h2 class="section-title">Communication Preferences</h2>
+        <div class="checkbox-group">
+          <div class="checkbox-item">
+            <input type="checkbox" id="optInEmails" checked>
+            <label for="optInEmails">Send me updates about ISRS activities and opportunities</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="optInNewsletter" checked>
+            <label for="optInNewsletter">Subscribe to the monthly newsletter</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal Agreements -->
+      <div style="background: #f9fafb; border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 6px; margin-top: 1.5rem;">
+        <div style="margin-bottom: 0.75rem;">
+          <input type="checkbox" id="agreeTerms" required style="margin-right: 0.5rem;">
+          <label for="agreeTerms" style="font-size: 0.95rem;">
+            <span class="required" style="margin-right: 0.25rem;">*</span>
+            I agree to the <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Terms and Conditions</a>
+          </label>
+        </div>
+        <div>
+          <input type="checkbox" id="agreePrivacy" required style="margin-right: 0.5rem;">
+          <label for="agreePrivacy" style="font-size: 0.95rem;">
+            <span class="required" style="margin-right: 0.25rem;">*</span>
+            I acknowledge the <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Privacy Policy</a>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-section">
+        <button type="submit" class="btn-submit" id="submitButton">Proceed to Payment</button>
+        <p style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.875rem;">
+          💳 Secure payment powered by Zeffy (100% free, no platform fees)
+        </p>
+      </div>
+    </form>
+
+    <!-- Zeffy Payment Modal (Hidden by default) -->
+    <div id="zeffyModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+      <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative;">
+        <button onclick="closeZeffyModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        <h2 style="margin-bottom: 1rem; font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue);">Complete Your Payment</h2>
+        <div id="zeffyContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    let selectedDonation = 0;
+    let pendingMemberData = null;
+
+    // Zeffy Configuration
+    // NOTE: Replace with actual Zeffy form IDs for each membership type
+    const ZEFFY_FORM_IDS = {
+      regular: 'YOUR_REGULAR_MEMBERSHIP_FORM_ID',
+      student: 'YOUR_STUDENT_MEMBERSHIP_FORM_ID',
+      lifetime: 'YOUR_LIFETIME_MEMBERSHIP_FORM_ID',
+      corporate: 'YOUR_CORPORATE_MEMBERSHIP_FORM_ID'
+    };
+
+    // Membership card selection
+    document.querySelectorAll('.membership-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.membership-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        card.querySelector('input[type="radio"]').checked = true;
+      });
+    });
+
+    // Donation amount selection
+    document.querySelectorAll('.donation-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.donation-button').forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+        selectedDonation = parseFloat(button.dataset.amount);
+        document.getElementById('donationAmount').value = selectedDonation;
+        document.getElementById('customDonation').value = '';
+      });
+    });
+
+    // Custom donation
+    document.getElementById('customDonation').addEventListener('input', (e) => {
+      const amount = parseFloat(e.target.value) || 0;
+      document.querySelectorAll('.donation-button').forEach(b => b.classList.remove('selected'));
+      selectedDonation = amount;
+      document.getElementById('donationAmount').value = amount;
+    });
+
+    // Open Zeffy Modal
+    function openZeffyModal(membershipType, totalAmount) {
+      const modal = document.getElementById('zeffyModal');
+      const container = document.getElementById('zeffyContainer');
+
+      modal.style.display = 'flex';
+
+      // Get the appropriate Zeffy form ID
+      const formId = ZEFFY_FORM_IDS[membershipType];
+
+      if (!formId || formId.startsWith('YOUR_')) {
+        // Fallback: If Zeffy form IDs not configured, skip payment and create membership
+        console.warn('⚠️ Zeffy form IDs not configured. Creating membership without payment.');
+        closeZeffyModal();
+        completeMembershipAfterPayment();
+        return;
+      }
+
+      // Embed Zeffy form
+      container.innerHTML = `
+        <iframe
+          src="https://www.zeffy.com/embed/donation-form/${formId}?amount=${totalAmount * 100}"
+          style="width: 100%; height: 500px; border: none;"
+          onload="window.zeffyPaymentComplete = false;"
+        ></iframe>
+        <div style="margin-top: 1rem; text-align: center;">
+          <button onclick="completeMembershipAfterPayment()" class="btn-submit">
+            I've Completed Payment
+          </button>
+        </div>
+      `;
+    }
+
+    // Close Zeffy Modal
+    function closeZeffyModal() {
+      document.getElementById('zeffyModal').style.display = 'none';
+      document.getElementById('submitButton').disabled = false;
+      document.querySelector('.join-form').style.opacity = '1';
+    }
+
+    // Complete membership after payment
+    async function completeMembershipAfterPayment() {
+      const loadingContainer = document.getElementById('loadingContainer');
+      const successContainer = document.getElementById('successContainer');
+      const errorContainer = document.getElementById('errorContainer');
+
+      closeZeffyModal();
+      loadingContainer.style.display = 'block';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/membership/join`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(pendingMemberData)
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to create membership');
+        }
+
+        // Track in Google Analytics
+        if (window.ISRSAnalytics) {
+          window.ISRSAnalytics.trackEvent('membership_join', {
+            membership_type: pendingMemberData.membership_type,
+            donation_amount: pendingMemberData.donation_amount
+          });
+        }
+
+        // Show success
+        loadingContainer.style.display = 'none';
+        document.querySelector('.join-form').style.display = 'none';
+        successContainer.style.display = 'block';
+
+      } catch (error) {
+        console.error('Membership error:', error);
+        errorContainer.innerHTML = `<div class="error-message">${error.message}</div>`;
+        loadingContainer.style.display = 'none';
+        document.querySelector('.join-form').style.opacity = '1';
+        document.getElementById('submitButton').disabled = false;
+      }
+    }
+
+    // Form submission
+    document.getElementById('membershipForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitButton = document.getElementById('submitButton');
+      const errorContainer = document.getElementById('errorContainer');
+
+      errorContainer.innerHTML = '';
+      submitButton.disabled = true;
+      document.querySelector('.join-form').style.opacity = '0.6';
+
+      try {
+        const membershipType = document.querySelector('input[name="membership_type"]:checked')?.value;
+
+        if (!membershipType) {
+          throw new Error('Please select a membership type');
+        }
+
+        const researchAreasStr = document.getElementById('researchAreas')?.value || '';
+        const researchAreas = researchAreasStr ? researchAreasStr.split(',').map(a => a.trim()) : [];
+
+        // Calculate total amount (membership + donation)
+        const membershipPrices = {
+          regular: 50,
+          student: 25,
+          lifetime: 1000,
+          corporate: 500
+        };
+        const totalAmount = membershipPrices[membershipType] + selectedDonation;
+
+        // Store member data for after payment
+        pendingMemberData = {
+          email: document.getElementById('email').value,
+          first_name: document.getElementById('firstName').value,
+          last_name: document.getElementById('lastName').value,
+          organization_name: document.getElementById('organization').value,
+          position: document.getElementById('position').value,
+          country: document.getElementById('country').value,
+          state_province: document.getElementById('state').value,
+          city: document.getElementById('city').value,
+          phone: document.getElementById('phone').value,
+          membership_type: membershipType,
+          research_areas: researchAreas,
+          bio: document.getElementById('bio').value,
+          website_url: document.getElementById('website').value,
+          linkedin_url: document.getElementById('linkedin').value,
+          opt_in_emails: document.getElementById('optInEmails').checked,
+          opt_in_newsletter: document.getElementById('optInNewsletter').checked,
+          donation_amount: selectedDonation,
+          donation_type: 'one_time',
+          in_honor_of: document.getElementById('inHonorOf').value
+        };
+
+        // Open Zeffy payment modal
+        openZeffyModal(membershipType, totalAmount);
+
+      } catch (error) {
+        console.error('Form validation error:', error);
+        errorContainer.innerHTML = `<div class="error-message">${error.message}</div>`;
+        document.querySelector('.join-form').style.opacity = '1';
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+</body>
+</html>

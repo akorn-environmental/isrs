@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizations - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    /* Page-specific: Notes column truncation */
+    .notes-cell {
+      max-width: 300px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    /* Column Picker - fixed to viewport to prevent cutoff */
+    .column-picker {
+      position: fixed;
+      top: auto;
+      right: auto;
+      margin-top: 0.25rem;
+      background: var(--admin-surface, white);
+      border: 1px solid var(--admin-border, #e5e7eb);
+      border-radius: var(--admin-radius-md);
+      box-shadow: var(--admin-shadow-lg);
+      z-index: 1000;
+      min-width: 220px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .column-picker-header {
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: var(--admin-text-sm);
+      border-bottom: 1px solid var(--admin-border, #e5e7eb);
+      color: var(--admin-text-secondary);
+    }
+    .column-picker-options {
+      padding: 0.5rem 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .column-picker-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: var(--admin-text-sm);
+      transition: background 0.15s;
+    }
+    .column-picker-option:hover {
+      background: var(--admin-gray-50, #f9fafb);
+    }
+    .column-picker-option input {
+      margin: 0;
+    }
+
+    /* Toolbar container for dropdown positioning */
+    .admin-toolbar { position: relative; }
+
+    /* Data Quality Score */
+    .quality-score { display: inline-flex; align-items: center; gap: 0.25rem; font-size: var(--admin-text-xs); font-weight: 500; }
+    .quality-bar { width: 40px; height: 6px; background: var(--admin-gray-200); border-radius: 3px; overflow: hidden; }
+    .quality-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+    .quality-high .quality-fill { background: var(--admin-success); }
+    .quality-medium .quality-fill { background: var(--admin-warning); }
+    .quality-low .quality-fill { background: var(--admin-danger); }
+
+    /* AI Button style - matches Contacts page */
+    .admin-btn-ai {
+      background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%) !important;
+      color: white !important;
+      border: none !important;
+    }
+    .admin-btn-ai:hover {
+      background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%) !important;
+      box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3);
+    }
+
+    /* AI Modal styles */
+    .ai-modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+    .ai-modal-content {
+      background: white;
+      margin: 5% auto;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 700px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    .ai-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--admin-gray-200);
+    }
+    .ai-modal-header h2 {
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .ai-close {
+      color: var(--admin-gray-400);
+      font-size: 28px;
+      font-weight: 300;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .ai-close:hover { color: var(--admin-gray-800); }
+    .ai-query-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--admin-gray-200);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: var(--admin-font-body);
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .ai-query-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .ai-examples {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--admin-gray-50);
+      border-radius: 8px;
+      font-size: var(--admin-text-sm);
+    }
+    .ai-examples strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--admin-gray-800);
+    }
+    .ai-examples code {
+      display: block;
+      padding: 0.25rem 0;
+      color: #667eea;
+      cursor: pointer;
+    }
+    .ai-examples code:hover { text-decoration: underline; }
+    .ai-loading {
+      display: none;
+      text-align: center;
+      padding: 1rem;
+      color: #667eea;
+    }
+    .ai-results {
+      display: none;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--admin-gray-200);
+    }
+    .ai-results h3 {
+      margin-bottom: 1rem;
+      color: var(--admin-gray-800);
+    }
+    .ai-sql-query {
+      background: #1a202c;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: var(--admin-font-mono);
+      font-size: var(--admin-text-sm);
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+    .ai-results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: var(--admin-text-sm);
+      max-height: 400px;
+      overflow-y: auto;
+      display: block;
+    }
+    .ai-results-table thead {
+      background: var(--admin-gray-50);
+      position: sticky;
+      top: 0;
+    }
+    .ai-results-table th,
+    .ai-results-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--admin-gray-200);
+    }
+    .ai-results-table th {
+      font-weight: 600;
+      color: var(--admin-gray-800);
+    }
+    .ai-results-table tbody tr:hover {
+      background: var(--admin-gray-50);
+    }
+    .ai-error {
+      display: none;
+      padding: 1rem;
+      background: var(--admin-danger-bg);
+      border: 1px solid var(--admin-danger);
+      border-radius: 6px;
+      color: var(--admin-danger-text);
+      margin-top: 1rem;
+    }
+    .ai-insights {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--admin-gray-100);
+      border-left: 4px solid #667eea;
+      border-radius: 4px;
+      font-size: var(--admin-text-md);
+      line-height: 1.6;
+    }
+
+    /* Inline editing styles */
+    .editable-cell { cursor: pointer; position: relative; }
+    .editable-cell:hover { background: var(--admin-primary-light); }
+    .editable-cell input, .editable-cell select {
+      width: 100%;
+      padding: 0.25rem 0.5rem;
+      border: 2px solid var(--admin-primary);
+      border-radius: var(--admin-radius-sm);
+      font-size: inherit;
+      background: var(--admin-surface);
+      color: var(--admin-text);
+    }
+    .editable-cell input:focus, .editable-cell select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--admin-primary-light);
+    }
+
+    /* AI Enhancement styles */
+    .row-actions { display: flex; gap: 0.25rem; justify-content: center; }
+    .row-action-btn {
+      padding: 0.25rem 0.5rem;
+      font-size: var(--admin-text-xs);
+      border: none;
+      border-radius: var(--admin-radius-sm);
+      cursor: pointer;
+      background: var(--admin-gray-100);
+      color: var(--admin-text-secondary);
+      transition: all 0.15s;
+    }
+    .row-action-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .row-action-btn.ai-btn { background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%); color: white; opacity: 0.9; }
+    .row-action-btn.ai-btn:hover { transform: scale(1.05); opacity: 1; }
+
+    /* AI button style for bulk actions */
+    .admin-btn-ai {
+      background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%) !important;
+      color: white !important;
+      border: none !important;
+    }
+    .admin-btn-ai:hover {
+      background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%) !important;
+      box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <div class="admin-card">
+      <div class="admin-page-header">
+        <h1>Organizations</h1>
+        <div class="admin-page-header-actions">
+          <button class="admin-btn admin-btn-success" onclick="showQuickAddOrgModal()">+ Quick Add</button>
+          <button class="admin-btn admin-btn-secondary" onclick="exportOrganizations()">Export CSV</button>
+          <button class="admin-btn admin-btn-ai" onclick="showAIModal()" id="aiQueryBtn" style="display:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            AI Query
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Toolbar - Full Width -->
+      <div class="admin-toolbar" style="gap: var(--admin-space-md);">
+        <input type="text" class="admin-input" id="searchBox" placeholder="Search organizations..." style="flex: 1; max-width: 400px;" oninput="filterOrganizations()">
+        <select class="admin-select" id="typeFilter" onchange="filterOrganizations()" style="width: 180px;">
+          <option value="">All Types</option>
+          <option value="university">University</option>
+          <option value="government">Government</option>
+          <option value="ngo">NGO/Non-profit</option>
+          <option value="company">Company</option>
+          <option value="foundation">Foundation</option>
+          <option value="research">Research Institute</option>
+          <option value="other">Other</option>
+        </select>
+        <select class="admin-select" id="countryFilter" onchange="filterOrganizations()" style="width: 180px;">
+          <option value="">All Countries</option>
+        </select>
+        <select id="pageSizeSelect" class="admin-select" style="width: 100px;" onchange="handlePageSizeChange()">
+          <option value="20">Show 20</option>
+          <option value="50">Show 50</option>
+          <option value="100">Show 100</option>
+          <option value="999999" selected>Show All</option>
+        </select>
+        <div style="position: relative;">
+          <button class="admin-btn admin-btn-secondary" onclick="toggleColumnPicker(event)" title="Show/hide columns">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Columns
+          </button>
+          <!-- Column Picker Dropdown -->
+          <div id="columnPicker" class="column-picker" style="display: none;">
+            <div class="column-picker-header">Show/Hide Columns</div>
+            <div class="column-picker-options" id="columnPickerOptions">
+              <!-- Options will be populated by JS -->
+            </div>
+          </div>
+        </div>
+        <button class="admin-btn admin-btn-secondary" onclick="resetFilters()">Reset</button>
+      </div>
+
+      <!-- Bulk Actions Bar -->
+      <div id="bulkActionsBar" style="display: none; padding: var(--admin-space-md) var(--admin-space-lg); background: var(--admin-gray-50); border: 1px solid var(--admin-gray-200); border-radius: var(--admin-radius-md); margin-bottom: var(--admin-space-lg);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: var(--admin-space-md);">
+            <span style="font-weight: 500; color: var(--admin-text-secondary);"><span id="selectedCount">0</span> selected</span>
+            <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="selectAllFiltered()">Select All Visible</button>
+            <button class="admin-btn admin-btn-sm admin-btn-ai" onclick="bulkEnhanceSelected()">✨ AI Enhance Selected</button>
+            <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="clearSelection()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-table-wrapper">
+        <div id="tableContent">
+          <div class="admin-loading">
+            <span class="admin-spinner"></span>
+            Loading organizations...
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="admin-pagination" id="pagination" style="display: none;">
+        <div class="admin-pagination-info">
+          Page <strong id="currentPageNum">1</strong> of <strong id="totalPages">1</strong> | Total Organizations: <strong id="totalCount">0</strong>
+        </div>
+        <div class="admin-pagination-controls">
+          <button class="admin-btn admin-btn-secondary admin-btn-sm" id="prevPageBtn" onclick="previousPage()" disabled>Previous</button>
+          <button class="admin-btn admin-btn-secondary admin-btn-sm" id="nextPageBtn" onclick="nextPage()" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Query Modal -->
+  <div id="aiModal" class="ai-modal">
+    <div class="ai-modal-content">
+      <div class="ai-modal-header">
+        <h2>AI Database Query</h2>
+        <span class="ai-close" onclick="closeAIModal()">&times;</span>
+      </div>
+
+      <textarea id="aiQueryInput" class="ai-query-input" placeholder="Ask a question in plain English..." rows="3"></textarea>
+
+      <div class="ai-examples">
+        <strong>Example questions:</strong>
+        <code onclick="setAIQuery(this.textContent)">Show all contacts from universities in the United States</code>
+        <code onclick="setAIQuery(this.textContent)">How many board members are there?</code>
+        <code onclick="setAIQuery(this.textContent)">List all contacts with expertise in oyster restoration</code>
+      </div>
+
+      <button class="ai-query-btn" onclick="executeAIQuery()">Execute Query</button>
+
+      <div class="ai-loading" id="aiLoading">Processing your query...</div>
+
+      <div class="ai-error" id="aiError"></div>
+
+      <div class="ai-results" id="aiResults">
+        <h3>SQL Query:</h3>
+        <div class="ai-sql-query" id="aiSqlQuery"></div>
+
+        <div id="aiInsights" class="ai-insights" style="display:none;"></div>
+
+        <h3>Results (<span id="aiRowCount">0</span> rows):</h3>
+        <table class="ai-results-table" id="aiResultsTable">
+          <thead id="aiResultsHead"></thead>
+          <tbody id="aiResultsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Add Organization Modal -->
+  <div id="quickAddOrgModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 600px;">
+      <div class="admin-modal-header">
+        <h2>Quick Add Organization</h2>
+        <button class="admin-modal-close" onclick="closeQuickAddOrgModal()">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="quickAddOrgForm" onsubmit="executeQuickAddOrg(event)">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="qaoName">Organization Name *</label>
+            <input type="text" id="qaoName" class="admin-input" style="width: 100%;" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--admin-space-lg);">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="qaoType">Type</label>
+              <select id="qaoType" class="admin-select" style="width: 100%;">
+                <option value="">Select type...</option>
+                <option value="university">University</option>
+                <option value="government">Government</option>
+                <option value="ngo">NGO/Non-profit</option>
+                <option value="company">Company</option>
+                <option value="foundation">Foundation</option>
+                <option value="research">Research Institute</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="qaoCountry">Country</label>
+              <input type="text" id="qaoCountry" class="admin-input" style="width: 100%;" value="United States">
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="qaoWebsite">Website</label>
+            <input type="url" id="qaoWebsite" class="admin-input" style="width: 100%;" placeholder="https://">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="qaoNotes">Notes</label>
+            <textarea id="qaoNotes" class="admin-textarea" style="width: 100%; min-height: 80px;"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" onclick="closeQuickAddOrgModal()">Cancel</button>
+        <button type="submit" form="quickAddOrgForm" class="admin-btn admin-btn-success" id="quickAddOrgBtn">Add Organization</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-database-backend.onrender.com';
+    let userPermissions = null;
+    let allOrganizations = [];
+    let filteredOrganizations = [];
+    let paginatedOrganizations = [];
+    let selectedOrganizations = new Set();
+    let sortField = 'name';
+    let sortDirection = 'asc';
+    let pageSize = 20;
+    let currentPage = 1;
+
+    // Column visibility configuration
+    const columnConfig = [
+      { id: 'name', label: 'Name', visible: true, required: true },
+      { id: 'type', label: 'Type', visible: true },
+      { id: 'country', label: 'Country', visible: true },
+      { id: 'website', label: 'Website', visible: true },
+      { id: 'quality', label: 'Quality', visible: true },
+      { id: 'notes', label: 'Notes', visible: true }
+    ];
+
+    // Load saved column preferences
+    const savedColumns = localStorage.getItem('isrs_organizations_columns');
+    if (savedColumns) {
+      try {
+        const saved = JSON.parse(savedColumns);
+        columnConfig.forEach(col => {
+          if (!col.required && saved[col.id] !== undefined) {
+            col.visible = saved[col.id];
+          }
+        });
+      } catch (e) {}
+    }
+
+    function toggleColumnPicker(event) {
+      const picker = document.getElementById('columnPicker');
+      const isVisible = picker.style.display !== 'none';
+
+      if (isVisible) {
+        picker.style.display = 'none';
+      } else {
+        // Position the dropdown relative to the button
+        const btn = event ? event.target.closest('button') : document.querySelector('[onclick*="toggleColumnPicker"]');
+        if (btn) {
+          const rect = btn.getBoundingClientRect();
+          picker.style.top = (rect.bottom + 4) + 'px';
+          picker.style.right = (window.innerWidth - rect.right) + 'px';
+        }
+        picker.style.display = 'block';
+        renderColumnPickerOptions();
+      }
+    }
+
+    function renderColumnPickerOptions() {
+      const container = document.getElementById('columnPickerOptions');
+      container.innerHTML = columnConfig.map(col => `
+        <label class="column-picker-option">
+          <input type="checkbox" ${col.visible ? 'checked' : ''} ${col.required ? 'disabled' : ''}
+                 onchange="toggleColumn('${col.id}', this.checked)">
+          ${col.label}
+        </label>
+      `).join('');
+    }
+
+    function toggleColumn(columnId, visible) {
+      const col = columnConfig.find(c => c.id === columnId);
+      if (col && !col.required) {
+        col.visible = visible;
+        // Save preferences
+        const prefs = {};
+        columnConfig.forEach(c => prefs[c.id] = c.visible);
+        localStorage.setItem('isrs_organizations_columns', JSON.stringify(prefs));
+        displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+      }
+    }
+
+    function isColumnVisible(columnId) {
+      const col = columnConfig.find(c => c.id === columnId);
+      return col ? col.visible : true;
+    }
+
+    function handlePageSizeChange() {
+      pageSize = parseInt(document.getElementById('pageSizeSelect').value);
+      currentPage = 1;
+      displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+    }
+
+    // Close column picker when clicking outside
+    document.addEventListener('click', (e) => {
+      const picker = document.getElementById('columnPicker');
+      const btn = e.target.closest('[onclick*="toggleColumnPicker"]');
+      if (picker && picker.style.display !== 'none' && !picker.contains(e.target) && !btn) {
+        picker.style.display = 'none';
+      }
+    });
+
+    // Check auth
+    window.addEventListener('DOMContentLoaded', async () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      await loadUserPermissions();
+      await loadOrganizations();
+
+      // Check for search parameter in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchParam = urlParams.get('search');
+      if (searchParam) {
+        const searchBox = document.getElementById('searchBox');
+        if (searchBox) {
+          searchBox.value = searchParam;
+          // Trigger search
+          const searchTerm = searchParam.toLowerCase();
+          const filteredOrgs = allOrganizations.filter(org =>
+            JSON.stringify(org).toLowerCase().includes(searchTerm)
+          );
+          displayOrganizations(filteredOrgs);
+        }
+      }
+    });
+
+    async function loadUserPermissions() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+          userPermissions = data.permissions || {};
+          // AI Query is now available to all users
+          document.getElementById('aiQueryBtn').style.display = 'inline-flex';
+        }
+      } catch (error) {
+        console.error('Failed to load permissions:', error);
+      }
+    }
+
+    async function loadOrganizations() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/organizations`, {
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          allOrganizations = data.data;
+          populateCountryFilter();
+          displayOrganizations(allOrganizations);
+        } else {
+          document.getElementById('tableContent').innerHTML = `
+            <div class="admin-alert admin-alert-danger" style="margin: 1rem;">Failed to load organizations: ${data.error || 'Unknown error'}</div>
+          `;
+        }
+      } catch (error) {
+        document.getElementById('tableContent').innerHTML = `
+          <div class="admin-alert admin-alert-danger" style="margin: 1rem;">Error connecting to server: ${error.message}</div>
+        `;
+      }
+    }
+
+    function calculateOrgQuality(org) {
+      let score = 0;
+      let maxScore = 5;
+
+      // Check for presence of key fields
+      if (org.name) score += 1;
+      if (org.type) score += 1;
+      if (org.country) score += 1;
+      if (org.website) score += 1;
+      if (org.notes && org.notes.length > 10) score += 1;
+
+      const percentage = Math.round((score / maxScore) * 100);
+      let level = 'low';
+      if (percentage >= 80) level = 'high';
+      else if (percentage >= 60) level = 'medium';
+
+      return { score, maxScore, percentage, level };
+    }
+
+    function resetSearch() {
+      document.getElementById('searchBox').value = '';
+      displayOrganizations(allOrganizations);
+    }
+
+    function populateCountryFilter() {
+      const countrySelect = document.getElementById('countryFilter');
+      const countries = [...new Set(allOrganizations.map(org => org.country).filter(Boolean))].sort();
+      countrySelect.innerHTML = '<option value="">All Countries</option>';
+      countries.forEach(country => {
+        countrySelect.innerHTML += `<option value="${country}">${country}</option>`;
+      });
+    }
+
+    function filterOrganizations() {
+      const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+      const typeFilter = document.getElementById('typeFilter').value;
+      const countryFilter = document.getElementById('countryFilter').value;
+
+      let filtered = allOrganizations.filter(org => {
+        // Search filter
+        if (searchTerm) {
+          const searchFields = [
+            org.name || '',
+            org.type || '',
+            org.country || '',
+            org.notes || ''
+          ].join(' ').toLowerCase();
+          if (!searchFields.includes(searchTerm)) return false;
+        }
+        // Type filter
+        if (typeFilter && (org.type || '').toLowerCase() !== typeFilter.toLowerCase()) return false;
+        // Country filter
+        if (countryFilter && org.country !== countryFilter) return false;
+        return true;
+      });
+
+      displayOrganizations(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('searchBox').value = '';
+      document.getElementById('typeFilter').value = '';
+      document.getElementById('countryFilter').value = '';
+      displayOrganizations(allOrganizations);
+    }
+
+    function exportOrganizations() {
+      if (allOrganizations.length === 0) {
+        showMessage('No organizations to export', 'error');
+        return;
+      }
+
+      const headers = ['Name', 'Type', 'Country', 'Website', 'Notes'];
+      const rows = allOrganizations.map(org => [
+        `"${(org.name || '').replace(/"/g, '""')}"`,
+        `"${(org.type || '').replace(/"/g, '""')}"`,
+        `"${(org.country || '').replace(/"/g, '""')}"`,
+        `"${(org.website || '').replace(/"/g, '""')}"`,
+        `"${(org.notes || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `organizations-${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+      showMessage('Export complete!', 'success');
+    }
+
+    function showMessage(message, type) {
+      const alertClass = type === 'success' ? 'admin-alert-success' : 'admin-alert-danger';
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `admin-alert ${alertClass}`;
+      messageDiv.textContent = message;
+      messageDiv.style.position = 'fixed';
+      messageDiv.style.top = '20px';
+      messageDiv.style.right = '20px';
+      messageDiv.style.zIndex = '2000';
+      messageDiv.style.minWidth = '300px';
+      document.body.appendChild(messageDiv);
+      setTimeout(() => messageDiv.remove(), 5000);
+    }
+
+    function displayOrganizations(organizations) {
+      // Store filtered for later use
+      filteredOrganizations = organizations;
+
+      if (organizations.length === 0) {
+        document.getElementById('tableContent').innerHTML = '<div class="admin-empty"><div class="admin-empty-title">No organizations found</div></div>';
+        document.getElementById('pagination').style.display = 'none';
+        return;
+      }
+
+      // Sort organizations
+      const sortedOrganizations = [...organizations].sort((a, b) => {
+        let aVal = a[sortField] || '';
+        let bVal = b[sortField] || '';
+
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (sortDirection === 'asc') {
+          return aVal > bVal ? 1 : -1;
+        } else {
+          return aVal < bVal ? 1 : -1;
+        }
+      });
+
+      // Apply pagination
+      const startIdx = (currentPage - 1) * pageSize;
+      const endIdx = pageSize >= 999999 ? sortedOrganizations.length : startIdx + pageSize;
+      paginatedOrganizations = sortedOrganizations.slice(startIdx, endIdx);
+
+      const html = `
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th class="checkbox-cell" style="width: 56px; text-align: center; padding-left: var(--admin-space-xl, 1.5rem) !important;">
+                <input type="checkbox" id="selectAll" class="admin-checkbox" onchange="toggleSelectAll()">
+              </th>
+              ${isColumnVisible('name') ? `<th class="sortable ${sortField === 'name' ? 'sort-' + sortDirection : ''}" onclick="handleSort('name')">
+                Name <span class="sort-indicator">${getSortIcon('name')}</span>
+              </th>` : ''}
+              ${isColumnVisible('type') ? `<th class="sortable ${sortField === 'type' ? 'sort-' + sortDirection : ''}" onclick="handleSort('type')">
+                Type <span class="sort-indicator">${getSortIcon('type')}</span>
+              </th>` : ''}
+              ${isColumnVisible('country') ? `<th class="sortable ${sortField === 'country' ? 'sort-' + sortDirection : ''}" onclick="handleSort('country')">
+                Country <span class="sort-indicator">${getSortIcon('country')}</span>
+              </th>` : ''}
+              ${isColumnVisible('website') ? `<th>Website</th>` : ''}
+              ${isColumnVisible('quality') ? `<th title="Data completeness score">Quality</th>` : ''}
+              ${isColumnVisible('notes') ? `<th>Notes</th>` : ''}
+              <th style="width: 80px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${paginatedOrganizations.map(org => {
+              const quality = calculateOrgQuality(org);
+              const safeId = org.id ? org.id.toString().replace(/'/g, "\\'") : '';
+              return `
+              <tr>
+                <td class="checkbox-cell" style="text-align: center;">
+                  <input type="checkbox" class="org-checkbox admin-checkbox" value="${org.id}"
+                         ${selectedOrganizations.has(org.id) ? 'checked' : ''}
+                         onchange="toggleOrganization('${safeId}')">
+                </td>
+                ${isColumnVisible('name') ? `<td class="editable-cell" onclick="editOrgCell(this, ${org.id}, 'name')" title="Click to edit">${org.name || '-'}</td>` : ''}
+                ${isColumnVisible('type') ? `<td class="editable-cell" onclick="editOrgCell(this, ${org.id}, 'type')" title="Click to edit">${org.type || '-'}</td>` : ''}
+                ${isColumnVisible('country') ? `<td class="editable-cell" onclick="editOrgCell(this, ${org.id}, 'country')" title="Click to edit">${org.country || '-'}</td>` : ''}
+                ${isColumnVisible('website') ? `<td class="editable-cell" onclick="editOrgCell(this, ${org.id}, 'website')" title="Click to edit">${org.website || '-'}</td>` : ''}
+                ${isColumnVisible('quality') ? `<td>
+                  <div class="quality-score quality-${quality.level}" title="${quality.score}/${quality.maxScore} fields complete">
+                    <div class="quality-bar"><div class="quality-fill" style="width: ${quality.percentage}%"></div></div>
+                    <span>${quality.percentage}%</span>
+                  </div>
+                </td>` : ''}
+                ${isColumnVisible('notes') ? `<td class="editable-cell notes-cell" onclick="editOrgCell(this, ${org.id}, 'notes')" title="Click to edit">${org.notes || '-'}</td>` : ''}
+                <td style="text-align: center;">
+                  <div class="row-actions">
+                    <button class="row-action-btn ai-btn" onclick="enhanceSingleOrganization(${org.id})" title="AI Enhance">✨</button>
+                  </div>
+                </td>
+              </tr>
+            `}).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('tableContent').innerHTML = html;
+      document.getElementById('totalCount').textContent = organizations.length;
+      updatePagination(organizations.length);
+      document.getElementById('pagination').style.display = 'flex';
+      updateSelectAllCheckbox();
+      updateBulkActionsBar();
+    }
+
+    function handleSort(field) {
+      if (sortField === field) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortField = field;
+        sortDirection = 'asc';
+      }
+      displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+    }
+
+    function getSortIcon(field) {
+      if (sortField !== field) return '↕';
+      return sortDirection === 'asc' ? '↑' : '↓';
+    }
+
+    function updatePagination(totalCount) {
+      const totalPages = Math.ceil(totalCount / pageSize);
+      document.getElementById('currentPageNum').textContent = currentPage;
+      document.getElementById('totalPages').textContent = totalPages;
+      document.getElementById('prevPageBtn').disabled = currentPage === 1;
+      document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
+    }
+
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil((filteredOrganizations.length || allOrganizations.length) / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/admin/';
+    }
+
+    // Search functionality
+    let searchBox;
+    setTimeout(() => {
+      searchBox = document.getElementById('searchBox');
+      if (searchBox) {
+        searchBox.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          const filteredOrgs = allOrganizations.filter(org =>
+            JSON.stringify(org).toLowerCase().includes(searchTerm)
+          );
+          displayOrganizations(filteredOrgs);
+        });
+      }
+    }, 100);
+
+    // AI Query Functions
+    function showAIModal() {
+      document.getElementById('aiModal').style.display = 'block';
+      document.getElementById('aiQueryInput').focus();
+    }
+
+    function closeAIModal() {
+      document.getElementById('aiModal').style.display = 'none';
+      document.getElementById('aiResults').style.display = 'none';
+      document.getElementById('aiError').style.display = 'none';
+      document.getElementById('aiQueryInput').value = '';
+    }
+
+    function setAIQuery(text) {
+      document.getElementById('aiQueryInput').value = text;
+    }
+
+    async function executeAIQuery() {
+      const question = document.getElementById('aiQueryInput').value.trim();
+      if (!question) {
+        alert('Please enter a question');
+        return;
+      }
+
+      const loading = document.getElementById('aiLoading');
+      const error = document.getElementById('aiError');
+      const results = document.getElementById('aiResults');
+
+      loading.style.display = 'block';
+      error.style.display = 'none';
+      results.style.display = 'none';
+
+      try {
+        const sessionToken = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE_URL}/api/admin/ai-query`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify({ question, includeInsights: true })
+        });
+
+        const data = await response.json();
+        loading.style.display = 'none';
+
+        if (data.success) {
+          // Show SQL query
+          document.getElementById('aiSqlQuery').textContent = data.sql;
+
+          // Show insights if available
+          if (data.insights) {
+            document.getElementById('aiInsights').textContent = data.insights;
+            document.getElementById('aiInsights').style.display = 'block';
+          } else {
+            document.getElementById('aiInsights').style.display = 'none';
+          }
+
+          // Show row count
+          document.getElementById('aiRowCount').textContent = data.rowCount;
+
+          // Build results table
+          const thead = document.getElementById('aiResultsHead');
+          const tbody = document.getElementById('aiResultsBody');
+          thead.innerHTML = '';
+          tbody.innerHTML = '';
+
+          if (data.rows && data.rows.length > 0) {
+            // Create table headers
+            const headerRow = document.createElement('tr');
+            const columns = Object.keys(data.rows[0]);
+            columns.forEach(col => {
+              const th = document.createElement('th');
+              th.textContent = col;
+              headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            // Create table rows
+            data.rows.forEach(row => {
+              const tr = document.createElement('tr');
+              columns.forEach(col => {
+                const td = document.createElement('td');
+                td.textContent = row[col] || '';
+                tr.appendChild(td);
+              });
+              tbody.appendChild(tr);
+            });
+          }
+
+          results.style.display = 'block';
+        } else {
+          error.textContent = data.error || 'Query failed';
+          error.style.display = 'block';
+        }
+      } catch (err) {
+        loading.style.display = 'none';
+        error.textContent = 'Error: ' + err.message;
+        error.style.display = 'block';
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('aiModal');
+      if (event.target == modal) {
+        closeAIModal();
+      }
+    }
+
+    // ESC key to close modal and keyboard shortcuts
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        closeAIModal();
+        closeQuickAddOrgModal();
+      }
+      // Ctrl/Cmd + F to focus search
+      if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
+        event.preventDefault();
+        document.getElementById('searchBox').focus();
+      }
+      // Ctrl/Cmd + N for quick add (when not in input)
+      if ((event.ctrlKey || event.metaKey) && event.key === 'n' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        event.preventDefault();
+        showQuickAddOrgModal();
+      }
+    });
+
+    // Quick Add Organization Modal functions
+    function showQuickAddOrgModal() {
+      document.getElementById('quickAddOrgModal').classList.add('active');
+      document.getElementById('qaoName').focus();
+    }
+
+    function closeQuickAddOrgModal() {
+      document.getElementById('quickAddOrgModal').classList.remove('active');
+      document.getElementById('quickAddOrgForm').reset();
+      document.getElementById('qaoCountry').value = 'United States';
+    }
+
+    async function executeQuickAddOrg(event) {
+      event.preventDefault();
+
+      const btn = document.getElementById('quickAddOrgBtn');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+
+      const orgData = {
+        name: document.getElementById('qaoName').value.trim(),
+        organization_type: document.getElementById('qaoType').value,
+        country: document.getElementById('qaoCountry').value.trim(),
+        website: document.getElementById('qaoWebsite').value.trim(),
+        notes: document.getElementById('qaoNotes').value.trim()
+      };
+
+      try {
+        const sessionToken = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE_URL}/api/admin/organizations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify(orgData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || 'Failed to add organization');
+        }
+
+        showToast('Organization added successfully!', 'success');
+        closeQuickAddOrgModal();
+        await loadOrganizations();
+
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Add Organization';
+      }
+    }
+
+    function showToast(message, type) {
+      // Check if toast function exists in global scope
+      const toast = document.createElement('div');
+      toast.className = `message-toast ${type}`;
+      toast.style.cssText = `position: fixed; top: 20px; right: 20px; min-width: 300px; padding: 1rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; animation: slideIn 0.3s;`;
+      toast.style.background = type === 'success' ? '#d1fae5' : type === 'error' ? '#fee2e2' : '#dbeafe';
+      toast.style.color = type === 'success' ? '#065f46' : type === 'error' ? '#991b1b' : '#1e40af';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 5000);
+    }
+
+    // Selection functions
+    function toggleSelectAll() {
+      const checkbox = document.getElementById('selectAll');
+      const checked = checkbox.checked;
+
+      if (checked) {
+        paginatedOrganizations.forEach(org => {
+          if (org.id) selectedOrganizations.add(org.id);
+        });
+      } else {
+        paginatedOrganizations.forEach(org => {
+          if (org.id) selectedOrganizations.delete(org.id);
+        });
+      }
+
+      updateBulkActionsBar();
+      displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+    }
+
+    function toggleOrganization(id) {
+      if (selectedOrganizations.has(id)) {
+        selectedOrganizations.delete(id);
+      } else {
+        selectedOrganizations.add(id);
+      }
+      updateBulkActionsBar();
+      updateSelectAllCheckbox();
+    }
+
+    function updateSelectAllCheckbox() {
+      const selectAllCheckbox = document.getElementById('selectAll');
+      if (selectAllCheckbox && paginatedOrganizations.length > 0) {
+        const allPageSelected = paginatedOrganizations.every(org => org.id && selectedOrganizations.has(org.id));
+        const somePageSelected = paginatedOrganizations.some(org => org.id && selectedOrganizations.has(org.id));
+
+        selectAllCheckbox.checked = allPageSelected;
+        selectAllCheckbox.indeterminate = somePageSelected && !allPageSelected;
+      }
+    }
+
+    function updateBulkActionsBar() {
+      const bulkActionsBar = document.getElementById('bulkActionsBar');
+      const selectedCount = document.getElementById('selectedCount');
+
+      if (selectedOrganizations.size > 0) {
+        bulkActionsBar.style.display = 'block';
+        selectedCount.textContent = selectedOrganizations.size;
+      } else {
+        bulkActionsBar.style.display = 'none';
+      }
+    }
+
+    function clearSelection() {
+      selectedOrganizations.clear();
+      displayOrganizations(filteredOrganizations.length ? filteredOrganizations : allOrganizations);
+      updateBulkActionsBar();
+    }
+
+    function selectAllFiltered() {
+      const orgsToDisplay = filteredOrganizations.length ? filteredOrganizations : allOrganizations;
+      orgsToDisplay.forEach(org => {
+        if (org.id) selectedOrganizations.add(org.id);
+      });
+      displayOrganizations(orgsToDisplay);
+      updateBulkActionsBar();
+    }
+
+    // AI Enhancement Functions
+    async function enhanceSingleOrganization(orgId) {
+      const org = allOrganizations.find(o => o.id === orgId);
+      if (!org) {
+        showMessage('Organization not found', 'error');
+        return;
+      }
+
+      // Find the button and show loading state
+      const btn = document.querySelector(`button[onclick="enhanceSingleOrganization(${orgId})"]`);
+      const originalBtn = btn?.innerHTML;
+      if (btn) {
+        btn.innerHTML = '<span style="animation: spin 1s linear infinite; display: inline-block;">✨</span>';
+        btn.disabled = true;
+      }
+
+      showMessage(`Enhancing ${org.name} with AI...`, 'info');
+
+      try {
+        const sessionToken = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE_URL}/api/claude/enhance-organization`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify({ organization_id: org.id, useWebSearch: true })
+        });
+
+        const data = await response.json();
+        console.log('AI enhance response for org', org.name, ':', data);
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || 'Failed to enhance organization');
+        }
+
+        // Show preview modal with suggestions
+        if (data.enhancement && data.enhancement.suggestions) {
+          showEnhancementPreview([{
+            id: org.id,
+            name: org.name,
+            type: 'organization',
+            current: org,
+            suggestions: data.enhancement.suggestions
+          }]);
+        } else {
+          showMessage('No enhancement suggestions available', 'info');
+        }
+
+        // Restore button
+        if (btn) {
+          btn.innerHTML = originalBtn;
+          btn.disabled = false;
+        }
+
+      } catch (error) {
+        console.error('Enhancement error:', error);
+        showMessage('Error: ' + error.message, 'error');
+        if (btn) {
+          btn.innerHTML = originalBtn;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    async function bulkEnhanceSelected() {
+      if (selectedOrganizations.size === 0) {
+        showMessage('Please select organizations first', 'error');
+        return;
+      }
+
+      const count = selectedOrganizations.size;
+      if (count > 20) {
+        if (!confirm(`You are about to AI enhance ${count} organizations. This may take several minutes. Continue?`)) {
+          return;
+        }
+      }
+
+      // Get selected organizations
+      const orgsToEnhance = allOrganizations.filter(o => selectedOrganizations.has(o.id));
+      let processed = 0;
+      let enhanced = 0;
+      let failed = 0;
+
+      // Create progress modal
+      const progressModal = document.createElement('div');
+      progressModal.id = 'aiProgressModal';
+      progressModal.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: flex; align-items: center; justify-content: center;">
+          <div style="background: var(--admin-surface, white); padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">✨</div>
+            <h3 style="margin: 0 0 1rem 0; color: var(--admin-text, #333);">AI Enhancement in Progress</h3>
+            <p id="aiProgressText" style="color: var(--admin-text-muted, #666); margin-bottom: 1rem;">Enhancing organization 0/${count}...</p>
+            <div style="background: var(--admin-gray-200, #e5e7eb); border-radius: 9999px; height: 8px; overflow: hidden;">
+              <div id="aiProgressBar" style="background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%); height: 100%; width: 0%; transition: width 0.3s;"></div>
+            </div>
+            <p id="aiProgressStatus" style="font-size: 0.875rem; color: var(--admin-text-muted, #666); margin-top: 0.5rem;">Starting...</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(progressModal);
+
+      const updateProgress = (current, total, status) => {
+        const pct = Math.round((current / total) * 100);
+        document.getElementById('aiProgressText').textContent = `Enhancing organization ${current}/${total}...`;
+        document.getElementById('aiProgressBar').style.width = `${pct}%`;
+        document.getElementById('aiProgressStatus').textContent = status || `${enhanced} enhanced, ${failed} failed`;
+      };
+
+      const allSuggestions = [];
+
+      // Process in batches of 3
+      const batchSize = 3;
+      for (let i = 0; i < orgsToEnhance.length; i += batchSize) {
+        const batch = orgsToEnhance.slice(i, i + batchSize);
+
+        const results = await Promise.allSettled(
+          batch.map(async (org) => {
+            try {
+              const sessionToken = localStorage.getItem('isrs_session_token');
+              const response = await fetch(`${API_BASE_URL}/api/claude/enhance-organization`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${sessionToken}`
+                },
+                body: JSON.stringify({ organization_id: org.id, useWebSearch: true })
+              });
+
+              const data = await response.json();
+              console.log('AI enhance response for org', org.name, ':', data);
+
+              if (response.ok && data.success && data.enhancement) {
+                const suggestions = data.enhancement.suggestions || {};
+                return { success: true, org, suggestions };
+              }
+              return { success: false, org, error: data.error || 'No enhancement suggestions returned' };
+            } catch (e) {
+              return { success: false, org, error: e.message };
+            }
+          })
+        );
+
+        results.forEach((result) => {
+          processed++;
+          updateProgress(processed, count);
+
+          if (result.status === 'fulfilled' && result.value.success) {
+            enhanced++;
+            allSuggestions.push({
+              id: result.value.org.id,
+              name: result.value.org.name,
+              type: 'organization',
+              current: result.value.org,
+              suggestions: result.value.suggestions
+            });
+          } else {
+            failed++;
+          }
+        });
+      }
+
+      // Remove progress modal
+      progressModal.remove();
+
+      // Show preview modal with all suggestions
+      if (allSuggestions.length > 0) {
+        showEnhancementPreview(allSuggestions);
+      } else {
+        showMessage(`Enhancement complete. ${failed} organizations had no suggestions.`, 'info');
+      }
+    }
+
+    // Inline cell editing for organizations
+    function editOrgCell(cell, orgId, field) {
+      // Prevent double editing
+      if (cell.querySelector('input, select, textarea')) return;
+
+      const currentValue = cell.textContent.trim() === '-' ? '' : cell.textContent.trim();
+      const org = allOrganizations.find(o => o.id === orgId);
+      if (!org) return;
+
+      // Store original value
+      cell.setAttribute('data-original', currentValue);
+
+      // Create input element (use textarea for notes, select for type, input for others)
+      let inputElement;
+
+      if (field === 'notes') {
+        inputElement = document.createElement('textarea');
+        inputElement.rows = 3;
+        inputElement.style.resize = 'vertical';
+      } else if (field === 'type') {
+        inputElement = document.createElement('select');
+        inputElement.innerHTML = `
+          <option value="">Select type...</option>
+          <option value="university" ${currentValue === 'university' ? 'selected' : ''}>University</option>
+          <option value="government" ${currentValue === 'government' ? 'selected' : ''}>Government</option>
+          <option value="ngo" ${currentValue === 'ngo' ? 'selected' : ''}>NGO/Non-profit</option>
+          <option value="company" ${currentValue === 'company' ? 'selected' : ''}>Company</option>
+          <option value="foundation" ${currentValue === 'foundation' ? 'selected' : ''}>Foundation</option>
+          <option value="research" ${currentValue === 'research' ? 'selected' : ''}>Research Institute</option>
+          <option value="other" ${currentValue === 'other' ? 'selected' : ''}>Other</option>
+        `;
+      } else {
+        inputElement = document.createElement('input');
+        inputElement.type = field === 'website' ? 'url' : 'text';
+        inputElement.value = currentValue;
+      }
+
+      inputElement.style.width = '100%';
+      inputElement.style.padding = '4px 8px';
+      inputElement.style.border = '2px solid var(--admin-primary)';
+      inputElement.style.borderRadius = '4px';
+      inputElement.style.fontSize = 'inherit';
+      inputElement.style.background = 'var(--admin-surface)';
+      inputElement.style.color = 'var(--admin-text)';
+
+      // Clear cell and add input
+      cell.textContent = '';
+      cell.appendChild(inputElement);
+      inputElement.focus();
+      if (inputElement.select) inputElement.select();
+
+      // Handle save on blur or enter
+      const saveEdit = async () => {
+        const newValue = (inputElement.value || '').trim();
+        const originalValue = cell.getAttribute('data-original');
+
+        // If no change, restore original
+        if (newValue === originalValue) {
+          cell.textContent = originalValue || '-';
+          return;
+        }
+
+        // Show saving state
+        cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
+
+        try {
+          const sessionToken = localStorage.getItem('isrs_session_token');
+          const response = await fetch(`${API_BASE_URL}/api/admin/organizations/${org.id}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${sessionToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ [field]: newValue })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            // Update local data
+            org[field] = newValue;
+            cell.textContent = newValue || '-';
+            showMessage('Field updated successfully', 'success');
+          } else {
+            cell.textContent = originalValue || '-';
+            showMessage('Failed to update: ' + (data.error || 'Unknown error'), 'error');
+          }
+        } catch (error) {
+          cell.textContent = originalValue || '-';
+          showMessage('Error updating field: ' + error.message, 'error');
+        }
+      };
+
+      inputElement.addEventListener('blur', saveEdit);
+      inputElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && field !== 'notes') {
+          e.preventDefault();
+          inputElement.blur();
+        }
+        if (e.key === 'Escape') {
+          cell.textContent = cell.getAttribute('data-original') || '-';
+        }
+      });
+    }
+  </script>
+
+  <!-- Email Utils -->
+  <script src="/js/email-utils.js"></script>
+
+  <!-- AI Enhancement Preview Modal -->
+  <script src="/js/ai-enhancement-preview.js"></script>
+
+  <!-- Admin Layout -->
+  <script src="/js/admin-layout.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAdminLayout('organizations');
+    });
+  </script>
+
+  <!-- Feedback Widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    initFeedbackWidget({ isAdminPortal: true });
+  </script>
+</body>
+</html>

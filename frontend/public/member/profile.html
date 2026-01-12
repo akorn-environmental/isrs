@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your ISRS member profile">
+  <title>My Profile - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/member-auth.js"></script>
+
+  <style>
+    .profile-section {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-section h2 {
+      color: var(--primary-blue);
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+      font-size: 1.3rem;
+    }
+
+    .profile-field {
+      margin-bottom: 1.25rem;
+    }
+
+    .profile-field label {
+      display: block;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .profile-field .value {
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 1.5rem;
+    }
+
+    .profile-field .value.empty {
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .profile-field input,
+    .profile-field textarea,
+    .profile-field select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .profile-field textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--accent-teal);
+      color: white;
+    }
+
+    .badge.complete {
+      background: #28a745;
+    }
+
+    .badge.incomplete {
+      background: #ffc107;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 900px; margin: 2rem auto 4rem; padding: 0 2rem;">
+
+      <!-- Profile Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 style="margin: 0 0 0.5rem 0; color: var(--primary-blue);">My Profile</h1>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <span id="completionBadge" class="badge">Loading...</span>
+            <span id="memberSince" style="color: var(--text-light); font-size: 0.95rem;"></span>
+          </div>
+        </div>
+        <div class="btn-group" style="margin-top: 0;">
+          <button id="editBtn" class="btn btn-primary" onclick="enableEditMode()">Edit Profile</button>
+          <button id="viewDirectoryBtn" class="btn btn-secondary" onclick="window.location.href='/member/directory.html'">View Directory</button>
+        </div>
+      </div>
+
+      <!-- Profile Completion Progress -->
+      <div id="completionProgress" class="profile-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span style="font-weight: 600;">Profile Completion</span>
+          <span id="completionPercent" style="font-weight: 600; color: var(--primary-blue); font-size: 1.1rem;">0%</span>
+        </div>
+        <div style="width: 100%; height: 10px; background: #dee2e6; border-radius: 5px; overflow: hidden;">
+          <div id="completionBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal)); transition: width 0.5s ease;"></div>
+        </div>
+        <p id="completionMessage" style="margin: 0.75rem 0 0 0; font-size: 0.9rem; color: var(--text-light);"></p>
+      </div>
+
+      <form id="profileForm">
+
+        <!-- Basic Information -->
+        <div class="profile-section">
+          <h2>Basic Information</h2>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="profile-field">
+              <label>First Name</label>
+              <div class="value" data-field="first_name"></div>
+              <input type="text" name="first_name" style="display: none;">
+            </div>
+
+            <div class="profile-field">
+              <label>Last Name</label>
+              <div class="value" data-field="last_name"></div>
+              <input type="text" name="last_name" style="display: none;">
+            </div>
+          </div>
+
+          <div class="profile-field">
+            <label>Email Address</label>
+            <div class="value" data-field="user_email"></div>
+            <small style="color: var(--text-light);">Email cannot be changed. Contact support if needed.</small>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="profile-field">
+              <label>Country</label>
+              <div class="value" data-field="country"></div>
+              <input type="text" name="country" style="display: none;">
+            </div>
+
+            <div class="profile-field">
+              <label>City</label>
+              <div class="value" data-field="city"></div>
+              <input type="text" name="city" style="display: none;">
+            </div>
+          </div>
+
+          <div class="profile-field">
+            <label>Phone</label>
+            <div class="value" data-field="phone"></div>
+            <input type="tel" name="phone" style="display: none;">
+          </div>
+        </div>
+
+        <!-- Professional Information -->
+        <div class="profile-section">
+          <h2>Professional Information</h2>
+
+          <div class="profile-field">
+            <label>Organization</label>
+            <div class="value" data-field="organization_name"></div>
+            <input type="text" name="organization_name" style="display: none;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="profile-field">
+              <label>Position/Title</label>
+              <div class="value" data-field="position"></div>
+              <input type="text" name="position" style="display: none;">
+            </div>
+
+            <div class="profile-field">
+              <label>Department</label>
+              <div class="value" data-field="department"></div>
+              <input type="text" name="department" style="display: none;">
+            </div>
+          </div>
+
+          <div class="profile-field">
+            <label>Bio / About Me</label>
+            <div class="value" data-field="bio" style="white-space: pre-wrap;"></div>
+            <textarea name="bio" style="display: none;"></textarea>
+          </div>
+
+          <div class="profile-field">
+            <label>Research Areas</label>
+            <div class="value" data-field="research_areas"></div>
+            <textarea name="research_areas" style="display: none;"></textarea>
+            <small style="color: var(--text-light); display: none;" class="edit-only">Separate multiple areas with commas</small>
+          </div>
+
+          <div class="profile-field">
+            <label>Expertise Keywords</label>
+            <div class="value" data-field="expertise_keywords"></div>
+            <textarea name="expertise_keywords" style="display: none;" rows="2"></textarea>
+            <small style="color: var(--text-light); display: none;" class="edit-only">Separate keywords with commas</small>
+          </div>
+        </div>
+
+        <!-- Online Presence -->
+        <div class="profile-section">
+          <h2>Online Presence</h2>
+
+          <div class="profile-field">
+            <label>Website</label>
+            <div class="value" data-field="website"></div>
+            <input type="url" name="website" placeholder="https://..." style="display: none;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="profile-field">
+              <label>LinkedIn URL</label>
+              <div class="value" data-field="linkedin_url"></div>
+              <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/..." style="display: none;">
+            </div>
+
+            <div class="profile-field">
+              <label>ORCID</label>
+              <div class="value" data-field="orcid"></div>
+              <input type="text" name="orcid" placeholder="0000-0000-0000-0000" style="display: none;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Conference History -->
+        <div id="conferenceHistorySection" class="profile-section" style="display: none;">
+          <h2>ICSR Conference History</h2>
+          <div id="conferenceHistory"></div>
+        </div>
+
+        <!-- Directory & Privacy Settings -->
+        <div class="profile-section">
+          <h2>Directory & Privacy Settings</h2>
+
+          <div class="profile-field">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="directory_opt_in" id="directoryOptIn" disabled style="width: 20px; height: 20px; margin-right: 0.75rem;">
+              <span>Include me in the public member directory</span>
+            </label>
+          </div>
+
+          <div id="visibilitySettings" style="display: none; background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1rem; margin-top: 1rem;">
+            <label style="font-weight: 600; display: block; margin-bottom: 0.75rem;">Visible Fields in Directory:</label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="organization" disabled style="margin-right: 0.5rem;">
+                <span>Organization</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="position" disabled style="margin-right: 0.5rem;">
+                <span>Position</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="country" disabled style="margin-right: 0.5rem;">
+                <span>Country</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="city" disabled style="margin-right: 0.5rem;">
+                <span>City</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="bio" disabled style="margin-right: 0.5rem;">
+                <span>Bio</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="research_areas" disabled style="margin-right: 0.5rem;">
+                <span>Research Areas</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="conference_history" disabled style="margin-right: 0.5rem;">
+                <span>Conference History</span>
+              </label>
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" class="visibility-field" data-field="contact_email" disabled style="margin-right: 0.5rem;">
+                <span>Email</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Mode Controls -->
+        <div id="editControls" style="display: none;">
+          <div style="background: #f0f8ff; border: 1px solid #d0e8ff; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem;">
+            <p style="margin: 0; color: var(--text-color);">
+              <strong>Tip:</strong> Complete more fields to increase your profile visibility and help other members find you!
+            </p>
+          </div>
+
+          <div class="btn-group" style="justify-content: center;">
+            <button type="submit" class="btn btn-primary" style="min-width: 150px;">Save Changes</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelEdit()" style="min-width: 150px;">Cancel</button>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Data Privacy & GDPR -->
+      <div class="profile-section" style="background: #fafafa;">
+        <h2>Data Privacy & Account</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div style="padding: 1rem; background: white; border: 1px solid var(--border-color); border-radius: 4px;">
+            <h3 style="margin: 0 0 0.5rem 0; font-size: 1rem;">Export Your Data</h3>
+            <p style="margin: 0 0 1rem 0; color: var(--text-light); font-size: 0.9rem;">
+              Download a copy of all your personal data
+            </p>
+            <button class="btn btn-secondary" onclick="requestDataExport()" style="width: 100%;">Request Data Export</button>
+          </div>
+
+          <div style="padding: 1rem; background: white; border: 1px solid var(--border-color); border-radius: 4px;">
+            <h3 style="margin: 0 0 0.5rem 0; font-size: 1rem;">Delete Account</h3>
+            <p style="margin: 0 0 1rem 0; color: var(--text-light); font-size: 0.9rem;">
+              Permanently delete your account and data
+            </p>
+            <button class="btn" onclick="confirmAccountDeletion()" style="width: 100%; background: #dc3545; color: white;">Delete Account</button>
+          </div>
+        </div>
+
+        <div style="text-align: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+          <button class="btn btn-secondary" onclick="MemberAuth.logout()">Logout</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    // Require authentication
+    if (!MemberAuth.requireAuth()) {
+      throw new Error('Not authenticated');
+    }
+
+    let profileData = null;
+    let editMode = false;
+
+    // Load profile
+    async function loadProfile() {
+      try {
+        const response = await MemberAuth.getProfile();
+
+        if (!response.success) {
+          throw new Error('Failed to load profile');
+        }
+
+        profileData = response.data;
+        displayProfile();
+
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        alert('Failed to load your profile. Please try refreshing the page.');
+      }
+    }
+
+    // Display profile data
+    function displayProfile() {
+      const profile = profileData.profile;
+      const history = profileData.conferenceHistory || [];
+
+      // Populate all fields
+      document.querySelectorAll('.value[data-field]').forEach(el => {
+        const field = el.dataset.field;
+        let value = profile[field];
+
+        if (value === null || value === undefined || value === '') {
+          el.textContent = 'Not provided';
+          el.classList.add('empty');
+        } else {
+          // Handle arrays
+          if (Array.isArray(value)) {
+            value = value.join(', ');
+          }
+          el.textContent = value;
+          el.classList.remove('empty');
+        }
+      });
+
+      // Set form inputs for edit mode
+      const form = document.getElementById('profileForm');
+      Object.keys(profile).forEach(key => {
+        const input = form.elements[key];
+        if (input) {
+          let value = profile[key];
+          if (Array.isArray(value)) {
+            value = value.join(', ');
+          }
+          input.value = value || '';
+        }
+      });
+
+      // Directory settings
+      document.getElementById('directoryOptIn').checked = profile.directory_opt_in || false;
+      toggleVisibilitySettings();
+
+      // Visibility fields
+      if (profile.directory_visible_fields) {
+        Object.entries(profile.directory_visible_fields).forEach(([field, visible]) => {
+          const checkbox = document.querySelector(`.visibility-field[data-field="${field}"]`);
+          if (checkbox) checkbox.checked = visible;
+        });
+      }
+
+      // Conference history
+      if (history.length > 0) {
+        const historyDiv = document.getElementById('conferenceHistory');
+        historyDiv.innerHTML = history.map(conf => `
+          <div style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
+            <strong style="color: var(--primary-blue);">${conf.year} - ${conf.name}</strong><br>
+            <span style="color: var(--text-light);">${conf.location || ''}</span>
+            ${conf.attendance_type ? `<br><em>${conf.attendance_type}</em>` : ''}
+          </div>
+        `).join('');
+        document.getElementById('conferenceHistorySection').style.display = 'block';
+      }
+
+      // Member since
+      if (profile.created_at) {
+        const date = new Date(profile.created_at);
+        document.getElementById('memberSince').textContent = `Member since ${date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+      }
+
+      // Update completion
+      updateCompletion(profile);
+    }
+
+    // Update completion score
+    function updateCompletion(profile) {
+      const score = profile.profile_completion_score || 0;
+      document.getElementById('completionPercent').textContent = score + '%';
+      document.getElementById('completionBar').style.width = score + '%';
+
+      const badge = document.getElementById('completionBadge');
+      if (score >= 80) {
+        badge.textContent = '✓ Complete Profile';
+        badge.className = 'badge complete';
+        document.getElementById('completionMessage').textContent = 'Your profile is complete and looking great!';
+      } else if (score >= 50) {
+        badge.textContent = score + '% Complete';
+        badge.className = 'badge';
+        document.getElementById('completionMessage').textContent = 'Good progress! Add more information to help members find you.';
+      } else {
+        badge.textContent = score + '% Complete';
+        badge.className = 'badge incomplete';
+        document.getElementById('completionMessage').textContent = 'Complete more fields to increase your profile visibility.';
+      }
+    }
+
+    // Enable edit mode
+    function enableEditMode() {
+      editMode = true;
+
+      // Show inputs, hide values
+      document.querySelectorAll('.profile-field').forEach(field => {
+        const value = field.querySelector('.value');
+        const input = field.querySelector('input, textarea');
+
+        if (value && !value.dataset.field.includes('email')) {
+          value.style.display = 'none';
+        }
+        if (input) {
+          input.style.display = 'block';
+        }
+      });
+
+      // Show edit-only elements
+      document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'block');
+
+      // Enable checkboxes
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
+
+      // Toggle buttons
+      document.getElementById('editBtn').style.display = 'none';
+      document.getElementById('viewDirectoryBtn').style.display = 'none';
+      document.getElementById('editControls').style.display = 'block';
+      document.getElementById('completionProgress').style.display = 'none';
+    }
+
+    // Cancel edit
+    function cancelEdit() {
+      editMode = false;
+      displayProfile(); // Reset to original values
+
+      // Hide inputs, show values
+      document.querySelectorAll('.profile-field').forEach(field => {
+        const value = field.querySelector('.value');
+        const input = field.querySelector('input, textarea');
+
+        if (value) value.style.display = 'block';
+        if (input) input.style.display = 'none';
+      });
+
+      // Hide edit-only elements
+      document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
+
+      // Disable checkboxes
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = true);
+
+      // Toggle buttons
+      document.getElementById('editBtn').style.display = 'inline-block';
+      document.getElementById('viewDirectoryBtn').style.display = 'inline-block';
+      document.getElementById('editControls').style.display = 'none';
+      document.getElementById('completionProgress').style.display = 'block';
+    }
+
+    // Toggle visibility settings
+    function toggleVisibilitySettings() {
+      const optIn = document.getElementById('directoryOptIn').checked;
+      document.getElementById('visibilitySettings').style.display = optIn ? 'block' : 'none';
+    }
+
+    document.getElementById('directoryOptIn').addEventListener('change', toggleVisibilitySettings);
+
+    // Handle form submission
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving...';
+
+      try {
+        // Gather visibility settings
+        const visibilityFields = {};
+        document.querySelectorAll('.visibility-field').forEach(checkbox => {
+          visibilityFields[checkbox.dataset.field] = checkbox.checked;
+        });
+
+        // Prepare updates
+        const updates = {
+          first_name: form.first_name.value.trim(),
+          last_name: form.last_name.value.trim(),
+          country: form.country.value.trim(),
+          city: form.city.value.trim(),
+          phone: form.phone.value.trim(),
+          organization_name: form.organization_name.value.trim(),
+          position: form.position.value.trim(),
+          department: form.department.value.trim(),
+          bio: form.bio.value.trim(),
+          research_areas: form.research_areas.value.trim(),
+          expertise_keywords: form.expertise_keywords.value.trim(),
+          website: form.website.value.trim(),
+          linkedin_url: form.linkedin_url.value.trim(),
+          orcid: form.orcid.value.trim(),
+          directory_opt_in: form.directory_opt_in.checked,
+          directory_visible_fields: visibilityFields
+        };
+
+        const response = await MemberAuth.updateProfile(updates);
+
+        if (!response.success) {
+          throw new Error(response.error || 'Failed to update profile');
+        }
+
+        // Reload profile
+        await loadProfile();
+        cancelEdit();
+
+        // Show success message
+        alert('Profile updated successfully!');
+
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        alert('Failed to save profile: ' + error.message);
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save Changes';
+      }
+    });
+
+    // Data export
+    async function requestDataExport() {
+      if (!confirm('Request a copy of all your personal data? You will receive an email with a download link within 48 hours.')) {
+        return;
+      }
+
+      try {
+        const response = await MemberAuth.requestDataExport();
+        if (response.success) {
+          alert('Data export requested successfully! You will receive an email within 48 hours.');
+        } else {
+          throw new Error(response.error);
+        }
+      } catch (error) {
+        alert('Failed to request data export: ' + error.message);
+      }
+    }
+
+    // Account deletion
+    async function confirmAccountDeletion() {
+      const confirmed = confirm(
+        'Are you sure you want to delete your account?\n\n' +
+        'This will:\n' +
+        '• Remove you from the member directory\n' +
+        '• Delete all your personal data\n' +
+        '• Cancel any conference registrations\n\n' +
+        'This action cannot be undone.'
+      );
+
+      if (!confirmed) return;
+
+      const reason = prompt('Optional: Please tell us why you\'re leaving (helps us improve):');
+
+      try {
+        const response = await MemberAuth.requestAccountDeletion(reason);
+        if (response.success) {
+          alert('Account deletion requested. Your account will be deleted within 7 days. You will receive a confirmation email.');
+          window.location.href = '/';
+        } else {
+          throw new Error(response.error);
+        }
+      } catch (error) {
+        alert('Failed to request account deletion: ' + error.message);
+      }
+    }
+
+    // Load profile on page load
+    document.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+</body>
+</html>

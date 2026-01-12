@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Connect with ISRS members worldwide working in shellfish restoration">
+  <title>Member Directory - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/member-auth.js"></script>
+
+  <style>
+    .filters-section {
+      background: #f8f9fa;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-group {
+      margin-bottom: 1rem;
+    }
+
+    .filter-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .member-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .member-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .member-header {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .member-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .member-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .member-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .member-title {
+      color: var(--text-light);
+      margin: 0 0 0.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .member-location {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .member-bio {
+      color: var(--text-color);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .member-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #e9ecef;
+      color: var(--text-color);
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .tag.conference {
+      background: var(--accent-teal);
+      color: white;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-light);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .member-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .member-photo {
+        margin-bottom: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 1000px; margin: 2rem auto 4rem; padding: 0 2rem;">
+
+      <!-- Page Header -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Member Directory</h1>
+        <p style="font-size: 1.1rem; color: var(--text-light); max-width: 700px; margin: 0 auto 1rem;">
+          Connect with researchers, practitioners, and stakeholders working in shellfish restoration worldwide
+        </p>
+        <div id="resultsCount" style="font-weight: 600; color: var(--primary-blue);"></div>
+      </div>
+
+      <!-- Search and Filters -->
+      <div class="filters-section">
+        <div class="filter-group">
+          <label for="searchInput">
+            <span style="display: flex; align-items: center; gap: 0.5rem;">
+              <span>Search</span>
+              <span style="font-weight: normal; font-size: 0.9rem; color: var(--text-light);">
+                (name, organization, bio, research areas)
+              </span>
+            </span>
+          </label>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search members..."
+            onkeyup="handleSearchDebounced()"
+          >
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+          <div class="filter-group">
+            <label for="countryFilter">Country</label>
+            <select id="countryFilter" onchange="applyFilters()">
+              <option value="">All Countries</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="conferenceFilter">Conference Year</label>
+            <select id="conferenceFilter" onchange="applyFilters()">
+              <option value="">All Years</option>
+              <option value="2022">ICSR 2022</option>
+              <option value="2018">ICSR 2018</option>
+              <option value="2015">ICSR 2015</option>
+              <option value="2011">ICSR 2011</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem; text-align: right;">
+          <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 0.5rem 1.5rem;">
+            Clear Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" style="text-align: center; padding: 3rem;">
+        <div class="spinner" style="margin: 0 auto 1rem; width: 50px; height: 50px; border: 4px solid var(--border-color); border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <p style="color: var(--text-light);">Loading members...</p>
+      </div>
+
+      <!-- Members Grid -->
+      <div id="membersGrid" style="display: none;">
+        <!-- Members will be populated here -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" style="display: none;" class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h2 style="color: var(--text-color); margin-bottom: 0.5rem;">No Members Found</h2>
+        <p>Try adjusting your search criteria or filters</p>
+      </div>
+
+      <!-- Call to Action (if not logged in) -->
+      <div id="ctaSection" style="margin-top: 3rem; text-align: center; padding: 2rem; background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 4px;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Join the ISRS Community</h2>
+        <p style="color: var(--text-color); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Connect with colleagues, share your research, and stay updated on shellfish restoration initiatives worldwide.
+        </p>
+        <a href="/member/login.html" class="btn btn-primary">Login to Your Profile</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    let allMembers = [];
+    let filteredMembers = [];
+    let searchTimeout = null;
+
+    // Load directory on page load
+    async function loadDirectory() {
+      try {
+        const response = await MemberAuth.getDirectory();
+
+        if (!response.success) {
+          throw new Error('Failed to load directory');
+        }
+
+        allMembers = response.data || [];
+        filteredMembers = allMembers;
+
+        // Populate country filter
+        populateCountryFilter();
+
+        // Display members
+        displayMembers();
+
+        // Hide loading, show grid
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('membersGrid').style.display = 'block';
+
+      } catch (error) {
+        console.error('Error loading directory:', error);
+        document.getElementById('loadingState').innerHTML = `
+          <p style="color: #c00;">Failed to load member directory. Please try refreshing the page.</p>
+        `;
+      }
+    }
+
+    // Populate country filter with unique countries
+    function populateCountryFilter() {
+      const countries = [...new Set(allMembers.map(m => m.country).filter(c => c))].sort();
+      const select = document.getElementById('countryFilter');
+
+      countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        option.textContent = country;
+        select.appendChild(option);
+      });
+    }
+
+    // Display members
+    function displayMembers() {
+      const grid = document.getElementById('membersGrid');
+      const emptyState = document.getElementById('emptyState');
+      const resultsCount = document.getElementById('resultsCount');
+
+      if (filteredMembers.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        resultsCount.textContent = 'No members found';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      grid.style.display = 'block';
+
+      // Update count
+      const count = filteredMembers.length;
+      resultsCount.textContent = `${count} ${count === 1 ? 'member' : 'members'} found`;
+
+      // Generate member cards
+      grid.innerHTML = filteredMembers.map(member => {
+        const initials = getInitials(member.full_name);
+        const position = member.position || '';
+        const organization = member.organization || '';
+        const title = [position, organization].filter(x => x).join(' at ') || 'ISRS Member';
+        const location = [member.city, member.country].filter(x => x).join(', ') || '';
+
+        // Parse research areas
+        const researchAreas = member.research_areas || [];
+        const areas = Array.isArray(researchAreas) ? researchAreas : [];
+
+        // Parse conference history
+        const conferenceHistory = member.conference_history || [];
+        const conferences = Array.isArray(conferenceHistory) ? conferenceHistory : [];
+
+        return `
+          <div class="member-card">
+            <div class="member-header">
+              <div class="member-photo" title="${member.full_name}">
+                ${initials}
+              </div>
+              <div class="member-info">
+                <h2 class="member-name">${escapeHtml(member.full_name)}</h2>
+                <p class="member-title">${escapeHtml(title)}</p>
+                ${location ? `<p class="member-location">📍 ${escapeHtml(location)}</p>` : ''}
+              </div>
+            </div>
+
+            ${member.bio ? `
+              <div class="member-bio">
+                ${escapeHtml(truncate(member.bio, 200))}
+              </div>
+            ` : ''}
+
+            ${areas.length > 0 || conferences.length > 0 ? `
+              <div class="member-tags">
+                ${areas.slice(0, 5).map(area =>
+                  `<span class="tag">${escapeHtml(area)}</span>`
+                ).join('')}
+                ${conferences.slice(0, 3).map(conf =>
+                  `<span class="tag conference">ICSR ${conf.year}</span>`
+                ).join('')}
+              </div>
+            ` : ''}
+
+            ${member.email ? `
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                <a href="mailto:${escapeHtml(member.email)}" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">
+                  📧 Contact
+                </a>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Apply filters
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      const country = document.getElementById('countryFilter').value;
+      const conference = document.getElementById('conferenceFilter').value;
+
+      filteredMembers = allMembers.filter(member => {
+        // Search filter
+        if (searchTerm) {
+          const searchableText = [
+            member.full_name,
+            member.organization,
+            member.bio,
+            ...(Array.isArray(member.research_areas) ? member.research_areas : [])
+          ].join(' ').toLowerCase();
+
+          if (!searchableText.includes(searchTerm)) {
+            return false;
+          }
+        }
+
+        // Country filter
+        if (country && member.country !== country) {
+          return false;
+        }
+
+        // Conference filter
+        if (conference) {
+          const conferences = member.conference_history || [];
+          const hasConference = conferences.some(c => c.year === parseInt(conference));
+          if (!hasConference) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      displayMembers();
+    }
+
+    // Debounced search
+    function handleSearchDebounced() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(applyFilters, 300);
+    }
+
+    // Clear all filters
+    function clearFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('countryFilter').value = '';
+      document.getElementById('conferenceFilter').value = '';
+      applyFilters();
+    }
+
+    // Utility functions
+    function getInitials(name) {
+      if (!name) return '?';
+      const parts = name.trim().split(' ');
+      if (parts.length === 1) return parts[0][0].toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function truncate(text, maxLength) {
+      if (!text || text.length <= maxLength) return text;
+      return text.substring(0, maxLength).trim() + '...';
+    }
+
+    // Load directory on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDirectory();
+
+      // Hide CTA if user is logged in
+      if (MemberAuth.isAuthenticated()) {
+        document.getElementById('ctaSection').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

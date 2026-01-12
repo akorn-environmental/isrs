@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Parser | ISRS Admin</title>
+  <link rel="stylesheet" href="/css/safmc-style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .nav-links a {
+      margin-left: 2rem;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .logout-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-header {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      margin: 0 0 0.5rem 0;
+      color: #111827;
+      font-size: 2rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      margin: 0 0 1rem 0;
+      color: #111827;
+      font-size: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 300px;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a67d8;
+    }
+
+    .btn-primary:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 3rem;
+      height: 3rem;
+      border: 3px solid #e5e7eb;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .result-section {
+      margin-top: 1rem;
+    }
+
+    .confidence-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .confidence-high {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .confidence-medium {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .confidence-low {
+      background: #fecaca;
+      color: #991b1b;
+    }
+
+    .contact-card {
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-card h4 {
+      margin: 0 0 0.5rem 0;
+      color: #111827;
+    }
+
+    .contact-info {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .action-item {
+      background: #eff6ff;
+      border-left: 3px solid #3b82f6;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .flag {
+      background: #fee2e2;
+      border-left: 3px solid #dc2626;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    .parsed-emails-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .email-item {
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .email-item:hover {
+      background: #f3f4f6;
+      transform: translateY(-2px);
+    }
+
+    .email-subject {
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+
+    .email-from {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .review-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .status-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-pending {
+      background: #fed7aa;
+      color: #92400e;
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <div class="admin-header">
+    <nav class="admin-nav">
+      <h2 style="margin:0;color:#667eea;">ISRS Email Parser</h2>
+      <div class="nav-links">
+        <a href="/admin/analytics.html">Analytics</a>
+        <a href="/admin/funding-pipeline.html">Funding</a>
+        <a href="/admin/email-campaigns.html">Campaigns</a>
+        <a href="/admin/email-parser.html">Email Parser</a>
+        <a href="/admin/email-analytics.html">Email Analytics</a>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>🤖 Intelligent Email Parser</h1>
+      <p>Paste emails to automatically extract contacts, action items, fundraising signals, and more</p>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="two-column">
+      <!-- Left: Parse New Email -->
+      <div>
+        <div class="card">
+          <h2>Parse New Email</h2>
+          <form id="parseForm" onsubmit="parseEmail(event)">
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" id="subject" placeholder="Email subject line" required>
+            </div>
+            <div class="form-group">
+              <label>From Name</label>
+              <input type="text" id="fromName" placeholder="Sender name">
+            </div>
+            <div class="form-group">
+              <label>From Email</label>
+              <input type="email" id="fromEmail" placeholder="sender@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>Email Body</label>
+              <textarea id="emailBody" placeholder="Paste full email content here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="parseBtn">Parse Email</button>
+          </form>
+        </div>
+
+        <!-- Results -->
+        <div id="results" style="display:none;margin-top:2rem;">
+          <div class="card">
+            <h2>Parsed Results</h2>
+            <div id="resultsContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Recent Parsed Emails -->
+      <div>
+        <div class="card">
+          <h2>Recently Parsed Emails</h2>
+          <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading parsed emails...</p>
+          </div>
+          <div id="parsedEmailsList" class="parsed-emails-list" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://isrs-database-backend.onrender.com';
+
+    async function parseEmail(event) {
+      event.preventDefault();
+
+      const subject = document.getElementById('subject').value;
+      const fromName = document.getElementById('fromName').value;
+      const fromEmail = document.getElementById('fromEmail').value;
+      const emailBody = document.getElementById('emailBody').value;
+
+      document.getElementById('parseBtn').disabled = true;
+      document.getElementById('parseBtn').textContent = 'Parsing...';
+      document.getElementById('results').style.display = 'none';
+
+      try {
+        const token = localStorage.getItem('session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/parse`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            subject,
+            fromName,
+            fromEmail,
+            emailBody,
+            receivedDate: new Date().toISOString()
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          displayResults(data);
+          loadParsedEmails();
+          document.getElementById('parseForm').reset();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to parse email'));
+        }
+      } catch (error) {
+        console.error('Parse error:', error);
+        alert('Failed to parse email. Please try again.');
+      } finally {
+        document.getElementById('parseBtn').disabled = false;
+        document.getElementById('parseBtn').textContent = 'Parse Email';
+      }
+    }
+
+    function displayResults(data) {
+      const { parsed, overallConfidence } = data;
+      
+      let html = `
+        <div style="margin-bottom:1rem;">
+          <strong>Overall Confidence:</strong> ${getConfidenceBadge(overallConfidence)}
+          <span style="margin-left:1rem;color:#6b7280;">Review Status: ${data.reviewStatus}</span>
+        </div>
+
+        <div class="result-section">
+          <h3>Summary</h3>
+          <p>${parsed.summary || 'No summary available'}</p>
+        </div>
+      `;
+
+      if (parsed.contacts && parsed.contacts.length > 0) {
+        html += `
+          <div class="result-section">
+            <h3>Contacts Extracted (${parsed.contacts.length})</h3>
+            ${parsed.contacts.map(c => `
+              <div class="contact-card">
+                <h4>${c.name} ${getConfidenceBadge(c.confidence)}</h4>
+                <div class="contact-info">
+                  ${c.email ? `📧 ${c.email}<br>` : ''}
+                  ${c.organization ? `🏢 ${c.organization}<br>` : ''}
+                  ${c.title ? `💼 ${c.title}<br>` : ''}
+                  ${c.phone ? `📞 ${c.phone}` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (parsed.action_items && parsed.action_items.length > 0) {
+        html += `
+          <div class="result-section">
+            <h3>Action Items (${parsed.action_items.length})</h3>
+            ${parsed.action_items.map(a => `
+              <div class="action-item">
+                <strong>${a.item}</strong><br>
+                <small>
+                  ${a.owner ? `Owner: ${a.owner} | ` : ''}
+                  ${a.deadline ? `Deadline: ${a.deadline} | ` : ''}
+                  Priority: ${a.priority} ${getConfidenceBadge(a.confidence)}
+                </small>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (parsed.fundraising && parsed.fundraising.signals && parsed.fundraising.signals.length > 0) {
+        html += `
+          <div class="result-section">
+            <h3>💰 Fundraising Signals</h3>
+            <ul>
+              ${parsed.fundraising.signals.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      if (parsed.flags && parsed.flags.length > 0) {
+        html += `
+          <div class="result-section">
+            <h3>⚠️ Flags</h3>
+            ${parsed.flags.map(f => `<div class="flag">${f}</div>`).join('')}
+          </div>
+        `;
+      }
+
+      if (parsed.recommended_next_steps && parsed.recommended_next_steps.length > 0) {
+        html += `
+          <div class="result-section">
+            <h3>Recommended Next Steps</h3>
+            <ol>
+              ${parsed.recommended_next_steps.map(s => `<li>${s}</li>`).join('')}
+            </ol>
+          </div>
+        `;
+      }
+
+      document.getElementById('resultsContent').innerHTML = html;
+      document.getElementById('results').style.display = 'block';
+    }
+
+    function getConfidenceBadge(confidence) {
+      const level = confidence >= 70 ? 'high' : confidence >= 50 ? 'medium' : 'low';
+      return `<span class="confidence-badge confidence-${level}">${confidence}% confidence</span>`;
+    }
+
+    async function loadParsedEmails() {
+      try {
+        const token = localStorage.getItem('session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          displayParsedEmails(data.emails);
+        }
+      } catch (error) {
+        console.error('Load error:', error);
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('parsedEmailsList').style.display = 'block';
+      }
+    }
+
+    function displayParsedEmails(emails) {
+      const html = emails.map(email => `
+        <div class="email-item" onclick="viewEmail(${email.id})">
+          <div class="email-subject">${email.subject || '(No subject)'}</div>
+          <div class="email-from">From: ${email.from_name || email.from_email}</div>
+          <div class="review-status status-${email.review_status}">
+            ${email.review_status} (${email.overall_confidence}% confidence)
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('parsedEmailsList').innerHTML = html || '<p style="text-align:center;color:#6b7280;">No parsed emails yet</p>';
+    }
+
+    function viewEmail(id) {
+      // In a full implementation, this would show the full parsed email details
+      alert(`Viewing email ID: ${id}\nFull details view coming soon!`);
+    }
+
+    function logout() {
+      localStorage.removeItem('session_token');
+      window.location.href = '/admin/login.html';
+    }
+
+    // Check auth and load
+    window.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('session_token');
+      if (!token) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
+      loadParsedEmails();
+    });
+  </script>
+
+  <!-- AI Assistant -->
+  <script src="/components/ai-assistant.html"></script>
+</body>
+</html>

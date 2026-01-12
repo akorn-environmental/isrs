@@ -1,0 +1,132 @@
+# ISRS Monorepo - Git Ignore
+
+# ============================================
+# Node.js / NPM
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.npm
+.yarn
+
+# ============================================
+# Environment Variables & Secrets
+# ============================================
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+.env.backup
+
+# ============================================
+# Logs
+# ============================================
+logs/
+*.log
+*.log.*
+combined.log
+error.log
+
+# ============================================
+# Uploads & User Content
+# ============================================
+backend/uploads/photos/*
+backend/uploads/thumbnails/*
+backend/uploads/documents/*
+!backend/uploads/photos/.gitkeep
+!backend/uploads/thumbnails/.gitkeep
+
+# ============================================
+# Database
+# ============================================
+*.sqlite
+*.sqlite3
+*.db
+database/backups/*
+
+# ============================================
+# OS Files
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================
+# IDE / Editors
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# Build / Dist
+# ============================================
+dist/
+build/
+.next/
+out/
+.cache/
+
+# ============================================
+# Testing
+# ============================================
+coverage/
+.nyc_output/
+*.test.js.snap
+
+# ============================================
+# Temporary Files
+# ============================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*~
+
+# ============================================
+# Certificates & Keys
+# ============================================
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# ============================================
+# Project-Specific
+# ============================================
+# Keep these docs in docs/
+/APOLLO_PII_ENHANCEMENT_COMPLETE.md
+/DEPLOYMENT_READY.md
+/SESSION_COMPLETE*.md
+/STARTUP_ENHANCEMENTS_COMPLETE.md
+
+# Migration scripts (keep in backend/database/)
+run-*-migration.js
+
+# Local development scripts
+test-*.sh
+fix-*.sh
+*.local.js
+
+# ============================================
+# Git Attributes
+# ============================================
+.gitattributes

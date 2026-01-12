@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Support ISRS - Partner with the International Shellfish Restoration Society to advance global marine ecosystem restoration">
+  <title>Support ISRS - International Shellfish Restoration Society</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <style>
+    .support-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border-color, #e1e1e1);
+    }
+    .support-section:last-child {
+      border-bottom: none;
+    }
+    .opportunity-box {
+      background: linear-gradient(135deg, var(--primary-blue, #2e5a8a), var(--accent-teal, #546d7d));
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+    .opportunity-box h3 {
+      color: white;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    .opportunity-box p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .partner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .partner-card {
+      background: var(--card-bg, #f8f9fa);
+      border: 1px solid var(--border-color, #e1e1e1);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .partner-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .partner-card h3 {
+      color: var(--primary-blue, #2e5a8a);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .partner-card h4 {
+      font-size: 0.9rem;
+      color: var(--accent-teal, #546d7d);
+      margin: 1.5rem 0 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .partner-card ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    .partner-card li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .partner-levels {
+      background: rgba(46, 90, 138, 0.08);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .partner-levels strong {
+      color: var(--primary-blue, #2e5a8a);
+    }
+    .impact-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .impact-stat {
+      padding: 1rem;
+    }
+    .impact-stat .number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-blue, #2e5a8a);
+      line-height: 1;
+    }
+    .impact-stat .label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+    .urgent-banner {
+      background: #fef3cd;
+      border: 1px solid #ffc107;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    .urgent-banner h3 {
+      color: #856404;
+      margin-bottom: 1rem;
+    }
+    .urgent-banner p {
+      color: #856404;
+      margin-bottom: 0.75rem;
+    }
+    .urgent-banner ul {
+      color: #856404;
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+    }
+    .cta-section {
+      background: var(--card-bg, #f8f9fa);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .cta-section h2 {
+      margin-bottom: 1rem;
+    }
+    .cta-section p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: var(--text-light);
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .cta-btn-primary {
+      background: var(--primary-blue, #2e5a8a);
+      color: white;
+    }
+    .cta-btn-primary:hover {
+      background: var(--secondary-blue, #4a7ab5);
+      text-decoration: none;
+    }
+    .cta-btn-secondary {
+      background: white;
+      color: var(--primary-blue, #2e5a8a);
+      border: 2px solid var(--primary-blue, #2e5a8a);
+    }
+    .cta-btn-secondary:hover {
+      background: var(--primary-blue, #2e5a8a);
+      color: white;
+      text-decoration: none;
+    }
+    .programs-list {
+      margin: 2rem 0;
+    }
+    .program-item {
+      background: var(--card-bg, #f8f9fa);
+      border: 1px solid var(--border-color, #e1e1e1);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .program-item h4 {
+      color: var(--primary-blue, #2e5a8a);
+      margin-bottom: 0.5rem;
+    }
+    .program-item p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header id="site-header"></header>
+
+  <!-- Hero Section -->
+  <main id="main-content">
+  <section class="hero" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/community-gathering.jpg');">
+    <div class="hero-content">
+      <h1 data-i18n="supportHeroHeading">Support ISRS</h1>
+      <p class="hero-subtitle" data-i18n="supportHeroSubtitle">Building Global Resilience Through Marine Ecosystem Restoration</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+
+    <!-- The Opportunity -->
+    <section class="support-section">
+      <h2 data-i18n="supportOpportunityHeading">The Critical Opportunity</h2>
+      <p style="font-size: 1.1rem; line-height: 1.7;" data-i18n="supportOpportunityText">Molluscan shellfish ecosystems provide some of nature's most powerful solutions to our most pressing challenges. A single oyster filters 50 gallons of water daily. Shellfish reefs protect coastlines from storm surge and sea level rise. These ecosystems support biodiversity, sequester carbon, and sustain coastal communities—yet we've lost up to 85% of them globally.</p>
+
+      <div class="opportunity-box">
+        <h3 data-i18n="supportOpportunityBoxHeading">ISRS exists to reverse this trend</h3>
+        <p data-i18n="supportOpportunityBoxText">By unifying the global restoration community, advancing scientific understanding, and scaling successful restoration approaches worldwide. Our flagship initiative is the biennial International Conference on Shellfish Restoration (ICSR)—the world's premier gathering for molluscan shellfish restoration since 1996.</p>
+      </div>
+
+      <div class="impact-stats">
+        <div class="impact-stat">
+          <div class="number" data-i18n="supportStat1Number">50</div>
+          <div class="label" data-i18n="supportStat1Label">Gallons filtered daily per oyster</div>
+        </div>
+        <div class="impact-stat">
+          <div class="number" data-i18n="supportStat2Number">85%</div>
+          <div class="label" data-i18n="supportStat2Label">Global shellfish loss</div>
+        </div>
+        <div class="impact-stat">
+          <div class="number" data-i18n="supportStat3Number">300+</div>
+          <div class="label" data-i18n="supportStat3Label">ICSR practitioners</div>
+        </div>
+        <div class="impact-stat">
+          <div class="number" data-i18n="supportStat4Number">20+</div>
+          <div class="label" data-i18n="supportStat4Label">Countries represented</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Urgent Need -->
+    <section class="support-section">
+      <div class="urgent-banner">
+        <h3 data-i18n="supportUrgentHeading">Urgent Need: Federal Funding Crisis</h3>
+        <p data-i18n="supportUrgentIntro">Recent federal budget changes have created unprecedented challenges for molluscan shellfish restoration:</p>
+        <ul>
+          <li data-i18n="supportUrgentPoint1">NOAA's Habitat Conservation budget cut by 29%</li>
+          <li data-i18n="supportUrgentPoint2">Over 586 NOAA employees terminated, reducing technical support capacity</li>
+          <li data-i18n="supportUrgentPoint3">Sea Grant programs at risk of elimination or severe defunding</li>
+          <li data-i18n="supportUrgentPoint4">Final phase of Bipartisan Infrastructure Law restoration funding ending in 2025</li>
+        </ul>
+        <p data-i18n="supportUrgentConclusion">The molluscan shellfish restoration community has responded with remarkable resilience. ISRS strengthens this community, connecting practitioners with diverse funding sources and ensuring restoration momentum continues despite federal challenges.</p>
+      </div>
+    </section>
+
+    <!-- Partnership Opportunities -->
+    <section class="support-section">
+      <h2 data-i18n="supportPartnershipHeading">Partnership Opportunities</h2>
+      <p data-i18n="supportPartnershipIntro">ISRS welcomes partners at all levels who share our commitment to healthy marine ecosystems.</p>
+
+      <div class="partner-grid">
+        <!-- Foundations -->
+        <div class="partner-card">
+          <h3>For Foundations</h3>
+          <p>Strategic investment in proven nature-based climate solutions with global impact potential.</p>
+          <h4>Your Impact</h4>
+          <ul>
+            <li>Advance innovative restoration science connecting researchers across 20+ countries</li>
+            <li>Scale successful approaches through international knowledge exchange</li>
+            <li>Build institutional capacity in emerging restoration regions</li>
+            <li>Leverage additional resources as ISRS guidance influences hundreds of millions in restoration investments</li>
+          </ul>
+          <div class="partner-levels">
+            <strong>Investment Levels:</strong><br>
+            $50,000+ Global Program Leadership<br>
+            $25,000-$49,999 Innovation Initiatives
+          </div>
+        </div>
+
+        <!-- Corporations -->
+        <div class="partner-card">
+          <h3>For Corporations</h3>
+          <p>Demonstrate environmental leadership while delivering concrete ESG benefits.</p>
+          <h4>Your Impact</h4>
+          <ul>
+            <li>Enhance ESG performance through association with cutting-edge marine conservation</li>
+            <li>Build supply chain resilience by protecting marine resources</li>
+            <li>Generate brand value through nature-based climate solutions</li>
+            <li>Access innovation networks with restoration technology pioneers</li>
+          </ul>
+          <div class="partner-levels">
+            <strong>Partnership Levels:</strong><br>
+            $25,000-$50,000 Sustainability Leadership<br>
+            $10,000-$24,999 Innovation Partnership
+          </div>
+        </div>
+
+        <!-- Government -->
+        <div class="partner-card">
+          <h3>For Government</h3>
+          <p>Multilateral collaboration for coastal resilience and sustainable resource management.</p>
+          <h4>Your Impact</h4>
+          <ul>
+            <li>Strengthen community resilience through nature-based infrastructure</li>
+            <li>Build international partnerships with global restoration experts</li>
+            <li>Leverage technical capacity from leading scientists worldwide</li>
+            <li>Support Indigenous sovereignty and traditional ecological knowledge</li>
+          </ul>
+          <div class="partner-levels">
+            <strong>Partnership Levels:</strong><br>
+            $15,000-$25,000 International Leadership<br>
+            $7,500-$15,000 Technical Capacity Building
+          </div>
+        </div>
+
+        <!-- Academia -->
+        <div class="partner-card">
+          <h3>For Academia</h3>
+          <p>Advance scientific understanding through global collaboration.</p>
+          <h4>Your Impact</h4>
+          <ul>
+            <li>Access cutting-edge restoration research from leading scientists worldwide</li>
+            <li>Create interdisciplinary collaboration spanning marine science and engineering</li>
+            <li>Develop innovative educational programs with hands-on restoration</li>
+            <li>Generate high-impact publications through collaborative initiatives</li>
+          </ul>
+          <div class="partner-levels">
+            <strong>Partnership Levels:</strong><br>
+            $7,500-$20,000 Research Exchange<br>
+            $2,500-$7,500 Student Research Support
+          </div>
+        </div>
+
+        <!-- Industry -->
+        <div class="partner-card">
+          <h3>For Industry</h3>
+          <p>Protect the marine resources your business depends on.</p>
+          <h4>Your Impact</h4>
+          <ul>
+            <li>Ensure long-term resource sustainability through ecosystem restoration</li>
+            <li>Demonstrate industry environmental leadership</li>
+            <li>Build operational resilience through improved water quality</li>
+            <li>Access restoration innovations applicable to operations</li>
+          </ul>
+          <div class="partner-levels">
+            <strong>Partnership Levels:</strong><br>
+            $20,000-$35,000 Sector Leadership<br>
+            $10,000-$19,999 Sustainability Innovation
+          </div>
+        </div>
+
+        <!-- Individual Donors -->
+        <div class="partner-card">
+          <h3>For Individual Donors</h3>
+          <p>Join the global restoration movement at any level.</p>
+          <h4>Membership Levels</h4>
+          <ul>
+            <li><strong>$100-$499:</strong> Supporting Member with newsletter and updates</li>
+            <li><strong>$500-$2,499:</strong> Active Member with conference discounts</li>
+            <li><strong>$2,500-$9,999:</strong> Restoration Advocate with recognition</li>
+            <li><strong>$10,000-$49,999:</strong> Conservation Partner</li>
+            <li><strong>$50,000+:</strong> Visionary Partner</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Programs -->
+    <section class="support-section">
+      <h2 data-i18n="supportProgramsHeading">Programs Delivering Global Impact</h2>
+      <div class="programs-list">
+        <div class="program-item">
+          <h4>Biennial ICSR Conference</h4>
+          <p>The world's premier gathering for molluscan shellfish restoration, bringing together 300+ practitioners from 20+ countries to share breakthrough science and successful restoration approaches. ICSR2026 will be held October 4-8, 2026, at the Little Creek Resort and Conference Center, operated by the Squaxin Island Tribe in Shelton, Washington.</p>
+        </div>
+        <div class="program-item">
+          <h4>Global Professional Network</h4>
+          <p>Year-round engagement connecting restoration practitioners worldwide through forums, webinars, and collaborative initiatives addressing shared challenges.</p>
+        </div>
+        <div class="program-item">
+          <h4>Research & Innovation Support</h4>
+          <p>Facilitating collaborative research, documenting best practices, and supporting student engagement in restoration science.</p>
+        </div>
+        <div class="program-item">
+          <h4>Policy & Advocacy</h4>
+          <p>Advancing science-based restoration policies and connecting practitioners with funding opportunities and regulatory support.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="support-section">
+      <h2 data-i18n="supportFeedbackHeading">Share Your Feedback</h2>
+      <p style="text-align: center; margin-bottom: 2rem;" data-i18n="supportFeedbackIntro">Have suggestions or questions about our partnership opportunities? We'd love to hear from you.</p>
+      <div class="contact-form" style="max-width: 700px; margin: 0 auto;">
+        <form id="supportFeedbackForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="feedbackFirstName" data-i18n="supportFirstName">First Name <span class="required">*</span></label>
+              <input type="text" id="feedbackFirstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="feedbackLastName" data-i18n="supportLastName">Last Name <span class="required">*</span></label>
+              <input type="text" id="feedbackLastName" name="lastName" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="feedbackEmail" data-i18n="supportEmail">Email <span class="required">*</span></label>
+            <input type="email" id="feedbackEmail" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="feedbackOrganization" data-i18n="supportOrganization">Organization</label>
+            <input type="text" id="feedbackOrganization" name="organization">
+          </div>
+          <div class="form-group">
+            <label for="feedbackType" data-i18n="supportInquiryType">Inquiry Type</label>
+            <select id="feedbackType" name="inquiryType">
+              <option value="general" data-i18n="supportGeneralInquiry">General Inquiry</option>
+              <option value="foundation" data-i18n="supportFoundationPartner">Foundation Partnership</option>
+              <option value="corporate" data-i18n="supportCorporatePartner">Corporate Partnership</option>
+              <option value="government" data-i18n="supportGovernmentPartner">Government Partnership</option>
+              <option value="academic" data-i18n="supportAcademicPartner">Academic Partnership</option>
+              <option value="individual" data-i18n="supportIndividualDonation">Individual Donation</option>
+              <option value="other" data-i18n="supportOther">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="feedbackMessage" data-i18n="supportMessage">Message <span class="required">*</span></label>
+            <textarea id="feedbackMessage" name="message" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="cta-btn cta-btn-primary" style="width: 100%; margin-top: 1rem;">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2 data-i18n="supportCTAHeading">Join Us</h2>
+      <p data-i18n="supportCTAText">Together, we can build resilient coasts and healthy oceans for future generations through the power of molluscan shellfish restoration.</p>
+      <div class="cta-buttons">
+        <a href="mailto:aaron@shellfish-society.org?subject=ISRS Partnership Inquiry" class="cta-btn cta-btn-primary" data-i18n="supportCTAContact">Contact Us About Partnership</a>
+        <a href="/press-kit.html" class="cta-btn cta-btn-secondary" data-i18n="supportCTAPressKit">View Press Kit</a>
+      </div>
+      <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-light);" data-i18n="supportCTAContactInfo">
+        <strong>Contact:</strong> Aaron Kornbluth, Interim Executive Director<br>
+        <a href="mailto:aaron@shellfish-society.org">aaron@shellfish-society.org</a> | (603) 953-4040
+      </p>
+    </div>
+
+  </div>
+  </main>
+
+  <!-- Footer -->
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

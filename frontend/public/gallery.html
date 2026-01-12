@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Photo gallery showcasing shellfish restoration projects, research, and events from ISRS and the global restoration community">
+  <title>Photo Gallery - International Shellfish Restoration Society</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/photo-uploader.js"></script>
+  <style>
+    .gallery-header {
+      text-align: center;
+      padding: 2rem 0;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .gallery-header h1 {
+      margin-bottom: 0.75rem;
+    }
+
+    .gallery-header p {
+      color: var(--text-muted, #666);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .upload-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-teal, #546d7d);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1rem;
+    }
+
+    .upload-button:hover {
+      background: var(--accent-teal-hover, #138d75);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(22, 160, 133, 0.4);
+    }
+
+    .upload-section {
+      display: none;
+      background: var(--light-gray, #f8f9fa);
+      border: 2px solid var(--border-color, #e1e1e1);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .upload-section.active {
+      display: block;
+    }
+
+    .upload-section h3 {
+      margin: 0 0 1rem 0;
+      color: var(--primary-blue, #2e5a8a);
+    }
+
+    .gallery-filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color, #e1e1e1);
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      background: var(--card-bg, #f8f9fa);
+      border: 1px solid var(--border-color, #e1e1e1);
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text-secondary, #4a4a4a);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary-blue, #2E5A8A);
+      color: var(--primary-blue, #2E5A8A);
+    }
+
+    .filter-btn.active {
+      background: var(--primary-blue, #2E5A8A);
+      border-color: var(--primary-blue, #2E5A8A);
+      color: white;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg, #f8f9fa);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .gallery-item-image {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+
+    .gallery-item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .gallery-item:hover .gallery-item-image img {
+      transform: scale(1.05);
+    }
+
+    .gallery-item-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 2rem 1rem 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover .gallery-item-overlay {
+      opacity: 1;
+    }
+
+    .gallery-item-overlay h3 {
+      color: white;
+      font-size: 1rem;
+      margin: 0 0 0.25rem;
+    }
+
+    .gallery-item-overlay p {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.8125rem;
+      margin: 0;
+    }
+
+    .gallery-item-info {
+      padding: 1rem;
+    }
+
+    .gallery-item-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary, #1a1a1a);
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gallery-item-meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted, #666);
+    }
+
+    .gallery-item-tags {
+      display: flex;
+      gap: 0.375rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .gallery-tag {
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.5rem;
+      background: rgba(46, 90, 138, 0.1);
+      color: var(--primary-blue, #2E5A8A);
+      border-radius: 10px;
+    }
+
+    /* Loading state */
+    .gallery-loading {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted, #666);
+    }
+
+    .gallery-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid var(--border-color, #e1e1e1);
+      border-top-color: var(--primary-blue, #2E5A8A);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Empty state */
+    .gallery-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .gallery-empty svg {
+      width: 80px;
+      height: 80px;
+      color: var(--text-muted, #999);
+      margin-bottom: 1rem;
+    }
+
+    .gallery-empty h3 {
+      margin: 0 0 0.5rem;
+      color: var(--text-primary, #1a1a1a);
+    }
+
+    .gallery-empty p {
+      margin: 0;
+      color: var(--text-muted, #666);
+    }
+
+    /* Lightbox Modal */
+    .lightbox-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .lightbox-overlay.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lightbox-image-container {
+      position: relative;
+      max-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .lightbox-close:hover {
+      opacity: 1;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .lightbox-prev {
+      left: -70px;
+    }
+
+    .lightbox-next {
+      right: -70px;
+    }
+
+    .lightbox-info {
+      text-align: center;
+      margin-top: 1.5rem;
+      max-width: 600px;
+    }
+
+    .lightbox-title {
+      color: white;
+      font-size: 1.25rem;
+      margin: 0 0 0.5rem;
+    }
+
+    .lightbox-description {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0 0 0.75rem;
+    }
+
+    .lightbox-meta {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.8125rem;
+    }
+
+    .lightbox-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary-blue, #2E5A8A);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .lightbox-download:hover {
+      background: var(--secondary-blue, #3d6a9a);
+      text-decoration: none;
+    }
+
+    .lightbox-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lightbox-metadata {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .lightbox-metadata h3 {
+      color: white;
+      font-size: 1rem;
+      margin: 0 0 0.75rem 0;
+    }
+
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .metadata-label {
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+    }
+
+    .metadata-value {
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* Related Photos */
+    .related-photos {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .related-photos h3 {
+      color: white;
+      font-size: 1rem;
+      margin: 0 0 1rem 0;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .related-item {
+      cursor: pointer;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .related-item:hover {
+      transform: scale(1.05);
+    }
+
+    .related-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    /* Comments Section */
+    .comments-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: left;
+    }
+
+    .comments-section h3 {
+      color: white;
+      font-size: 1rem;
+      margin: 0 0 1rem 0;
+    }
+
+    .comment-form {
+      margin-bottom: 1.5rem;
+    }
+
+    .comment-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-family: inherit;
+      font-size: 0.875rem;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .comment-input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .comment-item {
+      padding: 0.75rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .comment-author {
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .comment-date {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+    }
+
+    .comment-text {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Sidebar Layout */
+    .gallery-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .gallery-sidebar {
+      position: sticky;
+      top: 2rem;
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .gallery-sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .gallery-sidebar::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    .sidebar-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .sidebar-section h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
+      color: var(--primary-blue);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-input,
+    .sidebar-select {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      margin-bottom: 0.75rem;
+    }
+
+    .sidebar-label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .sidebar-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .sidebar-buttons .btn {
+      flex: 1;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .results-info {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      padding: 0.75rem;
+      background: #f8f9fa;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .legal-notice-sidebar {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--text-light);
+    }
+
+    .legal-notice-sidebar a {
+      color: var(--primary-blue);
+      text-decoration: underline;
+    }
+
+    .featured-card-small {
+      display: block;
+      text-decoration: none;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .featured-card-small:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .featured-card-small img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+
+    .featured-card-small .card-info {
+      padding: 0.75rem;
+      background: white;
+    }
+
+    .featured-card-small h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.95rem;
+      color: var(--primary-blue);
+    }
+
+    .featured-card-small p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 1024px) {
+      .gallery-layout {
+        grid-template-columns: 280px 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    /* Keyboard Shortcuts Help Overlay */
+    .shortcuts-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .shortcuts-overlay.active {
+      display: flex;
+    }
+
+    .shortcuts-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .shortcuts-panel h2 {
+      margin: 0 0 1.5rem 0;
+      color: var(--primary-blue);
+    }
+
+    .shortcut-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .shortcut-item:last-child {
+      border-bottom: none;
+    }
+
+    .shortcut-key {
+      background: #f0f0f0;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+    }
+
+    .shortcut-desc {
+      color: var(--text-light);
+      flex: 1;
+      margin-right: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .gallery-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-sidebar {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+
+      .lightbox-nav {
+        display: none;
+      }
+
+      .lightbox-content {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header id="site-header"></header>
+
+  <!-- Hero Section -->
+  <main id="main-content">
+  <section class="hero hero-short" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/community-gathering.jpg');">
+    <div class="hero-content">
+      <h1 data-i18n="galleryHeading">Photo Gallery</h1>
+      <p class="hero-subtitle" data-i18n="gallerySubtitle">Images from the global shellfish restoration community</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Upload Section (hidden by default) -->
+    <div class="upload-section" id="uploadSection">
+      <h3 data-i18n="galleryUploadHeading">Share Your Photos</h3>
+      <p style="margin-bottom: 1.5rem; color: var(--text-light);" data-i18n="galleryUploadDescription">Upload photos from your restoration projects, field work, or events. Our AI will help analyze and tag your images.</p>
+      <div id="photo-uploader"></div>
+    </div>
+
+    <!-- Sidebar + Grid Layout -->
+    <div class="gallery-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="gallery-sidebar">
+
+        <!-- Search & Filters -->
+        <div class="sidebar-section">
+          <h3 data-i18n="gallerySearchFilterHeading">🔍 Search & Filter</h3>
+
+          <label class="sidebar-label" data-i18n="gallerySearchLabel">Text Search</label>
+          <input type="text" id="textSearchInput" class="sidebar-input" data-i18n-placeholder="gallerySearchPlaceholder">
+
+          <label class="sidebar-label" data-i18n="galleryAISearchLabel">AI Visual Search</label>
+          <input type="text" id="aiSearchInput" class="sidebar-input" data-i18n-placeholder="galleryAISearchPlaceholder">
+
+          <label class="sidebar-label" data-i18n="galleryConferenceLabel">Conference/Event</label>
+          <select id="conferenceFilter" class="sidebar-select">
+            <option value="" data-i18n="galleryAllEvents">All Events</option>
+          </select>
+
+          <label class="sidebar-label" data-i18n="galleryPhotoTypeLabel">Photo Type</label>
+          <select id="typeFilter" class="sidebar-select">
+            <option value="" data-i18n="galleryAllTypes">All Types</option>
+            <option value="conference" data-i18n="galleryTypeConference">Conference Photos</option>
+            <option value="historic" data-i18n="galleryTypeHistoric">Historic Photos</option>
+            <option value="headshots" data-i18n="galleryTypeHeadshots">Headshots/People</option>
+            <option value="logos" data-i18n="galleryTypeLogos">Logos</option>
+            <option value="backgrounds" data-i18n="galleryTypeBackgrounds">Backgrounds</option>
+          </select>
+
+          <label class="sidebar-label" data-i18n="galleryLocationLabel">Location</label>
+          <select id="locationFilter" class="sidebar-select">
+            <option value="" data-i18n="galleryAllLocations">All Locations</option>
+          </select>
+
+          <label class="sidebar-label" data-i18n="galleryYearLabel">Year</label>
+          <select id="yearFilter" class="sidebar-select">
+            <option value="" data-i18n="galleryAllYears">All Years</option>
+          </select>
+
+          <label class="sidebar-label" data-i18n="gallerySortByLabel">Sort By</label>
+          <select id="sortSelect" class="sidebar-select">
+            <option value="date-newest" data-i18n="gallerySortDateNewest">Date (Newest First)</option>
+            <option value="date-oldest" data-i18n="gallerySortDateOldest">Date (Oldest First)</option>
+            <option value="alpha-az" data-i18n="gallerySortAlphaAZ">Alphabetical (A-Z)</option>
+            <option value="alpha-za" data-i18n="gallerySortAlphaZA">Alphabetical (Z-A)</option>
+            <option value="category" data-i18n="gallerySortCategory">Category</option>
+            <option value="photographer" data-i18n="gallerySortPhotographer">Photographer</option>
+          </select>
+
+          <div class="sidebar-buttons">
+            <button class="btn btn-primary" onclick="applySearchFiltersSort()" data-i18n="gallerySearchButton">Search</button>
+            <button class="btn btn-secondary" onclick="clearAllFilters()" data-i18n="galleryClearButton">Clear</button>
+          </div>
+
+          <div class="results-info" id="resultsCount" data-i18n="galleryShowingAll">
+            Showing all photos
+          </div>
+        </div>
+
+        <!-- Upload Button -->
+        <div class="sidebar-section">
+          <button class="btn btn-primary" onclick="toggleUploadSection()" style="width: 100%; padding: 0.75rem;" data-i18n="galleryUploadButton">
+            📤 Upload Photos
+          </button>
+        </div>
+
+        <!-- Bulk Download -->
+        <div class="sidebar-section">
+          <button class="btn btn-secondary" onclick="bulkDownload()" style="width: 100%; padding: 0.75rem; font-size: 0.875rem;" data-i18n="galleryDownloadButton">
+            📥 Download Filtered Photos
+          </button>
+          <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--text-light); text-align: center;" data-i18n="galleryDownloadDesc">
+            Download all visible photos as ZIP
+          </p>
+        </div>
+
+        <!-- Featured Galleries -->
+        <div class="sidebar-section">
+          <h3 data-i18n="galleryFeaturedHeading">⭐ Featured</h3>
+          <a href="/icsr2024-photos.html" class="featured-card-small">
+            <img src="/images/conference/ICSR-2024-1.jpg" alt="ICSR 2024">
+            <div class="card-info">
+              <h4 data-i18n="galleryFeaturedICSR2024">ICSR 2024</h4>
+              <p data-i18n="galleryFeaturedICSR2024Desc">Jekyll Island • 92 photos</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Legal Notice -->
+        <div class="sidebar-section legal-notice-sidebar">
+          <h3 data-i18n="galleryLegalHeading">📄 Legal</h3>
+          <p style="margin: 0 0 0.5rem 0;" data-i18n="galleryLegalNotice"><strong>Copyright Notice:</strong> Photos copyright ISRS, akorn environmental, and contributors. All rights reserved.</p>
+          <p style="margin: 0;"><a href="#legal-terms" data-i18n="galleryLegalViewTerms">View full terms</a></p>
+        </div>
+
+        <!-- Keyboard Shortcuts Help -->
+        <div class="sidebar-section">
+          <button class="btn btn-secondary" onclick="toggleShortcutsHelp()" style="width: 100%; padding: 0.6rem; font-size: 0.875rem;" data-i18n="galleryKeyboardShortcuts">
+            ⌨️ Keyboard Shortcuts
+          </button>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT: PHOTO GRID -->
+      <main>
+        <div id="galleryContainer">
+          <div class="gallery-loading">
+            <div class="gallery-spinner"></div>
+            <p data-i18n="galleryLoading">Loading gallery...</p>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <!-- Legal Terms Section -->
+    <div id="legal-terms" style="margin-top: 4rem; padding: 2rem; background: #f8f9fa; border-radius: 12px; border: 1px solid #e1e1e1;">
+      <h2 style="margin-top: 0; color: var(--primary-blue); font-size: 1.5rem;">Legal Terms & Copyright Notice</h2>
+
+      <!-- Copyright Notice -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.75rem;">📸 Copyright & Ownership</h3>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          All photographs displayed in this gallery are protected by copyright law and are the property of their respective copyright holders, including but not limited to:
+        </p>
+        <ul style="margin: 0 0 0.75rem 1.5rem; line-height: 1.7;">
+          <li>International Shellfish Restoration Society (ISRS)</li>
+          <li>akorn environmental</li>
+          <li>Individual photographers and contributors</li>
+          <li>Member organizations and institutions</li>
+        </ul>
+        <p style="margin: 0; line-height: 1.7; font-weight: 600;">
+          © 2024 ISRS & Contributors. All rights reserved.
+        </p>
+      </div>
+
+      <!-- Terms of Use -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.75rem;">📋 Terms of Use</h3>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          <strong>Prohibited Uses:</strong> You may NOT download, reproduce, distribute, modify, create derivative works, publicly display, republish, or transmit any photos from this gallery without explicit written permission from the copyright holder(s).
+        </p>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          <strong>Viewing Only:</strong> This gallery is provided solely for viewing purposes by ISRS members and the restoration community. Any other use requires prior written authorization.
+        </p>
+        <p style="margin: 0; line-height: 1.7;">
+          <strong>Commercial Use:</strong> All commercial use, including but not limited to advertising, marketing, publications, or any revenue-generating activity, is strictly prohibited without a signed licensing agreement.
+        </p>
+      </div>
+
+      <!-- Attribution Requirements -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.75rem;">✍️ Attribution Requirements</h3>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          If you have obtained written permission to use a photograph from this gallery, you must provide proper attribution including:
+        </p>
+        <ul style="margin: 0 0 0 1.5rem; line-height: 1.7;">
+          <li>Photographer name (if known)</li>
+          <li>Copyright holder (ISRS, akorn environmental, or as specified)</li>
+          <li>Year of photograph</li>
+          <li>Link to source (https://www.shellfish-restoration.org)</li>
+        </ul>
+      </div>
+
+      <!-- Liability Disclaimer -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.75rem;">⚠️ Disclaimer of Liability</h3>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          <strong>No Warranties:</strong> ISRS and akorn environmental provide this photo gallery "as is" without any warranties, express or implied. We make no guarantees regarding the accuracy, completeness, or reliability of photo metadata, captions, locations, or dates.
+        </p>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          <strong>Limitation of Liability:</strong> ISRS, akorn environmental, and their officers, directors, employees, agents, and affiliates shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising from:
+        </p>
+        <ul style="margin: 0 0 0.75rem 1.5rem; line-height: 1.7;">
+          <li>Use or inability to use photos in this gallery</li>
+          <li>Errors or omissions in photo metadata or descriptions</li>
+          <li>Unauthorized access or use of photos</li>
+          <li>Third-party claims related to photo content</li>
+        </ul>
+        <p style="margin: 0; line-height: 1.7;">
+          <strong>Maximum Liability:</strong> In no event shall the total liability of ISRS or akorn environmental exceed the amount paid (if any) to access this gallery.
+        </p>
+      </div>
+
+      <!-- Photo Submissions -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.75rem;">📤 Photo Submissions</h3>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          By uploading photos to this gallery, you represent and warrant that:
+        </p>
+        <ul style="margin: 0 0 0.75rem 1.5rem; line-height: 1.7;">
+          <li>You own the copyright or have obtained necessary permissions</li>
+          <li>Photos do not violate any third-party rights</li>
+          <li>You grant ISRS and akorn environmental a non-exclusive license to display, store, and manage the photos</li>
+          <li>You retain copyright ownership of your submitted photos</li>
+        </ul>
+        <p style="margin: 0; line-height: 1.7;">
+          ISRS and akorn environmental reserve the right to remove any photos at their sole discretion without notice.
+        </p>
+      </div>
+
+      <!-- Contact & Permissions -->
+      <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-teal);">
+        <h3 style="font-size: 1.1rem; color: var(--text-primary); margin: 0 0 0.75rem 0;">📧 Licensing & Permissions</h3>
+        <p style="margin: 0 0 0.75rem 0; line-height: 1.7;">
+          For licensing inquiries, permission requests, or questions about photo usage, please contact:
+        </p>
+        <p style="margin: 0 0 0.5rem 0; line-height: 1.7;">
+          <strong>Aaron Kornbluth</strong><br>
+          akorn environmental<br>
+          Email: <a href="mailto:aaron.kornbluth@gmail.com" style="color: var(--primary-blue);">aaron.kornbluth@gmail.com</a>
+        </p>
+        <p style="margin: 0; line-height: 1.7; font-size: 0.9rem; color: var(--text-muted);">
+          <em>Gallery system developed and managed by akorn environmental for the International Shellfish Restoration Society.</em>
+        </p>
+      </div>
+
+      <p style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #ddd; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+        Last Updated: December 15, 2025 | These terms constitute a legally binding agreement. By accessing this gallery, you agree to be bound by these terms.
+      </p>
+    </div>
+  </div>
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox-overlay" id="lightbox">
+    <div class="lightbox-content">
+      <div class="lightbox-image-container">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">&lsaquo;</button>
+        <img class="lightbox-image" id="lightboxImage" src="" alt="">
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">&rsaquo;</button>
+      </div>
+      <div class="lightbox-info">
+        <h2 class="lightbox-title" id="lightboxTitle"></h2>
+        <p class="lightbox-description" id="lightboxDescription"></p>
+        <p class="lightbox-meta" id="lightboxMeta"></p>
+
+        <div class="lightbox-actions">
+          <a class="lightbox-download" id="lightboxDownload" href="" download>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download
+          </a>
+          <button class="lightbox-download" onclick="addToFavorites()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            Favorite
+          </button>
+          <button class="lightbox-download" onclick="sharePhoto()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            Share
+          </button>
+        </div>
+
+        <div class="lightbox-metadata" id="lightboxMetadata">
+          <h3>📊 Photo Details</h3>
+          <div class="metadata-grid" id="metadataGrid"></div>
+        </div>
+
+        <!-- Related Photos -->
+        <div class="related-photos" id="relatedPhotos">
+          <h3>🔗 Related Photos</h3>
+          <div class="related-grid" id="relatedGrid"></div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section" id="commentsSection">
+          <h3>💬 Comments</h3>
+
+          <div class="comment-form">
+            <textarea id="commentInput" class="comment-input" placeholder="Add a comment..."></textarea>
+            <button class="btn btn-primary" onclick="postComment()" style="margin-top: 0.5rem;">Post Comment</button>
+          </div>
+
+          <div id="commentsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Overlay -->
+  <div class="shortcuts-overlay" id="shortcutsOverlay">
+    <div class="shortcuts-panel">
+      <h2>⌨️ Keyboard Shortcuts</h2>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Show/hide this help</span>
+        <kbd class="shortcut-key">?</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Focus search bar</span>
+        <kbd class="shortcut-key">Ctrl</kbd> + <kbd class="shortcut-key">K</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Next photo (in lightbox)</span>
+        <kbd class="shortcut-key">→</kbd> or <kbd class="shortcut-key">L</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Previous photo (in lightbox)</span>
+        <kbd class="shortcut-key">←</kbd> or <kbd class="shortcut-key">H</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Close lightbox</span>
+        <kbd class="shortcut-key">ESC</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Toggle full-screen (lightbox)</span>
+        <kbd class="shortcut-key">F</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Zoom in (lightbox)</span>
+        <kbd class="shortcut-key">+</kbd> or <kbd class="shortcut-key">=</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Zoom out (lightbox)</span>
+        <kbd class="shortcut-key">-</kbd>
+      </div>
+
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Reset zoom (lightbox)</span>
+        <kbd class="shortcut-key">0</kbd>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <button class="btn btn-primary" onclick="toggleShortcutsHelp()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://isrs-database-backend.onrender.com';
+
+    let allPhotos = [];
+    let filteredPhotos = [];
+    let displayedPhotos = [];
+    let currentIndex = 0;
+    let photosPerPage = 50;
+    let currentPage = 1;
+    let isLoadingMore = false;
+
+    // Search and filter state
+    let filters = {
+      textSearch: '',
+      aiSearch: '',
+      conference: '',
+      type: '',
+      location: '',
+      year: '',
+      sort: 'date-newest'
+    };
+
+    // Load photo catalog
+    async function loadGallery() {
+      const container = document.getElementById('galleryContainer');
+
+      try {
+        // Try to load from backend first
+        const response = await fetch(`${API_BASE_URL}/api/photos/public`);
+        const data = await response.json();
+
+        if (data.success && data.data && data.data.length > 0) {
+          allPhotos = data.data;
+        } else {
+          throw new Error('No backend data');
+        }
+      } catch (error) {
+        console.log('Loading local photo catalog...');
+        // Fallback to local catalog
+        try {
+          const catalogResponse = await fetch('/data/photo-catalog.json');
+          const catalog = await catalogResponse.json();
+          allPhotos = catalog.photos;
+          console.log(`Loaded ${allPhotos.length} photos from local catalog`);
+        } catch (catalogError) {
+          console.error('Error loading local catalog:', catalogError);
+          allPhotos = [];
+        }
+      }
+
+      filteredPhotos = allPhotos;
+
+      if (allPhotos.length > 0) {
+        populateFilterDropdowns();
+        applySearchFiltersSort();
+      } else {
+        showEmptyState();
+      }
+    }
+
+    // Populate filter dropdowns dynamically
+    function populateFilterDropdowns() {
+      // Extract unique conferences
+      const conferences = [...new Set(allPhotos.map(p => p.conference_name).filter(Boolean))].sort();
+      const conferenceSelect = document.getElementById('conferenceFilter');
+      conferences.forEach(conf => {
+        const option = document.createElement('option');
+        option.value = conf;
+        option.textContent = conf;
+        conferenceSelect.appendChild(option);
+      });
+
+      // Extract unique locations
+      const locations = [...new Set(allPhotos.map(p => p.location_name).filter(Boolean))].sort();
+      const locationSelect = document.getElementById('locationFilter');
+      locations.forEach(loc => {
+        const option = document.createElement('option');
+        option.value = loc;
+        option.textContent = loc;
+        locationSelect.appendChild(option);
+      });
+
+      // Extract unique years
+      const years = [...new Set(allPhotos.map(p => {
+        const date = p.taken_date || p.created_at;
+        if (date) {
+          const year = new Date(date).getFullYear();
+          return isNaN(year) ? null : year;
+        }
+        return null;
+      }).filter(Boolean))].sort((a, b) => b - a);
+
+      const yearSelect = document.getElementById('yearFilter');
+      years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      });
+    }
+
+    // Apply search, filters, and sorting
+    function applySearchFiltersSort() {
+      // Get current filter values
+      filters.textSearch = document.getElementById('textSearchInput').value.toLowerCase();
+      filters.aiSearch = document.getElementById('aiSearchInput').value.toLowerCase();
+      filters.conference = document.getElementById('conferenceFilter').value;
+      filters.type = document.getElementById('typeFilter').value;
+      filters.location = document.getElementById('locationFilter').value;
+      filters.year = document.getElementById('yearFilter').value;
+      filters.sort = document.getElementById('sortSelect').value;
+
+      let filtered = [...allPhotos];
+
+      // Apply text search
+      if (filters.textSearch) {
+        filtered = filtered.filter(p => {
+          return (p.caption && p.caption.toLowerCase().includes(filters.textSearch)) ||
+                 (p.description && p.description.toLowerCase().includes(filters.textSearch)) ||
+                 (p.location_name && p.location_name.toLowerCase().includes(filters.textSearch)) ||
+                 (p.photographer_name && p.photographer_name.toLowerCase().includes(filters.textSearch)) ||
+                 (p.tags && p.tags.some(tag => tag.toLowerCase().includes(filters.textSearch)));
+        });
+      }
+
+      // Apply AI visual search
+      if (filters.aiSearch) {
+        filtered = filtered.filter(p => {
+          // Search in AI-generated descriptions and tags
+          return (p.ai_description && p.ai_description.toLowerCase().includes(filters.aiSearch)) ||
+                 (p.ai_tags && p.ai_tags.some(tag => tag.toLowerCase().includes(filters.aiSearch))) ||
+                 (p.description && p.description.toLowerCase().includes(filters.aiSearch)) ||
+                 (p.tags && p.tags.some(tag => tag.toLowerCase().includes(filters.aiSearch)));
+        });
+      }
+
+      // Apply conference filter
+      if (filters.conference) {
+        filtered = filtered.filter(p => p.conference_name === filters.conference);
+      }
+
+      // Apply type filter
+      if (filters.type) {
+        filtered = filtered.filter(p => p.category === filters.type);
+      }
+
+      // Apply location filter
+      if (filters.location) {
+        filtered = filtered.filter(p => p.location_name === filters.location);
+      }
+
+      // Apply year filter
+      if (filters.year) {
+        filtered = filtered.filter(p => {
+          const date = p.taken_date || p.created_at;
+          if (date) {
+            const year = new Date(date).getFullYear();
+            return year.toString() === filters.year;
+          }
+          return false;
+        });
+      }
+
+      // Apply sorting
+      filtered = sortPhotos(filtered, filters.sort);
+
+      filteredPhotos = filtered;
+      currentPage = 1; // Reset to first page when filters change
+      updateResultsCount();
+      renderGallery(true); // true = reset/initial render
+    }
+
+    // Sort photos by selected method
+    function sortPhotos(photos, sortMethod) {
+      const sorted = [...photos];
+
+      switch (sortMethod) {
+        case 'date-newest':
+          return sorted.sort((a, b) => {
+            const dateA = new Date(a.taken_date || a.created_at || 0);
+            const dateB = new Date(b.taken_date || b.created_at || 0);
+            return dateB - dateA;
+          });
+
+        case 'date-oldest':
+          return sorted.sort((a, b) => {
+            const dateA = new Date(a.taken_date || a.created_at || 0);
+            const dateB = new Date(b.taken_date || b.created_at || 0);
+            return dateA - dateB;
+          });
+
+        case 'alpha-az':
+          return sorted.sort((a, b) => {
+            const nameA = (a.caption || a.original_filename || '').toLowerCase();
+            const nameB = (b.caption || b.original_filename || '').toLowerCase();
+            return nameA.localeCompare(nameB);
+          });
+
+        case 'alpha-za':
+          return sorted.sort((a, b) => {
+            const nameA = (a.caption || a.original_filename || '').toLowerCase();
+            const nameB = (b.caption || b.original_filename || '').toLowerCase();
+            return nameB.localeCompare(nameA);
+          });
+
+        case 'category':
+          return sorted.sort((a, b) => {
+            const catA = (a.category || '').toLowerCase();
+            const catB = (b.category || '').toLowerCase();
+            if (catA === catB) {
+              // Secondary sort by date
+              const dateA = new Date(a.taken_date || a.created_at || 0);
+              const dateB = new Date(b.taken_date || b.created_at || 0);
+              return dateB - dateA;
+            }
+            return catA.localeCompare(catB);
+          });
+
+        case 'photographer':
+          return sorted.sort((a, b) => {
+            const photogA = (a.photographer_name || 'Unknown').toLowerCase();
+            const photogB = (b.photographer_name || 'Unknown').toLowerCase();
+            if (photogA === photogB) {
+              // Secondary sort by date
+              const dateA = new Date(a.taken_date || a.created_at || 0);
+              const dateB = new Date(b.taken_date || b.created_at || 0);
+              return dateB - dateA;
+            }
+            return photogA.localeCompare(photogB);
+          });
+
+        default:
+          return sorted;
+      }
+    }
+
+    // Clear all filters and reset
+    function clearAllFilters() {
+      document.getElementById('textSearchInput').value = '';
+      document.getElementById('aiSearchInput').value = '';
+      document.getElementById('conferenceFilter').value = '';
+      document.getElementById('typeFilter').value = '';
+      document.getElementById('locationFilter').value = '';
+      document.getElementById('yearFilter').value = '';
+      document.getElementById('sortSelect').value = 'date-newest';
+
+      filters = {
+        textSearch: '',
+        aiSearch: '',
+        conference: '',
+        type: '',
+        location: '',
+        year: '',
+        sort: 'date-newest'
+      };
+
+      applySearchFiltersSort();
+    }
+
+    // Update results count display
+    function updateResultsCount() {
+      const resultsEl = document.getElementById('resultsCount');
+      const total = allPhotos.length;
+      const shown = filteredPhotos.length;
+
+      if (shown === total) {
+        resultsEl.textContent = `Showing all ${total} photo${total !== 1 ? 's' : ''}`;
+      } else {
+        resultsEl.textContent = `Showing ${shown} of ${total} photo${total !== 1 ? 's' : ''}`;
+      }
+    }
+
+    // Render gallery grid (with infinite scroll support)
+    function renderGallery(reset = false) {
+      const container = document.getElementById('galleryContainer');
+
+      if (reset) {
+        currentPage = 1;
+        displayedPhotos = [];
+      }
+
+      if (filteredPhotos.length === 0) {
+        container.innerHTML = `
+          <div class="gallery-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <h3>No Photos Found</h3>
+            <p>No photos match this filter</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Get photos for current page
+      const startIndex = (currentPage - 1) * photosPerPage;
+      const endIndex = startIndex + photosPerPage;
+      const photosToShow = filteredPhotos.slice(startIndex, endIndex);
+
+      // Add to displayed photos
+      displayedPhotos = [...displayedPhotos, ...photosToShow];
+
+      // Generate HTML for new photos only
+      const newPhotosHTML = photosToShow.map((photo, relativeIndex) => {
+        const actualIndex = startIndex + relativeIndex;
+        const altText = photo.ai_description ||
+                       photo.description ||
+                       photo.caption ||
+                       `Photo from ${photo.location_name || 'ISRS gallery'}`;
+
+        return `
+        <div class="gallery-item" onclick="openLightbox(${actualIndex})">
+          <div class="gallery-item-image">
+            <img src="${photo.thumbnail_url || photo.url}" alt="${altText}" loading="lazy">
+            <div class="gallery-item-overlay">
+              <h3>${photo.caption || 'Untitled'}</h3>
+              ${photo.location_name ? `<p>${photo.location_name}</p>` : ''}
+            </div>
+          </div>
+          <div class="gallery-item-info">
+            <div class="gallery-item-title">${photo.caption || photo.original_filename}</div>
+            <div class="gallery-item-meta">
+              ${photo.photographer_name ? `By ${photo.photographer_name}` : ''}
+              ${photo.photographer_name && photo.location_name ? ' · ' : ''}
+              ${photo.location_name || ''}
+            </div>
+            ${photo.tags && photo.tags.length > 0 ? `
+              <div class="gallery-item-tags">
+                ${photo.tags.slice(0, 3).map(tag => `<span class="gallery-tag">${tag}</span>`).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      }).join('');
+
+      if (reset) {
+        // Initial render - create grid
+        container.innerHTML = `
+          <div class="gallery-grid" id="galleryGrid">
+            ${newPhotosHTML}
+          </div>
+          <div id="loadingMore" style="display: none; text-align: center; padding: 2rem;">
+            <div class="gallery-spinner" style="margin: 0 auto 1rem;"></div>
+            <p>Loading more photos...</p>
+          </div>
+          <div id="noMorePhotos" style="display: none; text-align: center; padding: 2rem; color: var(--text-light);">
+            <p>You've reached the end!</p>
+          </div>
+        `;
+      } else {
+        // Append to existing grid
+        const grid = document.getElementById('galleryGrid');
+        if (grid) {
+          grid.insertAdjacentHTML('beforeend', newPhotosHTML);
+        }
+      }
+
+      isLoadingMore = false;
+
+      // Show/hide end message
+      const hasMore = displayedPhotos.length < filteredPhotos.length;
+      document.getElementById('noMorePhotos').style.display = hasMore ? 'none' : 'block';
+    }
+
+    // Load more photos when scrolling
+    function loadMorePhotos() {
+      if (isLoadingMore) return;
+      if (displayedPhotos.length >= filteredPhotos.length) return;
+
+      isLoadingMore = true;
+      document.getElementById('loadingMore').style.display = 'block';
+
+      currentPage++;
+
+      // Simulate slight delay for UX (remove in production if photos load instantly)
+      setTimeout(() => {
+        renderGallery(false);
+        document.getElementById('loadingMore').style.display = 'none';
+      }, 300);
+    }
+
+    // Infinite scroll detection
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight;
+
+      // Load more when user is 500px from bottom
+      if (scrollPosition >= pageHeight - 500) {
+        loadMorePhotos();
+      }
+    });
+
+    // Show empty state
+    function showEmptyState() {
+      const container = document.getElementById('galleryContainer');
+      container.innerHTML = `
+        <div class="gallery-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <h3>Gallery Coming Soon</h3>
+          <p>Check back later for photos from our restoration projects and events.</p>
+        </div>
+      `;
+
+      // Hide filters if no photos
+      document.getElementById('galleryFilters').style.display = 'none';
+    }
+
+    // Current photo for actions
+    let currentPhoto = null;
+
+    // Lightbox functions
+    function openLightbox(index) {
+      currentIndex = index;
+      const photo = filteredPhotos[index];
+      currentPhoto = photo;
+
+      document.getElementById('lightboxImage').src = photo.url;
+      document.getElementById('lightboxTitle').textContent = photo.caption || 'Untitled';
+      document.getElementById('lightboxDescription').textContent = photo.description || '';
+
+      const meta = [];
+      if (photo.photographer_name) meta.push(`Photo by ${photo.photographer_name}`);
+      if (photo.location_name) meta.push(photo.location_name);
+      if (photo.license_type) meta.push(photo.license_type);
+      document.getElementById('lightboxMeta').textContent = meta.join(' · ');
+
+      document.getElementById('lightboxDownload').href = photo.url;
+
+      // Populate metadata
+      populateMetadata(photo);
+
+      // Track view (increment view count)
+      trackPhotoView(photo.id);
+
+      // Load related photos
+      loadRelatedPhotos(photo);
+
+      // Load comments
+      loadComments(photo.id);
+
+      // Reset zoom when opening lightbox
+      resetZoom();
+
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Load related photos
+    function loadRelatedPhotos(photo) {
+      const grid = document.getElementById('relatedGrid');
+
+      // Find related photos (same conference, location, or tags)
+      let related = filteredPhotos.filter(p => {
+        if (p.id === photo.id) return false;
+
+        // Same conference
+        if (photo.conference_name && p.conference_name === photo.conference_name) return true;
+
+        // Same location
+        if (photo.location_name && p.location_name === photo.location_name) return true;
+
+        // Shared tags
+        if (photo.tags && p.tags) {
+          const sharedTags = photo.tags.filter(tag => p.tags.includes(tag));
+          if (sharedTags.length > 0) return true;
+        }
+
+        return false;
+      });
+
+      // Limit to 4 photos
+      related = related.slice(0, 4);
+
+      if (related.length === 0) {
+        document.getElementById('relatedPhotos').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('relatedPhotos').style.display = 'block';
+
+      grid.innerHTML = related.map(p => {
+        const index = filteredPhotos.indexOf(p);
+        return `
+          <div class="related-item" onclick="openLightbox(${index})">
+            <img src="${p.thumbnail_url || p.url}" alt="${p.caption || ''}" loading="lazy">
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Load comments for a photo
+    async function loadComments(photoId) {
+      if (!photoId) {
+        document.getElementById('commentsSection').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('commentsSection').style.display = 'block';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}/comments`, {
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.data) {
+          renderComments(data.data);
+        } else {
+          renderComments([]);
+        }
+      } catch (error) {
+        console.error('Error loading comments:', error);
+        renderComments([]);
+      }
+    }
+
+    // Render comments
+    function renderComments(comments) {
+      const list = document.getElementById('commentsList');
+
+      if (comments.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.875rem;">No comments yet. Be the first to comment!</p>';
+        return;
+      }
+
+      list.innerHTML = comments.map(comment => {
+        const date = new Date(comment.created_at);
+        const timeAgo = getTimeAgo(date);
+
+        return `
+          <div class="comment-item">
+            <div class="comment-header">
+              <span class="comment-author">${comment.user_name || 'Anonymous'}</span>
+              <span class="comment-date">${timeAgo}</span>
+            </div>
+            <p class="comment-text">${escapeHtml(comment.comment_text)}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Post a comment
+    async function postComment() {
+      if (!currentPhoto) return;
+
+      const input = document.getElementById('commentInput');
+      const commentText = input.value.trim();
+
+      if (!commentText) {
+        alert('Please enter a comment');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/photos/${currentPhoto.id}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ comment_text: commentText })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          input.value = '';
+          loadComments(currentPhoto.id);
+          alert('✅ Comment posted!');
+        } else {
+          alert(data.message || 'Please log in to comment');
+        }
+      } catch (error) {
+        console.error('Error posting comment:', error);
+        alert('Please log in to comment');
+      }
+    }
+
+    // Helper: Get time ago string
+    function getTimeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+
+      const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60
+      };
+
+      for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+        const interval = Math.floor(seconds / secondsInUnit);
+        if (interval >= 1) {
+          return `${interval} ${unit}${interval > 1 ? 's' : ''} ago`;
+        }
+      }
+
+      return 'Just now';
+    }
+
+    // Helper: Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Populate metadata grid
+    function populateMetadata(photo) {
+      const grid = document.getElementById('metadataGrid');
+      const metadata = [];
+
+      // Basic info
+      if (photo.original_filename) {
+        metadata.push({ label: 'Filename', value: photo.original_filename });
+      }
+
+      if (photo.taken_date) {
+        const date = new Date(photo.taken_date);
+        metadata.push({ label: 'Date Taken', value: date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) });
+      }
+
+      if (photo.conference_name) {
+        metadata.push({ label: 'Event', value: photo.conference_name });
+      }
+
+      // EXIF data
+      if (photo.exif_data) {
+        const exif = typeof photo.exif_data === 'string' ? JSON.parse(photo.exif_data) : photo.exif_data;
+
+        if (exif.camera) metadata.push({ label: 'Camera', value: exif.camera });
+        if (exif.lens) metadata.push({ label: 'Lens', value: exif.lens });
+        if (exif.focal_length) metadata.push({ label: 'Focal Length', value: exif.focal_length });
+        if (exif.aperture) metadata.push({ label: 'Aperture', value: `f/${exif.aperture}` });
+        if (exif.shutter_speed) metadata.push({ label: 'Shutter Speed', value: exif.shutter_speed });
+        if (exif.iso) metadata.push({ label: 'ISO', value: exif.iso });
+      }
+
+      // File info
+      if (photo.file_size) {
+        const sizeInMB = (photo.file_size / (1024 * 1024)).toFixed(2);
+        metadata.push({ label: 'File Size', value: `${sizeInMB} MB` });
+      }
+
+      if (photo.image_width && photo.image_height) {
+        metadata.push({ label: 'Dimensions', value: `${photo.image_width} × ${photo.image_height}` });
+      }
+
+      // View count
+      const viewCount = photo.view_count || 0;
+      metadata.push({ label: 'Views', value: viewCount.toLocaleString() });
+
+      // License
+      if (photo.license_type) {
+        metadata.push({ label: 'License', value: photo.license_type });
+      }
+
+      // Tags
+      if (photo.tags && photo.tags.length > 0) {
+        metadata.push({ label: 'Tags', value: photo.tags.join(', ') });
+      }
+
+      // Render metadata
+      grid.innerHTML = metadata.map(item => `
+        <div class="metadata-label">${item.label}:</div>
+        <div class="metadata-value">${item.value}</div>
+      `).join('');
+    }
+
+    // Track photo view
+    async function trackPhotoView(photoId) {
+      if (!photoId) return;
+
+      try {
+        await fetch(`${API_BASE_URL}/api/photos/${photoId}/view`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+        // Silently increment view count
+      } catch (error) {
+        console.error('Error tracking view:', error);
+      }
+    }
+
+    // Add to favorites
+    async function addToFavorites() {
+      if (!currentPhoto) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/favorites`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ photo_id: currentPhoto.id })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('✅ Added to your favorites!');
+        } else {
+          alert(data.message || 'Please log in to save favorites');
+        }
+      } catch (error) {
+        console.error('Error adding to favorites:', error);
+        alert('Please log in to save favorites');
+      }
+    }
+
+    // Share photo
+    function sharePhoto() {
+      if (!currentPhoto) return;
+
+      const shareUrl = `${window.location.origin}/gallery.html?photo=${currentPhoto.id}`;
+      const shareText = `Check out this photo: ${currentPhoto.caption || 'ISRS Gallery'}`;
+
+      if (navigator.share) {
+        // Use native share API if available (mobile)
+        navigator.share({
+          title: currentPhoto.caption || 'ISRS Photo',
+          text: shareText,
+          url: shareUrl
+        }).catch(err => console.log('Share cancelled', err));
+      } else {
+        // Fallbox: copy to clipboard
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          alert('📋 Link copied to clipboard!');
+        }).catch(err => {
+          // Manual fallback
+          prompt('Copy this link:', shareUrl);
+        });
+      }
+    }
+
+    // Bulk download filtered photos
+    async function bulkDownload() {
+      if (filteredPhotos.length === 0) {
+        alert('No photos to download');
+        return;
+      }
+
+      const confirm = window.confirm(`Download ${filteredPhotos.length} photos as ZIP file? This may take a few moments.`);
+      if (!confirm) return;
+
+      try {
+        const photoIds = filteredPhotos.map(p => p.id);
+
+        const response = await fetch(`${API_BASE_URL}/api/photos/bulk-download`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ photo_ids: photoIds })
+        });
+
+        if (!response.ok) {
+          throw new Error('Download failed');
+        }
+
+        // Get the ZIP file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `isrs-photos-${new Date().toISOString().split('T')[0]}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        alert('✅ Download started!');
+      } catch (error) {
+        console.error('Bulk download error:', error);
+        alert('❌ Download failed. Please try again or contact support.');
+      }
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+
+      // Reset zoom when closing
+      resetZoom();
+
+      // Exit fullscreen if active
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    }
+
+    function navigateLightbox(direction) {
+      currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
+      const photo = filteredPhotos[currentIndex];
+
+      document.getElementById('lightboxImage').src = photo.url;
+      document.getElementById('lightboxTitle').textContent = photo.caption || 'Untitled';
+      document.getElementById('lightboxDescription').textContent = photo.description || '';
+
+      const meta = [];
+      if (photo.photographer_name) meta.push(`Photo by ${photo.photographer_name}`);
+      if (photo.location_name) meta.push(photo.location_name);
+      if (photo.license_type) meta.push(photo.license_type);
+      document.getElementById('lightboxMeta').textContent = meta.join(' · ');
+
+      document.getElementById('lightboxDownload').href = photo.url;
+    }
+
+    // Lightbox zoom state
+    let lightboxZoom = 1;
+    let isFullscreen = false;
+
+    // Toggle shortcuts help overlay
+    function toggleShortcutsHelp() {
+      const overlay = document.getElementById('shortcutsOverlay');
+      overlay.classList.toggle('active');
+      if (overlay.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Enhanced keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const lightbox = document.getElementById('lightbox');
+      const isLightboxActive = lightbox.classList.contains('active');
+      const shortcutsOverlay = document.getElementById('shortcutsOverlay');
+      const isShortcutsActive = shortcutsOverlay.classList.contains('active');
+
+      // Global shortcuts
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        toggleShortcutsHelp();
+        return;
+      }
+
+      // Shortcuts overlay specific
+      if (isShortcutsActive) {
+        if (e.key === 'Escape') {
+          toggleShortcutsHelp();
+        }
+        return;
+      }
+
+      // Lightbox-specific shortcuts
+      if (isLightboxActive) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowLeft' || e.key === 'h' || e.key === 'H') {
+          e.preventDefault();
+          navigateLightbox(-1);
+        } else if (e.key === 'ArrowRight' || e.key === 'l' || e.key === 'L') {
+          e.preventDefault();
+          navigateLightbox(1);
+        } else if (e.key === 'f' || e.key === 'F') {
+          e.preventDefault();
+          toggleFullscreen();
+        } else if (e.key === '+' || e.key === '=') {
+          e.preventDefault();
+          zoomLightbox(0.2);
+        } else if (e.key === '-') {
+          e.preventDefault();
+          zoomLightbox(-0.2);
+        } else if (e.key === '0') {
+          e.preventDefault();
+          resetZoom();
+        }
+      }
+    });
+
+    // Zoom functions for lightbox
+    function zoomLightbox(delta) {
+      lightboxZoom = Math.max(0.5, Math.min(3, lightboxZoom + delta));
+      const img = document.getElementById('lightboxImage');
+      img.style.transform = `scale(${lightboxZoom})`;
+      img.style.cursor = lightboxZoom > 1 ? 'zoom-out' : 'zoom-in';
+    }
+
+    function resetZoom() {
+      lightboxZoom = 1;
+      const img = document.getElementById('lightboxImage');
+      img.style.transform = 'scale(1)';
+      img.style.cursor = 'zoom-in';
+    }
+
+    // Toggle fullscreen mode
+    function toggleFullscreen() {
+      const lightbox = document.getElementById('lightbox');
+
+      if (!document.fullscreenElement) {
+        lightbox.requestFullscreen().catch(err => {
+          console.error('Error entering fullscreen:', err);
+        });
+        isFullscreen = true;
+      } else {
+        document.exitFullscreen();
+        isFullscreen = false;
+      }
+    }
+
+    // Click to zoom in lightbox
+    document.getElementById('lightboxImage').addEventListener('click', (e) => {
+      if (lightboxZoom === 1) {
+        zoomLightbox(0.5); // Zoom in to 1.5x
+      } else {
+        resetZoom(); // Reset to 1x
+      }
+    });
+
+    // Close on backdrop click
+    document.getElementById('lightbox').addEventListener('click', (e) => {
+      if (e.target.id === 'lightbox') closeLightbox();
+    });
+
+    // Toggle upload section
+    function toggleUploadSection() {
+      const uploadSection = document.getElementById('uploadSection');
+      uploadSection.classList.toggle('active');
+
+      // Initialize uploader if not already done
+      if (!window.photoUploaderInitialized) {
+        window.photoUploaderInitialized = true;
+        const uploader = new PhotoUploader('photo-uploader', {
+          maxFiles: 10,
+          maxFileSize: 25,
+          onUploadStart: (count) => {
+            console.log(`Starting upload of ${count} files...`);
+          },
+          onUploadProgress: (uploaded, total) => {
+            console.log(`Progress: ${uploaded}/${total}`);
+          },
+          onUploadComplete: (photos) => {
+            console.log('Upload complete!', photos);
+            alert(`Successfully uploaded ${photos.length} photo(s)! Refreshing gallery...`);
+            // Refresh the gallery
+            loadGallery();
+            // Close upload section
+            uploadSection.classList.remove('active');
+          },
+          onUploadError: (filename, error) => {
+            console.error(`Error uploading ${filename}:`, error);
+          }
+        });
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load gallery
+      loadGallery();
+
+      // Setup Enter key support for search inputs
+      const textSearchInput = document.getElementById('textSearchInput');
+      const aiSearchInput = document.getElementById('aiSearchInput');
+
+      textSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applySearchFiltersSort();
+        }
+      });
+
+      aiSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applySearchFiltersSort();
+        }
+      });
+
+      // Setup keyboard shortcuts for search
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          textSearchInput.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
