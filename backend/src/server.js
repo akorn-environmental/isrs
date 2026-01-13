@@ -33,6 +33,7 @@ const boardDocumentsRoutes = require('./routes/boardDocumentsRoutes');
 const errorsRouter = require('./routes/errors');
 const grantsRoutes = require('./routes/grants');
 const contactEnrichmentRoutes = require('./routes/contactEnrichmentRoutes');
+const assetZoneRoutes = require('./routes/assetZoneRoutes');  // Asset zones for photo assignments
 const { errorHandler} = require('./middleware/errorHandler');
 
 const app = express();
@@ -211,6 +212,7 @@ app.use('/api/board-documents', boardDocumentsRoutes);  // Board documents (rest
 app.use('/api/errors', errorsRouter);  // Error logging endpoint (no auth required)
 app.use('/api/grants', grantsRoutes);  // Grants.gov API integration
 app.use('/api/contact-enrichment', contactEnrichmentRoutes);  // Apollo.io contact enrichment
+app.use('/api/asset-zones', assetZoneRoutes);  // Asset zones for photo assignments (NEW)
 
 // Error handling
 app.use(errorHandler);

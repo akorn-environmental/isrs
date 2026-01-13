@@ -71,10 +71,14 @@ async function analyzeWithClaude(buffer, mimeType) {
   "restoration_technique": "reef_construction|spat_collection|substrate_placement|transplanting|monitoring|survey|other|none",
   "confidence": 0.0-1.0,
   "detected_copyright": "any visible copyright, watermark, or attribution text",
-  "suggested_license": "CC-BY|CC-BY-SA|CC-BY-NC|CC0|All Rights Reserved|Unknown"
+  "suggested_license": "CC-BY|CC-BY-SA|CC-BY-NC|CC0|All Rights Reserved|Unknown",
+  "alt_text": "Detailed accessibility description for screen readers (100-150 chars). MUST describe visual content for general audiences, not just species."
 }
 
-Focus on shellfish species (oysters, clams, mussels, scallops), restoration activities, and habitat types. Be specific but concise.`;
+Focus on:
+1. Shellfish species (oysters, clams, mussels, scallops), restoration activities, and habitat types
+2. General visual description for accessibility (people, setting, activities, environment)
+Be specific but concise.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -246,6 +250,9 @@ async function uploadPhoto(fileBuffer, fileInfo, metadata, attendeeId) {
   const habitatType = aiAnalysis?.habitat_type || null;
   const restorationTechnique = aiAnalysis?.restoration_technique || null;
 
+  // Extract alt_text from AI analysis (NEW)
+  const altText = aiAnalysis?.alt_text || null;
+
   // Save to database
   const result = await query(
     `INSERT INTO photos (
@@ -257,6 +264,7 @@ async function uploadPhoto(fileBuffer, fileInfo, metadata, attendeeId) {
       license_type, license_url, attribution_required,
       ai_analysis, ai_processed, ai_processed_at,
       species_identified, habitat_type, restoration_technique,
+      alt_text,
       is_public, tags
     ) VALUES (
       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
@@ -264,7 +272,8 @@ async function uploadPhoto(fileBuffer, fileInfo, metadata, attendeeId) {
       $21, $22, $23, $24, $25, $26,
       $27, $28, $29,
       $30, $31, $32,
-      $33, $34
+      $33,
+      $34, $35
     ) RETURNING *`,
     [
       attendeeId,
@@ -299,6 +308,7 @@ async function uploadPhoto(fileBuffer, fileInfo, metadata, attendeeId) {
       speciesIdentified,
       habitatType,
       restorationTechnique,
+      altText,
       metadata.isPublic || false,
       metadata.tags || null
     ]
@@ -410,12 +420,14 @@ async function getPublicPhotos(options = {}) {
 
 /**
  * Update photo metadata
+ * Includes focal point and alt text support
  */
 async function updatePhotoMetadata(photoId, attendeeId, updates) {
   const allowedFields = [
     'caption', 'description', 'location_name', 'project_name',
     'license_type', 'license_url', 'photographer_name',
-    'copyright_holder', 'is_public', 'tags'
+    'copyright_holder', 'is_public', 'tags',
+    'focal_point_x', 'focal_point_y', 'alt_text'  // NEW: Focal points and alt text
   ];
 
   const updateFields = [];
