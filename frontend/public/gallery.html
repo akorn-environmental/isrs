@@ -133,6 +133,9 @@
     }
 
     .gallery-item-image img {
+      backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      animation: fadeIn 0.3s ease-in;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -140,6 +143,9 @@
     }
 
     .gallery-item:hover .gallery-item-image img {
+      backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      animation: fadeIn 0.3s ease-in;
       transform: scale(1.05);
     }
 
@@ -1130,7 +1136,7 @@
     let filteredPhotos = [];
     let displayedPhotos = [];
     let currentIndex = 0;
-    let photosPerPage = 50;
+    let photosPerPage = 24; // Optimized: Reduced from 50 for faster loading
     let currentPage = 1;
     let isLoadingMore = false;
 
