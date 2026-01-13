@@ -3,6 +3,8 @@
  * Sent immediately after successful registration
  */
 
+const { t } = require('../emailTranslations');
+
 function registrationConfirmationTemplate(data) {
   const {
     firstName,
@@ -17,13 +19,14 @@ function registrationConfirmationTemplate(data) {
     paymentMethod,
     selectedSessions = [],
     discountCode = null,
-    discountAmount = 0
+    discountAmount = 0,
+    language = 'en'  // NEW: Language parameter
   } = data;
 
   const finalAmount = registrationFee - discountAmount;
 
   return {
-    subject: `Registration Confirmed: ${conferenceName}`,
+    subject: `${t('regConfirmSubject', language)}: ${conferenceName}`,
     html: `
 <!DOCTYPE html>
 <html lang="en">

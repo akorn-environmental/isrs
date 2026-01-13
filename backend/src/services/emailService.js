@@ -215,16 +215,19 @@ async function trackEmailClick(campaignId, recipientId, url) {
  * @param {string} toEmail - Recipient email address
  * @param {string} userName - User's first name
  * @param {string} magicLink - The magic link URL
+ * @param {string} language - User's preferred language (en, fr, es) - defaults to 'en'
  */
-async function sendMagicLink(toEmail, userName, magicLink) {
-  const subject = 'Your Secure Login Link - ISRS Member Portal';
+async function sendMagicLink(toEmail, userName, magicLink, language = 'en') {
+  const { t } = require('./emailTranslations');
+
+  const subject = t('magicLinkSubject', language);
 
   const body = `
     <h2 style="color: #2e5a8a; font-family: 'Marcellus', Georgia, serif; font-weight: 400; margin-top: 0;">
-      Hello ${userName},
+      ${t('magicLinkGreeting', language)} ${userName},
     </h2>
     <p style="font-size: 16px; line-height: 1.6;">
-      You requested to log in to the <strong>International Shellfish Restoration Society</strong> member portal.
+      ${t('magicLinkIntro', language)}
     </p>
     <p style="margin: 35px 0; text-align: center;">
       <a href="${magicLink}"
@@ -237,23 +240,23 @@ async function sendMagicLink(toEmail, userName, magicLink) {
                 font-size: 16px;
                 font-weight: 600;
                 box-shadow: 0 4px 12px rgba(46, 90, 138, 0.3);">
-        🔐 Log In to ISRS Portal
+        ${t('magicLinkButton', language)}
       </a>
     </p>
     <p style="font-size: 14px; color: #666;">
-      This secure link will expire in <strong>15 minutes</strong> for your protection.
+      ${t('magicLinkExpiry', language)}
     </p>
     <p style="font-size: 14px; color: #666;">
-      If you didn't request this login link, you can safely ignore this email.
+      ${t('magicLinkIgnore', language)}
     </p>
     <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e8f5e9; background-color: #f8f9fa; padding: 20px; border-radius: 6px;">
       <p style="font-size: 13px; color: #2e7d32; margin: 0;">
-        <strong>🔒 Security Reminder:</strong> Never share this link with anyone. ISRS will never ask for your login credentials via email.
+        <strong>${t('magicLinkSecurityTitle', language)}</strong> ${t('magicLinkSecurityText', language)}
       </p>
     </div>
     <p style="font-size: 12px; color: #999; margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 4px;">
-      <strong>Trouble clicking the button?</strong><br>
-      Copy and paste this link into your browser:<br>
+      <strong>${t('magicLinkTroubleTitle', language)}</strong><br>
+      ${t('magicLinkTroubleCopy', language)}<br>
       <span style="word-break: break-all; color: #2e5a8a; font-family: monospace; font-size: 11px;">${magicLink}</span>
     </p>
   `;
