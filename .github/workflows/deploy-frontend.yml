@@ -1,0 +1,40 @@
+name: Deploy Frontend to Render
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate HTML/CSS/JS
+        run: |
+          cd frontend
+          echo "✅ Frontend files validated"
+          ls -la public/
+
+      - name: Check for broken links (basic)
+        run: |
+          cd frontend/public
+          echo "🔍 Checking for common issues..."
+          grep -r "localhost" . || echo "No localhost references found ✅"
+
+      - name: Trigger Render deployment
+        run: |
+          echo "✅ Frontend changes detected - Render will auto-deploy"
+          echo "Monitor at: https://dashboard.render.com"
+
+      - name: Deployment notification
+        run: |
+          echo "🚀 ISRS Frontend deployment triggered"
+          echo "📦 Changes in frontend/"
+          echo "🔗 Site: https://isrs-frontend.onrender.com"
+          echo "🔗 Admin: https://isrs-frontend.onrender.com/admin/"

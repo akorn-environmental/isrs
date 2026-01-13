@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Logs - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded" style="max-width: 1200px; margin: 0 auto;">
+    <div class="admin-page-header" style="background: transparent; border: none; padding-left: 0;">
+      <h1>Audit Logs</h1>
+      <p class="admin-text-muted">View system activity and admin action history</p>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-body" style="text-align: center; padding: 4rem 2rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">📋</div>
+        <h2>Audit Logging Interface</h2>
+        <p class="admin-text-muted" style="margin: 1rem 0 2rem;">
+          The audit logging interface is coming soon. System logs are currently available through Render dashboard and error reporting.
+        </p>
+        <p class="admin-text-muted" style="margin-bottom: 2rem;">
+          <strong>For now, view logs at:</strong><br>
+          • Render Dashboard: <a href="https://dashboard.render.com" target="_blank">dashboard.render.com</a><br>
+          • Frontend errors are logged to backend automatically<br>
+          • All console output is captured in production
+        </p>
+        <a href="/admin/" class="admin-btn admin-btn-primary">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin-layout.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const contactEnrichmentService = require('../services/contactEnrichmentService');
 const { query } = require('../config/database');
-const { asyncHandler } = require('../utils/asyncHandler');
+const { asyncHandler } = require('../middleware/errorHandler');
 
 /**
  * Contact Enrichment Routes for ISRS

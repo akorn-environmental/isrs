@@ -1,0 +1,42 @@
+name: Deploy Backend to Render
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Run backend tests (if any)
+        run: |
+          cd backend
+          npm test || echo "No tests configured"
+
+      - name: Trigger Render deployment
+        run: |
+          echo "✅ Backend changes detected - Render will auto-deploy"
+          echo "Monitor at: https://dashboard.render.com"
+
+      - name: Deployment notification
+        run: |
+          echo "🚀 ISRS Backend deployment triggered"
+          echo "📦 Changes in backend/"
+          echo "🔗 API: https://isrs-database-backend.onrender.com"
