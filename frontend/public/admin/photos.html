@@ -617,6 +617,8 @@
       </div>
       <div class="photo-modal-footer">
         <button class="btn btn-danger" onclick="deleteCurrentPhoto()">Delete Photo</button>
+        <div style="flex: 1;"></div>
+        <button class="btn btn-secondary" id="setFocalPointBtn">🎯 Set Focal Point</button>
         <button class="btn btn-secondary" id="toggleVisibilityBtn">Make Public</button>
         <button class="btn btn-primary" onclick="closePhotoModal()">Close</button>
       </div>
@@ -1059,6 +1061,77 @@
     document.getElementById('photoModal').addEventListener('click', (e) => {
       if (e.target.id === 'photoModal') closePhotoModal();
     });
+
+    // Focal Point Picker initialization
+    let currentPhoto = null;
+
+    // Store current photo when opening modal
+    const originalOpenPhotoModal = openPhotoModal;
+    openPhotoModal = function(photoId) {
+      currentPhoto = allPhotos.find(p => p.id === photoId);
+      originalOpenPhotoModal(photoId);
+    };
+
+    // Setup focal point button
+    document.getElementById('setFocalPointBtn').addEventListener('click', () => {
+      if (!currentPhoto) {
+        alert('No photo selected');
+        return;
+      }
+
+      const picker = new FocalPointPicker({
+        photoId: currentPhoto.id,
+        photoUrl: currentPhoto.url || `${API_BASE_URL}/uploads/photos/${currentPhoto.filename}`,
+        initialX: currentPhoto.focal_point_x || 50,
+        initialY: currentPhoto.focal_point_y || 50,
+        altText: currentPhoto.caption || currentPhoto.alt_text || '',
+        onSave: async (x, y) => {
+          const sessionToken = localStorage.getItem('isrs_session_token');
+          if (!sessionToken) {
+            alert('Not authenticated. Please log in again.');
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/api/photos/${currentPhoto.id}`, {
+              method: 'PATCH',
+              headers: {
+                'Authorization': `Bearer ${sessionToken}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                focal_point_x: parseFloat(x.toFixed(2)),
+                focal_point_y: parseFloat(y.toFixed(2))
+              })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error || 'Failed to save focal point');
+            }
+
+            // Update current photo object
+            if (currentPhoto) {
+              currentPhoto.focal_point_x = x;
+              currentPhoto.focal_point_y = y;
+            }
+
+            // Show success message
+            alert('✅ Focal point saved successfully!');
+
+            // Refresh photo list
+            loadPhotos();
+          } catch (error) {
+            console.error('Failed to save focal point:', error);
+            throw error;
+          }
+        }
+      });
+
+      picker.open();
+    });
   </script>
+  <script src="/js/focal-point-picker.js"></script>
 </body>
 </html>
