@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Information - ISRS Monorepo</title>
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .security-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #10b981;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .security-section {
+            margin: 20px 0;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .security-item-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #10b981;
+        }
+
+        .security-item-content h3 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .security-item-content p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tech-badge {
+            padding: 6px 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .contact-info {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .contact-info h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .contact-info a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Security Information</h1>
+        <p class="subtitle">ISRS Monorepo Security & Privacy Overview</p>
+        <span class="security-badge">✓ Secured & Monitored</span>
+
+        <h2>Authentication & Access Control</h2>
+        <div class="security-section">
+            
+            <div class="security-item">
+                <div class="security-item-icon">✉️</div>
+                <div class="security-item-content">
+                    <h3>Passwordless Authentication</h3>
+                    <p>We use magic link authentication - no passwords to remember or steal. Login links are sent to your verified email address and expire after single use or 15 minutes.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <div class="security-item-icon">🎫</div>
+                <div class="security-item-content">
+                    <h3>Secure Session Management</h3>
+                    <p>Sessions use HttpOnly cookies to prevent XSS attacks and include CSRF tokens for request validation.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Data Protection</h2>
+        <div class="security-section">
+            <div class="security-item">
+                <div class="security-item-icon">🔐</div>
+                <div class="security-item-content">
+                    <h3>Encryption in Transit</h3>
+                    <p>All data transmitted between your browser and our servers is encrypted using TLS 1.3 (HTTPS). This ensures that your data cannot be intercepted or read by third parties.</p>
+                </div>
+            </div>
+
+            <div class="security-item">
+                <div class="security-item-icon">🗄️</div>
+                <div class="security-item-content">
+                    <h3>Encryption at Rest</h3>
+                    <p>All database data is encrypted at rest using AES-256 encryption. This protects your data even if physical storage is compromised.</p>
+                </div>
+            </div>
+
+            <div class="security-item">
+                <div class="security-item-icon">🔑</div>
+                <div class="security-item-content">
+                    <h3>Secure Password Storage</h3>
+                    <p>No passwords are stored. We use passwordless magic link authentication, eliminating password-related vulnerabilities.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Application Security</h2>
+        <div class="security-section">
+            
+            <div class="security-item">
+                <div class="security-item-icon">🚫</div>
+                <div class="security-item-content">
+                    <h3>XSS Prevention</h3>
+                    <p>All user input is sanitized and escaped. Content Security Policy (CSP) headers prevent malicious script injection.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <div class="security-item-icon">🔒</div>
+                <div class="security-item-content">
+                    <h3>SQL Injection Protection</h3>
+                    <p>Parameterized queries and ORM protection prevent SQL injection attacks. All database inputs are validated.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <div class="security-item-icon">⚡</div>
+                <div class="security-item-content">
+                    <h3>Rate Limiting</h3>
+                    <p>API rate limiting prevents brute force attacks and ensures fair resource usage.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Infrastructure & Hosting</h2>
+        <div class="security-section">
+            <div class="security-item">
+                <div class="security-item-icon">☁️</div>
+                <div class="security-item-content">
+                    <h3>Secure Cloud Hosting</h3>
+                    <p>Hosted on Render.com with enterprise-grade security, automatic SSL certificates, DDoS protection, and 99.9% uptime SLA.</p>
+                </div>
+            </div>
+
+            <div class="security-item">
+                <div class="security-item-icon">🔄</div>
+                <div class="security-item-content">
+                    <h3>Automated Backups</h3>
+                    <p>Daily automated backups with 7-day retention. Point-in-time recovery available.</p>
+                </div>
+            </div>
+
+            <div class="security-item">
+                <div class="security-item-icon">📊</div>
+                <div class="security-item-content">
+                    <h3>Monitoring & Logging</h3>
+                    <p>24/7 application monitoring, error tracking, and security event logging for rapid incident response.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Compliance & Standards</h2>
+        <div class="security-section">
+            
+            <div class="security-item">
+                <div class="security-item-icon">🌐</div>
+                <div class="security-item-content">
+                    <h3>CORS Configuration</h3>
+                    <p>Properly configured Cross-Origin Resource Sharing policies restrict API access to authorized domains only.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <div class="security-item-icon">📋</div>
+                <div class="security-item-content">
+                    <h3>Data Privacy</h3>
+                    <p>We collect only necessary data, never sell information, and provide data export/deletion upon request.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <div class="security-item-icon">♿</div>
+                <div class="security-item-content">
+                    <h3>Accessibility</h3>
+                    <p>WCAG 2.1 AA standards for accessibility, ensuring the platform is usable by everyone.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Technology Stack</h2>
+        <div class="tech-stack">
+            <span class="tech-badge">Express</span><span class="tech-badge">PostgreSQL</span><span class="tech-badge">Monorepo</span><span class="tech-badge">ISRS</span>
+        </div>
+
+        <div class="contact-info">
+            <h3>Security Concerns or Questions?</h3>
+            <p>If you have security concerns or discover a vulnerability, please contact us immediately:</p>
+            <p><strong>Email:</strong> <a href="mailto:aaron.kornbluth@gmail.com">aaron.kornbluth@gmail.com</a></p>
+            <p><strong>Response Time:</strong> We aim to respond to security reports within 24 hours.</p>
+        </div>
+
+        <footer>
+            <p>This page is for informational purposes. It is not linked from the main site.</p>
+            <p>Last updated: January 14, 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
