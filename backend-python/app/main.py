@@ -50,12 +50,8 @@ async def health_check():
     )
 
 
-# Root endpoint - redirect to public website
-@app.get("/", tags=["System"])
-async def root():
-    """Redirect root URL to public website."""
-    return RedirectResponse(url="https://www.shellfish-society.org/", status_code=301)
-
+# NOTE: Root endpoint removed - static files are served at root instead
+# The frontend index.html will be served at "/"
 
 # Startup event
 @app.on_event("startup")
@@ -92,14 +88,15 @@ app.include_router(enrichment.router, prefix="/api/enrichment", tags=["Enrichmen
 app.include_router(assets.router, prefix="/api/assets", tags=["Assets"])
 
 
-# NOTE: Static file serving disabled - root redirects to public website
-# The backend serves API routes only, and redirects "/" to shellfish-society.org
-# If you need to serve static files in the future, uncomment below:
-# frontend_path = Path(__file__).parent.parent.parent / "frontend" / "public"
-# if frontend_path.exists():
-#     app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="static")
-#     logger.info(f"Serving frontend from: {frontend_path}")
-logger.info("API mode - root redirects to https://www.shellfish-society.org/")
+# Serve static files (frontend) - Must be AFTER API routes
+# This serves the frontend from the parent directory's frontend/public folder
+frontend_path = Path(__file__).parent.parent.parent / "frontend" / "public"
+if frontend_path.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="static")
+    logger.info(f"Serving frontend from: {frontend_path}")
+else:
+    logger.warning(f"Frontend directory not found at: {frontend_path}")
+    logger.warning("API-only mode - no frontend files will be served")
 
 
 if __name__ == "__main__":
