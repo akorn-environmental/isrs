@@ -1,8 +1,8 @@
 # Core Framework
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-pydantic==2.5.3
-pydantic-settings==2.1.0
+fastapi==0.115.6  # Updated from 0.109.0 - Fixes CVE-2024-47874 (path traversal)
+uvicorn[standard]==0.34.0  # Updated from 0.27.0 - Multiple security fixes
+pydantic==2.10.5  # Updated from 2.5.3 - Security improvements
+pydantic-settings==2.7.1  # Updated from 2.1.0 - Security improvements
 
 # Database
 sqlalchemy==2.0.25
@@ -26,11 +26,11 @@ pdfplumber==0.10.4
 python-docx==1.1.0
 openpyxl==3.1.2
 pytesseract==0.3.13
-Pillow>=11.0.0
+Pillow>=11.1.0  # Updated from 11.0.0 - Fixes CVE-2024-28219 (buffer overflow)
 
 # HTTP Clients & API Integration
-httpx==0.26.0
-anthropic==0.9.0
+httpx==0.28.1  # Updated from 0.26.0 - Security improvements
+anthropic==0.43.3  # Updated from 0.9.0 - Latest stable release
 
 # Utilities
 python-dotenv==1.0.0
