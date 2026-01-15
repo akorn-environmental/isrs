@@ -28,7 +28,7 @@ services:
       - key: SMTP_PASSWORD
         sync: false
       - key: CORS_ORIGINS
-        value: http://localhost:3000,http://localhost:5173,https://isrs-database-frontend.onrender.com
+        value: http://localhost:3000,http://localhost:5173,https://isrs-database-frontend.onrender.com,https://www.shellfish-society.org,https://shellfish-society.org
       - key: ENVIRONMENT
         value: production
       - key: LOG_LEVEL

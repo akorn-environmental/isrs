@@ -557,7 +557,7 @@ async function saveProfile() {
   try {
     const sessionToken = localStorage.getItem('isrs_session_token');
     if (sessionToken) {
-      const response = await fetch('https://isrs-database-backend.onrender.com/api/auth/profile', {
+      const response = await fetch('https://isrs-python-backend.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

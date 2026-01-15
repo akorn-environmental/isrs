@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.reset();
 
         // Optional: Send to backend API
-        // const response = await fetch('https://isrs-database-backend.onrender.com/api/contact', {
+        // const response = await fetch('https://isrs-python-backend.onrender.com/api/contact', {
         //   method: 'POST',
         //   headers: { 'Content-Type': 'application/json' },
         //   body: JSON.stringify(formData)
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         supportFeedbackForm.reset();
 
         // Optional: Send to backend API
-        // const response = await fetch('https://isrs-database-backend.onrender.com/api/contact', {
+        // const response = await fetch('https://isrs-python-backend.onrender.com/api/contact', {
         //   method: 'POST',
         //   headers: { 'Content-Type': 'application/json' },
         //   body: JSON.stringify(formData)

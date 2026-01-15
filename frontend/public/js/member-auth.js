@@ -7,7 +7,7 @@ const MemberAuth = (() => {
   // Configuration
   const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000/api/profile'
-    : 'https://isrs-database-backend.onrender.com/api/profile';
+    : 'https://isrs-python-backend.onrender.com/api/profile';
 
   const SESSION_KEY = 'isrs_session_token';
   const USER_KEY = 'isrs_user_data';
