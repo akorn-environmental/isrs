@@ -3,7 +3,7 @@ FastAPI main application for ISRS Database.
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 import logging
 from pathlib import Path
@@ -89,11 +89,34 @@ app.include_router(assets.router, prefix="/api/assets", tags=["Assets"])
 
 
 # Serve static files (frontend) - Must be AFTER API routes
-# This serves the frontend from the parent directory's frontend/public folder
 frontend_path = Path(__file__).parent.parent.parent / "frontend" / "public"
+logger.info(f"Checking frontend path: {frontend_path}")
+logger.info(f"Frontend path exists: {frontend_path.exists()}")
+
 if frontend_path.exists():
-    app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="static")
-    logger.info(f"Serving frontend from: {frontend_path}")
+    # Mount static files at /static
+    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+    logger.info(f"Mounted static files from: {frontend_path}")
+
+    # Serve index.html for root and any non-API routes (SPA routing)
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        """Serve frontend for all non-API routes."""
+        # Don't intercept API routes
+        if full_path.startswith("api/"):
+            return JSONResponse({"error": "Not found"}, status_code=404)
+
+        # Serve specific file if it exists
+        file_path = frontend_path / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+
+        # Otherwise serve index.html (SPA routing)
+        index_path = frontend_path / "index.html"
+        if index_path.exists():
+            return FileResponse(index_path)
+
+        return JSONResponse({"error": "Frontend not found"}, status_code=404)
 else:
     logger.warning(f"Frontend directory not found at: {frontend_path}")
     logger.warning("API-only mode - no frontend files will be served")
