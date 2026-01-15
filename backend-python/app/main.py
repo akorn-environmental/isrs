@@ -85,7 +85,7 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, funding, documents, enrichment
+from app.routers import auth, contacts, votes, conferences, funding, documents, enrichment, assets
 
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(contacts.router, prefix="/api/contacts", tags=["Contacts"])
@@ -94,6 +94,7 @@ app.include_router(conferences.router, prefix="/api/conferences", tags=["Confere
 app.include_router(funding.router, prefix="/api/funding", tags=["Funding"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(enrichment.router, prefix="/api/enrichment", tags=["Enrichment"])
+app.include_router(assets.router, prefix="/api/assets", tags=["Assets"])
 
 
 if __name__ == "__main__":

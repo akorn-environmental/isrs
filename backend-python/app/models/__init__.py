@@ -15,6 +15,7 @@ from app.models.conference import (
 from app.models.funding import FundingProspect
 from app.models.auth import UserSession
 from app.models.system import AuditLog, DataQualityMetric
+from app.models.asset import Asset
 
 __all__ = [
     "Base",
@@ -32,4 +33,5 @@ __all__ = [
     "UserSession",
     "AuditLog",
     "DataQualityMetric",
+    "Asset",
 ]
