@@ -4,7 +4,9 @@ FastAPI main application for ISRS Database.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 import logging
+from pathlib import Path
 
 from app.config import settings
 from app.database import init_db
@@ -48,18 +50,8 @@ async def health_check():
     )
 
 
-# Root endpoint
-@app.get("/", tags=["System"])
-async def root():
-    """Root endpoint with API information."""
-    return JSONResponse(
-        content={
-            "message": f"Welcome to {settings.APP_NAME}",
-            "version": settings.APP_VERSION,
-            "docs": "/docs",
-            "health": "/health",
-        }
-    )
+# NOTE: Root endpoint removed - static files are served at root instead
+# The frontend index.html will be served at "/"
 
 
 # Startup event
@@ -95,6 +87,17 @@ app.include_router(funding.router, prefix="/api/funding", tags=["Funding"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(enrichment.router, prefix="/api/enrichment", tags=["Enrichment"])
 app.include_router(assets.router, prefix="/api/assets", tags=["Assets"])
+
+
+# Serve static files (frontend) - Must be AFTER API routes
+# This serves the frontend from the parent directory's frontend/public folder
+frontend_path = Path(__file__).parent.parent.parent / "frontend" / "public"
+if frontend_path.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="static")
+    logger.info(f"Serving frontend from: {frontend_path}")
+else:
+    logger.warning(f"Frontend directory not found at: {frontend_path}")
+    logger.warning("API-only mode - no frontend files will be served")
 
 
 if __name__ == "__main__":
