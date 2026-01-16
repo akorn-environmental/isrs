@@ -26,12 +26,12 @@ SERVICE_ID="srv-d5k0t5d6ubrc739a4e50"
 SERVICE_NAME="isrs-python-backend"
 
 # Environment variables to add (key=value format)
-# NOTE: Replace with your actual AWS credentials before running
+# These will be loaded from the .aws-s3-credentials file or can be set manually
 ENV_VARS=(
-    "AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY_ID_HERE"
-    "AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY_HERE"
-    "AWS_REGION=us-east-1"
-    "AWS_BUCKET_NAME=akorn-assets"
+    "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-YOUR_AWS_ACCESS_KEY_ID_HERE}"
+    "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-YOUR_AWS_SECRET_ACCESS_KEY_HERE}"
+    "AWS_REGION=${AWS_REGION:-us-east-1}"
+    "AWS_BUCKET_NAME=${AWS_BUCKET_NAME:-akorn-assets}"
 )
 
 echo -e "${YELLOW}Environment Variables to Add:${NC}"
