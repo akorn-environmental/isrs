@@ -14,7 +14,7 @@
 const AssetZoneDisplay = {
   API_BASE_URL: window.location.hostname === 'localhost'
     ? 'http://localhost:3001'
-    : 'https://isrs-python-backend.onrender.com',
+    : ''  // Same-origin URLs,
 
   /**
    * Initialize all asset zones on the page

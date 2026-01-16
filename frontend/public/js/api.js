@@ -1,6 +1,6 @@
 // ISRS API Client
 
-const API_BASE_URL = 'https://isrs-python-backend.onrender.com';
+const API_BASE_URL = ''  // Same-origin URLs;
 
 /**
  * Make API request

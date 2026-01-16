@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Portal - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .welcome-banner h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    .member-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .action-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .action-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .action-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .action-description {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content" class="container" style="max-width: 1200px; padding: 2rem;">
+    
+    <div id="loadingState">
+      <p>Loading your portal...</p>
+    </div>
+
+    <div id="memberContent" style="display: none;">
+      
+      <div class="welcome-banner">
+        <h1>Welcome, <span id="memberName">Member</span>!</h1>
+        <p>Your ISRS Member Portal</p>
+      </div>
+
+      <div class="member-actions">
+        
+        <div class="action-card" onclick="location.href='/profile/dashboard.html'">
+          <div class="action-icon">👤</div>
+          <div class="action-title">My Profile</div>
+          <div class="action-description">
+            View and edit your profile, manage privacy settings
+          </div>
+        </div>
+
+        <div class="action-card" onclick="location.href='/conference/register.html'">
+          <div class="action-icon">📅</div>
+          <div class="action-title">Conferences</div>
+          <div class="action-description">
+            Register for conferences, view your registrations
+          </div>
+        </div>
+
+        <div class="action-card" onclick="location.href='/abstracts/submit.html'">
+          <div class="action-icon">📝</div>
+          <div class="action-title">Abstracts</div>
+          <div class="action-description">
+            Submit and manage your abstract submissions
+          </div>
+        </div>
+
+        <div class="action-card" onclick="location.href='/member/directory.html'">
+          <div class="action-icon">📇</div>
+          <div class="action-title">Member Directory</div>
+          <div class="action-description">
+            Browse the member directory and connect with colleagues
+          </div>
+        </div>
+
+        <div class="action-card" onclick="location.href='/membership/manage.html'">
+          <div class="action-icon">💳</div>
+          <div class="action-title">Membership</div>
+          <div class="action-description">
+            Manage your membership and payment information
+          </div>
+        </div>
+
+        <div class="action-card" onclick="location.href='/gallery.html'">
+          <div class="action-icon">📸</div>
+          <div class="action-title">Photo Gallery</div>
+          <div class="action-description">
+            Browse conference photos and memories
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align: center; margin: 3rem 0;">
+        <button class="btn btn-danger" onclick="handleLogout()">
+          Logout
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://isrs-python-backend.onrender.com';
+
+    // Persistent logging that survives redirects
+    const debugLog = [];
+    function log(message, data = null) {
+      const entry = `[${new Date().toISOString()}] ${message}`;
+      console.log(entry, data || '');
+      debugLog.push(data ? `${entry} ${JSON.stringify(data)}` : entry);
+
+      // Save to localStorage so we can see it even after redirects
+      try {
+        const existingLogs = JSON.parse(localStorage.getItem('isrs_debug_log') || '[]');
+        existingLogs.push(data ? `${entry} ${JSON.stringify(data)}` : entry);
+        // Keep only last 50 entries
+        if (existingLogs.length > 50) existingLogs.shift();
+        localStorage.setItem('isrs_debug_log', JSON.stringify(existingLogs));
+      } catch (e) {
+        console.error('Failed to save debug log:', e);
+      }
+    }
+
+    // Show debug log on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedLogs = localStorage.getItem('isrs_debug_log');
+      if (savedLogs) {
+        console.log('📜 PREVIOUS DEBUG LOGS:');
+        console.log('='.repeat(80));
+        JSON.parse(savedLogs).forEach(log => console.log(log));
+        console.log('='.repeat(80));
+      }
+    });
+
+    async function checkAuth() {
+      log('🚀 checkAuth() started');
+      log('📍 Current URL:', window.location.href);
+
+      try {
+        // Check for exchange token in URL (from magic link redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const exchangeToken = urlParams.get('auth');
+        log('🔍 Auth token in URL:', exchangeToken ? exchangeToken.substring(0, 20) + '...' : 'NONE');
+
+        if (exchangeToken) {
+          log('🔄 Exchange token found, swapping for session...');
+          log('🌐 API_BASE_URL:', API_BASE_URL);
+
+          // Exchange token for session - try cookie first, fall back to response body
+          log('📤 Sending POST to /api/auth/exchange...');
+          const exchangeResponse = await fetch(`${API_BASE_URL}/api/auth/exchange`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ token: exchangeToken })
+          });
+
+          log('📥 Exchange response status:', exchangeResponse.status);
+          const exchangeData = await exchangeResponse.json();
+          log('📥 Exchange response data:', exchangeData);
+
+          // Clean URL (remove auth parameter)
+          window.history.replaceState({}, '', window.location.pathname);
+          log('🧹 URL cleaned, auth param removed');
+
+          if (!exchangeResponse.ok || !exchangeData.success) {
+            log('❌ Token exchange failed');
+            log('❌ Response status:', exchangeResponse.status);
+            log('❌ Error message:', exchangeData.error);
+            log('❌ Full response:', exchangeData);
+
+            // Show ALL debug logs in alert before redirect
+            const allLogs = JSON.parse(localStorage.getItem('isrs_debug_log') || '[]');
+            alert('LOGIN FAILED\n\n' +
+                  'Error: ' + (exchangeData.error || 'Token exchange failed') + '\n\n' +
+                  'DEBUG LOG:\n' + allLogs.slice(-10).join('\n'));
+
+            window.location.href = '/login.html';
+            return;
+          }
+
+          // Store session token in localStorage for cross-origin compatibility
+          if (exchangeData.data && exchangeData.data.sessionToken) {
+            localStorage.setItem('isrs_session_token', exchangeData.data.sessionToken);
+            log('✅ Session token stored in localStorage');
+            log('🔑 Token preview:', exchangeData.data.sessionToken.substring(0, 20) + '...');
+          } else {
+            log('⚠️ No sessionToken in exchange response!');
+            log('⚠️ Exchange data:', exchangeData);
+          }
+
+          log('✅ Token exchanged successfully');
+        } else {
+          log('ℹ️ No auth token in URL, checking for existing session...');
+        }
+
+        // Get session token from localStorage
+        const sessionToken = localStorage.getItem('isrs_session_token');
+        log('🔑 Session token from localStorage:', sessionToken ? sessionToken.substring(0, 20) + '...' : 'NONE');
+
+        // Now check session (try cookie-based first, fall back to token-based)
+        let response;
+        let sessionUrl;
+
+        if (sessionToken) {
+          // Use token from localStorage (for cross-origin compatibility)
+          sessionUrl = `${API_BASE_URL}/api/auth/session?sessionToken=${sessionToken}`;
+          log('📤 Checking session with token from localStorage');
+          log('📤 Session check URL:', sessionUrl);
+          response = await fetch(sessionUrl, {
+            credentials: 'include'
+          });
+        } else {
+          // Try cookie-based auth (for same-origin deployments)
+          sessionUrl = `${API_BASE_URL}/api/auth/session`;
+          log('📤 Checking session with cookies only');
+          log('📤 Session check URL:', sessionUrl);
+          response = await fetch(sessionUrl, {
+            credentials: 'include'
+          });
+        }
+
+        log('📥 Session check response status:', response.status);
+        const data = await response.json();
+        log('📥 Session check response data:', data);
+
+        if (!response.ok || !data.success) {
+          log('❌ Session check failed');
+          log('❌ Response status:', response.status);
+          log('❌ Response data:', data);
+
+          // Clear invalid session
+          localStorage.removeItem('isrs_session_token');
+          log('🧹 Cleared localStorage');
+
+          // Show ALL debug logs in alert before redirect
+          const allLogs = JSON.parse(localStorage.getItem('isrs_debug_log') || '[]');
+          alert('SESSION VALIDATION FAILED\n\n' +
+                'Error: ' + (data.error || 'Unknown error') + '\n\n' +
+                'DEBUG LOG:\n' + allLogs.slice(-10).join('\n'));
+
+          window.location.href = '/login.html';
+          return;
+        }
+
+        log('✅ Authenticated:', data.data.user.fullName);
+        log('✅ Role:', data.data.primaryRole.displayName);
+        log('✅ User data:', data.data);
+
+        document.getElementById('memberName').textContent = data.data.user.firstName;
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('memberContent').style.display = 'block';
+        log('✅ UI updated, member content displayed');
+
+      } catch (error) {
+        log('💥 EXCEPTION in checkAuth():', error.message);
+        log('💥 Error stack:', error.stack);
+
+        localStorage.removeItem('isrs_session_token');
+
+        // Show ALL debug logs in alert before redirect
+        const allLogs = JSON.parse(localStorage.getItem('isrs_debug_log') || '[]');
+        alert('AUTHENTICATION ERROR\n\n' +
+              error.message + '\n\n' +
+              'DEBUG LOG:\n' + allLogs.slice(-10).join('\n'));
+
+        window.location.href = '/login.html';
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        const sessionToken = localStorage.getItem('isrs_session_token');
+
+        // Call logout endpoint if we have a session
+        if (sessionToken) {
+          await fetch(`${API_BASE_URL}/api/auth/logout?sessionToken=${sessionToken}`, {
+            method: 'POST',
+            credentials: 'include'
+          });
+        } else {
+          await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            method: 'POST',
+            credentials: 'include'
+          });
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+      } finally {
+        // Always clear local storage and redirect
+        localStorage.removeItem('isrs_session_token');
+        window.location.href = '/login.html';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+</body>
+</html>

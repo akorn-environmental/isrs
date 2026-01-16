@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .admin-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-nav a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      margin-right: 2rem;
+      font-weight: 600;
+    }
+
+    .admin-nav a:hover {
+      color: var(--secondary-blue);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .data-table {
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2rem;
+      margin: 0;
+      color: var(--primary-blue);
+    }
+
+    .search-box {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      width: 300px;
+      font-family: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--light-gray);
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-dark);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    tr:hover {
+      background: var(--light-gray);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem;
+    }
+
+    .pagination {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <div class="admin-nav">
+    <div>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/contacts.html">Contacts</a>
+      <a href="/admin/organizations.html">Organizations</a>
+      <a href="/admin/votes.html">Board Votes</a>
+      <a href="/admin/conferences.html">Conferences</a>
+      <a href="/admin/funding.html">Funding</a>
+    </div>
+    <button class="btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container">
+    <div class="data-table">
+      <div class="table-header">
+        <h1>Contacts</h1>
+        <input type="text" class="search-box" id="searchBox" placeholder="Search contacts...">
+      </div>
+
+      <div id="tableContent">
+        <div class="loading">Loading contacts...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-python-backend.onrender.com';
+
+    // Check auth
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      loadContacts();
+    });
+
+    async function loadContacts() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/contacts`, {
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          displayContacts(data.data);
+        } else {
+          document.getElementById('tableContent').innerHTML = `
+            <div class="error">Failed to load contacts: ${data.error || 'Unknown error'}</div>
+          `;
+        }
+      } catch (error) {
+        document.getElementById('tableContent').innerHTML = `
+          <div class="error">Error connecting to server: ${error.message}</div>
+        `;
+      }
+    }
+
+    function displayContacts(contacts) {
+      const html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Organization</th>
+              <th>Country</th>
+              <th>Member Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${contacts.map(contact => `
+              <tr>
+                <td>${contact.first_name || ''} ${contact.last_name || ''}</td>
+                <td>${contact.email || '-'}</td>
+                <td>${contact.organization_name || '-'}</td>
+                <td>${contact.country || '-'}</td>
+                <td>${contact.member_type || '-'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="pagination">
+          <p>Total Contacts: ${contacts.length}</p>
+        </div>
+      `;
+
+      document.getElementById('tableContent').innerHTML = html;
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/admin/';
+    }
+
+    // Search functionality
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

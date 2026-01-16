@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Documents - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--admin-space-lg);
+      margin-top: var(--admin-space-xl);
+    }
+
+    .document-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      padding: var(--admin-space-xl);
+      transition: all 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .document-card:hover {
+      box-shadow: var(--admin-shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .document-card.pending {
+      border-left: 4px solid var(--admin-warning);
+    }
+
+    .document-card.approved {
+      border-left: 4px solid var(--admin-success);
+    }
+
+    .document-card.draft {
+      border-left: 4px solid var(--admin-gray-400);
+    }
+
+    .document-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--admin-primary-light);
+      border-radius: var(--admin-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: var(--admin-space-md);
+    }
+
+    .document-title {
+      font-size: var(--admin-text-lg);
+      font-weight: 600;
+      color: var(--admin-text);
+      margin-bottom: var(--admin-space-sm);
+      line-height: 1.4;
+    }
+
+    .document-meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--admin-space-xs);
+      margin-top: var(--admin-space-md);
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+    }
+
+    .document-badges {
+      display: flex;
+      gap: var(--admin-space-sm);
+      margin-top: var(--admin-space-md);
+      flex-wrap: wrap;
+    }
+
+    .document-actions {
+      display: flex;
+      gap: var(--admin-space-sm);
+      margin-top: var(--admin-space-lg);
+    }
+
+    .upload-area {
+      border: 2px dashed var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      padding: var(--admin-space-3xl);
+      text-align: center;
+      background: var(--admin-surface);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-area:hover,
+    .upload-area.drag-over {
+      border-color: var(--admin-primary);
+      background: var(--admin-primary-light);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: var(--admin-space-md);
+      color: var(--admin-primary);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: var(--admin-space-md);
+      margin-bottom: var(--admin-space-xl);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--admin-space-lg);
+      margin-bottom: var(--admin-space-2xl);
+    }
+
+    .stat-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      padding: var(--admin-space-xl);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: var(--admin-text-3xl);
+      font-weight: 700;
+      color: var(--admin-text);
+    }
+
+    .stat-label {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+      margin-top: var(--admin-space-xs);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--admin-space-4xl);
+      color: var(--admin-text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: var(--admin-space-lg);
+    }
+
+    @media (max-width: 768px) {
+      .documents-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Inline editing styles */
+    .editable-field {
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+    }
+    .editable-field:hover {
+      background: var(--admin-primary-light);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .editable-field input, .editable-field select {
+      padding: 0.25rem 0.5rem;
+      border: 2px solid var(--admin-primary);
+      border-radius: var(--admin-radius-sm);
+      font-size: inherit;
+      background: var(--admin-surface);
+      color: var(--admin-text);
+    }
+    .editable-field input:focus, .editable-field select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--admin-primary-light);
+    }
+    .document-title.editable-field:hover {
+      background: var(--admin-primary-light);
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <!-- Page Header -->
+    <div class="admin-page-header">
+      <div>
+        <h1>Board Documents</h1>
+        <p style="color: var(--admin-text-muted); margin-top: var(--admin-space-xs);">Secure document repository for board members</p>
+      </div>
+      <div class="admin-page-header-actions">
+        <button class="admin-btn admin-btn-primary" onclick="showUploadModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Upload Document
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards" id="statsCards">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Total Documents</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statPending">0</div>
+        <div class="stat-label">Pending Approval</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statDrafts">0</div>
+        <div class="stat-label">Drafts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statFinal">0</div>
+        <div class="stat-label">Final Documents</div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input type="text" class="admin-input" id="searchBox" placeholder="Search documents..." style="flex: 1; min-width: 200px;">
+      <select id="categoryFilter" class="admin-select" onchange="loadDocuments()">
+        <option value="">All Categories</option>
+        <option value="Meeting Minutes">Meeting Minutes</option>
+        <option value="Bylaws & Governance">Bylaws & Governance</option>
+        <option value="Financial Reports">Financial Reports</option>
+        <option value="Policies & Procedures">Policies & Procedures</option>
+      </select>
+      <select id="statusFilter" class="admin-select" onchange="loadDocuments()">
+        <option value="">All Status</option>
+        <option value="draft">Draft</option>
+        <option value="final">Final</option>
+        <option value="archived">Archived</option>
+      </select>
+      <select id="approvalFilter" class="admin-select" onchange="loadDocuments()">
+        <option value="">All Approvals</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <select id="sortOrder" class="admin-select" onchange="filterDocuments()">
+        <option value="date-desc">Date (Newest First)</option>
+        <option value="date-asc">Date (Oldest First)</option>
+        <option value="title-asc">Title (A-Z)</option>
+        <option value="title-desc">Title (Z-A)</option>
+        <option value="category-asc">Category (A-Z)</option>
+        <option value="category-desc">Category (Z-A)</option>
+      </select>
+      <button class="admin-btn admin-btn-secondary" onclick="resetFilters()">Reset</button>
+    </div>
+
+    <!-- Documents Grid -->
+    <div id="documentsContainer">
+      <div class="admin-loading">
+        <div class="admin-spinner"></div>
+        Loading documents...
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 600px;">
+      <div class="admin-modal-header">
+        <h2>Upload Document</h2>
+        <button class="admin-modal-close" onclick="closeUploadModal()">&times;</button>
+      </div>
+      <form id="uploadForm" onsubmit="uploadDocument(event)">
+        <div class="admin-modal-body">
+          <!-- File Upload -->
+          <div class="admin-form-group">
+            <label class="admin-form-label">Document File *</label>
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+              <div class="upload-icon">📄</div>
+              <p><strong>Click to upload</strong> or drag and drop</p>
+              <p style="font-size: var(--admin-text-sm); color: var(--admin-text-muted); margin-top: var(--admin-space-sm);">
+                PDF, Word, Excel, PowerPoint (max 50MB)
+              </p>
+            </div>
+            <input type="file" id="fileInput" style="display: none;" required
+                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv">
+            <div id="fileInfo" style="display: none; margin-top: var(--admin-space-md);">
+              <div class="admin-alert admin-alert-success">
+                <strong>Selected file:</strong> <span id="fileName"></span> (<span id="fileSize"></span>)
+              </div>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docTitle">Title *</label>
+            <input type="text" id="docTitle" class="admin-input" required>
+          </div>
+
+          <!-- Description -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docDescription">Description</label>
+            <textarea id="docDescription" class="admin-textarea" rows="3"></textarea>
+          </div>
+
+          <!-- Category -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docCategory">Category *</label>
+            <select id="docCategory" class="admin-select" required>
+              <option value="">Select category...</option>
+              <option value="Meeting Minutes">Meeting Minutes</option>
+              <option value="Bylaws & Governance">Bylaws & Governance</option>
+              <option value="Financial Reports">Financial Reports</option>
+              <option value="Policies & Procedures">Policies & Procedures</option>
+            </select>
+          </div>
+
+          <!-- Status -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docStatus">Status *</label>
+            <select id="docStatus" class="admin-select" required>
+              <option value="draft">Draft</option>
+              <option value="final">Final</option>
+            </select>
+          </div>
+
+          <!-- Meeting Date -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docMeetingDate">Meeting Date</label>
+            <input type="date" id="docMeetingDate" class="admin-input">
+          </div>
+
+          <!-- Fiscal Year -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docFiscalYear">Fiscal Year</label>
+            <input type="text" id="docFiscalYear" class="admin-input" placeholder="e.g., 2024-2025">
+          </div>
+
+          <!-- Tags -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docTags">Tags (comma-separated)</label>
+            <input type="text" id="docTags" class="admin-input" placeholder="e.g., budget, strategic-plan, annual">
+          </div>
+
+          <!-- Notes -->
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="docNotes">Internal Notes</label>
+            <textarea id="docNotes" class="admin-textarea" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeUploadModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-success" id="uploadBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload Document
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View/Edit Document Modal -->
+  <div id="documentModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 800px;">
+      <div class="admin-modal-header">
+        <h2 id="modalDocTitle">Document Details</h2>
+        <button class="admin-modal-close" onclick="closeDocumentModal()">&times;</button>
+      </div>
+      <div class="admin-modal-body" id="documentModalBody">
+        <!-- Content populated by JS -->
+      </div>
+      <div class="admin-modal-footer" id="documentModalFooter">
+        <!-- Actions populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin-layout.js"></script>
+  <script>
+    const API_BASE_URL = 'https://isrs-python-backend.onrender.com';
+    let allDocuments = [];
+    let currentDocument = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAdminLayout('board-documents');
+      checkAuth();
+
+      // File input change handler
+      document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+      // Drag and drop handlers
+      const uploadArea = document.getElementById('uploadArea');
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+      });
+
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('drag-over');
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          document.getElementById('fileInput').files = files;
+          handleFileSelect({ target: { files } });
+        }
+      });
+
+      // Search handler
+      document.getElementById('searchBox').addEventListener('input', filterDocuments);
+    });
+
+    function checkAuth() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      const userRole = localStorage.getItem('isrs_user_role');
+
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+
+      // Check if user has appropriate role
+      if (userRole && !['admin', 'board'].includes(userRole.toLowerCase())) {
+        showToast('Access denied. Board members and administrators only.', 'error');
+        setTimeout(() => window.location.href = '/admin/dashboard.html', 2000);
+        return;
+      }
+
+      loadDocuments();
+    }
+
+    async function loadDocuments() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      const category = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const approvalStatus = document.getElementById('approvalFilter').value;
+
+      try {
+        let url = `${API_BASE_URL}/api/admin/board-documents?limit=200`;
+        if (category) url += `&category=${encodeURIComponent(category)}`;
+        if (status) url += `&status=${status}`;
+        if (approvalStatus) url += `&approval_status=${approvalStatus}`;
+
+        const response = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          allDocuments = data.data;
+          updateStats();
+          displayDocuments(allDocuments);
+        } else {
+          showToast('Failed to load documents: ' + (data.error || 'Unknown error'), 'error');
+        }
+      } catch (error) {
+        console.error('Error loading documents:', error);
+        showToast('Error loading documents. Please try again.', 'error');
+      }
+    }
+
+    function updateStats() {
+      const total = allDocuments.length;
+      const pending = allDocuments.filter(d => d.approval_status === 'pending').length;
+      const drafts = allDocuments.filter(d => d.status === 'draft').length;
+      const final = allDocuments.filter(d => d.status === 'final').length;
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statDrafts').textContent = drafts;
+      document.getElementById('statFinal').textContent = final;
+    }
+
+    function sortDocuments(documentList) {
+      const sortOrder = document.getElementById('sortOrder')?.value || 'date-desc';
+      const sorted = [...documentList];
+
+      sorted.sort((a, b) => {
+        let aVal, bVal;
+
+        switch(sortOrder) {
+          case 'date-desc':
+            aVal = new Date(a.created_at || 0).getTime();
+            bVal = new Date(b.created_at || 0).getTime();
+            return bVal - aVal;
+          case 'date-asc':
+            aVal = new Date(a.created_at || 0).getTime();
+            bVal = new Date(b.created_at || 0).getTime();
+            return aVal - bVal;
+          case 'title-asc':
+            return (a.title || '').localeCompare(b.title || '');
+          case 'title-desc':
+            return (b.title || '').localeCompare(a.title || '');
+          case 'category-asc':
+            return (a.category || '').localeCompare(b.category || '');
+          case 'category-desc':
+            return (b.category || '').localeCompare(a.category || '');
+          default:
+            return 0;
+        }
+      });
+
+      return sorted;
+    }
+
+    function displayDocuments(documents) {
+      const container = document.getElementById('documentsContainer');
+
+      if (documents.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📄</div>
+            <h3>No documents found</h3>
+            <p>Upload your first document to get started</p>
+            <button class="admin-btn admin-btn-primary" onclick="showUploadModal()" style="margin-top: var(--admin-space-lg);">
+              Upload Document
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const sortedDocuments = sortDocuments(documents);
+
+      const html = `
+        <div class="documents-grid">
+          ${sortedDocuments.map(doc => renderDocumentCard(doc)).join('')}
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function renderDocumentCard(doc) {
+      const icon = getFileIcon(doc.file_type);
+      const date = new Date(doc.created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+
+      return `
+        <div class="document-card ${doc.approval_status}">
+          <div class="document-icon" onclick="viewDocument('${doc.id}')" style="cursor: pointer;">${icon}</div>
+          <div class="document-title editable-field" onclick="editDocField(event, '${doc.id}', 'title')" title="Click to edit title">${escapeHtml(doc.title)}</div>
+          <div class="document-badges">
+            <span class="admin-badge admin-badge-${doc.status === 'final' ? 'success' : 'secondary'} editable-field" onclick="editDocField(event, '${doc.id}', 'status')" title="Click to edit status">${doc.status}</span>
+            <span class="admin-badge admin-badge-${doc.approval_status === 'approved' ? 'success' : doc.approval_status === 'pending' ? 'warning' : 'danger'}">${doc.approval_status}</span>
+            <span class="admin-badge admin-badge-info editable-field" onclick="editDocField(event, '${doc.id}', 'category')" title="Click to edit category">${doc.category}</span>
+          </div>
+          <div class="document-meta" onclick="viewDocument('${doc.id}')" style="cursor: pointer;">
+            <div>📅 ${date}</div>
+            <div>👤 ${doc.uploaded_by_first_name || 'Unknown'} ${doc.uploaded_by_last_name || ''}</div>
+            ${doc.file_size ? `<div>📊 ${formatFileSize(doc.file_size)}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function getFileIcon(mimeType) {
+      if (!mimeType) return '📄';
+      if (mimeType.includes('pdf')) return '📕';
+      if (mimeType.includes('word')) return '📘';
+      if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📊';
+      if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📑';
+      return '📄';
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function filterDocuments() {
+      const search = document.getElementById('searchBox').value.toLowerCase();
+      const filtered = allDocuments.filter(doc =>
+        doc.title.toLowerCase().includes(search) ||
+        (doc.description && doc.description.toLowerCase().includes(search)) ||
+        (doc.category && doc.category.toLowerCase().includes(search))
+      );
+      displayDocuments(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('searchBox').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('approvalFilter').value = '';
+      document.getElementById('sortOrder').value = 'date-desc';
+      loadDocuments();
+    }
+
+    function showUploadModal() {
+      document.getElementById('uploadModal').classList.add('active');
+      // Reset form
+      document.getElementById('uploadForm').reset();
+      document.getElementById('fileInfo').style.display = 'none';
+    }
+
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.remove('active');
+    }
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        document.getElementById('fileInfo').style.display = 'block';
+      }
+    }
+
+    async function uploadDocument(e) {
+      e.preventDefault();
+
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        showToast('Please select a file', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('document', file);
+      formData.append('title', document.getElementById('docTitle').value);
+      formData.append('description', document.getElementById('docDescription').value);
+      formData.append('category', document.getElementById('docCategory').value);
+      formData.append('status', document.getElementById('docStatus').value);
+      formData.append('meeting_date', document.getElementById('docMeetingDate').value);
+      formData.append('fiscal_year', document.getElementById('docFiscalYear').value);
+      formData.append('notes', document.getElementById('docNotes').value);
+
+      const tags = document.getElementById('docTags').value;
+      if (tags) {
+        formData.append('tags', JSON.stringify(tags.split(',').map(t => t.trim()).filter(Boolean)));
+      }
+
+      const uploadBtn = document.getElementById('uploadBtn');
+      const originalText = uploadBtn.innerHTML;
+      uploadBtn.disabled = true;
+      uploadBtn.innerHTML = '<div class="admin-spinner" style="width: 16px; height: 16px; border-width: 2px; margin-right: 0.5rem;"></div> Uploading...';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/board-documents`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showToast(data.message || 'Document uploaded successfully', 'success');
+          closeUploadModal();
+          loadDocuments();
+        } else {
+          showToast('Upload failed: ' + (data.error || 'Unknown error'), 'error');
+        }
+      } catch (error) {
+        console.error('Error uploading document:', error);
+        showToast('Error uploading document. Please try again.', 'error');
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = originalText;
+      }
+    }
+
+    async function viewDocument(id) {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${id}`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          currentDocument = data.data;
+          showDocumentModal(data.data);
+        } else {
+          showToast('Failed to load document', 'error');
+        }
+      } catch (error) {
+        console.error('Error loading document:', error);
+        showToast('Error loading document', 'error');
+      }
+    }
+
+    function showDocumentModal(doc) {
+      document.getElementById('modalDocTitle').textContent = doc.title;
+
+      const uploadedDate = new Date(doc.created_at).toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      const body = `
+        <div style="display: grid; gap: var(--admin-space-lg);">
+          ${doc.description ? `<div><strong>Description:</strong><br>${escapeHtml(doc.description)}</div>` : ''}
+          <div><strong>Category:</strong> <span class="admin-badge admin-badge-info">${doc.category}</span></div>
+          <div><strong>Status:</strong> <span class="admin-badge admin-badge-${doc.status === 'final' ? 'success' : 'secondary'}">${doc.status}</span></div>
+          <div><strong>Approval:</strong> <span class="admin-badge admin-badge-${doc.approval_status === 'approved' ? 'success' : doc.approval_status === 'pending' ? 'warning' : 'danger'}">${doc.approval_status}</span></div>
+          <div><strong>Uploaded:</strong> ${uploadedDate} by ${doc.uploaded_by_first_name || 'Unknown'} ${doc.uploaded_by_last_name || ''}</div>
+          ${doc.meeting_date ? `<div><strong>Meeting Date:</strong> ${new Date(doc.meeting_date).toLocaleDateString()}</div>` : ''}
+          ${doc.fiscal_year ? `<div><strong>Fiscal Year:</strong> ${doc.fiscal_year}</div>` : ''}
+          ${doc.file_size ? `<div><strong>File Size:</strong> ${formatFileSize(doc.file_size)}</div>` : ''}
+          ${doc.notes ? `<div><strong>Notes:</strong><br>${escapeHtml(doc.notes)}</div>` : ''}
+        </div>
+      `;
+
+      document.getElementById('documentModalBody').innerHTML = body;
+
+      const footer = `
+        <button type="button" class="admin-btn admin-btn-secondary" onclick="closeDocumentModal()">Close</button>
+        <button type="button" class="admin-btn admin-btn-primary" onclick="downloadDocument('${doc.id}')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download
+        </button>
+        ${doc.approval_status === 'pending' ? `
+          <button type="button" class="admin-btn admin-btn-success" onclick="approveDocument('${doc.id}')">Approve</button>
+          <button type="button" class="admin-btn admin-btn-danger" onclick="rejectDocument('${doc.id}')">Reject</button>
+        ` : ''}
+      `;
+
+      document.getElementById('documentModalFooter').innerHTML = footer;
+      document.getElementById('documentModal').classList.add('active');
+    }
+
+    function closeDocumentModal() {
+      document.getElementById('documentModal').classList.remove('active');
+      currentDocument = null;
+    }
+
+    async function downloadDocument(id) {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      window.open(`${API_BASE_URL}/api/admin/board-documents/${id}/download?token=${sessionToken}`, '_blank');
+    }
+
+    async function approveDocument(id) {
+      await updateApproval(id, 'approved');
+    }
+
+    async function rejectDocument(id) {
+      await updateApproval(id, 'rejected');
+    }
+
+    async function updateApproval(id, status) {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${id}/approval`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify({ approval_status: status })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showToast(data.message || `Document ${status}`, 'success');
+          closeDocumentModal();
+          loadDocuments();
+        } else {
+          showToast('Failed to update approval status', 'error');
+        }
+      } catch (error) {
+        console.error('Error updating approval:', error);
+        showToast('Error updating approval status', 'error');
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `message-toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Inline field editing for board documents
+    function editDocField(event, docId, field) {
+      // Prevent card click event from firing
+      event.stopPropagation();
+
+      const element = event.currentTarget;
+
+      // Prevent double editing
+      if (element.querySelector('input, select')) return;
+
+      // Get current value
+      const currentValue = element.textContent.trim();
+      const doc = allDocuments.find(d => d.id === docId);
+      if (!doc) return;
+
+      // Store original value and HTML
+      element.setAttribute('data-original', currentValue);
+      element.setAttribute('data-original-html', element.innerHTML);
+
+      // Create input element
+      let inputElement;
+
+      if (field === 'status') {
+        inputElement = document.createElement('select');
+        inputElement.innerHTML = `
+          <option value="draft" ${currentValue === 'draft' ? 'selected' : ''}>Draft</option>
+          <option value="final" ${currentValue === 'final' ? 'selected' : ''}>Final</option>
+          <option value="archived" ${currentValue === 'archived' ? 'selected' : ''}>Archived</option>
+        `;
+      } else if (field === 'category') {
+        inputElement = document.createElement('select');
+        inputElement.innerHTML = `
+          <option value="Meeting Minutes" ${currentValue === 'Meeting Minutes' ? 'selected' : ''}>Meeting Minutes</option>
+          <option value="Bylaws" ${currentValue === 'Bylaws' ? 'selected' : ''}>Bylaws</option>
+          <option value="Financial Reports" ${currentValue === 'Financial Reports' ? 'selected' : ''}>Financial Reports</option>
+          <option value="Policies" ${currentValue === 'Policies' ? 'selected' : ''}>Policies</option>
+          <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
+        `;
+      } else {
+        inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.value = currentValue;
+        inputElement.style.minWidth = '200px';
+      }
+
+      inputElement.style.padding = '4px 8px';
+      inputElement.style.border = '2px solid var(--admin-primary)';
+      inputElement.style.borderRadius = '4px';
+      inputElement.style.fontSize = 'inherit';
+      inputElement.style.background = 'var(--admin-surface)';
+      inputElement.style.color = 'var(--admin-text)';
+
+      // Replace content with input
+      element.textContent = '';
+      element.appendChild(inputElement);
+      inputElement.focus();
+      if (inputElement.select) inputElement.select();
+
+      // Handle save on blur or enter
+      const saveEdit = async () => {
+        const newValue = (inputElement.value || '').trim();
+        const originalValue = element.getAttribute('data-original');
+
+        // If no change, restore original
+        if (newValue === originalValue) {
+          element.innerHTML = element.getAttribute('data-original-html');
+          return;
+        }
+
+        // Show saving state
+        element.innerHTML = '<span style="color: var(--admin-primary); font-size: 0.875rem;">Saving...</span>';
+
+        try {
+          const sessionToken = localStorage.getItem('isrs_session_token');
+          const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${doc.id}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${sessionToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ [field]: newValue })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            // Update local data
+            doc[field] = newValue;
+
+            // Refresh the display
+            await loadDocuments();
+            showToast('Document updated successfully', 'success');
+          } else {
+            element.innerHTML = element.getAttribute('data-original-html');
+            showToast('Failed to update: ' + (data.error || 'Unknown error'), 'error');
+          }
+        } catch (error) {
+          element.innerHTML = element.getAttribute('data-original-html');
+          showToast('Error updating document: ' + error.message, 'error');
+        }
+      };
+
+      inputElement.addEventListener('blur', saveEdit);
+      inputElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          inputElement.blur();
+        }
+        if (e.key === 'Escape') {
+          element.innerHTML = element.getAttribute('data-original-html');
+        }
+      });
+
+      // Prevent clicks on the input from triggering card click
+      inputElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+  </script>
+  <style>
+    .message-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      min-width: 300px;
+      padding: var(--admin-space-lg);
+      border-radius: var(--admin-radius-md);
+      box-shadow: var(--admin-shadow-lg);
+      z-index: 2000;
+      animation: slideIn 0.3s;
+    }
+    .message-toast.success {
+      background: var(--admin-success-bg);
+      color: var(--admin-success-text);
+      border: 1px solid var(--admin-success);
+    }
+    .message-toast.error {
+      background: var(--admin-danger-bg);
+      color: var(--admin-danger-text);
+      border: 1px solid var(--admin-danger);
+    }
+    .message-toast.info {
+      background: var(--admin-info-bg);
+      color: var(--admin-info-text, var(--admin-info));
+      border: 1px solid var(--admin-info);
+    }
+    @keyframes slideIn {
+      from { transform: translateX(400px); }
+      to { transform: translateX(0); }
+    }
+  </style>
+</body>
+</html>

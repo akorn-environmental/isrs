@@ -400,9 +400,9 @@
     // Auto-detect environment
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:3000'
-      : 'https://isrs-python-backend.onrender.com';
+      : '';  // Use same-origin (relative URLs) in production
 
-    console.log('🔐 Portal Login - API Backend:', API_BASE_URL);
+    console.log('🔐 Portal Login - API Backend:', API_BASE_URL || 'same-origin');
 
     // Initialize language selector on page load
     document.addEventListener('DOMContentLoaded', () => {

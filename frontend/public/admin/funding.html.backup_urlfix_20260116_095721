@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funding Prospects - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    /* Page-specific styles only */
+    .amount { font-weight: 600; color: var(--admin-success-text); white-space: nowrap; }
+    .admin-stats-bar {
+      padding: var(--admin-space-lg) var(--admin-space-xl);
+      background: var(--admin-gray-50);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--admin-text-sm);
+      border-top: 1px solid var(--admin-gray-200);
+    }
+    .admin-form-section-title {
+      margin: var(--admin-space-xl) 0 var(--admin-space-lg);
+      padding-top: var(--admin-space-lg);
+      border-top: 1px solid var(--admin-gray-200);
+      font-size: var(--admin-text-lg);
+      color: var(--admin-primary);
+    }
+    .admin-form-section-title:first-of-type {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .admin-checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: var(--admin-text-sm);
+    }
+    .admin-checkbox-label input[type="checkbox"] {
+      width: auto;
+      margin-right: var(--admin-space-md);
+    }
+
+    /* Inline editing styles */
+    .editable-cell { cursor: pointer; position: relative; }
+    .editable-cell:hover { background: var(--admin-primary-light); }
+    .editable-cell input, .editable-cell select, .editable-cell textarea {
+      width: 100%;
+      padding: 0.25rem 0.5rem;
+      border: 2px solid var(--admin-primary);
+      border-radius: var(--admin-radius-sm);
+      font-size: inherit;
+      background: var(--admin-surface);
+      color: var(--admin-text);
+    }
+    .editable-cell input:focus, .editable-cell select:focus, .editable-cell textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--admin-primary-light);
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <div class="admin-card">
+      <div class="admin-page-header">
+        <h1>Funding Prospects</h1>
+        <div class="admin-page-header-actions">
+          <button class="admin-btn admin-btn-secondary" onclick="exportFunding()">Export CSV</button>
+          <a href="/admin/import.html" class="admin-btn admin-btn-warning">Import</a>
+          <button class="admin-btn admin-btn-success" onclick="showAddForm()">Add New Prospect</button>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="admin-toolbar">
+        <input type="text" class="admin-input" id="searchInput" placeholder="Search organizations, contacts..." style="flex: 1; max-width: 400px;" oninput="filterFunding()">
+        <select class="admin-select" id="statusFilter" onchange="filterFunding()" style="width: 150px;">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="contacted">Contacted</option>
+          <option value="committed">Committed</option>
+          <option value="received">Received</option>
+          <option value="declined">Declined</option>
+        </select>
+        <select class="admin-select" id="icsrFilter" onchange="filterFunding()" style="width: 160px;">
+          <option value="">All ICSR History</option>
+          <option value="true">Past ICSR Funders</option>
+          <option value="false">New Prospects</option>
+        </select>
+        <button class="admin-btn admin-btn-secondary" onclick="resetFilters()">Reset</button>
+      </div>
+
+      <div class="admin-table-wrapper">
+        <div id="tableContent">
+          <div class="admin-loading">
+            <div class="admin-spinner"></div>
+            Loading funding prospects...
+          </div>
+        </div>
+      </div>
+      <div class="admin-stats-bar admin-hidden" id="statsBar">
+        <span>Total Prospects: <strong id="totalCount">0</strong></span>
+        <span>Total Amount: <strong id="totalAmount">$0</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Add/Edit -->
+  <div id="fundingModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2 id="modalTitle">Add Funding Prospect</h2>
+        <button class="admin-modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="fundingForm" onsubmit="handleSubmit(event)">
+          <input type="hidden" id="fundingId" name="id">
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="organization_id">Organization *</label>
+            <select id="organization_id" name="organization_id" class="admin-select" style="width: 100%;" required>
+              <option value="">-- Select Organization --</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="contact_person">Contact Person</label>
+            <input type="text" id="contact_person" name="contact_person" class="admin-input" style="width: 100%;">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="amount">Amount ($)</label>
+            <input type="number" id="amount" name="amount" min="0" step="0.01" class="admin-input" style="width: 100%;">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="status">Status *</label>
+            <select id="status" name="status" class="admin-select" style="width: 100%;" required>
+              <option value="pending">Pending</option>
+              <option value="contacted">Contacted</option>
+              <option value="committed">Committed</option>
+              <option value="declined">Declined</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="date_contacted">Date Contacted</label>
+            <input type="date" id="date_contacted" name="date_contacted" class="admin-input" style="width: 100%;">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="notes">Notes</label>
+            <textarea id="notes" name="notes" class="admin-textarea" style="width: 100%;"></textarea>
+          </div>
+
+          <h3 class="admin-form-section-title">ICSR Funding History</h3>
+
+          <div class="admin-form-group">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="has_funded_icsr" name="has_funded_icsr">
+              Has funded ICSR conferences in the past
+            </label>
+          </div>
+
+          <div id="icsrDetails" class="admin-hidden">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="icsr_funding_years">Years Funded (comma-separated, e.g., 2020, 2022, 2024)</label>
+              <input type="text" id="icsr_funding_years" name="icsr_funding_years" class="admin-input" style="width: 100%;" placeholder="2020, 2022, 2024">
+            </div>
+
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="icsr_funding_notes">Funding Details/Notes</label>
+              <textarea id="icsr_funding_notes" name="icsr_funding_notes" class="admin-textarea" style="width: 100%;" placeholder="Details about past ICSR funding..."></textarea>
+            </div>
+          </div>
+
+          <h3 class="admin-form-section-title">Lead Assignment</h3>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="lead_contact_ids">Assigned Leads (Board Members/Advisors)</label>
+            <select id="lead_contact_ids" name="lead_contact_ids" class="admin-select" style="width: 100%; height: 150px;" multiple>
+              <option value="">Loading available leads...</option>
+            </select>
+            <p class="admin-form-help">Hold Ctrl (Cmd on Mac) to select multiple leads</p>
+          </div>
+
+          <div id="assignedLeadsDisplay" class="admin-hidden admin-mt-md">
+            <strong>Currently assigned:</strong>
+            <div id="currentLeadsList" class="admin-mt-sm"></div>
+          </div>
+
+          <div id="notifySection" class="admin-hidden admin-mt-lg">
+            <button type="button" class="admin-btn admin-btn-primary" onclick="notifyLeads()" id="notifyBtn">Send Email to Assigned Leads</button>
+          </div>
+
+          <div class="admin-modal-footer" style="margin: var(--admin-space-xl) calc(-1 * var(--admin-space-xl)) calc(-1 * var(--admin-space-xl)); padding: var(--admin-space-lg) var(--admin-space-xl);">
+            <button type="button" class="admin-btn admin-btn-secondary" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="admin-btn admin-btn-success" id="submitBtn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-python-backend.onrender.com';
+    let allOrganizations = [];
+    let allProspects = [];
+    let availableLeads = [];
+    let currentProspectId = null;
+    let sortField = 'date_contacted';
+    let sortDirection = 'desc';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      loadOrganizations();
+      loadFunding();
+      loadAvailableLeads();
+      setupICSRToggle();
+    });
+
+    async function loadOrganizations() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/organizations`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          allOrganizations = data.data;
+        }
+      } catch (error) {
+        console.error('Failed to load organizations:', error);
+      }
+    }
+
+    async function loadAvailableLeads() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/funding/available-leads`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          availableLeads = data.data;
+        }
+      } catch (error) {
+        console.error('Failed to load available leads:', error);
+      }
+    }
+
+    function setupICSRToggle() {
+      const checkbox = document.getElementById('has_funded_icsr');
+      const details = document.getElementById('icsrDetails');
+      checkbox.addEventListener('change', (e) => {
+        details.classList.toggle('admin-hidden', !e.target.checked);
+      });
+    }
+
+    async function loadFunding() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/funding`, {
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          allProspects = data.data;
+          displayFunding(allProspects);
+        } else {
+          document.getElementById('tableContent').innerHTML = `<div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">Failed to load funding prospects: ${data.error || 'Unknown error'}</div>`;
+        }
+      } catch (error) {
+        document.getElementById('tableContent').innerHTML = `<div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">Error: ${error.message}</div>`;
+      }
+    }
+
+    function displayFunding(prospects) {
+      if (prospects.length === 0) {
+        document.getElementById('tableContent').innerHTML = '<div class="admin-empty"><div class="admin-empty-title">No funding prospects found</div></div>';
+        document.getElementById('statsBar').classList.add('admin-hidden');
+        return;
+      }
+
+      // Sort prospects
+      const sortedProspects = [...prospects].sort((a, b) => {
+        let aVal = a[sortField] || '';
+        let bVal = b[sortField] || '';
+
+        // Handle dates
+        if (sortField === 'date_contacted') {
+          aVal = new Date(aVal).getTime() || 0;
+          bVal = new Date(bVal).getTime() || 0;
+        } else if (sortField === 'amount') {
+          aVal = parseFloat(aVal) || 0;
+          bVal = parseFloat(bVal) || 0;
+        } else if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (sortDirection === 'asc') {
+          return aVal > bVal ? 1 : -1;
+        } else {
+          return aVal < bVal ? 1 : -1;
+        }
+      });
+
+      // Calculate total amount
+      const totalAmount = prospects.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+
+      const html = `
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th class="sortable ${sortField === 'organization_name' ? 'sort-' + sortDirection : ''}" onclick="handleSort('organization_name')">
+                Organization <span class="sort-indicator">${getSortIcon('organization_name')}</span>
+              </th>
+              <th>Contact Person</th>
+              <th class="sortable ${sortField === 'amount' ? 'sort-' + sortDirection : ''}" onclick="handleSort('amount')">
+                Amount <span class="sort-indicator">${getSortIcon('amount')}</span>
+              </th>
+              <th class="sortable ${sortField === 'status' ? 'sort-' + sortDirection : ''}" onclick="handleSort('status')">
+                Status <span class="sort-indicator">${getSortIcon('status')}</span>
+              </th>
+              <th class="sortable ${sortField === 'date_contacted' ? 'sort-' + sortDirection : ''}" onclick="handleSort('date_contacted')">
+                Date Contacted <span class="sort-indicator">${getSortIcon('date_contacted')}</span>
+              </th>
+              <th>ICSR Funder</th>
+              <th>Assigned Leads</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sortedProspects.map(prospect => {
+              const statusDisplay = (prospect.status || 'pending').charAt(0).toUpperCase() + (prospect.status || 'pending').slice(1);
+              const statusClass = getStatusBadgeClass(prospect.status || 'pending');
+
+              // ICSR funding display
+              const icsrDisplay = prospect.has_funded_icsr
+                ? `<span class="admin-text-success admin-font-bold">Yes</span>${prospect.icsr_funding_years && prospect.icsr_funding_years.length > 0 ? `<br><small class="admin-text-muted">${prospect.icsr_funding_years.join(', ')}</small>` : ''}`
+                : '-';
+
+              // Assigned leads display
+              const leadsDisplay = prospect.assigned_leads && prospect.assigned_leads.length > 0
+                ? prospect.assigned_leads.map(lead => `<div style="font-size: var(--admin-text-xs); padding: 2px 0;">${lead.name}</div>`).join('')
+                : '-';
+
+              return `
+              <tr>
+                <td class="editable-cell" onclick="editFundingCell(this, '${prospect.id}', 'organization_name')" title="Click to edit">${prospect.organization_name || '-'}</td>
+                <td class="editable-cell" onclick="editFundingCell(this, '${prospect.id}', 'contact_person')" title="Click to edit">${prospect.contact_person || '-'}</td>
+                <td class="editable-cell" onclick="editFundingCell(this, '${prospect.id}', 'amount')" title="Click to edit"><span class="amount">${prospect.amount ? '$' + parseFloat(prospect.amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '-'}</span></td>
+                <td class="editable-cell" onclick="editFundingCell(this, '${prospect.id}', 'status')" title="Click to edit"><span class="admin-badge ${statusClass}">${statusDisplay}</span></td>
+                <td class="editable-cell" onclick="editFundingCell(this, '${prospect.id}', 'date_contacted')" title="Click to edit">${prospect.date_contacted ? new Date(prospect.date_contacted).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-'}</td>
+                <td>${icsrDisplay}</td>
+                <td style="max-width: 200px;">${leadsDisplay}</td>
+                <td class="editable-cell admin-truncate" onclick="editFundingCell(this, '${prospect.id}', 'notes')" style="max-width: 250px;" title="Click to edit: ${prospect.notes || ''}">${prospect.notes || '-'}</td>
+                <td>
+                  <div class="actions">
+                    <button class="admin-btn admin-btn-secondary admin-btn-xs" onclick='editProspect(${JSON.stringify(prospect).replace(/'/g, "&#39;")})'>Edit</button>
+                    <button class="admin-btn admin-btn-danger admin-btn-xs" onclick="deleteProspect('${prospect.id}')">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            `}).join('')}
+          </tbody>
+        </table>
+      `;
+      document.getElementById('tableContent').innerHTML = html;
+      document.getElementById('totalCount').textContent = prospects.length;
+      document.getElementById('totalAmount').textContent = '$' + totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      document.getElementById('statsBar').classList.remove('admin-hidden');
+    }
+
+    function getStatusBadgeClass(status) {
+      switch (status) {
+        case 'pending': return 'admin-badge-warning';
+        case 'contacted': return 'admin-badge-info';
+        case 'committed': return 'admin-badge-success';
+        case 'received': return 'admin-badge-success';
+        case 'declined': return 'admin-badge-danger';
+        case 'rejected': return 'admin-badge-danger';
+        default: return 'admin-badge-neutral';
+      }
+    }
+
+    function handleSort(field) {
+      if (sortField === field) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortField = field;
+        sortDirection = 'asc';
+      }
+      filterFunding();
+    }
+
+    function getSortIcon(field) {
+      if (sortField !== field) return '\u21C5';
+      return sortDirection === 'asc' ? '\u2191' : '\u2193';
+    }
+
+    function filterFunding() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const icsrFilter = document.getElementById('icsrFilter').value;
+
+      let filtered = allProspects.filter(prospect => {
+        // Search filter
+        if (searchTerm) {
+          const searchFields = [
+            prospect.organization_name || '',
+            prospect.contact_person || '',
+            prospect.notes || ''
+          ].join(' ').toLowerCase();
+          if (!searchFields.includes(searchTerm)) return false;
+        }
+        // Status filter
+        if (statusFilter && prospect.status !== statusFilter) return false;
+        // ICSR filter
+        if (icsrFilter !== '') {
+          const icsrBool = icsrFilter === 'true';
+          if (prospect.has_funded_icsr !== icsrBool) return false;
+        }
+        return true;
+      });
+
+      displayFunding(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('icsrFilter').value = '';
+      displayFunding(allProspects);
+    }
+
+    function exportFunding() {
+      if (allProspects.length === 0) {
+        showMessage('No prospects to export', 'error');
+        return;
+      }
+
+      const headers = ['Organization', 'Contact Person', 'Amount', 'Status', 'Date Contacted', 'ICSR Funder', 'ICSR Years', 'Notes'];
+      const rows = allProspects.map(p => [
+        `"${(p.organization_name || '').replace(/"/g, '""')}"`,
+        `"${(p.contact_person || '').replace(/"/g, '""')}"`,
+        p.amount || '',
+        p.status || '',
+        p.date_contacted ? new Date(p.date_contacted).toLocaleDateString() : '',
+        p.has_funded_icsr ? 'Yes' : 'No',
+        p.icsr_funding_years ? p.icsr_funding_years.join('; ') : '',
+        `"${(p.notes || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `funding-prospects-${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+      showMessage('Export complete!', 'success');
+    }
+
+    function showAddForm() {
+      document.getElementById('modalTitle').textContent = 'Add Funding Prospect';
+      document.getElementById('fundingForm').reset();
+      document.getElementById('fundingId').value = '';
+      currentProspectId = null;
+      populateOrganizationDropdown();
+      populateLeadsDropdown();
+      document.getElementById('icsrDetails').classList.add('admin-hidden');
+      document.getElementById('assignedLeadsDisplay').classList.add('admin-hidden');
+      document.getElementById('notifySection').classList.add('admin-hidden');
+      document.getElementById('fundingModal').classList.add('active');
+    }
+
+    function editProspect(prospect) {
+      document.getElementById('modalTitle').textContent = 'Edit Funding Prospect';
+      document.getElementById('fundingId').value = prospect.id;
+      currentProspectId = prospect.id;
+      populateOrganizationDropdown(prospect.organization_id);
+      document.getElementById('contact_person').value = prospect.contact_person || '';
+      document.getElementById('amount').value = prospect.amount || '';
+      document.getElementById('status').value = prospect.status || 'pending';
+      document.getElementById('date_contacted').value = prospect.date_contacted ? prospect.date_contacted.split('T')[0] : '';
+      document.getElementById('notes').value = prospect.notes || '';
+
+      // ICSR fields
+      const hasICSR = prospect.has_funded_icsr || false;
+      document.getElementById('has_funded_icsr').checked = hasICSR;
+      document.getElementById('icsrDetails').classList.toggle('admin-hidden', !hasICSR);
+      document.getElementById('icsr_funding_years').value = prospect.icsr_funding_years ? prospect.icsr_funding_years.join(', ') : '';
+      document.getElementById('icsr_funding_notes').value = prospect.icsr_funding_notes || '';
+
+      // Lead assignment
+      populateLeadsDropdown(prospect.lead_contact_ids);
+
+      // Show assigned leads display
+      if (prospect.assigned_leads && prospect.assigned_leads.length > 0) {
+        document.getElementById('assignedLeadsDisplay').classList.remove('admin-hidden');
+        document.getElementById('notifySection').classList.remove('admin-hidden');
+        const leadsList = prospect.assigned_leads.map(lead =>
+          `<div style="padding: 4px 0;">- ${lead.name} (${lead.email})</div>`
+        ).join('');
+        document.getElementById('currentLeadsList').innerHTML = leadsList;
+      } else {
+        document.getElementById('assignedLeadsDisplay').classList.add('admin-hidden');
+        document.getElementById('notifySection').classList.add('admin-hidden');
+      }
+
+      document.getElementById('fundingModal').classList.add('active');
+    }
+
+    function populateOrganizationDropdown(selectedId = '') {
+      const select = document.getElementById('organization_id');
+      select.innerHTML = '<option value="">-- Select Organization --</option>';
+      allOrganizations.forEach(org => {
+        const option = document.createElement('option');
+        option.value = org.id;
+        option.textContent = org.name;
+        if (org.id === selectedId) option.selected = true;
+        select.appendChild(option);
+      });
+    }
+
+    function populateLeadsDropdown(selectedLeadIds = []) {
+      const select = document.getElementById('lead_contact_ids');
+      select.innerHTML = '';
+
+      if (availableLeads.length === 0) {
+        select.innerHTML = '<option value="">No leads available</option>';
+        return;
+      }
+
+      availableLeads.forEach(lead => {
+        const option = document.createElement('option');
+        option.value = lead.id;
+        option.textContent = `${lead.display_name}${lead.position ? ' - ' + lead.position : ''}`;
+        if (selectedLeadIds && selectedLeadIds.includes(lead.id)) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('fundingModal').classList.remove('active');
+    }
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving...';
+
+      // Get ICSR data
+      const hasICSR = document.getElementById('has_funded_icsr').checked;
+      const yearsValue = document.getElementById('icsr_funding_years').value;
+      const yearsArray = hasICSR && yearsValue
+        ? yearsValue.split(',').map(y => y.trim()).filter(y => y)
+        : null;
+
+      // Get selected lead IDs
+      const leadSelect = document.getElementById('lead_contact_ids');
+      const selectedLeads = Array.from(leadSelect.selectedOptions).map(opt => opt.value);
+
+      const formData = {
+        organization_id: document.getElementById('organization_id').value,
+        contact_person: document.getElementById('contact_person').value || null,
+        amount: document.getElementById('amount').value ? parseFloat(document.getElementById('amount').value) : null,
+        status: document.getElementById('status').value,
+        date_contacted: document.getElementById('date_contacted').value || null,
+        notes: document.getElementById('notes').value || null,
+        has_funded_icsr: hasICSR,
+        icsr_funding_years: yearsArray,
+        icsr_funding_notes: hasICSR ? (document.getElementById('icsr_funding_notes').value || null) : null
+      };
+
+      const prospectId = document.getElementById('fundingId').value;
+      const isEdit = prospectId !== '';
+      const url = isEdit
+        ? `${API_BASE_URL}/api/admin/funding/${prospectId}`
+        : `${API_BASE_URL}/api/admin/funding`;
+      const method = isEdit ? 'PUT' : 'POST';
+
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          const savedProspectId = data.data.id;
+
+          // If leads were selected, assign them
+          if (selectedLeads.length > 0) {
+            try {
+              const leadsResponse = await fetch(`${API_BASE_URL}/api/admin/funding/${savedProspectId}/assign-leads`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${sessionToken}`
+                },
+                body: JSON.stringify({ lead_contact_ids: selectedLeads })
+              });
+
+              if (!leadsResponse.ok) {
+                showMessage('Prospect saved, but failed to assign leads', 'error');
+              }
+            } catch (error) {
+              console.error('Failed to assign leads:', error);
+              showMessage('Prospect saved, but failed to assign leads', 'error');
+            }
+          }
+
+          closeModal();
+          await loadFunding();
+          showMessage(`Funding prospect ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
+        } else {
+          showMessage(`Error: ${data.error || 'Failed to save funding prospect'}`, 'error');
+        }
+      } catch (error) {
+        showMessage(`Error: ${error.message}`, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save';
+      }
+    }
+
+    async function deleteProspect(id) {
+      if (!confirm('Are you sure you want to delete this funding prospect?')) return;
+
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/funding/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          await loadFunding();
+          showMessage('Funding prospect deleted successfully!', 'success');
+        } else {
+          showMessage(`Error: ${data.error || 'Failed to delete funding prospect'}`, 'error');
+        }
+      } catch (error) {
+        showMessage(`Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function notifyLeads() {
+      if (!currentProspectId) {
+        showMessage('Error: No prospect selected', 'error');
+        return;
+      }
+
+      const notifyBtn = document.getElementById('notifyBtn');
+      if (!confirm('Send email notification to all assigned leads?')) return;
+
+      notifyBtn.disabled = true;
+      notifyBtn.textContent = 'Sending...';
+
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/funding/${currentProspectId}/notify-leads`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${sessionToken}` }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showMessage(`Email sent to ${data.recipients.length} lead(s)!`, 'success');
+        } else {
+          showMessage(`Error: ${data.error || 'Failed to send notifications'}`, 'error');
+        }
+      } catch (error) {
+        showMessage(`Error: ${error.message}`, 'error');
+      } finally {
+        notifyBtn.disabled = false;
+        notifyBtn.textContent = 'Send Email to Assigned Leads';
+      }
+    }
+
+    function showMessage(message, type) {
+      const alertClass = type === 'success' ? 'admin-alert-success' : 'admin-alert-danger';
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `admin-alert ${alertClass}`;
+      messageDiv.textContent = message;
+      messageDiv.style.position = 'fixed';
+      messageDiv.style.top = '20px';
+      messageDiv.style.right = '20px';
+      messageDiv.style.zIndex = '2000';
+      messageDiv.style.minWidth = '300px';
+      document.body.appendChild(messageDiv);
+      setTimeout(() => messageDiv.remove(), 5000);
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/admin/';
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('fundingModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    // ESC key to close modal
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        closeModal();
+      }
+    });
+
+    // Inline cell editing for funding prospects
+    function editFundingCell(cell, prospectId, field) {
+      // Prevent double editing
+      if (cell.querySelector('input, select, textarea')) return;
+
+      // Extract text from badge or amount span if present
+      const badge = cell.querySelector('.admin-badge');
+      const amount = cell.querySelector('.amount');
+      let currentValue;
+
+      if (badge) {
+        currentValue = badge.textContent.trim().toLowerCase();
+      } else if (amount) {
+        const text = amount.textContent.trim();
+        currentValue = text.replace(/[$,]/g, ''); // Remove $ and commas
+      } else {
+        currentValue = cell.textContent.trim() === '-' ? '' : cell.textContent.trim();
+      }
+
+      // Handle date field
+      if (field === 'date_contacted' && currentValue && currentValue !== '-') {
+        const dateObj = new Date(currentValue);
+        if (!isNaN(dateObj.getTime())) {
+          currentValue = dateObj.toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+        }
+      }
+
+      const prospect = allProspects.find(p => p.id === prospectId);
+      if (!prospect) return;
+
+      // Store original value
+      cell.setAttribute('data-original', currentValue);
+      cell.setAttribute('data-original-html', cell.innerHTML);
+
+      // Create input element (use textarea for notes, select for status, input for others)
+      let inputElement;
+
+      if (field === 'notes') {
+        inputElement = document.createElement('textarea');
+        inputElement.rows = 3;
+        inputElement.style.resize = 'vertical';
+        inputElement.value = currentValue;
+      } else if (field === 'status') {
+        inputElement = document.createElement('select');
+        inputElement.innerHTML = `
+          <option value="pending" ${currentValue === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="contacted" ${currentValue === 'contacted' ? 'selected' : ''}>Contacted</option>
+          <option value="proposal_sent" ${currentValue === 'proposal_sent' ? 'selected' : ''}>Proposal Sent</option>
+          <option value="negotiating" ${currentValue === 'negotiating' ? 'selected' : ''}>Negotiating</option>
+          <option value="awarded" ${currentValue === 'awarded' ? 'selected' : ''}>Awarded</option>
+          <option value="rejected" ${currentValue === 'rejected' ? 'selected' : ''}>Rejected</option>
+          <option value="inactive" ${currentValue === 'inactive' ? 'selected' : ''}>Inactive</option>
+        `;
+      } else if (field === 'date_contacted') {
+        inputElement = document.createElement('input');
+        inputElement.type = 'date';
+        inputElement.value = currentValue;
+      } else if (field === 'amount') {
+        inputElement = document.createElement('input');
+        inputElement.type = 'number';
+        inputElement.step = '1';
+        inputElement.min = '0';
+        inputElement.value = currentValue;
+      } else {
+        inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.value = currentValue;
+      }
+
+      inputElement.style.width = '100%';
+      inputElement.style.padding = '4px 8px';
+      inputElement.style.border = '2px solid var(--admin-primary)';
+      inputElement.style.borderRadius = '4px';
+      inputElement.style.fontSize = 'inherit';
+      inputElement.style.background = 'var(--admin-surface)';
+      inputElement.style.color = 'var(--admin-text)';
+
+      // Clear cell and add input
+      cell.textContent = '';
+      cell.appendChild(inputElement);
+      inputElement.focus();
+      if (inputElement.select) inputElement.select();
+
+      // Handle save on blur or enter
+      const saveEdit = async () => {
+        const newValue = (inputElement.value || '').trim();
+        const originalValue = cell.getAttribute('data-original');
+
+        // If no change, restore original
+        if (newValue === originalValue || (!newValue && !originalValue)) {
+          cell.innerHTML = cell.getAttribute('data-original-html');
+          return;
+        }
+
+        // Show saving state
+        cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
+
+        try {
+          const sessionToken = localStorage.getItem('isrs_session_token');
+          const response = await fetch(`${API_BASE_URL}/api/admin/funding/${prospect.id}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${sessionToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ [field]: newValue || null })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            // Update local data
+            prospect[field] = newValue;
+
+            // Display updated value with appropriate formatting
+            if (field === 'amount') {
+              const formatted = newValue ? '$' + parseFloat(newValue).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '-';
+              cell.innerHTML = `<span class="amount">${formatted}</span>`;
+            } else if (field === 'status') {
+              const statusDisplay = newValue.charAt(0).toUpperCase() + newValue.slice(1);
+              const statusClass = getStatusBadgeClass(newValue);
+              cell.innerHTML = `<span class="admin-badge ${statusClass}">${statusDisplay}</span>`;
+            } else if (field === 'date_contacted') {
+              const formatted = newValue ? new Date(newValue).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+              cell.textContent = formatted;
+            } else {
+              cell.textContent = newValue || '-';
+            }
+
+            showMessage('Field updated successfully', 'success');
+          } else {
+            cell.innerHTML = cell.getAttribute('data-original-html');
+            showMessage('Failed to update: ' + (data.error || 'Unknown error'), 'error');
+          }
+        } catch (error) {
+          cell.innerHTML = cell.getAttribute('data-original-html');
+          showMessage('Error updating field: ' + error.message, 'error');
+        }
+      };
+
+      inputElement.addEventListener('blur', saveEdit);
+      inputElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && field !== 'notes') {
+          e.preventDefault();
+          inputElement.blur();
+        }
+        if (e.key === 'Escape') {
+          cell.innerHTML = cell.getAttribute('data-original-html');
+        }
+      });
+    }
+  </script>
+
+  <!-- Email Utils -->
+  <script src="/js/email-utils.js"></script>
+
+  <!-- Admin Layout -->
+  <script src="/js/admin-layout.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAdminLayout('funding');
+    });
+  </script>
+
+  <!-- Feedback Widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    initFeedbackWidget({ isAdminPortal: true });
+  </script>
+</body>
+</html>

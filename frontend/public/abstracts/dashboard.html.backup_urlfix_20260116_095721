@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Abstracts - ISRS 2026</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <script src="/js/analytics.js?v=2.0"></script>
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .dashboard-header h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .btn-submit-new {
+      background: var(--accent-teal);
+      color: white;
+      border: none;
+      padding: 0.875rem 1.75rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit-new:hover {
+      background: #50b8b7;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(91, 192, 190, 0.3);
+    }
+
+    .dashboard-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .abstracts-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .abstract-card {
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .abstract-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary-blue);
+    }
+
+    .abstract-card.status-submitted {
+      border-left: 6px solid #3b82f6;
+    }
+
+    .abstract-card.status-under_review {
+      border-left: 6px solid #f59e0b;
+    }
+
+    .abstract-card.status-accepted {
+      border-left: 6px solid #10b981;
+    }
+
+    .abstract-card.status-rejected {
+      border-left: 6px solid #dc2626;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .card-title {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 1.5rem;
+      color: var(--primary-blue);
+      margin: 0;
+      flex: 1;
+    }
+
+    .status-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-submitted {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-under_review {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-accepted {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .submission-number {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .abstract-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f6f8fc 0%, #eef2f7 100%);
+      border-radius: 6px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .meta-icon {
+      font-size: 1.2rem;
+    }
+
+    .abstract-preview {
+      color: var(--text-dark);
+      line-height: 1.6;
+      margin: 1rem 0;
+      max-height: 4.8em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .keyword {
+      background: var(--primary-blue);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    .btn-view {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-view:hover {
+      background: var(--secondary-blue);
+    }
+
+    .btn-edit {
+      background: white;
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+    }
+
+    .btn-edit:hover {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-withdraw {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-withdraw:hover {
+      background: #991b1b;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-light);
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h2 {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--light-gray);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+      border-left: 4px solid #c33;
+    }
+
+    /* Modal for viewing full abstract */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 8px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--text-light);
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text-dark);
+    }
+
+    .modal-title {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-abstract {
+      line-height: 1.8;
+      color: var(--text-dark);
+      margin: 1.5rem 0;
+      white-space: pre-wrap;
+    }
+
+    .modal-section {
+      margin: 1.5rem 0;
+    }
+
+    .modal-section h3 {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .co-authors-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .co-authors-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .co-authors-list li:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-submit-new {
+        width: 100%;
+        text-align: center;
+      }
+
+      .card-header {
+        flex-direction: column;
+      }
+
+      .card-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .modal-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div>
+        <h1>My Abstract Submissions</h1>
+        <p style="opacity: 0.95; margin: 0.5rem 0 0 0;">ISRS Conference 2026</p>
+      </div>
+      <a href="/abstracts/submit.html" class="btn-submit-new">➕ Submit New Abstract</a>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Loading State -->
+      <div id="loadingContainer" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your submissions...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorContainer" style="display: none;">
+        <div class="error-message">
+          <strong>Error Loading Submissions</strong>
+          <p id="errorMessage"></p>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyContainer" style="display: none;" class="empty-state">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <h2>No Abstracts Yet</h2>
+        <p>You haven't submitted any abstracts for ISRS 2026.</p>
+        <p style="margin-top: 1rem;">
+          <a href="/abstracts/submit.html" class="btn-submit-new">Submit Your First Abstract</a>
+        </p>
+      </div>
+
+      <!-- Abstracts Grid -->
+      <div id="abstractsContainer" style="display: none;" class="abstracts-grid"></div>
+    </div>
+  </div>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- View Modal -->
+  <div class="modal" id="viewModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://isrs-python-backend.onrender.com';
+    let abstracts = [];
+
+    // Get attendee ID from URL or localStorage
+    function getAttendeeId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('attendee_id') || localStorage.getItem('isrs_attendee_id') || '550e8400-e29b-41d4-a716-446655440001';
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    // Status labels
+    const statusLabels = {
+      submitted: 'Submitted',
+      under_review: 'Under Review',
+      accepted: 'Accepted',
+      rejected: 'Not Accepted',
+      withdrawn: 'Withdrawn'
+    };
+
+    // Presentation type labels
+    const typeLabels = {
+      oral: '🎤 Oral Presentation',
+      poster: '📊 Poster',
+      workshop: '🛠️ Workshop',
+      keynote: '🌟 Keynote'
+    };
+
+    // Load abstracts
+    async function loadAbstracts() {
+      const attendeeId = getAttendeeId();
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/abstracts/attendee/${attendeeId}`);
+        const result = await response.json();
+
+        document.getElementById('loadingContainer').style.display = 'none';
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to load abstracts');
+        }
+
+        abstracts = result.data;
+
+        if (abstracts.length === 0) {
+          document.getElementById('emptyContainer').style.display = 'block';
+        } else {
+          displayAbstracts(abstracts);
+        }
+
+        // Track page view
+        if (window.ISRSAnalytics) {
+          window.ISRSAnalytics.trackPageView('abstracts_dashboard');
+        }
+
+      } catch (error) {
+        console.error('Error loading abstracts:', error);
+        document.getElementById('loadingContainer').style.display = 'none';
+        document.getElementById('errorContainer').style.display = 'block';
+        document.getElementById('errorMessage').textContent = error.message;
+      }
+    }
+
+    // Display abstracts
+    function displayAbstracts(abstracts) {
+      const container = document.getElementById('abstractsContainer');
+      container.style.display = 'block';
+
+      container.innerHTML = abstracts.map(abstract => `
+        <div class="abstract-card status-${abstract.status}">
+          <div class="card-header">
+            <h3 class="card-title">${abstract.title}</h3>
+            <span class="status-badge status-${abstract.status}">
+              ${statusLabels[abstract.status] || abstract.status}
+            </span>
+          </div>
+
+          <div class="submission-number">
+            Submission #: ${abstract.submission_number}
+          </div>
+
+          <div class="abstract-meta">
+            <div class="meta-item">
+              <span class="meta-icon">${typeLabels[abstract.presentation_type] || abstract.presentation_type}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon">📅</span>
+              <span>Submitted: ${formatDate(abstract.submission_date)}</span>
+            </div>
+            ${abstract.topic_area ? `
+              <div class="meta-item">
+                <span class="meta-icon">🏷️</span>
+                <span>${abstract.topic_area.replace(/_/g, ' ')}</span>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="abstract-preview">
+            ${abstract.abstract}
+          </div>
+
+          ${abstract.keywords && abstract.keywords.length > 0 ? `
+            <div class="keywords">
+              ${abstract.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
+            </div>
+          ` : ''}
+
+          ${abstract.decision ? `
+            <div style="background: #fef3c7; padding: 1rem; border-radius: 6px; margin-top: 1rem; border-left: 4px solid #f59e0b;">
+              <strong>Decision:</strong> ${abstract.decision.replace(/_/g, ' ')}
+              ${abstract.decision_notes ? `<br><small>${abstract.decision_notes}</small>` : ''}
+            </div>
+          ` : ''}
+
+          ${abstract.scheduled_date ? `
+            <div style="background: #d1fae5; padding: 1rem; border-radius: 6px; margin-top: 1rem; border-left: 4px solid #10b981;">
+              <strong>📅 Scheduled:</strong> ${formatDate(abstract.scheduled_date)}
+              ${abstract.scheduled_start_time ? ` at ${abstract.scheduled_start_time}` : ''}
+              ${abstract.session_name ? `<br><strong>Session:</strong> ${abstract.session_name}` : ''}
+              ${abstract.room ? `<br><strong>Room:</strong> ${abstract.room}` : ''}
+            </div>
+          ` : ''}
+
+          <div class="card-actions">
+            <button class="btn btn-view" onclick="viewAbstract('${abstract.id}')">
+              View Full Abstract
+            </button>
+            ${abstract.status === 'submitted' ? `
+              <button class="btn btn-edit" onclick="editAbstract('${abstract.id}')">
+                Edit
+              </button>
+              <button class="btn btn-withdraw" onclick="withdrawAbstract('${abstract.id}')">
+                Withdraw
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // View abstract in modal
+    function viewAbstract(abstractId) {
+      const abstract = abstracts.find(a => a.id === abstractId);
+      if (!abstract) return;
+
+      const coAuthors = abstract.co_authors || [];
+
+      const modalContent = `
+        <h2 class="modal-title">${abstract.title}</h2>
+
+        <div class="submission-number">
+          Submission #: ${abstract.submission_number}
+        </div>
+
+        <div class="abstract-meta">
+          <div class="meta-item">
+            <span>${typeLabels[abstract.presentation_type] || abstract.presentation_type}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">📅</span>
+            <span>${formatDate(abstract.submission_date)}</span>
+          </div>
+          <div class="meta-item">
+            <span class="status-badge status-${abstract.status}">
+              ${statusLabels[abstract.status]}
+            </span>
+          </div>
+        </div>
+
+        ${abstract.keywords && abstract.keywords.length > 0 ? `
+          <div class="modal-section">
+            <h3>Keywords</h3>
+            <div class="keywords">
+              ${abstract.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="modal-section">
+          <h3>Abstract</h3>
+          <div class="modal-abstract">${abstract.abstract}</div>
+        </div>
+
+        ${coAuthors.length > 0 ? `
+          <div class="modal-section">
+            <h3>Co-Authors</h3>
+            <ul class="co-authors-list">
+              ${coAuthors.map(author => `
+                <li>
+                  <strong>${author.name}</strong><br>
+                  ${author.affiliation}
+                  ${author.email ? `<br><small>${author.email}</small>` : ''}
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        ${abstract.special_equipment_needed ? `
+          <div class="modal-section">
+            <h3>Special Requirements</h3>
+            <p>${abstract.special_equipment_needed}</p>
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById('modalContent').innerHTML = modalContent;
+      document.getElementById('viewModal').classList.add('active');
+
+      // Track view
+      if (window.ISRSAnalytics) {
+        window.ISRSAnalytics.trackEvent('abstract_viewed', {
+          submission_number: abstract.submission_number
+        });
+      }
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('viewModal').classList.remove('active');
+    }
+
+    // Edit abstract
+    function editAbstract(abstractId) {
+      // Redirect to edit page (to be implemented)
+      window.location.href = `/abstracts/edit.html?id=${abstractId}`;
+    }
+
+    // Withdraw abstract
+    async function withdrawAbstract(abstractId) {
+      if (!confirm('Are you sure you want to withdraw this abstract? This action cannot be undone.')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/abstracts/${abstractId}/withdraw`, {
+          method: 'POST'
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to withdraw abstract');
+        }
+
+        alert('Abstract withdrawn successfully');
+        location.reload();
+
+      } catch (error) {
+        console.error('Error withdrawing abstract:', error);
+        alert('Failed to withdraw abstract: ' + error.message);
+      }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('viewModal').addEventListener('click', (e) => {
+      if (e.target.id === 'viewModal') {
+        closeModal();
+      }
+    });
+
+    // Load abstracts on page load
+    document.addEventListener('DOMContentLoaded', loadAbstracts);
+  </script>
+
+  <script src="/js/components.js"></script>
+</body>
+</html>

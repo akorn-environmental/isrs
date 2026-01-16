@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <script src="/js/analytics.js?v=2.0"></script>
+  <style>
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-header h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-family: 'Marcellus', Georgia, serif;
+      color: var(--primary-blue);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary-blue);
+    }
+
+    .registration-item, .abstract-item {
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .item-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .status-paid {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .status-submitted {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
+    .status-accepted {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .item-details {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .item-details strong {
+      color: var(--text-dark);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .spinner {
+      border: 4px solid var(--border-color);
+      border-top: 4px solid var(--primary-blue);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .action-card {
+      background: white;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: var(--text-dark);
+    }
+
+    .action-card:hover {
+      border-color: var(--primary-blue);
+      box-shadow: 0 4px 12px rgba(46, 90, 138, 0.15);
+    }
+
+    .action-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .action-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-description {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div>
+        <h1>Welcome, <span id="userName"></span>!</h1>
+        <p id="userEmail"></p>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="loadingState" class="loading">
+      <div class="spinner"></div>
+      <p>Loading your profile...</p>
+    </div>
+
+    <div id="dashboardContent" style="display: none;">
+      <div class="quick-actions">
+        <a href="/conference/register.html" class="action-card">
+          <div class="action-icon">📝</div>
+          <div class="action-title">Register for Conference</div>
+          <div class="action-description">ISRS 2026</div>
+        </a>
+
+        <a href="/abstracts/submit.html" class="action-card">
+          <div class="action-icon">📄</div>
+          <div class="action-title">Submit Abstract</div>
+          <div class="action-description">Share your research</div>
+        </a>
+
+        <a href="/membership/apply.html" class="action-card">
+          <div class="action-icon">👥</div>
+          <div class="action-title">Join ISRS</div>
+          <div class="action-description">Become a member</div>
+        </a>
+
+        <a href="/meetings/calendar.html" class="action-card">
+          <div class="action-icon">📅</div>
+          <div class="action-title">Meeting Calendar</div>
+          <div class="action-description">View upcoming meetings</div>
+        </a>
+      </div>
+
+      <!-- Registrations Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <span>📝 My Conference Registrations</span>
+        </div>
+        <div id="registrationsList"></div>
+      </div>
+
+      <!-- Abstracts Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <span>📄 My Abstract Submissions</span>
+          <a href="/abstracts/submit.html" class="btn-primary">+ Submit New Abstract</a>
+        </div>
+        <div id="abstractsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://isrs-python-backend.onrender.com/api';
+
+    let sessionToken = localStorage.getItem('isrs_session_token');
+    let userData = JSON.parse(localStorage.getItem('isrs_user') || '{}');
+
+    // Check if logged in
+    if (!sessionToken) {
+      window.location.href = '/login.html';
+    }
+
+    // Load profile data
+    async function loadProfile() {
+      try {
+        const response = await fetch(`${API_BASE}/profile/me?sessionToken=${sessionToken}`);
+        const data = await response.json();
+
+        if (!data.success) {
+          if (response.status === 401) {
+            // Session expired
+            localStorage.removeItem('isrs_session_token');
+            localStorage.removeItem('isrs_user');
+            window.location.href = '/login.html';
+            return;
+          }
+          throw new Error(data.error);
+        }
+
+        // Update user info
+        document.getElementById('userName').textContent =
+          `${data.data.profile.first_name} ${data.data.profile.last_name}`;
+        document.getElementById('userEmail').textContent = data.data.profile.user_email;
+
+        // Render registrations
+        renderRegistrations(data.data.registrations);
+
+        // Render abstracts
+        renderAbstracts(data.data.abstracts);
+
+        // Show content
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashboardContent').style.display = 'block';
+
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        document.getElementById('loadingState').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <p>Failed to load profile. Please try again.</p>
+            <button class="btn-primary" onclick="loadProfile()">Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    function renderRegistrations(registrations) {
+      const container = document.getElementById('registrationsList');
+
+      if (!registrations || registrations.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>You haven't registered for any conferences yet.</p>
+            <a href="/conference/register.html" class="btn-primary">Register for ISRS 2026</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = registrations.map(reg => `
+        <div class="registration-item">
+          <div class="item-header">
+            <div class="item-title">${reg.conference_name || `ISRS ${reg.year}`}</div>
+            <span class="status-badge status-${reg.payment_status || 'pending'}">${formatStatus(reg.payment_status)}</span>
+          </div>
+          <div class="item-details">
+            <p><strong>Registration Number:</strong> ${reg.registration_number}</p>
+            <p><strong>Type:</strong> ${formatRegistrationType(reg.registration_type)}</p>
+            <p><strong>Fee:</strong> $${parseFloat(reg.registration_fee).toFixed(2)}</p>
+            <p><strong>Dates:</strong> ${formatDate(reg.start_date)} - ${formatDate(reg.end_date)}</p>
+            ${reg.interested_in_abstract_submission ? '<p><strong>📄 Interested in submitting an abstract</strong></p>' : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAbstracts(abstracts) {
+      const container = document.getElementById('abstractsList');
+
+      if (!abstracts || abstracts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📄</div>
+            <p>You haven't submitted any abstracts yet.</p>
+            <a href="/abstracts/submit.html" class="btn-primary">Submit Your First Abstract</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = abstracts.map(abs => `
+        <div class="abstract-item">
+          <div class="item-header">
+            <div class="item-title">${abs.title}</div>
+            <span class="status-badge status-${abs.status || 'submitted'}">${formatStatus(abs.status)}</span>
+          </div>
+          <div class="item-details">
+            <p><strong>Conference:</strong> ${abs.conference_name || `ISRS ${abs.year}`}</p>
+            <p><strong>Submission Number:</strong> ${abs.submission_number || 'Pending'}</p>
+            <p><strong>Type:</strong> ${formatPresentationType(abs.presentation_type)}</p>
+            <p><strong>Submitted:</strong> ${formatDate(abs.submission_date)}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function formatStatus(status) {
+      if (!status) return 'Pending';
+      return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatRegistrationType(type) {
+      if (!type) return 'Standard';
+      return type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatPresentationType(type) {
+      if (!type) return 'Not specified';
+      return type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return 'TBD';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        // Call logout API
+        fetch(`${API_BASE}/profile/logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ sessionToken })
+        }).finally(() => {
+          localStorage.removeItem('isrs_session_token');
+          localStorage.removeItem('isrs_user');
+          window.location.href = '/login.html';
+        });
+      }
+    }
+
+    // Load profile on page load
+    loadProfile();
+  </script>
+
+  <!-- Stay Connected -->
+  <div id="stay-connected"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+</body>
+</html>

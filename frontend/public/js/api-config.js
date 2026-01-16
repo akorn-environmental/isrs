@@ -13,7 +13,7 @@ const API_CONFIG = {
   get baseURL() {
     return this.isLocalhost
       ? 'http://localhost:3000'
-      : 'https://isrs-python-backend.onrender.com';
+      : '';  // Use same-origin (relative URLs) in production
   },
 
   // Get API base with /api suffix

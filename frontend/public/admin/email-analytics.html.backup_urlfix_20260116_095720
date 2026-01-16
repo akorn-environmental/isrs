@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Parsing Analytics | ISRS Admin</title>
+  <link rel="stylesheet" href="/css/safmc-style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .nav-links a {
+      margin-left: 2rem;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: #5a67d8;
+    }
+
+    .logout-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1800px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-header {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      margin: 0 0 0.5rem 0;
+      color: #111827;
+      font-size: 2rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #6b7280;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-change {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .stat-change.positive {
+      color: #059669;
+    }
+
+    .stat-change.negative {
+      color: #dc2626;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .chart-card h2 {
+      margin: 0 0 1rem 0;
+      color: #111827;
+      font-size: 1.25rem;
+    }
+
+    .full-width-card {
+      grid-column: 1 / -1;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #f9fafb;
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-top: 1px solid #e5e7eb;
+      color: #111827;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .confidence-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .confidence-high {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .confidence-medium {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .confidence-low {
+      background: #fecaca;
+      color: #991b1b;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 3rem;
+      height: 3rem;
+      border: 3px solid #e5e7eb;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .filter-group {
+      flex: 1;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .filter-group select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      font-family: inherit;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a67d8;
+    }
+
+    @media (max-width: 1200px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <!-- Error Reporter - Logs frontend errors to backend/Render -->
+  <script src="/js/errorReporter.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <div class="admin-header">
+    <nav class="admin-nav">
+      <h2 style="margin:0;color:#667eea;">ISRS Email Analytics</h2>
+      <div class="nav-links">
+        <a href="/admin/analytics.html">Analytics</a>
+        <a href="/admin/funding-pipeline.html">Funding</a>
+        <a href="/admin/email-campaigns.html">Campaigns</a>
+        <a href="/admin/email-parser.html">Email Parser</a>
+        <a href="/admin/email-analytics.html">Email Analytics</a>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>📊 Email Parsing Analytics</h1>
+      <p>Track email parsing performance, extraction accuracy, and automation insights</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-group">
+        <label>Time Period</label>
+        <select id="timePeriod" onchange="loadAnalytics()">
+          <option value="7">Last 7 days</option>
+          <option value="30" selected>Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="all">All time</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Review Status</label>
+        <select id="reviewStatus" onchange="loadAnalytics()">
+          <option value="all" selected>All</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+        </select>
+      </div>
+      <div class="filter-group" style="display:flex;align-items:flex-end;">
+        <button class="btn btn-primary" onclick="loadAnalytics()">Refresh Data</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading email parsing analytics...</p>
+    </div>
+
+    <!-- Main Content -->
+    <div id="content" style="display:none;">
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Emails Parsed</div>
+          <div class="stat-value" id="totalEmails">0</div>
+          <div class="stat-change" id="emailsChange"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Confidence Score</div>
+          <div class="stat-value" id="avgConfidence">0%</div>
+          <div class="stat-change" id="confidenceChange"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Contacts Extracted</div>
+          <div class="stat-value" id="contactsExtracted">0</div>
+          <div class="stat-change" id="contactsChange"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Auto-Imported</div>
+          <div class="stat-value" id="autoImported">0</div>
+          <div class="stat-change" id="importedChange"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Action Items Created</div>
+          <div class="stat-value" id="actionItems">0</div>
+          <div class="stat-change" id="actionsChange"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fundraising Signals</div>
+          <div class="stat-value" id="fundraisingSignals">0</div>
+          <div class="stat-change" id="fundraisingChange"></div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <!-- Email Volume Over Time -->
+        <div class="chart-card full-width-card">
+          <h2>Email Parsing Volume</h2>
+          <canvas id="volumeChart"></canvas>
+        </div>
+
+        <!-- Confidence Distribution -->
+        <div class="chart-card">
+          <h2>Confidence Score Distribution</h2>
+          <canvas id="confidenceChart"></canvas>
+        </div>
+
+        <!-- Review Status -->
+        <div class="chart-card">
+          <h2>Review Status Breakdown</h2>
+          <canvas id="reviewChart"></canvas>
+        </div>
+
+        <!-- Extraction Categories -->
+        <div class="chart-card">
+          <h2>Top Extraction Categories</h2>
+          <canvas id="categoriesChart"></canvas>
+        </div>
+
+        <!-- Automation Success Rate -->
+        <div class="chart-card">
+          <h2>Automation Success Rate</h2>
+          <canvas id="automationChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Top Extracted Contacts -->
+      <div class="chart-card full-width-card">
+        <h2>Top Extracted Contacts</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Organization</th>
+                <th>Confidence</th>
+                <th>Extracted From</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="topContactsTable">
+              <tr><td colspan="7" style="text-align:center;padding:2rem;color:#6b7280;">No data available</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Fundraising Signals Summary -->
+      <div class="chart-card full-width-card">
+        <h2>Recent Fundraising Signals</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Email Subject</th>
+                <th>Signal Type</th>
+                <th>Estimated Value</th>
+                <th>Confidence</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="fundraisingTable">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;color:#6b7280;">No fundraising signals detected</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://isrs-python-backend.onrender.com';
+    let charts = {};
+
+    async function loadAnalytics() {
+      const timePeriod = document.getElementById('timePeriod').value;
+      const reviewStatus = document.getElementById('reviewStatus').value;
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('content').style.display = 'none';
+
+      try {
+        const token = localStorage.getItem('session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/analytics?period=${timePeriod}&status=${reviewStatus}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          renderAnalytics(data.analytics);
+        } else {
+          alert('Error loading analytics: ' + (data.error || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Analytics load error:', error);
+        alert('Failed to load analytics. Please try again.');
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      }
+    }
+
+    function renderAnalytics(analytics) {
+      // Update stats cards
+      document.getElementById('totalEmails').textContent = analytics.overview.totalEmails || 0;
+      document.getElementById('avgConfidence').textContent = `${analytics.overview.avgConfidence || 0}%`;
+      document.getElementById('contactsExtracted').textContent = analytics.overview.contactsExtracted || 0;
+      document.getElementById('autoImported').textContent = analytics.overview.autoImported || 0;
+      document.getElementById('actionItems').textContent = analytics.overview.actionItems || 0;
+      document.getElementById('fundraisingSignals').textContent = analytics.overview.fundraisingSignals || 0;
+
+      // Update change indicators (if available)
+      updateChange('emailsChange', analytics.overview.emailsChange);
+      updateChange('confidenceChange', analytics.overview.confidenceChange);
+      updateChange('contactsChange', analytics.overview.contactsChange);
+      updateChange('importedChange', analytics.overview.importedChange);
+      updateChange('actionsChange', analytics.overview.actionsChange);
+      updateChange('fundraisingChange', analytics.overview.fundraisingChange);
+
+      // Render charts
+      renderVolumeChart(analytics.volumeData);
+      renderConfidenceChart(analytics.confidenceDistribution);
+      renderReviewChart(analytics.reviewStatus);
+      renderCategoriesChart(analytics.categories);
+      renderAutomationChart(analytics.automation);
+
+      // Render tables
+      renderContactsTable(analytics.topContacts);
+      renderFundraisingTable(analytics.fundraisingSignals);
+    }
+
+    function updateChange(elementId, change) {
+      const element = document.getElementById(elementId);
+      if (change !== undefined && change !== null) {
+        const sign = change >= 0 ? '+' : '';
+        element.textContent = `${sign}${change}% vs previous period`;
+        element.className = `stat-change ${change >= 0 ? 'positive' : 'negative'}`;
+      } else {
+        element.textContent = '';
+      }
+    }
+
+    function renderVolumeChart(data) {
+      const ctx = document.getElementById('volumeChart');
+      if (charts.volume) charts.volume.destroy();
+
+      charts.volume = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data?.labels || [],
+          datasets: [{
+            label: 'Emails Parsed',
+            data: data?.values || [],
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function renderConfidenceChart(data) {
+      const ctx = document.getElementById('confidenceChart');
+      if (charts.confidence) charts.confidence.destroy();
+
+      charts.confidence = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['High (70-100%)', 'Medium (50-70%)', 'Low (<50%)'],
+          datasets: [{
+            data: [data?.high || 0, data?.medium || 0, data?.low || 0],
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    function renderReviewChart(data) {
+      const ctx = document.getElementById('reviewChart');
+      if (charts.review) charts.review.destroy();
+
+      charts.review = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Pending', 'Approved'],
+          datasets: [{
+            data: [data?.pending || 0, data?.approved || 0],
+            backgroundColor: ['#f59e0b', '#10b981']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    function renderCategoriesChart(data) {
+      const ctx = document.getElementById('categoriesChart');
+      if (charts.categories) charts.categories.destroy();
+
+      charts.categories = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data?.labels || ['Contacts', 'Actions', 'Fundraising', 'Scheduling'],
+          datasets: [{
+            label: 'Extractions',
+            data: data?.values || [0, 0, 0, 0],
+            backgroundColor: '#667eea'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function renderAutomationChart(data) {
+      const ctx = document.getElementById('automationChart');
+      if (charts.automation) charts.automation.destroy();
+
+      charts.automation = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Auto-Imported', 'Manual Review'],
+          datasets: [{
+            label: 'Count',
+            data: [data?.automated || 0, data?.manual || 0],
+            backgroundColor: ['#10b981', '#6b7280']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function renderContactsTable(contacts) {
+      const tbody = document.getElementById('topContactsTable');
+
+      if (!contacts || contacts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#6b7280;">No contacts extracted yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = contacts.map(contact => `
+        <tr>
+          <td><strong>${contact.name || 'N/A'}</strong></td>
+          <td>${contact.email || 'N/A'}</td>
+          <td>${contact.organization || 'N/A'}</td>
+          <td>${getConfidenceBadge(contact.confidence)}</td>
+          <td>${contact.emailSubject || 'N/A'}</td>
+          <td>${new Date(contact.extractedDate).toLocaleDateString()}</td>
+          <td>${contact.imported ? '✅ Imported' : '⏳ Pending'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderFundraisingTable(signals) {
+      const tbody = document.getElementById('fundraisingTable');
+
+      if (!signals || signals.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#6b7280;">No fundraising signals detected</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = signals.map(signal => `
+        <tr>
+          <td><strong>${signal.emailSubject || 'N/A'}</strong></td>
+          <td>${signal.signalType || 'General Interest'}</td>
+          <td>${signal.estimatedValue || 'Not specified'}</td>
+          <td>${getConfidenceBadge(signal.confidence)}</td>
+          <td>${new Date(signal.date).toLocaleDateString()}</td>
+          <td>${signal.status || 'Pending'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getConfidenceBadge(confidence) {
+      const level = confidence >= 70 ? 'high' : confidence >= 50 ? 'medium' : 'low';
+      return `<span class="confidence-badge confidence-${level}">${confidence}%</span>`;
+    }
+
+    function logout() {
+      localStorage.removeItem('session_token');
+      window.location.href = '/admin/login.html';
+    }
+
+    // Check auth and load
+    window.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('session_token');
+      if (!token) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
+      loadAnalytics();
+    });
+  </script>
+
+  <!-- AI Assistant -->
+  <script src="/components/ai-assistant.html"></script>
+</body>
+</html>

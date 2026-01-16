@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Zones - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <script src="/js/theme.js"></script>
+  <script src="/js/admin-layout.js"></script>
+  <style>
+    .zones-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .zones-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--admin-surface, white);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .zones-table thead {
+      background: var(--admin-light, #f9fafb);
+    }
+
+    .zones-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      color: var(--admin-text, #374151);
+      border-bottom: 2px solid var(--admin-border, #e5e7eb);
+    }
+
+    .zones-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--admin-border, #e5e7eb);
+    }
+
+    .zones-table tbody tr:hover {
+      background: var(--admin-hover, #f9fafb);
+    }
+
+    .zone-id-code {
+      font-family: 'Courier New', monospace;
+      background: #f3f4f6;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .zone-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .zone-badge.single { background: #dbeafe; color: #1e40af; }
+    .zone-badge.slideshow { background: #fef3c7; color: #92400e; }
+    .zone-badge.grid { background: #d1fae5; color: #065f46; }
+    .zone-badge.lightbox { background: #e9d5ff; color: #6b21a8; }
+
+    .zone-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #1f2937;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.625rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-family: inherit;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 0.25rem;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7280;
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <div class="zones-header">
+      <div>
+        <h1>Asset Zone Management</h1>
+        <p class="admin-text-muted">Define zones on pages where photos can be displayed</p>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateZoneModal()">+ Create New Zone</button>
+    </div>
+
+    <div id="zonesContainer">
+      <div class="empty-state">
+        <div class="empty-state-icon">⏳</div>
+        <p>Loading zones...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Zone Modal -->
+  <div class="modal-overlay" id="zoneModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Create New Zone</h2>
+      </div>
+      <div class="modal-body">
+        <form id="zoneForm">
+          <div class="form-group">
+            <label for="zoneId">Zone ID *</label>
+            <input type="text" id="zoneId" required pattern="[a-zA-Z0-9-_]+" placeholder="e.g., home-hero-slideshow">
+            <small>Unique identifier (letters, numbers, dashes, underscores only)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="pagePath">Page Path *</label>
+            <input type="text" id="pagePath" required placeholder="/" value="/">
+            <small>URL path where zone appears (e.g., /, /about.html, /gallery.html)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="zoneName">Zone Name *</label>
+            <input type="text" id="zoneName" required placeholder="Home Page Hero Slideshow">
+            <small>Human-readable name</small>
+          </div>
+
+          <div class="form-group">
+            <label for="displayMode">Display Mode *</label>
+            <select id="displayMode" required>
+              <option value="single">Single - Display one photo</option>
+              <option value="slideshow">Slideshow - Auto-rotating slideshow</option>
+              <option value="grid">Grid - Multiple photos in a grid</option>
+              <option value="lightbox">Lightbox - Clickable thumbnails</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="maxAssets">Maximum Photos</label>
+            <input type="number" id="maxAssets" min="1" max="100" value="1" required>
+            <small>Maximum number of photos allowed in this zone</small>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeZoneModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveZone()">Save Zone</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3001'
+      : 'https://isrs-python-backend.onrender.com';
+
+    let allZones = [];
+    let editingZone = null;
+
+    // Load zones on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAdminLayout('asset-zones');
+      loadZones();
+    });
+
+    async function loadZones() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones/admin/all`, {
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            window.location.href = '/admin/login.html';
+            return;
+          }
+          throw new Error('Failed to load zones');
+        }
+
+        const data = await response.json();
+        allZones = data.zones || [];
+        renderZones();
+      } catch (error) {
+        console.error('Error loading zones:', error);
+        document.getElementById('zonesContainer').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <p>Failed to load zones: ${error.message}</p>
+            <button class="btn btn-primary" onclick="loadZones()">Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    function renderZones() {
+      const container = document.getElementById('zonesContainer');
+
+      if (allZones.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎨</div>
+            <h3>No Asset Zones Yet</h3>
+            <p>Create your first zone to start organizing photos on your pages</p>
+            <button class="btn btn-primary" onclick="openCreateZoneModal()">Create First Zone</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="zones-table">
+          <thead>
+            <tr>
+              <th>Zone ID</th>
+              <th>Page</th>
+              <th>Name</th>
+              <th>Display Mode</th>
+              <th>Photos</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allZones.map(zone => `
+              <tr>
+                <td><code class="zone-id-code">${zone.zone_id}</code></td>
+                <td>${zone.page_path}</td>
+                <td>${zone.zone_name}</td>
+                <td><span class="zone-badge ${zone.display_mode}">${zone.display_mode}</span></td>
+                <td>${zone.asset_count || 0} / ${zone.max_assets}</td>
+                <td>
+                  <div class="zone-actions">
+                    <button class="btn btn-sm btn-secondary" onclick="editZone('${zone.zone_id}')">Edit</button>
+                    <button class="btn btn-sm btn-secondary" onclick="managePhotos('${zone.zone_id}')">Manage Photos</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteZone('${zone.zone_id}')">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function openCreateZoneModal() {
+      editingZone = null;
+      document.getElementById('modalTitle').textContent = 'Create New Zone';
+      document.getElementById('zoneForm').reset();
+      document.getElementById('zoneId').disabled = false;
+      document.getElementById('displayMode').value = 'single';
+      document.getElementById('maxAssets').value = '1';
+      document.getElementById('zoneModal').classList.add('active');
+    }
+
+    function editZone(zoneId) {
+      editingZone = allZones.find(z => z.zone_id === zoneId);
+      if (!editingZone) return;
+
+      document.getElementById('modalTitle').textContent = 'Edit Zone';
+      document.getElementById('zoneId').value = editingZone.zone_id;
+      document.getElementById('zoneId').disabled = true;
+      document.getElementById('pagePath').value = editingZone.page_path;
+      document.getElementById('zoneName').value = editingZone.zone_name;
+      document.getElementById('displayMode').value = editingZone.display_mode;
+      document.getElementById('maxAssets').value = editingZone.max_assets;
+      document.getElementById('zoneModal').classList.add('active');
+    }
+
+    function closeZoneModal() {
+      document.getElementById('zoneModal').classList.remove('active');
+      editingZone = null;
+    }
+
+    async function saveZone() {
+      const form = document.getElementById('zoneForm');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const zoneData = {
+        zone_id: document.getElementById('zoneId').value,
+        page_path: document.getElementById('pagePath').value,
+        zone_name: document.getElementById('zoneName').value,
+        display_mode: document.getElementById('displayMode').value,
+        max_assets: parseInt(document.getElementById('maxAssets').value),
+        configuration: {}
+      };
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(zoneData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to save zone');
+        }
+
+        alert(editingZone ? '✅ Zone updated successfully!' : '✅ Zone created successfully!');
+        closeZoneModal();
+        loadZones();
+      } catch (error) {
+        console.error('Error saving zone:', error);
+        alert('Failed to save zone: ' + error.message);
+      }
+    }
+
+    async function deleteZone(zoneId) {
+      const zone = allZones.find(z => z.zone_id === zoneId);
+      if (!zone) return;
+
+      if (!confirm(`Delete zone "${zone.zone_name}"?\n\nThis will remove ${zone.asset_count || 0} photo assignment(s).`)) {
+        return;
+      }
+
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        alert('Not authenticated');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones/${zoneId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to delete zone');
+        }
+
+        alert('✅ Zone deleted successfully!');
+        loadZones();
+      } catch (error) {
+        console.error('Error deleting zone:', error);
+        alert('Failed to delete zone: ' + error.message);
+      }
+    }
+
+    function managePhotos(zoneId) {
+      // TODO: Implement photo assignment UI
+      // For now, redirect to photos page
+      alert(`Photo assignment UI coming soon!\n\nFor now:\n1. Go to Photos page\n2. Select photos\n3. Assign to zone: ${zoneId}\n\nOr use the API directly.`);
+      window.location.href = '/admin/photos.html';
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('zoneModal').addEventListener('click', (e) => {
+      if (e.target.id === 'zoneModal') closeZoneModal();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('zoneModal').classList.contains('active')) {
+        closeZoneModal();
+      }
+    });
+  </script>
+</body>
+</html>
