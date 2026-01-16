@@ -12,6 +12,7 @@ from app.database import get_db
 from app.models.conference import AttendeeProfile
 from app.services.auth_service import auth_service
 from app.services.email_service import email_service
+from app.rate_limiter import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -89,10 +90,12 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)) -> A
 
 
 @router.post("/request-login", response_model=LoginResponse)
+@limiter.limit("5/hour")
 async def request_login(login_data: LoginRequest, request: Request, db: Session = Depends(get_db)):
     """
     Request a magic link for login.
     Sends an email with a one-time login link.
+    Rate limited to 5 requests per hour per IP to prevent abuse.
     """
     try:
         email = login_data.email.lower()
@@ -139,10 +142,12 @@ async def request_login(login_data: LoginRequest, request: Request, db: Session 
 
 
 @router.post("/verify-token", response_model=VerifyTokenResponse)
+@limiter.limit("10/hour")
 async def verify_token(verify_data: VerifyTokenRequest, request: Request, db: Session = Depends(get_db)):
     """
     Verify a magic link token and create a session.
     Returns a session token that can be used for subsequent requests.
+    Rate limited to 10 requests per hour per IP to prevent brute force attacks.
     """
     try:
         magic_link_token = verify_data.token
