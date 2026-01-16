@@ -6,8 +6,8 @@
 const MemberAuth = (() => {
   // Configuration
   const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000/api/profile'
-    : 'https://isrs-python-backend.onrender.com/api/profile';
+    ? 'http://localhost:3000/api/auth'
+    : 'https://isrs-python-backend.onrender.com/api/auth';
 
   const SESSION_KEY = 'isrs_session_token';
   const USER_KEY = 'isrs_user_data';
@@ -95,7 +95,7 @@ const MemberAuth = (() => {
    * @returns {Promise} Session data
    */
   async function verifyMagicLink(token) {
-    const response = await apiCall('/verify-magic-link', {
+    const response = await apiCall('/verify-token', {
       method: 'POST',
       body: JSON.stringify({ token })
     });
