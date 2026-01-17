@@ -9,7 +9,7 @@ from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
 from app.config import settings
-from app.models.auth import UserSession
+from app.models.auth import UserSession, RefreshToken
 from app.models.conference import AttendeeProfile
 
 logger = logging.getLogger(__name__)
@@ -237,6 +237,171 @@ class AuthService:
             logger.info(f"Cleaned up {total_deleted} expired sessions")
 
         return total_deleted
+
+    @staticmethod
+    async def create_refresh_token(
+        db: Session, user_id: str, ip_address: Optional[str] = None, user_agent: Optional[str] = None
+    ) -> RefreshToken:
+        """
+        Create a new refresh token for a user.
+
+        Args:
+            db: Database session
+            user_id: User's attendee profile ID
+            ip_address: User's IP address
+            user_agent: User's browser user agent
+
+        Returns:
+            RefreshToken: New refresh token instance
+        """
+        refresh_token = RefreshToken.create_token(
+            user_id=user_id,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            expiry_days=7  # 7 days default
+        )
+
+        db.add(refresh_token)
+        db.commit()
+        db.refresh(refresh_token)
+
+        logger.info(f"Created refresh token for user {user_id}")
+        return refresh_token
+
+    @staticmethod
+    async def validate_refresh_token(db: Session, token: str) -> Optional[RefreshToken]:
+        """
+        Validate a refresh token.
+
+        Args:
+            db: Database session
+            token: Refresh token string
+
+        Returns:
+            RefreshToken if valid, None otherwise
+        """
+        refresh_token = db.query(RefreshToken).filter(RefreshToken.token == token).first()
+
+        if not refresh_token:
+            logger.warning(f"Refresh token not found")
+            return None
+
+        if not refresh_token.is_valid():
+            logger.warning(f"Refresh token expired or revoked")
+            return None
+
+        return refresh_token
+
+    @staticmethod
+    async def rotate_refresh_token(
+        db: Session, old_token: str, ip_address: Optional[str] = None, user_agent: Optional[str] = None
+    ) -> Optional[dict]:
+        """
+        Rotate a refresh token - validate old token, revoke it, and create a new one.
+
+        This implements the refresh token rotation pattern for security:
+        - Old token is immediately revoked after use
+        - New token is generated with fresh expiration
+        - Prevents replay attacks
+
+        Args:
+            db: Database session
+            old_token: Current refresh token
+            ip_address: User's IP address
+            user_agent: User's browser user agent
+
+        Returns:
+            Dict with new access_token and refresh_token, or None if invalid
+        """
+        # Validate old token
+        old_refresh_token = await AuthService.validate_refresh_token(db, old_token)
+
+        if not old_refresh_token:
+            return None
+
+        # Create new refresh token
+        new_refresh_token = RefreshToken.create_token(
+            user_id=old_refresh_token.user_id,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            expiry_days=7
+        )
+
+        # Revoke old token (with reference to new one)
+        old_refresh_token.revoke(replaced_by=new_refresh_token.token)
+
+        db.add(new_refresh_token)
+        db.commit()
+        db.refresh(new_refresh_token)
+
+        # Create new short-lived access token
+        access_token = AuthService.create_jwt_token(
+            data={"sub": str(old_refresh_token.user_id)},
+            expires_delta=timedelta(hours=1)  # 1 hour access token
+        )
+
+        logger.info(f"Rotated refresh token for user {old_refresh_token.user_id}")
+
+        return {
+            "access_token": access_token,
+            "refresh_token": new_refresh_token.token,
+            "user_id": str(old_refresh_token.user_id)
+        }
+
+    @staticmethod
+    async def revoke_all_user_refresh_tokens(db: Session, user_id: str) -> int:
+        """
+        Revoke all refresh tokens for a user (e.g., on logout or password change).
+
+        Args:
+            db: Database session
+            user_id: User's attendee profile ID
+
+        Returns:
+            Number of tokens revoked
+        """
+        tokens = db.query(RefreshToken).filter(
+            RefreshToken.user_id == user_id,
+            RefreshToken.revoked_at == None
+        ).all()
+
+        count = 0
+        for token in tokens:
+            token.revoke()
+            count += 1
+
+        db.commit()
+
+        if count > 0:
+            logger.info(f"Revoked {count} refresh tokens for user {user_id}")
+
+        return count
+
+    @staticmethod
+    async def cleanup_expired_refresh_tokens(db: Session) -> int:
+        """
+        Clean up expired and revoked refresh tokens.
+
+        Args:
+            db: Database session
+
+        Returns:
+            Number of tokens deleted
+        """
+        # Delete tokens that are either expired or have been revoked for >30 days
+        cutoff_date = datetime.utcnow() - timedelta(days=30)
+
+        deleted = db.query(RefreshToken).filter(
+            (RefreshToken.expires_at < datetime.utcnow()) |
+            (RefreshToken.revoked_at < cutoff_date)
+        ).delete()
+
+        db.commit()
+
+        if deleted > 0:
+            logger.info(f"Cleaned up {deleted} expired/old refresh tokens")
+
+        return deleted
 
 
 # Global auth service instance

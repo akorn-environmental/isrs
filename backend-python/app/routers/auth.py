@@ -44,6 +44,7 @@ class VerifyTokenResponse(BaseModel):
 
     success: bool
     session_token: Optional[str] = None
+    refresh_token: Optional[str] = None
     message: str
     user: Optional[dict] = None
 
@@ -172,6 +173,14 @@ async def verify_token(verify_data: VerifyTokenRequest, request: Request, db: Se
         # Get attendee info
         attendee = db.query(AttendeeProfile).filter(AttendeeProfile.id == user_session.attendee_id).first()
 
+        # Create refresh token for this session
+        refresh_token_obj = await auth_service.create_refresh_token(
+            db=db,
+            user_id=str(user_session.attendee_id),
+            ip_address=client_ip,
+            user_agent=user_agent
+        )
+
         user_data = {
             "id": str(attendee.id),
             "email": attendee.user_email,
@@ -183,7 +192,11 @@ async def verify_token(verify_data: VerifyTokenRequest, request: Request, db: Se
         logger.info(f"Token verified and session created for {attendee.user_email}")
 
         return VerifyTokenResponse(
-            success=True, session_token=session_token, message="Login successful", user=user_data
+            success=True,
+            session_token=session_token,
+            refresh_token=refresh_token_obj.token,
+            message="Login successful",
+            user=user_data
         )
 
     except HTTPException:
@@ -238,12 +251,85 @@ async def logout(request: Request, db: Session = Depends(get_db)):
                 db.commit()
                 logger.info(f"User logged out: {user_session.email}")
 
+        # Also revoke all refresh tokens for this user
+        if user_session:
+            await auth_service.revoke_all_user_refresh_tokens(db, str(user_session.attendee_id))
+
         return JSONResponse(content={"success": True, "message": "Logged out successfully"})
 
     except Exception as e:
         logger.error(f"Error during logout: {str(e)}")
         # Return success anyway (logout should be idempotent)
         return JSONResponse(content={"success": True, "message": "Logged out"})
+
+
+@router.post("/refresh")
+@limiter.limit("60/hour")
+async def refresh_access_token(request: Request, db: Session = Depends(get_db)):
+    """
+    Refresh access token using refresh token.
+    Implements token rotation for security - old token is revoked, new one issued.
+
+    Rate limited to 60 requests per hour (higher than login for auto-refresh).
+
+    Headers or Cookies:
+        refresh_token: Current refresh token
+
+    Returns:
+        New access_token and refresh_token (old tokens are revoked)
+    """
+    try:
+        # Try to get refresh token from Authorization header first
+        auth_header = request.headers.get("Authorization")
+        refresh_token = None
+
+        if auth_header and auth_header.startswith("Bearer "):
+            refresh_token = auth_header.replace("Bearer ", "")
+        else:
+            # Fall back to cookie
+            refresh_token = request.cookies.get("refresh_token")
+
+        if not refresh_token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="No refresh token provided"
+            )
+
+        # Get client IP and user agent
+        ip_address = request.client.host if request.client else None
+        user_agent = request.headers.get("User-Agent")
+
+        # Rotate the refresh token (validates old, revokes it, creates new)
+        result = await auth_service.rotate_refresh_token(
+            db=db,
+            old_token=refresh_token,
+            ip_address=ip_address,
+            user_agent=user_agent
+        )
+
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired refresh token"
+            )
+
+        logger.info(f"Access token refreshed for user {result['user_id']}")
+
+        return JSONResponse(content={
+            "success": True,
+            "access_token": result["access_token"],
+            "refresh_token": result["refresh_token"],
+            "message": "Tokens refreshed successfully"
+        })
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during token refresh: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to refresh token"
+        )
 
 
 @router.get("/me")

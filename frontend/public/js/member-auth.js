@@ -10,6 +10,7 @@ const MemberAuth = (() => {
     : 'https://isrs-python-backend.onrender.com/api/auth';
 
   const SESSION_KEY = 'isrs_session_token';
+  const REFRESH_KEY = 'isrs_refresh_token';
   const USER_KEY = 'isrs_user_data';
 
   // Session Management
@@ -23,6 +24,7 @@ const MemberAuth = (() => {
 
   function clearSession() {
     localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(REFRESH_KEY);
     localStorage.removeItem(USER_KEY);
   }
 
@@ -100,9 +102,17 @@ const MemberAuth = (() => {
       body: JSON.stringify({ token })
     });
 
-    if (response.success && response.data) {
-      setSessionToken(response.data.sessionToken);
-      setUserData(response.data.user);
+    if (response.success) {
+      // Store both session and refresh tokens
+      if (response.session_token) {
+        setSessionToken(response.session_token);
+      }
+      if (response.refresh_token) {
+        localStorage.setItem(REFRESH_KEY, response.refresh_token);
+      }
+      if (response.user) {
+        setUserData(response.user);
+      }
     }
 
     return response;
