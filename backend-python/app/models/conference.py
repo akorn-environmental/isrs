@@ -81,6 +81,7 @@ class AttendeeProfile(Base, TimestampMixin):
     organization = relationship("Organization", back_populates="attendee_profiles")
     registrations = relationship("ConferenceRegistration", back_populates="attendee")
     user_sessions = relationship("UserSession", back_populates="attendee")
+    refresh_tokens = relationship("RefreshToken", back_populates="attendee", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<AttendeeProfile(id={self.id}, email='{self.user_email}', name='{self.first_name} {self.last_name}')>"
