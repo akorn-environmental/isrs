@@ -54,6 +54,22 @@ class AddAssetToZoneRequest(BaseModel):
 
 # ============ PUBLIC ENDPOINTS (no auth required) ============
 
+@router.get("/public/health")
+async def zone_health_check(db: Session = Depends(get_db)):
+    """Simple health check for zones endpoint - tests DB access."""
+    try:
+        # Just try a count query
+        count = db.query(AssetZone).count()
+        return {"success": True, "zone_count": count, "message": "DB connection OK"}
+    except Exception as e:
+        import traceback
+        return {
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }
+
+
 @router.get("/public/{zone_id}")
 async def get_zone_public(
     zone_id: str,
