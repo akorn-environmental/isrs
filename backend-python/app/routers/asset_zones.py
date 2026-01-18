@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from app.database import get_db
 from app.models import AttendeeProfile, Asset, AssetZone, AssetZoneAsset
-from app.routers.auth import get_current_user, get_current_user_optional
+from app.routers.auth import get_current_user
 
 router = APIRouter()
 
