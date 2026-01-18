@@ -61,7 +61,8 @@ CREATE TABLE IF NOT EXISTS asset_zone_assets (
     caption TEXT,
     link_url VARCHAR(1024),
     is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create indexes for asset_zone_assets

@@ -54,22 +54,6 @@ class AddAssetToZoneRequest(BaseModel):
 
 # ============ PUBLIC ENDPOINTS (no auth required) ============
 
-@router.get("/public/health")
-async def zone_health_check(db: Session = Depends(get_db)):
-    """Simple health check for zones endpoint - tests DB access."""
-    try:
-        # Just try a count query
-        count = db.query(AssetZone).count()
-        return {"success": True, "zone_count": count, "message": "DB connection OK"}
-    except Exception as e:
-        import traceback
-        return {
-            "success": False,
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }
-
-
 @router.get("/public/{zone_id}")
 async def get_zone_public(
     zone_id: str,
@@ -80,23 +64,13 @@ async def get_zone_public(
     Get a zone and its assets by zone_id (public endpoint).
     Returns the zone with all active assets for display on the site.
     """
-    try:
-        # Simple query first without joins to test DB connection
-        zone = db.query(AssetZone).filter(
-            AssetZone.zone_id == zone_id,
-            AssetZone.page_path == page_path,
-            AssetZone.is_active == True
-        ).first()
-    except Exception as e:
-        # Log the error and return a graceful response
-        import logging
-        logging.error(f"Error fetching zone {zone_id}: {str(e)}")
-        return {
-            "success": False,
-            "error": str(e),
-            "zone": None,
-            "assets": []
-        }
+    zone = db.query(AssetZone).options(
+        joinedload(AssetZone.assets).joinedload(AssetZoneAsset.asset)
+    ).filter(
+        AssetZone.zone_id == zone_id,
+        AssetZone.page_path == page_path,
+        AssetZone.is_active == True
+    ).first()
 
     if not zone:
         # Return empty response instead of 404 for graceful degradation
