@@ -25,11 +25,7 @@ class AssetZone(Base, TimestampMixin):
     configuration = Column(JSON, default={}, comment="Zone-specific config (transition, speed, objectFit, etc.)")
     is_active = Column(Boolean, default=True, comment="Whether the zone is active")
 
-    # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationships
+    # Relationships (timestamps provided by TimestampMixin)
     assets = relationship("AssetZoneAsset", back_populates="zone", cascade="all, delete-orphan", order_by="AssetZoneAsset.sort_order")
 
     def __repr__(self):
@@ -53,10 +49,7 @@ class AssetZoneAsset(Base, TimestampMixin):
     link_url = Column(String(1024), comment="Optional link when asset is clicked")
     is_active = Column(Boolean, default=True, comment="Whether this asset is active in the zone")
 
-    # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    # Relationships
+    # Relationships (timestamps provided by TimestampMixin)
     zone = relationship("AssetZone", back_populates="assets")
     asset = relationship("Asset")
 
