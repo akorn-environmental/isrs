@@ -4,17 +4,17 @@
  * Supports: single, slideshow, grid, lightbox modes
  *
  * Usage:
- * HTML: <div class="asset-zone" data-zone-id="home-hero-slideshow"></div>
+ * HTML: <div class="asset-zone" data-zone-id="home-hero" data-page-path="/"></div>
  * JavaScript: AssetZoneDisplay.initAll();
  *
  * Or initialize specific zone:
- * AssetZoneDisplay.loadZone('home-hero-slideshow', document.getElementById('myZone'));
+ * AssetZoneDisplay.loadZone('home-hero', '/', document.getElementById('myZone'));
  */
 
 const AssetZoneDisplay = {
-  API_BASE_URL: window.location.hostname === 'localhost'
-    ? 'http://localhost:3001'
-    : ''  // Same-origin URLs,
+  API_BASE_URL: window.API_BASE_URL || (window.location.hostname === 'localhost'
+    ? 'http://localhost:8000'
+    : ''),  // Same-origin in production
 
   /**
    * Initialize all asset zones on the page
@@ -25,111 +25,142 @@ const AssetZoneDisplay = {
 
     for (const zoneEl of zones) {
       const zoneId = zoneEl.dataset.zoneId;
-      await this.loadZone(zoneId, zoneEl);
+      const pagePath = zoneEl.dataset.pagePath || window.location.pathname;
+      await this.loadZone(zoneId, pagePath, zoneEl);
     }
   },
 
   /**
    * Load a specific zone
    */
-  async loadZone(zoneId, containerEl) {
+  async loadZone(zoneId, pagePath = '/', containerEl) {
     try {
-      console.log(`📦 Loading zone: ${zoneId}`);
-      const response = await fetch(`${this.API_BASE_URL}/api/asset-zones/${zoneId}`);
+      console.log(`📦 Loading zone: ${zoneId} for page: ${pagePath}`);
+
+      // Use the public API endpoint
+      const url = `${this.API_BASE_URL}/api/zones/public/${encodeURIComponent(zoneId)}?page_path=${encodeURIComponent(pagePath)}`;
+      const response = await fetch(url);
 
       if (!response.ok) {
-        console.error(`Zone ${zoneId} returned ${response.status}`);
+        console.warn(`Zone ${zoneId} returned ${response.status}`);
+        // Keep default content if zone doesn't exist
         return;
       }
 
-      const zone = await response.json();
+      const data = await response.json();
 
-      if (!zone || !zone.assets || zone.assets.length === 0) {
-        console.log(`Zone ${zoneId} has no assets`);
-        containerEl.innerHTML = '<p class="zone-empty">No photos assigned to this zone yet.</p>';
+      if (!data.success || !data.zone || !data.assets || data.assets.length === 0) {
+        console.log(`Zone ${zoneId} has no assets, keeping default content`);
+        // Don't clear container - keep default/fallback content
         return;
       }
 
-      console.log(`✅ Zone ${zoneId}: ${zone.assets.length} asset(s), mode: ${zone.display_mode}`);
+      const zone = data.zone;
+      const assets = data.assets;
+
+      console.log(`✅ Zone ${zoneId}: ${assets.length} asset(s), mode: ${zone.display_mode}`);
 
       const displayMode = zone.display_mode || 'single';
+      const config = zone.configuration || {};
 
       switch (displayMode) {
         case 'single':
-          this.renderSingle(containerEl, zone);
+          this.renderSingle(containerEl, assets, config);
           break;
         case 'slideshow':
-          this.renderSlideshow(containerEl, zone);
+          this.renderSlideshow(containerEl, assets, config);
           break;
         case 'grid':
-          this.renderGrid(containerEl, zone);
+          this.renderGrid(containerEl, assets, config);
           break;
         case 'lightbox':
-          this.renderLightbox(containerEl, zone);
+          this.renderLightbox(containerEl, assets, config);
           break;
         default:
           console.error(`Unknown display mode: ${displayMode}`);
       }
     } catch (error) {
       console.error(`Error loading zone ${zoneId}:`, error);
-      containerEl.innerHTML = '<p class="zone-error">Failed to load photos.</p>';
+      // Don't clear container on error - keep default content
     }
   },
 
   /**
    * Render single asset
    */
-  renderSingle(container, zone) {
-    const asset = zone.assets[0];
-    const focalX = asset.focal_point_x || 50;
-    const focalY = asset.focal_point_y || 50;
+  renderSingle(container, assets, config) {
+    const asset = assets[0];
+    const objectFit = config.objectFit || 'cover';
+    const objectPosition = config.objectPosition || 'center';
 
     container.innerHTML = `
-      <div class="asset-zone-single">
+      <div class="asset-zone-single" style="width: 100%; height: 100%;">
         <img
-          src="${this.API_BASE_URL}${asset.file_path}"
-          alt="${asset.alt_text || asset.caption || ''}"
+          src="${asset.url}"
+          alt="${asset.alt_text || ''}"
           loading="lazy"
           decoding="async"
-          style="object-position: ${focalX}% ${focalY}%;"
+          style="width: 100%; height: 100%; object-fit: ${objectFit}; object-position: ${objectPosition};"
         >
         ${asset.caption ? `<div class="asset-caption">${asset.caption}</div>` : ''}
       </div>
     `;
+
+    // Handle click link
+    if (asset.link_url) {
+      container.style.cursor = 'pointer';
+      container.addEventListener('click', () => {
+        window.location.href = asset.link_url;
+      });
+    }
   },
 
   /**
    * Render slideshow
    */
-  renderSlideshow(container, zone) {
-    const assets = zone.assets;
+  renderSlideshow(container, assets, config) {
     let currentIndex = 0;
+    const transition = config.transition || 'fade';
+    const speed = config.speed || 5000;
+    const autoAdvance = config.autoAdvance !== false;
+    const showControls = config.showControls !== false;
+    const showIndicators = config.showIndicators !== false;
+    const objectFit = config.objectFit || 'cover';
 
     container.innerHTML = `
-      <div class="asset-zone-slideshow">
-        <div class="slideshow-track">
-          ${assets.map((asset, i) => {
-            const focalX = asset.focal_point_x || 50;
-            const focalY = asset.focal_point_y || 50;
-            return `
-              <div class="slideshow-slide ${i === 0 ? 'active' : ''}">
-                <img
-                  src="${this.API_BASE_URL}${asset.file_path}"
-                  alt="${asset.alt_text || asset.caption || ''}"
-                  loading="lazy"
-                  decoding="async"
-                  style="object-position: ${focalX}% ${focalY}%;"
-                >
-                ${asset.caption ? `<div class="asset-caption">${asset.caption}</div>` : ''}
-              </div>
-            `;
-          }).join('')}
+      <div class="asset-zone-slideshow" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+        <div class="slideshow-track" style="position: relative; width: 100%; height: 100%;">
+          ${assets.map((asset, i) => `
+            <div class="slideshow-slide ${i === 0 ? 'active' : ''}"
+                 style="position: absolute; inset: 0; opacity: ${i === 0 ? 1 : 0}; transition: opacity 0.5s ease;">
+              <img
+                src="${asset.url}"
+                alt="${asset.alt_text || ''}"
+                loading="${i === 0 ? 'eager' : 'lazy'}"
+                decoding="async"
+                style="width: 100%; height: 100%; object-fit: ${objectFit};"
+              >
+              ${asset.caption ? `<div class="asset-caption">${asset.caption}</div>` : ''}
+            </div>
+          `).join('')}
         </div>
-        ${assets.length > 1 ? `
-          <button class="slideshow-prev" aria-label="Previous slide">&lsaquo;</button>
-          <button class="slideshow-next" aria-label="Next slide">&rsaquo;</button>
-          <div class="slideshow-indicators">
-            ${assets.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('')}
+        ${assets.length > 1 && showControls ? `
+          <button class="slideshow-prev" aria-label="Previous slide"
+                  style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(0,0,0,0.5); color: white; border: none; padding: 1rem; cursor: pointer; font-size: 1.5rem; border-radius: 50%;">
+            &#8249;
+          </button>
+          <button class="slideshow-next" aria-label="Next slide"
+                  style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(0,0,0,0.5); color: white; border: none; padding: 1rem; cursor: pointer; font-size: 1.5rem; border-radius: 50%;">
+            &#8250;
+          </button>
+        ` : ''}
+        ${assets.length > 1 && showIndicators ? `
+          <div class="slideshow-indicators" style="position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 0.5rem;">
+            ${assets.map((_, i) => `
+              <span data-index="${i}"
+                    style="width: 10px; height: 10px; border-radius: 50%; background: ${i === 0 ? 'white' : 'rgba(255,255,255,0.5)'}; cursor: pointer;">
+              </span>
+            `).join('')}
           </div>
         ` : ''}
       </div>
@@ -140,61 +171,87 @@ const AssetZoneDisplay = {
       const indicators = container.querySelectorAll('.slideshow-indicators span');
 
       const showSlide = (index) => {
-        slides.forEach(s => s.classList.remove('active'));
-        indicators.forEach(i => i.classList.remove('active'));
-        slides[index].classList.add('active');
-        indicators[index].classList.add('active');
+        slides.forEach((s, i) => {
+          s.style.opacity = i === index ? '1' : '0';
+          s.classList.toggle('active', i === index);
+        });
+        indicators.forEach((ind, i) => {
+          ind.style.background = i === index ? 'white' : 'rgba(255,255,255,0.5)';
+        });
         currentIndex = index;
       };
 
-      container.querySelector('.slideshow-prev').addEventListener('click', () => {
-        const newIndex = (currentIndex - 1 + assets.length) % assets.length;
-        showSlide(newIndex);
-      });
+      const prevBtn = container.querySelector('.slideshow-prev');
+      const nextBtn = container.querySelector('.slideshow-next');
 
-      container.querySelector('.slideshow-next').addEventListener('click', () => {
-        const newIndex = (currentIndex + 1) % assets.length;
-        showSlide(newIndex);
-      });
+      if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const newIndex = (currentIndex - 1 + assets.length) % assets.length;
+          showSlide(newIndex);
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const newIndex = (currentIndex + 1) % assets.length;
+          showSlide(newIndex);
+        });
+      }
 
       indicators.forEach((indicator, i) => {
-        indicator.addEventListener('click', () => showSlide(i));
+        indicator.addEventListener('click', (e) => {
+          e.stopPropagation();
+          showSlide(i);
+        });
       });
 
-      // Auto-advance every 5 seconds
-      const autoAdvanceInterval = zone.configuration?.autoAdvance || 5000;
-      setInterval(() => {
-        const newIndex = (currentIndex + 1) % assets.length;
-        showSlide(newIndex);
-      }, autoAdvanceInterval);
+      // Auto-advance
+      if (autoAdvance) {
+        let autoAdvanceTimer;
+        const startAutoAdvance = () => {
+          autoAdvanceTimer = setInterval(() => {
+            const newIndex = (currentIndex + 1) % assets.length;
+            showSlide(newIndex);
+          }, speed);
+        };
+
+        const stopAutoAdvance = () => {
+          clearInterval(autoAdvanceTimer);
+        };
+
+        container.addEventListener('mouseenter', stopAutoAdvance);
+        container.addEventListener('mouseleave', startAutoAdvance);
+        startAutoAdvance();
+      }
     }
   },
 
   /**
    * Render grid
    */
-  renderGrid(container, zone) {
-    const assets = zone.assets;
-    const columns = zone.configuration?.columns || 3;
+  renderGrid(container, assets, config) {
+    const columns = config.columns || 3;
+    const gap = config.gap || '1rem';
+    const objectFit = config.objectFit || 'cover';
 
     container.innerHTML = `
-      <div class="asset-zone-grid" style="grid-template-columns: repeat(${columns}, 1fr);">
-        ${assets.map(asset => {
-          const focalX = asset.focal_point_x || 50;
-          const focalY = asset.focal_point_y || 50;
-          return `
-            <div class="grid-item">
-              <img
-                src="${this.API_BASE_URL}${asset.file_path}"
-                alt="${asset.alt_text || asset.caption || ''}"
-                loading="lazy"
-                decoding="async"
-                style="object-position: ${focalX}% ${focalY}%;"
-              >
-              ${asset.caption ? `<div class="asset-caption">${asset.caption}</div>` : ''}
-            </div>
-          `;
-        }).join('')}
+      <div class="asset-zone-grid" style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: ${gap};">
+        ${assets.map(asset => `
+          <div class="grid-item" style="overflow: hidden; border-radius: 0.5rem;">
+            <img
+              src="${asset.url}"
+              alt="${asset.alt_text || ''}"
+              loading="lazy"
+              decoding="async"
+              style="width: 100%; height: 100%; object-fit: ${objectFit}; transition: transform 0.3s;"
+              onmouseover="this.style.transform='scale(1.05)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
+            ${asset.caption ? `<div class="asset-caption">${asset.caption}</div>` : ''}
+          </div>
+        `).join('')}
       </div>
     `;
   },
@@ -202,26 +259,26 @@ const AssetZoneDisplay = {
   /**
    * Render lightbox gallery
    */
-  renderLightbox(container, zone) {
-    const assets = zone.assets;
+  renderLightbox(container, assets, config) {
+    const columns = config.columns || 4;
+    const gap = config.gap || '0.5rem';
 
     container.innerHTML = `
-      <div class="asset-zone-lightbox">
-        ${assets.map((asset, i) => {
-          const focalX = asset.focal_point_x || 50;
-          const focalY = asset.focal_point_y || 50;
-          return `
-            <div class="lightbox-thumb" data-index="${i}" data-photo-url="${this.API_BASE_URL}${asset.file_path}">
-              <img
-                src="${this.API_BASE_URL}${asset.thumbnail_path || asset.file_path}"
-                alt="${asset.alt_text || asset.caption || ''}"
-                loading="lazy"
-                decoding="async"
-                style="object-position: ${focalX}% ${focalY}%;"
-              >
-            </div>
-          `;
-        }).join('')}
+      <div class="asset-zone-lightbox" style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: ${gap};">
+        ${assets.map((asset, i) => `
+          <div class="lightbox-thumb" data-index="${i}" data-photo-url="${asset.url}"
+               style="cursor: pointer; overflow: hidden; border-radius: 0.25rem; aspect-ratio: 1;">
+            <img
+              src="${asset.url}"
+              alt="${asset.alt_text || ''}"
+              loading="lazy"
+              decoding="async"
+              style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;"
+              onmouseover="this.style.transform='scale(1.1)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
+          </div>
+        `).join('')}
       </div>
     `;
 
@@ -247,13 +304,14 @@ const AssetZoneDisplay = {
 
     const overlay = document.createElement('div');
     overlay.className = 'simple-lightbox-overlay';
+    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center;';
     overlay.innerHTML = `
-      <div class="simple-lightbox">
-        <button class="lightbox-close">&times;</button>
-        <button class="lightbox-prev">&lsaquo;</button>
-        <img class="lightbox-image" src="" alt="">
-        <button class="lightbox-next">&rsaquo;</button>
-        <div class="lightbox-caption"></div>
+      <div class="simple-lightbox" style="position: relative; max-width: 90vw; max-height: 90vh;">
+        <button class="lightbox-close" style="position: absolute; top: -2rem; right: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer;">&times;</button>
+        <button class="lightbox-prev" style="position: absolute; left: -3rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 3rem; cursor: pointer;">&lsaquo;</button>
+        <img class="lightbox-image" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain;">
+        <button class="lightbox-next" style="position: absolute; right: -3rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 3rem; cursor: pointer;">&rsaquo;</button>
+        <div class="lightbox-caption" style="position: absolute; bottom: -2rem; left: 0; right: 0; text-align: center; color: white;"></div>
       </div>
     `;
 
@@ -265,12 +323,8 @@ const AssetZoneDisplay = {
 
     const showImage = (index) => {
       const asset = assets[index];
-      const focalX = asset.focal_point_x || 50;
-      const focalY = asset.focal_point_y || 50;
-
-      img.src = `${this.API_BASE_URL}${asset.file_path}`;
-      img.alt = asset.alt_text || asset.caption || '';
-      img.style.objectPosition = `${focalX}% ${focalY}%`;
+      img.src = asset.url;
+      img.alt = asset.alt_text || '';
       caption.textContent = asset.caption || '';
       currentIndex = index;
     };
@@ -296,6 +350,22 @@ const AssetZoneDisplay = {
         document.body.style.overflow = '';
       }
     });
+
+    // Keyboard navigation
+    const handleKeydown = (e) => {
+      if (e.key === 'Escape') {
+        overlay.remove();
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', handleKeydown);
+      } else if (e.key === 'ArrowLeft') {
+        const newIndex = (currentIndex - 1 + assets.length) % assets.length;
+        showImage(newIndex);
+      } else if (e.key === 'ArrowRight') {
+        const newIndex = (currentIndex + 1) % assets.length;
+        showImage(newIndex);
+      }
+    };
+    document.addEventListener('keydown', handleKeydown);
 
     showImage(startIndex);
   }
