@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS assets (
     category VARCHAR(50) DEFAULT 'other',
     tags VARCHAR(500),
     description TEXT,
-    uploaded_by INTEGER NOT NULL REFERENCES attendee_profiles(id),
+    uploaded_by UUID NOT NULL REFERENCES attendee_profiles(id),
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -3,6 +3,7 @@ Asset model for file management (images, documents, videos).
 """
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base, TimestampMixin
@@ -30,7 +31,7 @@ class Asset(Base, TimestampMixin):
     )
     tags = Column(String(500), comment="Comma-separated tags for searching")
     description = Column(Text, comment="Asset description or notes")
-    uploaded_by = Column(Integer, ForeignKey("attendee_profiles.id"), nullable=False, index=True)
+    uploaded_by = Column(UUID(as_uuid=True), ForeignKey("attendee_profiles.id"), nullable=False, index=True)
     uploaded_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
     # Relationship
