@@ -65,9 +65,8 @@ async def get_zone_public(
     Returns the zone with all active assets for display on the site.
     """
     try:
-        zone = db.query(AssetZone).options(
-            joinedload(AssetZone.assets).joinedload(AssetZoneAsset.asset)
-        ).filter(
+        # Simple query first without joins to test DB connection
+        zone = db.query(AssetZone).filter(
             AssetZone.zone_id == zone_id,
             AssetZone.page_path == page_path,
             AssetZone.is_active == True
