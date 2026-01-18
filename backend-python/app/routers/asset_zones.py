@@ -64,13 +64,24 @@ async def get_zone_public(
     Get a zone and its assets by zone_id (public endpoint).
     Returns the zone with all active assets for display on the site.
     """
-    zone = db.query(AssetZone).options(
-        joinedload(AssetZone.assets).joinedload(AssetZoneAsset.asset)
-    ).filter(
-        AssetZone.zone_id == zone_id,
-        AssetZone.page_path == page_path,
-        AssetZone.is_active == True
-    ).first()
+    try:
+        zone = db.query(AssetZone).options(
+            joinedload(AssetZone.assets).joinedload(AssetZoneAsset.asset)
+        ).filter(
+            AssetZone.zone_id == zone_id,
+            AssetZone.page_path == page_path,
+            AssetZone.is_active == True
+        ).first()
+    except Exception as e:
+        # Log the error and return a graceful response
+        import logging
+        logging.error(f"Error fetching zone {zone_id}: {str(e)}")
+        return {
+            "success": False,
+            "error": str(e),
+            "zone": None,
+            "assets": []
+        }
 
     if not zone:
         # Return empty response instead of 404 for graceful degradation
