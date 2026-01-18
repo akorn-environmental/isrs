@@ -1,5 +1,37 @@
--- Migration: Add Asset Zones tables
--- Run this SQL on the production database to add asset zone functionality
+-- Migration: Add Assets and Asset Zones tables
+-- Run this SQL on the production database to add asset management and zone functionality
+
+-- ============================================
+-- STEP 1: Create assets table (required first)
+-- ============================================
+CREATE TABLE IF NOT EXISTS assets (
+    id SERIAL PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    s3_key VARCHAR(512) NOT NULL UNIQUE,
+    s3_url VARCHAR(1024) NOT NULL,
+    file_type VARCHAR(100),
+    file_size INTEGER,
+    category VARCHAR(50) DEFAULT 'other',
+    tags VARCHAR(500),
+    description TEXT,
+    uploaded_by INTEGER NOT NULL REFERENCES attendee_profiles(id),
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for assets
+CREATE INDEX IF NOT EXISTS idx_assets_s3_key ON assets(s3_key);
+CREATE INDEX IF NOT EXISTS idx_assets_category ON assets(category);
+CREATE INDEX IF NOT EXISTS idx_assets_uploaded_by ON assets(uploaded_by);
+CREATE INDEX IF NOT EXISTS idx_assets_uploaded_at ON assets(uploaded_at);
+
+-- Add comment for documentation
+COMMENT ON TABLE assets IS 'Asset storage for uploaded files (images, documents, videos)';
+
+-- ============================================
+-- STEP 2: Create asset_zones table
+-- ============================================
 
 -- Create asset_zones table
 CREATE TABLE IF NOT EXISTS asset_zones (
