@@ -3,9 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ICSR2026 Planning - Admin Portal</title>
+  <title>ICSR2026 Planning - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="admin-styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+
+  <!-- Claude AI Dropdown -->
+  <link rel="stylesheet" href="/admin/claude-ai-dropdown.css">
+
+  <!-- Error Reporter -->
+  <script src="/js/errorReporter.js"></script>
+
   <style>
     .stat-card {
       background: white;
@@ -125,17 +137,22 @@
     }
   </style>
 </head>
-<body>
-  <div id="admin-layout">
-    <aside id="admin-sidebar"></aside>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <div class="admin-card">
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <h1>🦪 ICSR2026 Planning</h1>
+        <div class="admin-page-header-actions">
+          <div id="claudeAIContainer"></div>
+          <button class="admin-btn admin-btn-success" onclick="window.location.href='/icsr2026.html'">View Public Page</button>
+          <button class="admin-btn admin-btn-primary" onclick="sendSaveTheDate()">Send Save-the-Date</button>
+        </div>
+      </div>
 
-    <div id="admin-main">
-      <header id="admin-header">
-        <h1>🦪 ICSR2026 Planning Dashboard</h1>
-        <p>International Conference on Shellfish Restoration • October 5-8, 2026</p>
-      </header>
-
-      <main id="admin-content">
+      <div style="margin-bottom: 1rem; padding: 0.75rem; background: var(--admin-info-bg); border-left: 4px solid var(--admin-info); border-radius: 4px;">
+        <strong>International Conference on Shellfish Restoration</strong> • October 5-8, 2026 • Little Creek Casino Resort, Shelton, WA
+      </div>
         <!-- Key Stats -->
         <section class="admin-section">
           <div class="grid grid-4">
@@ -400,12 +417,11 @@
             <button class="btn btn-secondary">Contact Squaxin Island Tribe</button>
           </div>
         </section>
-      </main>
     </div>
   </div>
 
-  <script src="/js/errorReporter.js"></script>
-  <script src="/components/admin-sidebar.js"></script>
+  <!-- Claude AI Assistant -->
+  <script src="/admin/claude-ai-dropdown.js"></script>
   <script>
     // Calculate days until event
     function updateDaysUntilEvent() {
@@ -416,9 +432,27 @@
       document.getElementById('daysUntilEvent').textContent = diffDays;
     }
 
+    // Send Save-the-Date
+    function sendSaveTheDate() {
+      alert('Save-the-Date email functionality coming soon!\n\nThis will send emails to the ICSR2026 mailing list with conference details, registration info, and sponsorship opportunities.');
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       updateDaysUntilEvent();
+
+      // Initialize Claude AI if available
+      if (typeof initializeClaudeAI === 'function') {
+        initializeClaudeAI('claudeAIContainer', {
+          context: 'ICSR2026 Planning',
+          suggestedPrompts: [
+            'Draft sponsorship email',
+            'Create session abstract template',
+            'Generate social media posts',
+            'Write Squaxin Island Tribe invitation letter'
+          ]
+        });
+      }
     });
   </script>
 </body>
