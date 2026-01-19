@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICSR2026 Planning - Admin Portal</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="admin-styles.css">
+  <style>
+    .stat-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin: 0.5rem 0;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .progress-bar {
+      background: #e0e0e0;
+      height: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #1e5a8e, #2980b9);
+      height: 100%;
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .sponsor-item {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sponsor-name {
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+    .sponsor-amount {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #27ae60;
+    }
+    .document-item {
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .document-info {
+      flex: 1;
+    }
+    .document-title {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 0.25rem;
+    }
+    .document-meta {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .task-item {
+      background: white;
+      border-left: 4px solid var(--primary-blue);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border-radius: 4px;
+    }
+    .task-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .task-assignee {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-inprogress {
+      background: #cce5ff;
+      color: #004085;
+    }
+    .status-complete {
+      background: #d4edda;
+      color: #155724;
+    }
+  </style>
+</head>
+<body>
+  <div id="admin-layout">
+    <aside id="admin-sidebar"></aside>
+
+    <div id="admin-main">
+      <header id="admin-header">
+        <h1>🦪 ICSR2026 Planning Dashboard</h1>
+        <p>International Conference on Shellfish Restoration • October 5-8, 2026</p>
+      </header>
+
+      <main id="admin-content">
+        <!-- Key Stats -->
+        <section class="admin-section">
+          <div class="grid grid-4">
+            <div class="stat-card">
+              <div class="stat-label">Conference Date</div>
+              <div class="stat-value" style="font-size: 1.5rem;">Oct 5-8</div>
+              <div class="stat-label">2026</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Days Until Event</div>
+              <div class="stat-value" id="daysUntilEvent">-</div>
+              <div class="stat-label">Days</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Sponsorship Raised</div>
+              <div class="stat-value" style="font-size: 1.8rem;">$7,000</div>
+              <div class="stat-label">of $70,000 goal</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Registrations</div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Opens Early 2026</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sponsorship Progress -->
+        <section class="admin-section">
+          <h2>💰 Sponsorship Progress</h2>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 10%;">10% ($7,000 of $70,000)</div>
+          </div>
+
+          <div class="grid grid-2" style="margin-top: 1.5rem;">
+            <div>
+              <h3>Confirmed Sponsors</h3>
+              <div class="sponsor-item">
+                <div>
+                  <div class="sponsor-name">The Nature Conservancy - California</div>
+                  <div style="font-size: 0.85rem; color: var(--text-light);">Confirmed Oct 2025</div>
+                </div>
+                <div class="sponsor-amount">$5,000</div>
+              </div>
+              <div class="sponsor-item">
+                <div>
+                  <div class="sponsor-name">The Nature Conservancy - Washington</div>
+                  <div style="font-size: 0.85rem; color: var(--text-light);">Confirmed Oct 2025</div>
+                </div>
+                <div class="sponsor-amount">$2,000</div>
+              </div>
+              <button class="btn btn-primary" style="margin-top: 1rem;">+ Add Sponsor</button>
+            </div>
+            <div>
+              <h3>Prospective Sponsors</h3>
+              <div class="sponsor-item" style="opacity: 0.7;">
+                <div>
+                  <div class="sponsor-name">Taylor Shellfish</div>
+                  <div style="font-size: 0.85rem; color: var(--text-light);">In discussions</div>
+                </div>
+                <div class="sponsor-amount">TBD</div>
+              </div>
+              <div class="sponsor-item" style="opacity: 0.7;">
+                <div>
+                  <div class="sponsor-name">PCSGA</div>
+                  <div style="font-size: 0.85rem; color: var(--text-light);">Oyster bar/food sponsorship</div>
+                </div>
+                <div class="sponsor-amount">TBD</div>
+              </div>
+              <button class="btn btn-secondary" style="margin-top: 1rem;">+ Track Prospect</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Planning Checklist -->
+        <section class="admin-section">
+          <h2>✅ Planning Checklist</h2>
+          <div class="grid grid-2">
+            <div>
+              <h3>Pre-Event Tasks</h3>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-pending">Pending</span>
+                  Venue Contract Signature
+                </div>
+                <div class="task-assignee">Assigned: Mark Risse • Due: ASAP</div>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Awaiting insurance resolution per Dec 2025 emails</p>
+              </div>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-pending">Pending</span>
+                  Squaxin Island Tribe Co-Host Invitation
+                </div>
+                <div class="task-assignee">Assigned: Betsy Peabody • Due: After venue contract</div>
+              </div>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-inprogress">In Progress</span>
+                  Program Co-Chairs
+                </div>
+                <div class="task-assignee">Confirmed: Julieta Martinelli (WDFW) • Seeking: East Coast/Tribal co-chair</div>
+              </div>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-pending">Pending</span>
+                  Save-the-Date Distribution
+                </div>
+                <div class="task-assignee">Planned: January 2026</div>
+              </div>
+            </div>
+            <div>
+              <h3>Program Development</h3>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-inprogress">In Progress</span>
+                  Session Topics Defined
+                </div>
+                <div class="task-assignee">Olympia oysters, Clam gardens, Abalone, Ostrea (NORA/NOOC)</div>
+              </div>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-pending">Pending</span>
+                  Keynote Speakers
+                </div>
+                <div class="task-assignee">Target: Tribal leaders, Matthew Gray considered</div>
+              </div>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-inprogress">In Progress</span>
+                  Salmon & Clam Bake Planning
+                </div>
+                <div class="task-assignee">In discussion with Squaxin Island Tribe & Salish Seafoods</div>
+              </div>
+              <div class="task-item">
+                <div class="task-title">
+                  <span class="status-badge status-complete">Complete</span>
+                  Website Updated
+                </div>
+                <div class="task-assignee">ICSR2026 page live with details</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Planning Committee -->
+        <section class="admin-section">
+          <h2>👥 Planning Committee</h2>
+          <div class="grid grid-3">
+            <div class="card">
+              <h3>Confirmed Members</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Betsy Peabody</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Local Chair (PSRF)</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Julieta Martinelli</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Program Co-Chair (WDFW)</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Bill Taylor</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Planning Committee</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>ISRS Board Members</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Aaron Kornbluth</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Likely member</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Lisa Paton</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Billing/AV Contact</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Katie Mosher</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Likely member</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Tribal Partners</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #dee2e6;">
+                  <strong>Squaxin Island Tribe</strong><br>
+                  <span style="font-size: 0.85rem; color: var(--text-light);">Potential co-host (pending invitation)</span>
+                </li>
+                <li style="padding: 0.5rem 0;">
+                  <span style="font-size: 0.85rem; color: var(--text-light); font-style: italic;">Additional Tribal partners TBD</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Documents -->
+        <section class="admin-section">
+          <h2>📄 Conference Documents</h2>
+          <div class="document-item">
+            <div class="document-info">
+              <div class="document-title">📋 Venue Agreement (Little Creek Casino Resort)</div>
+              <div class="document-meta">Status: Ready for signature • Last Updated: Oct 2025</div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn btn-secondary btn-sm">View</button>
+              <button class="btn btn-primary btn-sm">Upload</button>
+            </div>
+          </div>
+          <div class="document-item">
+            <div class="document-info">
+              <div class="document-title">📋 Venue Requirements & Specs</div>
+              <div class="document-meta">Property map, meeting space specs, directional maps</div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn btn-secondary btn-sm">View</button>
+              <button class="btn btn-primary btn-sm">Upload</button>
+            </div>
+          </div>
+          <div class="document-item">
+            <div class="document-info">
+              <div class="document-title">📋 PSRF Answers & Venue Clarifications</div>
+              <div class="document-meta">Negotiated improvements and details (Oct 2025)</div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn btn-secondary btn-sm">View</button>
+              <button class="btn btn-primary btn-sm">Upload</button>
+            </div>
+          </div>
+          <div class="document-item">
+            <div class="document-info">
+              <div class="document-title">💼 D&O and Event Insurance Quotes</div>
+              <div class="document-meta">Status: Pending • Required before venue contract signature</div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn btn-secondary btn-sm">View</button>
+              <button class="btn btn-primary btn-sm">Upload</button>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="margin-top: 1rem;">+ Upload Document</button>
+        </section>
+
+        <!-- Registration (Placeholder) -->
+        <section class="admin-section">
+          <h2>🎫 Registration Management</h2>
+          <div class="card" style="text-align: center; padding: 3rem; background: #f8f9fa;">
+            <h3 style="color: var(--text-light);">Registration Opens Early 2026</h3>
+            <p style="color: var(--text-light);">Registration management tools will be available when registration opens.</p>
+            <button class="btn btn-primary" disabled>Configure Registration</button>
+          </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="admin-section">
+          <h2>⚡ Quick Actions</h2>
+          <div class="grid grid-3">
+            <button class="btn btn-primary">Email Planning Committee</button>
+            <button class="btn btn-primary">Update Website</button>
+            <button class="btn btn-primary">Export Sponsor Report</button>
+            <button class="btn btn-secondary">Send Save-the-Date</button>
+            <button class="btn btn-secondary">View Venue Contract</button>
+            <button class="btn btn-secondary">Contact Squaxin Island Tribe</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/errorReporter.js"></script>
+  <script src="/components/admin-sidebar.js"></script>
+  <script>
+    // Calculate days until event
+    function updateDaysUntilEvent() {
+      const eventDate = new Date('2026-10-05');
+      const today = new Date();
+      const diffTime = eventDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      document.getElementById('daysUntilEvent').textContent = diffDays;
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDaysUntilEvent();
+    });
+  </script>
+</body>
+</html>
