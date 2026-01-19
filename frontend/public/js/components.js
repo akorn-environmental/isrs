@@ -669,7 +669,9 @@ const translations = {
     icsr2026HeroHeading: 'ICSR2026',
     icsr2026HostedBy: 'Hosted by <a href="https://restorationfund.org/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Puget Sound Restoration Fund</a>',
     icsr2026Location: 'Puget Sound, Washington State',
+    icsr2026LocationDates: 'Puget Sound, Washington State<br>October 5-8, 2026',
     icsr2026Dates: 'October 5-8, 2026',
+    icsr2026DateRange: 'October 5-8, 2026',
 
     // ICSR2026 - Overview
     icsr2026OverviewHeading: 'Join Us in the Pacific Northwest',
@@ -1610,7 +1612,9 @@ const translations = {
     icsr2026HeroHeading: 'ICSR2026',
     icsr2026HostedBy: 'Organizado por <a href="https://restorationfund.org/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Puget Sound Restoration Fund</a>',
     icsr2026Location: 'Puget Sound, Estado de Washington',
+    icsr2026LocationDates: 'Puget Sound, Estado de Washington<br>5-8 de Octubre de 2026',
     icsr2026Dates: '5-8 de Octubre de 2026',
+    icsr2026DateRange: '5-8 de Octubre de 2026',
 
     // ICSR2026 - Descripción General
     icsr2026OverviewHeading: 'Únase a Nosotros en el Noroeste del Pacífico',
@@ -2555,7 +2559,9 @@ const translations = {
     icsr2026HeroHeading: 'ICSR2026',
     icsr2026HostedBy: 'Organisé par <a href="https://restorationfund.org/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Puget Sound Restoration Fund</a>',
     icsr2026Location: 'Puget Sound, État de Washington',
+    icsr2026LocationDates: 'Puget Sound, État de Washington<br>5-8 Octobre 2026',
     icsr2026Dates: '5-8 Octobre 2026',
+    icsr2026DateRange: '5-8 Octobre 2026',
 
     // ICSR2026 - Aperçu
     icsr2026OverviewHeading: 'Rejoignez-Nous dans le Nord-Ouest du Pacifique',
