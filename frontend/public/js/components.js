@@ -711,7 +711,7 @@ const translations = {
 
     // ICSR2026 - Venue
     icsr2026VenueHeading: 'Conference Venue at Squaxin Island Tribe Territory',
-    icsr2026VenueText1: 'ICSR2026 will be held at the Little Creek Resort and Conference Center, operated by the Squaxin Island Tribe in Shelton, Washington. The Squaxin Island people\'s ancestral territory includes much of southern Puget Sound, and they have been stewards of shellfish resources for thousands of years, maintaining deep cultural and spiritual connections to clams, oysters, and other shellfish.',
+    icsr2026VenueText1: 'ICSR2026 will be held at the <a href="https://littlecreek.com/" target="_blank" rel="noopener noreferrer">Little Creek Resort and Conference Center</a>, operated by the Squaxin Island Tribe in Shelton, Washington. The Squaxin Island people\'s ancestral territory includes much of southern Puget Sound, and they have been stewards of shellfish resources for thousands of years, maintaining deep cultural and spiritual connections to clams, oysters, and other shellfish.',
     icsr2026VenueText2: 'Today, the Tribe continues this tradition through active shellfish management, restoration programs, and aquaculture operations, integrating traditional ecological knowledge with modern conservation science. ICSR2026 will provide unique opportunities to learn from Tribal restoration practitioners and experience Indigenous approaches to shellfish stewardship.',
 
     // ICSR2026 - Why Puget Sound
@@ -954,7 +954,7 @@ const translations = {
     // Support - Programs
     supportProgramsHeading: 'Programs Delivering Global Impact',
     supportProgramICR: 'Biennial ICSR Conference',
-    supportProgramICRDesc: 'The world\'s premier gathering for molluscan shellfish restoration, bringing together 300+ practitioners from 20+ countries to share breakthrough science and successful restoration approaches. ICSR2026 will be held October 4-8, 2026, at the Little Creek Resort and Conference Center, operated by the Squaxin Island Tribe in Shelton, Washington.',
+    supportProgramICRDesc: 'The world\'s premier gathering for molluscan shellfish restoration, bringing together 300+ practitioners from 20+ countries to share breakthrough science and successful restoration approaches. ICSR2026 will be held October 5-8, 2026, at the <a href="https://littlecreek.com/" target="_blank" rel="noopener noreferrer">Little Creek Resort and Conference Center</a>, operated by the Squaxin Island Tribe in Shelton, Washington.',
     supportProgramNetwork: 'Global Professional Network',
     supportProgramNetworkDesc: 'Year-round engagement connecting restoration practitioners worldwide through forums, webinars, and collaborative initiatives addressing shared challenges.',
     supportProgramResearch: 'Research & Innovation Support',
@@ -1691,7 +1691,7 @@ const translations = {
 
     // ICSR2026 - Lugar
     icsr2026VenueHeading: 'Lugar de la Conferencia en el Territorio de la Tribu Squaxin Island',
-    icsr2026VenueText1: 'ICSR2026 se llevará a cabo en el Little Creek Resort and Conference Center, operado por la Tribu Squaxin Island en Shelton, Washington. El territorio ancestral del pueblo Squaxin Island incluye gran parte del sur de Puget Sound, y han sido administradores de recursos de moluscos durante miles de años, manteniendo profundas conexiones culturales y espirituales con almejas, ostras y otros moluscos.',
+    icsr2026VenueText1: 'ICSR2026 se llevará a cabo en el <a href="https://littlecreek.com/" target="_blank" rel="noopener noreferrer">Little Creek Resort and Conference Center</a>, operado por la Tribu Squaxin Island en Shelton, Washington. El territorio ancestral del pueblo Squaxin Island incluye gran parte del sur de Puget Sound, y han sido administradores de recursos de moluscos durante miles de años, manteniendo profundas conexiones culturales y espirituales con almejas, ostras y otros moluscos.',
     icsr2026VenueText2: 'Hoy, la Tribu continúa esta tradición a través de la gestión activa de moluscos, programas de restauración y operaciones de acuicultura, integrando el conocimiento ecológico tradicional con la ciencia de conservación moderna. ICSR2026 brindará oportunidades únicas para aprender de los profesionales de restauración tribales y experimentar enfoques indígenas para la administración de moluscos.',
 
     // ICSR2026 - Por Qué Puget Sound
@@ -1938,7 +1938,7 @@ const translations = {
     // Apoyo - Programas
     supportProgramsHeading: 'Programas que Entregan Impacto Global',
     supportProgramICR: 'Conferencia ICSR Bienal',
-    supportProgramICRDesc: 'La reunión premier mundial para la restauración de moluscos, reuniendo a más de 300 profesionales de más de 20 países para compartir ciencia innovadora y enfoques exitosos de restauración. ICSR2026 se llevará a cabo del 4 al 8 de octubre de 2026, en el Little Creek Resort and Conference Center, operado por la Tribu Squaxin Island en Shelton, Washington.',
+    supportProgramICRDesc: 'La reunión premier mundial para la restauración de moluscos, reuniendo a más de 300 profesionales de más de 20 países para compartir ciencia innovadora y enfoques exitosos de restauración. ICSR2026 se llevará a cabo del 5 al 8 de octubre de 2026, en el <a href="https://littlecreek.com/" target="_blank" rel="noopener noreferrer">Little Creek Resort and Conference Center</a>, operado por la Tribu Squaxin Island en Shelton, Washington.',
     supportProgramNetwork: 'Red Profesional Global',
     supportProgramNetworkDesc: 'Compromiso durante todo el año conectando a profesionales de restauración en todo el mundo a través de foros, seminarios web e iniciativas colaborativas que abordan desafíos compartidos.',
     supportProgramResearch: 'Apoyo a Investigación e Innovación',
@@ -2675,7 +2675,7 @@ const translations = {
 
     // ICSR2026 - Lieu
     icsr2026VenueHeading: 'Lieu de Conférence sur le Territoire de la Tribu Squaxin Island',
-    icsr2026VenueText1: 'ICSR2026 se tiendra au Little Creek Resort and Conference Center, exploité par la Tribu Squaxin Island à Shelton, Washington. Le territoire ancestral du peuple Squaxin Island comprend une grande partie du sud de Puget Sound, et ils ont été gestionnaires des ressources de mollusques pendant des milliers d\'années, maintenant de profondes connexions culturelles et spirituelles avec les palourdes, les huîtres et autres mollusques.',
+    icsr2026VenueText1: 'ICSR2026 se tiendra au <a href="https://littlecreek.com/" target="_blank" rel="noopener noreferrer">Little Creek Resort and Conference Center</a>, exploité par la Tribu Squaxin Island à Shelton, Washington. Le territoire ancestral du peuple Squaxin Island comprend une grande partie du sud de Puget Sound, et ils ont été gestionnaires des ressources de mollusques pendant des milliers d\'années, maintenant de profondes connexions culturelles et spirituelles avec les palourdes, les huîtres et autres mollusques.',
     icsr2026VenueText2: 'Aujourd\'hui, la Tribu continue cette tradition par la gestion active des mollusques, les programmes de restauration et les opérations d\'aquaculture, intégrant le savoir écologique traditionnel avec la science de conservation moderne. ICSR2026 offrira des opportunités uniques d\'apprendre des praticiens de la restauration tribaux et de découvrir les approches autochtones de la gérance des mollusques.',
 
     // ICSR2026 - Pourquoi Puget Sound
@@ -2922,7 +2922,7 @@ const translations = {
     // Soutien - Programmes
     supportProgramsHeading: 'Programmes Offrant un Impact Mondial',
     supportProgramICR: 'Conférence ICSR Bisannuelle',
-    supportProgramICRDesc: 'Le rassemblement mondial premier pour la restauration des mollusques, réunissant plus de 300 praticiens de plus de 20 pays pour partager des sciences révolutionnaires et des approches de restauration réussies. ICSR2026 se tiendra du 4 au 8 octobre 2026, au Little Creek Resort and Conference Center, exploité par la Tribu Squaxin Island à Shelton, Washington.',
+    supportProgramICRDesc: 'Le rassemblement mondial premier pour la restauration des mollusques, réunissant plus de 300 praticiens de plus de 20 pays pour partager des sciences révolutionnaires et des approches de restauration réussies. ICSR2026 se tiendra du 5 au 8 octobre 2026, au <a href="https://littlecreek.com/" target="_blank" rel="noopener noreferrer">Little Creek Resort and Conference Center</a>, exploité par la Tribu Squaxin Island à Shelton, Washington.',
     supportProgramNetwork: 'Réseau Professionnel Mondial',
     supportProgramNetworkDesc: 'Engagement tout au long de l\'année connectant les praticiens de la restauration dans le monde entier par des forums, webinaires et initiatives collaboratives abordant des défis partagés.',
     supportProgramResearch: 'Soutien à la Recherche et à l\'Innovation',
