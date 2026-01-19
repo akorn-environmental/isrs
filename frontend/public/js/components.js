@@ -678,6 +678,7 @@ const translations = {
     icsr2026OverviewText1: 'The 2026 International Conference on Shellfish Restoration will bring together the global restoration community for four days of cutting-edge research, practical workshops, and invaluable networking with restoration practitioners from around the world.',
     icsr2026OverviewText2: 'Set in the spectacular Puget Sound region, ICSR2026 will explore the intersection of traditional ecological knowledge, modern restoration science, and community-based conservation.',
     icsr2026MailingListCTA: 'Join Mailing List for Updates',
+    icsr2026JoinMailingList: 'Join Mailing List for Updates',
 
     // ICSR2026 - Important Dates
     icsr2026DatesHeading: 'Important Dates',
@@ -693,6 +694,7 @@ const translations = {
     icsr2026InfoTBA: 'Information TBA',
 
     // ICSR2026 - What to Expect
+    icsr2026WhatToExpect: 'What to Expect',
     icsr2026ExpectHeading: 'What to Expect',
     icsr2026ExpectResearch: 'Cutting-Edge Research',
     icsr2026ExpectResearchDesc: 'Oral presentations and lightning talks on oyster dynamics, habitat monitoring, urban restoration, species interactions, reef structures, and climate adaptation',
@@ -703,21 +705,31 @@ const translations = {
     icsr2026ExpectNetworking: 'Networking',
     icsr2026ExpectNetworkingDesc: 'Welcome reception, poster sessions, conference banquet, regional network meetings, and informal gatherings throughout the week',
 
+    // ICSR2026 - Planned Sessions
+    icsr2026SessionsHeading: 'Planned Sessions & Themes',
+    icsr2026SessionsIntro: 'Conference programming is in development. Planned sessions include:',
+
     // ICSR2026 - Venue
     icsr2026VenueHeading: 'Conference Venue at Squaxin Island Tribe Territory',
     icsr2026VenueText1: 'ICSR2026 will be held at the Little Creek Resort and Conference Center, operated by the Squaxin Island Tribe in Shelton, Washington. The Squaxin Island people\'s ancestral territory includes much of southern Puget Sound, and they have been stewards of shellfish resources for thousands of years, maintaining deep cultural and spiritual connections to clams, oysters, and other shellfish.',
     icsr2026VenueText2: 'Today, the Tribe continues this tradition through active shellfish management, restoration programs, and aquaculture operations, integrating traditional ecological knowledge with modern conservation science. ICSR2026 will provide unique opportunities to learn from Tribal restoration practitioners and experience Indigenous approaches to shellfish stewardship.',
 
     // ICSR2026 - Why Puget Sound
+    icsr2026WhyPugetSound: 'Why Puget Sound?',
     icsr2026WhyHeading: 'Why Puget Sound?',
+    icsr2026WhyPugetSoundIntro: 'Puget Sound is a global hotspot for shellfish restoration innovation<br>with deep cultural connections to shellfish:',
     icsr2026WhyIntro: 'Puget Sound is a global hotspot for shellfish restoration innovation with deep cultural connections to shellfish:',
+    icsr2026WhyDiverseSpecies: '🌊 Diverse Species',
     icsr2026WhySpecies: 'Diverse Species',
+    icsr2026WhyDiverseSpeciesDesc: 'Home to native Olympia oysters, Pacific oysters, geoduck clams, Manila clams, and numerous other shellfish species.',
     icsr2026WhySpeciesDesc: 'Home to native Olympia oysters, Pacific oysters, geoduck clams, Manila clams, and numerous other shellfish species.',
     icsr2026WhyResearch: 'Research Excellence',
     icsr2026WhyResearchDesc: 'Leading universities and research institutions advancing shellfish science and restoration techniques.',
     icsr2026WhyTribal: 'Tribal Leadership',
     icsr2026WhyTribalDesc: 'Coast Salish Tribes leading innovative restoration programs rooted in traditional knowledge.',
+    icsr2026WhyActiveRestoration: '🦪 Active Restoration',
     icsr2026WhyRestoration: 'Active Restoration',
+    icsr2026WhyActiveRestorationDesc: 'Dozens of ongoing restoration projects addressing water quality, habitat loss, and climate change.',
     icsr2026WhyRestorationDesc: 'Dozens of ongoing restoration projects addressing water quality, habitat loss, and climate change.',
     icsr2026WhyPolicy: 'Policy Innovation',
     icsr2026WhyPolicyDesc: 'Progressive shellfish management and restoration policies serving as models for other regions.',
@@ -725,9 +737,16 @@ const translations = {
     icsr2026WhyEcosystemDesc: 'Holistic approaches integrating shellfish restoration with broader coastal ecosystem recovery.',
 
     // ICSR2026 - Expected Attendance
+    icsr2026ExpectedAttendance: 'Expected Attendance',
     icsr2026AttendanceHeading: 'Expected Attendance',
+    icsr2026ExpectedParticipants: '350+',
+    icsr2026ExpectedCountries: '25+',
+    icsr2026ExpectedPresentations: '150+',
+    icsr2026ParticipantsLabel: 'Participants',
     icsr2026Participants: 'Participants',
+    icsr2026CountriesLabel: 'Countries',
     icsr2026Countries: 'Countries',
+    icsr2026PresentationsLabel: 'Presentations',
     icsr2026Presentations: 'Presentations',
 
     // ICSR2026 - Registration & Sponsorship
@@ -741,15 +760,33 @@ const translations = {
     // ICSR2026 - Sponsors
     icsr2026SponsorsHeading: 'Conference Sponsors',
     icsr2026SponsorsIntro: 'We gratefully acknowledge our sponsors who make ICSR2026 possible through their generous support.',
+    icsr2026SponsorPSRF: 'Puget Sound Restoration Fund',
+    icsr2026HostOrganization: 'Host Organization',
+    icsr2026SponsorTNC: 'The Nature Conservancy - California',
+    icsr2026SponsorLevel: '$5,000 Sponsor',
+    icsr2026SponsorTNCWA: 'The Nature Conservancy - Washington',
+    icsr2026SponsorLevelWA: '$2,000 Sponsor',
 
     // ICSR2026 - Code of Conduct
+    icsr2026CodeOfConduct: 'Code of Conduct',
     icsr2026CodeHeading: 'Code of Conduct',
     icsr2026CodeText: 'ICSR2026 is committed to providing a respectful, inclusive, and welcoming environment for all participants. We maintain a zero-tolerance policy for harassment and inappropriate behavior. All attendees are expected to treat each other with respect, welcome diverse perspectives, and refrain from unauthorized photography or recording.',
+    icsr2026CodeContact: '<strong>Questions or concerns?</strong> Contact us at <a href="mailto:info@shellfish-society.org" style="color: var(--primary-blue);">info@shellfish-society.org</a>',
 
     // ICSR2026 - Mailing List Modal
     icsr2026ModalCloseAriaLabel: 'Close mailing list modal',
     icsr2026ModalTitle: 'Join Our Mailing List',
     icsr2026ModalSubtitle: 'Stay updated on ICSR2026 registration, abstract submissions, and conference details.',
+    icsr2026ModalFirstName: 'First Name',
+    icsr2026ModalLastName: 'Last Name',
+    icsr2026ModalEmail: 'Email',
+    icsr2026ModalOrganization: 'Organization',
+    icsr2026ModalNote: 'Note (Optional)',
+    icsr2026ModalCancel: 'Cancel',
+    icsr2026ModalSubmit: 'Join Mailing List',
+    icsr2026ModalSuccess: '✓ Success!',
+    icsr2026ModalSuccessText: 'Thank you for joining our mailing list. We\'ll keep you updated on ICSR2026.',
+    icsr2026ModalClose: 'Close',
     icsr2026ModalErrorMessage: 'There was an error submitting your information. Please try again or contact us directly at info@shellfish-society.org',
 
     // ========== GALLERY PAGE ==========
@@ -1621,6 +1658,7 @@ const translations = {
     icsr2026OverviewText1: 'La Conferencia Internacional sobre Restauración de Moluscos 2026 reunirá a la comunidad global de restauración durante cuatro días de investigación de vanguardia, talleres prácticos y networking invaluable con profesionales de restauración de todo el mundo.',
     icsr2026OverviewText2: 'Situada en la espectacular región de Puget Sound, ICSR2026 explorará la intersección del conocimiento ecológico tradicional, la ciencia moderna de restauración y la conservación basada en la comunidad.',
     icsr2026MailingListCTA: 'Únase a la Lista de Correo para Actualizaciones',
+    icsr2026JoinMailingList: 'Únase a la Lista de Correo para Actualizaciones',
 
     // ICSR2026 - Fechas Importantes
     icsr2026DatesHeading: 'Fechas Importantes',
@@ -1636,6 +1674,7 @@ const translations = {
     icsr2026InfoTBA: 'Información Por Anunciar',
 
     // ICSR2026 - Qué Esperar
+    icsr2026WhatToExpect: 'Qué Esperar',
     icsr2026ExpectHeading: 'Qué Esperar',
     icsr2026ExpectResearch: 'Investigación de Vanguardia',
     icsr2026ExpectResearchDesc: 'Presentaciones orales y charlas relámpago sobre dinámica de ostras, monitoreo de hábitat, restauración urbana, interacciones de especies, estructuras de arrecifes y adaptación climática',
@@ -1646,21 +1685,31 @@ const translations = {
     icsr2026ExpectNetworking: 'Networking',
     icsr2026ExpectNetworkingDesc: 'Recepción de bienvenida, sesiones de pósteres, banquete de conferencia, reuniones de redes regionales y reuniones informales durante toda la semana',
 
+    // ICSR2026 - Sesiones Planificadas
+    icsr2026SessionsHeading: 'Sesiones y Temas Planificados',
+    icsr2026SessionsIntro: 'La programación de la conferencia está en desarrollo. Las sesiones planificadas incluyen:',
+
     // ICSR2026 - Lugar
     icsr2026VenueHeading: 'Lugar de la Conferencia en el Territorio de la Tribu Squaxin Island',
     icsr2026VenueText1: 'ICSR2026 se llevará a cabo en el Little Creek Resort and Conference Center, operado por la Tribu Squaxin Island en Shelton, Washington. El territorio ancestral del pueblo Squaxin Island incluye gran parte del sur de Puget Sound, y han sido administradores de recursos de moluscos durante miles de años, manteniendo profundas conexiones culturales y espirituales con almejas, ostras y otros moluscos.',
     icsr2026VenueText2: 'Hoy, la Tribu continúa esta tradición a través de la gestión activa de moluscos, programas de restauración y operaciones de acuicultura, integrando el conocimiento ecológico tradicional con la ciencia de conservación moderna. ICSR2026 brindará oportunidades únicas para aprender de los profesionales de restauración tribales y experimentar enfoques indígenas para la administración de moluscos.',
 
     // ICSR2026 - Por Qué Puget Sound
+    icsr2026WhyPugetSound: '¿Por Qué Puget Sound?',
     icsr2026WhyHeading: '¿Por Qué Puget Sound?',
+    icsr2026WhyPugetSoundIntro: 'Puget Sound es un punto caliente global para la innovación en restauración de moluscos<br>con profundas conexiones culturales con los moluscos:',
     icsr2026WhyIntro: 'Puget Sound es un punto caliente global para la innovación en restauración de moluscos con profundas conexiones culturales con los moluscos:',
+    icsr2026WhyDiverseSpecies: '🌊 Especies Diversas',
     icsr2026WhySpecies: 'Especies Diversas',
+    icsr2026WhyDiverseSpeciesDesc: 'Hogar de ostras Olympia nativas, ostras del Pacífico, almejas geoduck, almejas Manila y numerosas otras especies de moluscos.',
     icsr2026WhySpeciesDesc: 'Hogar de ostras Olympia nativas, ostras del Pacífico, almejas geoduck, almejas Manila y numerosas otras especies de moluscos.',
     icsr2026WhyResearch: 'Excelencia en Investigación',
     icsr2026WhyResearchDesc: 'Universidades e instituciones de investigación líderes que avanzan la ciencia de moluscos y las técnicas de restauración.',
     icsr2026WhyTribal: 'Liderazgo Tribal',
     icsr2026WhyTribalDesc: 'Tribus Coast Salish liderando programas innovadores de restauración basados en el conocimiento tradicional.',
+    icsr2026WhyActiveRestoration: '🦪 Restauración Activa',
     icsr2026WhyRestoration: 'Restauración Activa',
+    icsr2026WhyActiveRestorationDesc: 'Docenas de proyectos de restauración en curso que abordan la calidad del agua, la pérdida de hábitat y el cambio climático.',
     icsr2026WhyRestorationDesc: 'Docenas de proyectos de restauración en curso que abordan la calidad del agua, la pérdida de hábitat y el cambio climático.',
     icsr2026WhyPolicy: 'Innovación en Políticas',
     icsr2026WhyPolicyDesc: 'Políticas progresivas de gestión y restauración de moluscos que sirven como modelos para otras regiones.',
@@ -1668,9 +1717,16 @@ const translations = {
     icsr2026WhyEcosystemDesc: 'Enfoques holísticos que integran la restauración de moluscos con la recuperación más amplia del ecosistema costero.',
 
     // ICSR2026 - Asistencia Esperada
+    icsr2026ExpectedAttendance: 'Asistencia Esperada',
     icsr2026AttendanceHeading: 'Asistencia Esperada',
+    icsr2026ExpectedParticipants: '350+',
+    icsr2026ExpectedCountries: '25+',
+    icsr2026ExpectedPresentations: '150+',
+    icsr2026ParticipantsLabel: 'Participantes',
     icsr2026Participants: 'Participantes',
+    icsr2026CountriesLabel: 'Países',
     icsr2026Countries: 'Países',
+    icsr2026PresentationsLabel: 'Presentaciones',
     icsr2026Presentations: 'Presentaciones',
 
     // ICSR2026 - Registro y Patrocinio
@@ -1684,15 +1740,33 @@ const translations = {
     // ICSR2026 - Patrocinadores
     icsr2026SponsorsHeading: 'Patrocinadores de la Conferencia',
     icsr2026SponsorsIntro: 'Agradecemos a nuestros patrocinadores que hacen posible ICSR2026 con su generoso apoyo.',
+    icsr2026SponsorPSRF: 'Puget Sound Restoration Fund',
+    icsr2026HostOrganization: 'Organización Anfitriona',
+    icsr2026SponsorTNC: 'The Nature Conservancy - California',
+    icsr2026SponsorLevel: 'Patrocinador $5,000',
+    icsr2026SponsorTNCWA: 'The Nature Conservancy - Washington',
+    icsr2026SponsorLevelWA: 'Patrocinador $2,000',
 
     // ICSR2026 - Código de Conducta
+    icsr2026CodeOfConduct: 'Código de Conducta',
     icsr2026CodeHeading: 'Código de Conducta',
     icsr2026CodeText: 'ICSR2026 se compromete a proporcionar un entorno respetuoso, inclusivo y acogedor para todos los participantes. Mantenemos una política de tolerancia cero para el acoso y el comportamiento inapropiado. Se espera que todos los asistentes se traten con respeto, den la bienvenida a diversas perspectivas y se abstengan de fotografía o grabación no autorizadas.',
+    icsr2026CodeContact: '<strong>¿Preguntas o inquietudes?</strong> Contáctenos en <a href="mailto:info@shellfish-society.org" style="color: var(--primary-blue);">info@shellfish-society.org</a>',
 
     // ICSR2026 - Modal de Lista de Correo
     icsr2026ModalCloseAriaLabel: 'Cerrar modal de lista de correo',
     icsr2026ModalTitle: 'Únase a Nuestra Lista de Correo',
     icsr2026ModalSubtitle: 'Manténgase actualizado sobre el registro de ICSR2026, envío de resúmenes y detalles de la conferencia.',
+    icsr2026ModalFirstName: 'Nombre',
+    icsr2026ModalLastName: 'Apellido',
+    icsr2026ModalEmail: 'Correo Electrónico',
+    icsr2026ModalOrganization: 'Organización',
+    icsr2026ModalNote: 'Nota (Opcional)',
+    icsr2026ModalCancel: 'Cancelar',
+    icsr2026ModalSubmit: 'Unirse a la Lista de Correo',
+    icsr2026ModalSuccess: '✓ ¡Éxito!',
+    icsr2026ModalSuccessText: 'Gracias por unirse a nuestra lista de correo. Le mantendremos informado sobre ICSR2026.',
+    icsr2026ModalClose: 'Cerrar',
     icsr2026ModalErrorMessage: 'Hubo un error al enviar su información. Por favor intente nuevamente o contáctenos directamente en info@shellfish-society.org',
 
     // ========== PÁGINA GALERÍA ==========
@@ -2568,6 +2642,7 @@ const translations = {
     icsr2026OverviewText1: 'La Conférence Internationale sur la Restauration des Mollusques 2026 réunira la communauté mondiale de restauration pendant quatre jours de recherche de pointe, d\'ateliers pratiques et de réseautage inestimable avec des praticiens de la restauration du monde entier.',
     icsr2026OverviewText2: 'Située dans la spectaculaire région de Puget Sound, ICSR2026 explorera l\'intersection du savoir écologique traditionnel, de la science moderne de restauration et de la conservation communautaire.',
     icsr2026MailingListCTA: 'Rejoindre la Liste de Diffusion pour les Mises à Jour',
+    icsr2026JoinMailingList: 'Rejoindre la Liste de Diffusion pour les Mises à Jour',
 
     // ICSR2026 - Dates Importantes
     icsr2026DatesHeading: 'Dates Importantes',
@@ -2583,6 +2658,7 @@ const translations = {
     icsr2026InfoTBA: 'Informations à Venir',
 
     // ICSR2026 - À Quoi S\'Attendre
+    icsr2026WhatToExpect: 'À Quoi S\'Attendre',
     icsr2026ExpectHeading: 'À Quoi S\'Attendre',
     icsr2026ExpectResearch: 'Recherche de Pointe',
     icsr2026ExpectResearchDesc: 'Présentations orales et conférences éclair sur la dynamique des huîtres, le suivi des habitats, la restauration urbaine, les interactions des espèces, les structures récifales et l\'adaptation au climat',
@@ -2593,21 +2669,31 @@ const translations = {
     icsr2026ExpectNetworking: 'Réseautage',
     icsr2026ExpectNetworkingDesc: 'Réception de bienvenue, sessions de posters, banquet de conférence, réunions de réseaux régionaux et rassemblements informels tout au long de la semaine',
 
+    // ICSR2026 - Sessions Planifiées
+    icsr2026SessionsHeading: 'Sessions et Thèmes Planifiés',
+    icsr2026SessionsIntro: 'La programmation de la conférence est en cours d\'élaboration. Les sessions planifiées comprennent:',
+
     // ICSR2026 - Lieu
     icsr2026VenueHeading: 'Lieu de Conférence sur le Territoire de la Tribu Squaxin Island',
     icsr2026VenueText1: 'ICSR2026 se tiendra au Little Creek Resort and Conference Center, exploité par la Tribu Squaxin Island à Shelton, Washington. Le territoire ancestral du peuple Squaxin Island comprend une grande partie du sud de Puget Sound, et ils ont été gestionnaires des ressources de mollusques pendant des milliers d\'années, maintenant de profondes connexions culturelles et spirituelles avec les palourdes, les huîtres et autres mollusques.',
     icsr2026VenueText2: 'Aujourd\'hui, la Tribu continue cette tradition par la gestion active des mollusques, les programmes de restauration et les opérations d\'aquaculture, intégrant le savoir écologique traditionnel avec la science de conservation moderne. ICSR2026 offrira des opportunités uniques d\'apprendre des praticiens de la restauration tribaux et de découvrir les approches autochtones de la gérance des mollusques.',
 
     // ICSR2026 - Pourquoi Puget Sound
+    icsr2026WhyPugetSound: 'Pourquoi Puget Sound?',
     icsr2026WhyHeading: 'Pourquoi Puget Sound?',
+    icsr2026WhyPugetSoundIntro: 'Puget Sound est un point chaud mondial pour l\'innovation en restauration des mollusques<br>avec de profondes connexions culturelles aux mollusques:',
     icsr2026WhyIntro: 'Puget Sound est un point chaud mondial pour l\'innovation en restauration des mollusques avec de profondes connexions culturelles aux mollusques:',
+    icsr2026WhyDiverseSpecies: '🌊 Espèces Diverses',
     icsr2026WhySpecies: 'Espèces Diverses',
+    icsr2026WhyDiverseSpeciesDesc: 'Habitat des huîtres Olympia indigènes, huîtres du Pacifique, palourdes géoduck, palourdes Manila et de nombreuses autres espèces de mollusques.',
     icsr2026WhySpeciesDesc: 'Habitat des huîtres Olympia indigènes, huîtres du Pacifique, palourdes géoduck, palourdes Manila et de nombreuses autres espèces de mollusques.',
     icsr2026WhyResearch: 'Excellence en Recherche',
     icsr2026WhyResearchDesc: 'Universités et institutions de recherche de premier plan faisant progresser la science des mollusques et les techniques de restauration.',
     icsr2026WhyTribal: 'Leadership Tribal',
     icsr2026WhyTribalDesc: 'Tribus Coast Salish dirigeant des programmes innovants de restauration ancrés dans le savoir traditionnel.',
+    icsr2026WhyActiveRestoration: '🦪 Restauration Active',
     icsr2026WhyRestoration: 'Restauration Active',
+    icsr2026WhyActiveRestorationDesc: 'Des dizaines de projets de restauration en cours abordant la qualité de l\'eau, la perte d\'habitat et le changement climatique.',
     icsr2026WhyRestorationDesc: 'Des dizaines de projets de restauration en cours abordant la qualité de l\'eau, la perte d\'habitat et le changement climatique.',
     icsr2026WhyPolicy: 'Innovation Politique',
     icsr2026WhyPolicyDesc: 'Politiques progressistes de gestion et de restauration des mollusques servant de modèles pour d\'autres régions.',
@@ -2615,9 +2701,16 @@ const translations = {
     icsr2026WhyEcosystemDesc: 'Approches holistiques intégrant la restauration des mollusques avec la récupération plus large de l\'écosystème côtier.',
 
     // ICSR2026 - Participation Attendue
+    icsr2026ExpectedAttendance: 'Participation Attendue',
     icsr2026AttendanceHeading: 'Participation Attendue',
+    icsr2026ExpectedParticipants: '350+',
+    icsr2026ExpectedCountries: '25+',
+    icsr2026ExpectedPresentations: '150+',
+    icsr2026ParticipantsLabel: 'Participants',
     icsr2026Participants: 'Participants',
+    icsr2026CountriesLabel: 'Pays',
     icsr2026Countries: 'Pays',
+    icsr2026PresentationsLabel: 'Présentations',
     icsr2026Presentations: 'Présentations',
 
     // ICSR2026 - Inscription et Parrainage
@@ -2631,15 +2724,33 @@ const translations = {
     // ICSR2026 - Sponsors
     icsr2026SponsorsHeading: 'Sponsors de la Conférence',
     icsr2026SponsorsIntro: 'Nous remercions chaleureusement nos sponsors qui rendent ICSR2026 possible par leur généreux soutien.',
+    icsr2026SponsorPSRF: 'Puget Sound Restoration Fund',
+    icsr2026HostOrganization: 'Organisation Hôte',
+    icsr2026SponsorTNC: 'The Nature Conservancy - California',
+    icsr2026SponsorLevel: 'Sponsor $5,000',
+    icsr2026SponsorTNCWA: 'The Nature Conservancy - Washington',
+    icsr2026SponsorLevelWA: 'Sponsor $2,000',
 
     // ICSR2026 - Code de Conduite
+    icsr2026CodeOfConduct: 'Code de Conduite',
     icsr2026CodeHeading: 'Code de Conduite',
     icsr2026CodeText: 'ICSR2026 s\'engage à fournir un environnement respectueux, inclusif et accueillant pour tous les participants. Nous maintenons une politique de tolérance zéro pour le harcèlement et les comportements inappropriés. Tous les participants sont tenus de se traiter avec respect, d\'accueillir diverses perspectives et de s\'abstenir de photographie ou enregistrement non autorisés.',
+    icsr2026CodeContact: '<strong>Questions ou préoccupations?</strong> Contactez-nous à <a href="mailto:info@shellfish-society.org" style="color: var(--primary-blue);">info@shellfish-society.org</a>',
 
     // ICSR2026 - Modal Liste de Diffusion
     icsr2026ModalCloseAriaLabel: 'Fermer modal liste de diffusion',
     icsr2026ModalTitle: 'Rejoignez Notre Liste de Diffusion',
     icsr2026ModalSubtitle: 'Restez informé sur l\'inscription à ICSR2026, les soumissions de résumés et les détails de la conférence.',
+    icsr2026ModalFirstName: 'Prénom',
+    icsr2026ModalLastName: 'Nom de Famille',
+    icsr2026ModalEmail: 'Email',
+    icsr2026ModalOrganization: 'Organisation',
+    icsr2026ModalNote: 'Note (Optionnel)',
+    icsr2026ModalCancel: 'Annuler',
+    icsr2026ModalSubmit: 'Rejoindre la Liste de Diffusion',
+    icsr2026ModalSuccess: '✓ Succès!',
+    icsr2026ModalSuccessText: 'Merci de vous être joint à notre liste de diffusion. Nous vous tiendrons informé sur ICSR2026.',
+    icsr2026ModalClose: 'Fermer',
     icsr2026ModalErrorMessage: 'Une erreur s\'est produite lors de la soumission de vos informations. Veuillez réessayer ou nous contacter directement à info@shellfish-society.org',
 
     // ========== PAGE GALERIE ==========
