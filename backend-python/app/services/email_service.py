@@ -1,8 +1,9 @@
 """
 Email service for sending magic link authentication emails.
-Uses aiosmtplib for async email sending.
+Supports both SMTP (Gmail) and AWS SES.
 """
 import logging
+import os
 from typing import Optional
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -14,15 +15,27 @@ logger = logging.getLogger(__name__)
 
 
 class EmailService:
-    """Service for sending emails via SMTP."""
+    """Service for sending emails via SMTP or AWS SES."""
 
     def __init__(self):
+        # Email service selection (smtp or ses)
+        self.email_service = os.getenv("EMAIL_SERVICE", "smtp").lower()
+
+        # SMTP settings
         self.smtp_host = settings.SMTP_HOST
         self.smtp_port = settings.SMTP_PORT
         self.smtp_user = settings.SMTP_USER
         self.smtp_password = settings.SMTP_PASSWORD
         self.from_email = settings.SMTP_FROM_EMAIL
         self.from_name = settings.SMTP_FROM_NAME
+
+        # AWS SES settings
+        self.ses_from_email = os.getenv("SES_FROM_EMAIL", "noreply@shellfish-society.org")
+        self.aws_region = os.getenv("AWS_SES_REGION", "us-east-1")
+
+        logger.info(f"Email service initialized with: {self.email_service}")
+        if self.email_service == "ses":
+            logger.info(f"Using AWS SES with from_email: {self.ses_from_email}")
 
     async def send_email(
         self,
@@ -32,7 +45,7 @@ class EmailService:
         text_content: Optional[str] = None,
     ) -> bool:
         """
-        Send an email via SMTP.
+        Send an email via SMTP or AWS SES (based on EMAIL_SERVICE env var).
 
         Args:
             to_email: Recipient email address
@@ -43,6 +56,19 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
+        if self.email_service == "ses":
+            return await self._send_via_ses(to_email, subject, html_content, text_content)
+        else:
+            return await self._send_via_smtp(to_email, subject, html_content, text_content)
+
+    async def _send_via_smtp(
+        self,
+        to_email: str,
+        subject: str,
+        html_content: str,
+        text_content: Optional[str] = None,
+    ) -> bool:
+        """Send email via SMTP (Gmail)."""
         try:
             # Create message
             message = MIMEMultipart("alternative")
@@ -69,11 +95,55 @@ class EmailService:
                 start_tls=True,
             )
 
-            logger.info(f"Email sent successfully to {to_email}")
+            logger.info(f"Email sent successfully via SMTP to {to_email}")
             return True
 
         except Exception as e:
-            logger.error(f"Failed to send email to {to_email}: {str(e)}")
+            logger.error(f"Failed to send email via SMTP to {to_email}: {str(e)}")
+            return False
+
+    async def _send_via_ses(
+        self,
+        to_email: str,
+        subject: str,
+        html_content: str,
+        text_content: Optional[str] = None,
+    ) -> bool:
+        """Send email via AWS SES."""
+        try:
+            import boto3
+            from botocore.exceptions import ClientError
+
+            # Create SES client
+            ses_client = boto3.client('ses', region_name=self.aws_region)
+
+            # Prepare email
+            email_message = {
+                'Subject': {'Data': subject, 'Charset': 'UTF-8'},
+                'Body': {}
+            }
+
+            if html_content:
+                email_message['Body']['Html'] = {'Data': html_content, 'Charset': 'UTF-8'}
+
+            if text_content:
+                email_message['Body']['Text'] = {'Data': text_content, 'Charset': 'UTF-8'}
+
+            # Send email
+            response = ses_client.send_email(
+                Source=f"{self.from_name} <{self.ses_from_email}>",
+                Destination={'ToAddresses': [to_email]},
+                Message=email_message
+            )
+
+            logger.info(f"Email sent successfully via SES to {to_email}. MessageId: {response['MessageId']}")
+            return True
+
+        except ClientError as e:
+            logger.error(f"AWS SES error sending to {to_email}: {e.response['Error']['Message']}")
+            return False
+        except Exception as e:
+            logger.error(f"Failed to send email via SES to {to_email}: {str(e)}")
             return False
 
     async def send_magic_link(self, to_email: str, magic_link: str) -> bool:
