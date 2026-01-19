@@ -114,7 +114,7 @@ class AuthService:
         db.refresh(user_session)
 
         # Build magic link URL
-        magic_link_url = f"{settings.MAGIC_LINK_BASE_URL}/auth/verify?token={magic_link_token}"
+        magic_link_url = f"{settings.MAGIC_LINK_BASE_URL}/member/verify.html?token={magic_link_token}"
 
         logger.info(f"Created magic link session for {email}")
         return user_session, magic_link_url
