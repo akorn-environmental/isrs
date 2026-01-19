@@ -128,7 +128,11 @@ const MemberAuth = (() => {
       throw new Error('Not authenticated');
     }
 
-    return apiCall(`/me?sessionToken=${sessionToken}`);
+    return apiCall('/me', {
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`
+      }
+    });
   }
 
   /**

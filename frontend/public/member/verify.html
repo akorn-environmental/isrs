@@ -94,12 +94,13 @@
         console.log('Fetching user profile...');
         const profileResponse = await MemberAuth.getProfile();
 
-        if (!profileResponse.success) {
+        if (!profileResponse || !profileResponse.email) {
           throw new Error('Failed to load profile');
         }
 
         // Step 3: Redirect based on setup status
-        const requiresSetup = profileResponse.data.requiresFirstTimeSetup;
+        // Note: Backend returns profile data directly, not wrapped in {success, data}
+        const requiresSetup = profileResponse.requiresFirstTimeSetup;
 
         console.log('Setup required:', requiresSetup);
 
