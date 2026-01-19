@@ -2,7 +2,7 @@
 Asset model for file management (images, documents, videos).
 """
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -31,6 +31,15 @@ class Asset(Base, TimestampMixin):
     )
     tags = Column(String(500), comment="Comma-separated tags for searching")
     description = Column(Text, comment="Asset description or notes")
+
+    # Focal point for responsive image cropping (percentage 0-100)
+    focal_point_x = Column(Float, nullable=True, comment="Focal point X coordinate (0-100, left to right)")
+    focal_point_y = Column(Float, nullable=True, comment="Focal point Y coordinate (0-100, top to bottom)")
+
+    # Accessibility and display
+    alt_text = Column(Text, nullable=True, comment="Alt text for accessibility")
+    caption = Column(Text, nullable=True, comment="Caption for display")
+
     uploaded_by = Column(UUID(as_uuid=True), ForeignKey("attendee_profiles.id"), nullable=False, index=True)
     uploaded_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 

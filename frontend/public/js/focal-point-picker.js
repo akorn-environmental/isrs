@@ -1,197 +1,336 @@
 /**
- * Focal Point Picker
- * Vanilla JS implementation converted from akorn's React FocalPointPicker
+ * Focal Point Picker Component
+ *
+ * Interactive UI for setting focal point coordinates on images for responsive cropping.
+ * Coordinates are stored as percentages (0-100) from top-left corner.
  *
  * Usage:
- * const picker = new FocalPointPicker({
- *   photoId: 'uuid-here',
- *   photoUrl: '/uploads/photo.jpg',
- *   initialX: 50,
- *   initialY: 50,
- *   altText: 'Photo description',
- *   onSave: (x, y) => { console.log('Saved:', x, y); }
- * });
- * picker.open();
+ *   const picker = new FocalPointPicker(imageUrl, currentX, currentY, onSave);
+ *   picker.show();
  */
 
 class FocalPointPicker {
-  constructor(options) {
-    this.photoId = options.photoId;
-    this.photoUrl = options.photoUrl;
-    this.focalX = options.initialX || 50;
-    this.focalY = options.initialY || 50;
-    this.onSave = options.onSave || (() => {});
-    this.altText = options.altText || '';
-
-    this.overlay = null;
+  constructor(imageUrl, initialX = 50, initialY = 50, onSave) {
+    this.imageUrl = imageUrl;
+    this.focalX = initialX;
+    this.focalY = initialY;
+    this.onSave = onSave;
+    this.modal = null;
+    this.canvas = null;
+    this.ctx = null;
     this.image = null;
-    this.crosshair = null;
+    this.isDragging = false;
   }
 
-  open() {
+  show() {
     this.createModal();
-    document.body.style.overflow = 'hidden';
-  }
-
-  close() {
-    if (this.overlay) {
-      this.overlay.remove();
-      this.overlay = null;
-    }
-    document.body.style.overflow = '';
+    this.loadImage();
   }
 
   createModal() {
-    // Create overlay
-    this.overlay = document.createElement('div');
-    this.overlay.className = 'focal-point-overlay';
-    this.overlay.innerHTML = `
-      <div class="focal-point-modal">
+    // Create modal overlay
+    this.modal = document.createElement('div');
+    this.modal.className = 'focal-point-modal';
+    this.modal.innerHTML = \`
+      <div class="focal-point-modal-content">
         <div class="focal-point-header">
-          <div>
-            <h2>Set Focal Point</h2>
-            <p class="focal-point-subtitle">Click on the image to set the focal point for responsive cropping</p>
-          </div>
-          <button class="focal-point-close" aria-label="Close">&times;</button>
+          <h2>Set Focal Point</h2>
+          <button class="focal-point-close">&times;</button>
         </div>
+
         <div class="focal-point-body">
-          <p class="focal-point-instructions">
-            <strong>Tip:</strong> Click on the most important part of your image (e.g., person's face, main subject).
-            This point will stay visible when the image is cropped for different screen sizes.
-          </p>
-          <div class="focal-point-image-container">
-            <img class="focal-point-image" src="${this.photoUrl}" alt="${this.altText}">
-            <div class="focal-point-crosshair">
-              <div class="crosshair-v"></div>
-              <div class="crosshair-h"></div>
-              <div class="crosshair-dot"></div>
-            </div>
+          <div class="focal-point-instructions">
+            <p>Click or drag on the image to set the focal point. This determines how the image crops on different screen sizes.</p>
           </div>
-          <div class="focal-point-coords">
-            <div class="coord-box">
-              <span class="coord-label">X:</span>
-              <strong id="focalX">${this.focalX.toFixed(1)}</strong>%
-            </div>
-            <div class="coord-box">
-              <span class="coord-label">Y:</span>
-              <strong id="focalY">${this.focalY.toFixed(1)}</strong>%
-            </div>
+
+          <div class="focal-point-canvas-container">
+            <canvas id="focalPointCanvas"></canvas>
+            <div class="focal-point-crosshair"></div>
           </div>
-        </div>
-        <div class="focal-point-footer">
-          <button class="btn btn-secondary" id="resetBtn">
-            <span>↺</span> Reset to Center
-          </button>
-          <div class="focal-point-actions">
-            <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
-            <button class="btn btn-primary" id="saveBtn">
-              <span>✓</span> Save Focal Point
+
+          <div class="focal-point-coordinates">
+            <div class="coord-group">
+              <label>X:</label>
+              <input type="number" id="focalX" min="0" max="100" step="0.1" value="\${this.focalX}">
+              <span>%</span>
+            </div>
+            <div class="coord-group">
+              <label>Y:</label>
+              <input type="number" id="focalY" min="0" max="100" step="0.1" value="\${this.focalY}">
+              <span>%</span>
+            </div>
+            <button class="btn-center" title="Center focal point">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <circle cx="10" cy="10" r="2"/>
+                <circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1"/>
+                <path d="M10 0 L10 4 M10 16 L10 20 M0 10 L4 10 M16 10 L20 10" stroke="currentColor" stroke-width="1"/>
+              </svg>
             </button>
           </div>
+
+          <div class="focal-point-preview">
+            <h3>Crop Previews</h3>
+            <div class="preview-grid">
+              <div class="preview-item">
+                <div class="preview-label">Square (1:1)</div>
+                <div class="preview-box preview-square"></div>
+              </div>
+              <div class="preview-item">
+                <div class="preview-label">Landscape (16:9)</div>
+                <div class="preview-box preview-landscape"></div>
+              </div>
+              <div class="preview-item">
+                <div class="preview-label">Portrait (4:5)</div>
+                <div class="preview-box preview-portrait"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="focal-point-footer">
+          <button class="btn btn-secondary focal-point-cancel">Cancel</button>
+          <button class="btn btn-primary focal-point-save">Save Focal Point</button>
         </div>
       </div>
-    `;
+    \`;
 
-    document.body.appendChild(this.overlay);
+    document.body.appendChild(this.modal);
 
-    // Get DOM elements
-    this.image = this.overlay.querySelector('.focal-point-image');
-    this.crosshair = this.overlay.querySelector('.focal-point-crosshair');
+    // Get elements
+    this.canvas = document.getElementById('focalPointCanvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.crosshair = this.modal.querySelector('.focal-point-crosshair');
+    this.inputX = document.getElementById('focalX');
+    this.inputY = document.getElementById('focalY');
 
-    // Attach event listeners
-    this.attachEvents();
+    // Add event listeners
+    this.modal.querySelector('.focal-point-close').addEventListener('click', () => this.close());
+    this.modal.querySelector('.focal-point-cancel').addEventListener('click', () => this.close());
+    this.modal.querySelector('.focal-point-save').addEventListener('click', () => this.save());
+    this.modal.querySelector('.btn-center').addEventListener('click', () => this.centerFocalPoint());
 
-    // Set initial position
-    this.updateCrosshair();
+    this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+    this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+    this.canvas.addEventListener('mouseup', () => this.handleMouseUp());
+    this.canvas.addEventListener('mouseleave', () => this.handleMouseUp());
+
+    this.inputX.addEventListener('input', (e) => this.handleInputChange(e, 'x'));
+    this.inputY.addEventListener('input', (e) => this.handleInputChange(e, 'y'));
+
+    // Close on overlay click
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) this.close();
+    });
   }
 
-  attachEvents() {
-    // Close button
-    this.overlay.querySelector('.focal-point-close').addEventListener('click', () => this.close());
-
-    // Image click
-    this.image.addEventListener('click', (e) => this.handleImageClick(e));
-
-    // Reset button
-    this.overlay.querySelector('#resetBtn').addEventListener('click', () => {
-      this.focalX = 50;
-      this.focalY = 50;
-      this.updateCrosshair();
-    });
-
-    // Cancel button
-    this.overlay.querySelector('#cancelBtn').addEventListener('click', () => this.close());
-
-    // Save button
-    this.overlay.querySelector('#saveBtn').addEventListener('click', () => this.save());
-
-    // Escape key
-    const escapeHandler = (e) => {
-      if (e.key === 'Escape') {
-        this.close();
-        document.removeEventListener('keydown', escapeHandler);
-      }
+  loadImage() {
+    this.image = new Image();
+    this.image.crossOrigin = 'anonymous';
+    this.image.onload = () => {
+      this.setupCanvas();
+      this.draw();
+      this.updatePreviews();
     };
-    document.addEventListener('keydown', escapeHandler);
-
-    // Backdrop click
-    this.overlay.addEventListener('click', (e) => {
-      if (e.target === this.overlay) this.close();
-    });
+    this.image.onerror = () => {
+      alert('Failed to load image. Please try again.');
+      this.close();
+    };
+    this.image.src = this.imageUrl;
   }
 
-  handleImageClick(e) {
-    e.stopPropagation();
+  setupCanvas() {
+    const container = this.modal.querySelector('.focal-point-canvas-container');
+    const maxWidth = Math.min(600, container.clientWidth - 40);
+    const maxHeight = 400;
 
-    if (!this.image) {
-      console.log('❌ No image ref');
-      return;
+    const scale = Math.min(maxWidth / this.image.width, maxHeight / this.image.height);
+    this.canvas.width = this.image.width * scale;
+    this.canvas.height = this.image.height * scale;
+  }
+
+  draw() {
+    // Clear canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Draw image
+    this.ctx.drawImage(this.image, 0, 0, this.canvas.width, this.canvas.height);
+
+    // Draw grid overlay
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    this.ctx.lineWidth = 1;
+
+    // Vertical lines (rule of thirds)
+    for (let i = 1; i <= 2; i++) {
+      const x = (this.canvas.width / 3) * i;
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, this.canvas.height);
+      this.ctx.stroke();
     }
 
-    const rect = this.image.getBoundingClientRect();
+    // Horizontal lines (rule of thirds)
+    for (let i = 1; i <= 2; i++) {
+      const y = (this.canvas.height / 3) * i;
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(this.canvas.width, y);
+      this.ctx.stroke();
+    }
 
-    // Calculate click position relative to image
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    // Draw focal point
+    const x = (this.focalX / 100) * this.canvas.width;
+    const y = (this.focalY / 100) * this.canvas.height;
 
-    // Convert to percentage
-    const percentX = (clickX / rect.width) * 100;
-    const percentY = (clickY / rect.height) * 100;
+    // Outer circle (white)
+    this.ctx.strokeStyle = '#ffffff';
+    this.ctx.lineWidth = 3;
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, 20, 0, Math.PI * 2);
+    this.ctx.stroke();
 
-    this.focalX = Math.max(0, Math.min(100, percentX));
-    this.focalY = Math.max(0, Math.min(100, percentY));
+    // Inner circle (blue)
+    this.ctx.strokeStyle = '#2980b9';
+    this.ctx.lineWidth = 2;
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, 15, 0, Math.PI * 2);
+    this.ctx.stroke();
 
-    console.log('🎯 Focal point set:', { x: this.focalX.toFixed(1), y: this.focalY.toFixed(1) });
-    this.updateCrosshair();
+    // Center dot
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+    this.ctx.fill();
+
+    // Crosshair lines
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    this.ctx.lineWidth = 1;
+
+    // Horizontal crosshair
+    this.ctx.beginPath();
+    this.ctx.moveTo(0, y);
+    this.ctx.lineTo(this.canvas.width, y);
+    this.ctx.stroke();
+
+    // Vertical crosshair
+    this.ctx.beginPath();
+    this.ctx.moveTo(x, 0);
+    this.ctx.lineTo(x, this.canvas.height);
+    this.ctx.stroke();
   }
 
-  updateCrosshair() {
-    this.crosshair.style.left = `${this.focalX}%`;
-    this.crosshair.style.top = `${this.focalY}%`;
-
-    document.getElementById('focalX').textContent = this.focalX.toFixed(1);
-    document.getElementById('focalY').textContent = this.focalY.toFixed(1);
+  handleMouseDown(e) {
+    this.isDragging = true;
+    this.updateFocalPoint(e);
   }
 
-  async save() {
-    const saveBtn = this.overlay.querySelector('#saveBtn');
-    const originalText = saveBtn.innerHTML;
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = '<span class="spinner"></span> Saving...';
+  handleMouseMove(e) {
+    if (this.isDragging) {
+      this.updateFocalPoint(e);
+    }
+  }
 
-    try {
-      await this.onSave(this.focalX, this.focalY);
-      this.close();
-    } catch (error) {
-      console.error('Failed to save focal point:', error);
-      alert('Failed to save focal point: ' + error.message);
-      saveBtn.disabled = false;
-      saveBtn.innerHTML = originalText;
+  handleMouseUp() {
+    this.isDragging = false;
+  }
+
+  updateFocalPoint(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    this.focalX = Math.max(0, Math.min(100, (x / this.canvas.width) * 100));
+    this.focalY = Math.max(0, Math.min(100, (y / this.canvas.height) * 100));
+
+    this.inputX.value = this.focalX.toFixed(1);
+    this.inputY.value = this.focalY.toFixed(1);
+
+    this.draw();
+    this.updatePreviews();
+  }
+
+  handleInputChange(e, axis) {
+    const value = parseFloat(e.target.value);
+    if (isNaN(value)) return;
+
+    if (axis === 'x') {
+      this.focalX = Math.max(0, Math.min(100, value));
+    } else {
+      this.focalY = Math.max(0, Math.min(100, value));
+    }
+
+    this.draw();
+    this.updatePreviews();
+  }
+
+  centerFocalPoint() {
+    this.focalX = 50;
+    this.focalY = 50;
+    this.inputX.value = '50.0';
+    this.inputY.value = '50.0';
+    this.draw();
+    this.updatePreviews();
+  }
+
+  updatePreviews() {
+    const previews = [
+      { selector: '.preview-square', ratio: 1 },
+      { selector: '.preview-landscape', ratio: 16/9 },
+      { selector: '.preview-portrait', ratio: 4/5 }
+    ];
+
+    previews.forEach(({ selector, ratio }) => {
+      const preview = this.modal.querySelector(selector);
+      const imageRatio = this.image.width / this.image.height;
+
+      let cropWidth, cropHeight, offsetX, offsetY;
+
+      if (imageRatio > ratio) {
+        // Image is wider - crop sides
+        cropHeight = this.image.height;
+        cropWidth = cropHeight * ratio;
+        offsetX = Math.max(0, Math.min(
+          this.image.width - cropWidth,
+          (this.focalX / 100) * this.image.width - cropWidth / 2
+        ));
+        offsetY = 0;
+      } else {
+        // Image is taller - crop top/bottom
+        cropWidth = this.image.width;
+        cropHeight = cropWidth / ratio;
+        offsetX = 0;
+        offsetY = Math.max(0, Math.min(
+          this.image.height - cropHeight,
+          (this.focalY / 100) * this.image.height - cropHeight / 2
+        ));
+      }
+
+      const posX = -(offsetX / this.image.width) * 100;
+      const posY = -(offsetY / this.image.height) * 100;
+      const scaleX = (this.image.width / cropWidth) * 100;
+      const scaleY = (this.image.height / cropHeight) * 100;
+
+      preview.style.backgroundImage = \`url(\${this.imageUrl})\`;
+      preview.style.backgroundPosition = \`\${posX}% \${posY}%\`;
+      preview.style.backgroundSize = \`\${scaleX}% \${scaleY}%\`;
+    });
+  }
+
+  save() {
+    if (this.onSave) {
+      this.onSave({
+        focal_point_x: parseFloat(this.focalX.toFixed(2)),
+        focal_point_y: parseFloat(this.focalY.toFixed(2))
+      });
+    }
+    this.close();
+  }
+
+  close() {
+    if (this.modal) {
+      this.modal.remove();
     }
   }
 }
 
 // Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FocalPointPicker;
-}
+window.FocalPointPicker = FocalPointPicker;

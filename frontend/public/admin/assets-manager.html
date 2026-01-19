@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asset Manager - ISRS Admin</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/focal-point-picker.css">
   <script src="/js/theme.js"></script>
+  <script src="/js/focal-point-picker.js"></script>
   <style>
     .upload-section {
       background: linear-gradient(135deg, #1e5a8e, #2980b9);
@@ -698,6 +700,9 @@
               <button class="btn-view" onclick="viewAsset('${asset.s3_url}')">
                 👁️ View
               </button>
+              ${isImage ? `<button class="btn-focal" onclick="setFocalPoint(${asset.id}, '${asset.s3_url}', ${asset.focal_point_x || 50}, ${asset.focal_point_y || 50})" style="background: #2980b9; color: white; flex: 1;">
+                🎯 Focal
+              </button>` : ''}
               <button class="btn-delete" onclick="deleteAsset(${asset.id})">
                 🗑️ Delete
               </button>
@@ -737,6 +742,48 @@
       } catch (error) {
         console.error('Delete error:', error);
         showToast('Failed to delete asset', 'error');
+      }
+    }
+
+    // Set focal point
+    function setFocalPoint(assetId, imageUrl, currentX, currentY) {
+      const picker = new FocalPointPicker(
+        imageUrl,
+        currentX || 50,
+        currentY || 50,
+        async (focalData) => {
+          await saveFocalPoint(assetId, focalData);
+        }
+      );
+      picker.show();
+    }
+
+    // Save focal point to server
+    async function saveFocalPoint(assetId, focalData) {
+      try {
+        const token = getAuthToken();
+        const formData = new FormData();
+        formData.append('focal_point_x', focalData.focal_point_x);
+        formData.append('focal_point_y', focalData.focal_point_y);
+
+        const response = await fetch(`${API_BASE}/api/assets/${assetId}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save focal point');
+        }
+
+        showToast('Focal point saved successfully!', 'success');
+        await loadAssets(); // Reload to show updated focal point
+
+      } catch (error) {
+        console.error('Save focal point error:', error);
+        showToast('Failed to save focal point', 'error');
       }
     }
 

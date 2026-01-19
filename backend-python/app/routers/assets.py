@@ -198,6 +198,10 @@ async def list_assets(
                 "category": asset.category,
                 "tags": asset.tags,
                 "description": asset.description,
+                "focal_point_x": asset.focal_point_x,
+                "focal_point_y": asset.focal_point_y,
+                "alt_text": asset.alt_text,
+                "caption": asset.caption,
                 "uploaded_by": asset.uploaded_by,
                 "uploaded_at": asset.uploaded_at.isoformat(),
             }
@@ -232,6 +236,10 @@ async def get_asset(
             "category": asset.category,
             "tags": asset.tags,
             "description": asset.description,
+            "focal_point_x": asset.focal_point_x,
+            "focal_point_y": asset.focal_point_y,
+            "alt_text": asset.alt_text,
+            "caption": asset.caption,
             "uploaded_by": asset.uploaded_by,
             "uploaded_at": asset.uploaded_at.isoformat(),
         }
@@ -244,11 +252,15 @@ async def update_asset(
     category: Optional[str] = Form(None),
     tags: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
+    focal_point_x: Optional[float] = Form(None),
+    focal_point_y: Optional[float] = Form(None),
+    alt_text: Optional[str] = Form(None),
+    caption: Optional[str] = Form(None),
     db: Session = Depends(get_db),
     current_user: AttendeeProfile = Depends(get_current_user),
 ):
     """
-    Update asset metadata.
+    Update asset metadata including focal points and accessibility fields.
     """
     asset = db.query(Asset).filter(Asset.id == asset_id).first()
 
@@ -267,6 +279,24 @@ async def update_asset(
     if description is not None:
         asset.description = description
 
+    # Update focal point coordinates (validate 0-100 range)
+    if focal_point_x is not None:
+        if not (0 <= focal_point_x <= 100):
+            raise HTTPException(status_code=400, detail="focal_point_x must be between 0 and 100")
+        asset.focal_point_x = focal_point_x
+
+    if focal_point_y is not None:
+        if not (0 <= focal_point_y <= 100):
+            raise HTTPException(status_code=400, detail="focal_point_y must be between 0 and 100")
+        asset.focal_point_y = focal_point_y
+
+    # Update accessibility fields
+    if alt_text is not None:
+        asset.alt_text = alt_text
+
+    if caption is not None:
+        asset.caption = caption
+
     db.commit()
     db.refresh(asset)
 
@@ -278,6 +308,10 @@ async def update_asset(
             "category": asset.category,
             "tags": asset.tags,
             "description": asset.description,
+            "focal_point_x": asset.focal_point_x,
+            "focal_point_y": asset.focal_point_y,
+            "alt_text": asset.alt_text,
+            "caption": asset.caption,
         }
     }
 
