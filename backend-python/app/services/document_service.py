@@ -9,7 +9,7 @@ from datetime import datetime
 import io
 
 # PDF Processing
-import PyPDF2
+import pypdf  # Replaced PyPDF2 - maintained fork with security fixes
 import pdfplumber
 
 # OCR
@@ -43,7 +43,7 @@ class DocumentService:
     @staticmethod
     def extract_pdf_text(file_path: str | Path | BinaryIO) -> Dict[str, Any]:
         """
-        Extract text from PDF using PyPDF2.
+        Extract text from PDF using pypdf.
         Fast and reliable for text-based PDFs.
 
         Args:
@@ -62,7 +62,7 @@ class DocumentService:
                 should_close = False
 
             try:
-                reader = PyPDF2.PdfReader(pdf_file)
+                reader = pypdf.PdfReader(pdf_file)
 
                 # Extract metadata
                 metadata = {
