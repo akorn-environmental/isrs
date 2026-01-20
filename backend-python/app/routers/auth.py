@@ -449,6 +449,13 @@ class UpdateProfileRequest(BaseModel):
     zip_code: Optional[str] = None
     country: Optional[str] = None
     bio: Optional[str] = None
+    research_areas: Optional[str] = None
+    expertise_keywords: Optional[str] = None
+    website: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    orcid: Optional[str] = None
+    directory_opt_in: Optional[bool] = None
+    directory_visible_fields: Optional[dict] = None
     notifications_enabled: Optional[bool] = None
     notification_preferences: Optional[dict] = None
 
