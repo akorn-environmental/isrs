@@ -163,24 +163,46 @@
             <small style="color: var(--text-light);">Optional. Shown in member directory if you choose. Different from your account email.</small>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div class="profile-field">
-              <label id="countryLabel">Country <span style="color: #d32f2f;">*</span></label>
-              <div class="value" data-field="country"></div>
-              <input type="text" name="country" required style="display: none;">
-            </div>
+          <div class="profile-field">
+            <label id="addressLabel">Street Address</label>
+            <div class="value" data-field="address"></div>
+            <input type="text" name="address" placeholder="123 Main Street" style="display: none;">
+          </div>
 
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="profile-field">
               <label id="cityLabel">City</label>
               <div class="value" data-field="city"></div>
               <input type="text" name="city" style="display: none;">
+            </div>
+
+            <div class="profile-field">
+              <label id="stateLabel">State / Province</label>
+              <div class="value" data-field="state"></div>
+              <input type="text" name="state" style="display: none;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="profile-field">
+              <label id="zipLabel">ZIP / Postal Code</label>
+              <div class="value" data-field="zip_code"></div>
+              <input type="text" name="zip_code" id="zipCodeInput" placeholder="12345" style="display: none;">
+              <small style="color: var(--text-light); display: none;" class="edit-only">Enter ZIP to auto-fill city/state</small>
+            </div>
+
+            <div class="profile-field">
+              <label id="countryLabel">Country <span style="color: #d32f2f;">*</span></label>
+              <div class="value" data-field="country"></div>
+              <input type="text" name="country" id="countryInput" required style="display: none;">
             </div>
           </div>
 
           <div class="profile-field">
             <label id="phoneLabel">Phone</label>
             <div class="value" data-field="phone"></div>
-            <input type="tel" name="phone" style="display: none;">
+            <input type="tel" name="phone" id="phoneInput" placeholder="+1 (555) 123-4567" style="display: none;">
+            <small style="color: var(--text-light); display: none;" class="edit-only">Format will be validated based on country</small>
           </div>
         </div>
 
@@ -840,6 +862,60 @@
 
     document.getElementById('directoryOptIn').addEventListener('change', toggleVisibilitySettings);
 
+    // ZIP code lookup - auto-populate city/state
+    let zipLookupTimeout;
+    document.getElementById('zipCodeInput').addEventListener('input', function(e) {
+      clearTimeout(zipLookupTimeout);
+      const zip = e.target.value.trim();
+      const country = document.getElementById('countryInput').value.trim() || 'US';
+
+      // Only lookup if we have at least 5 characters (US ZIP)
+      if (zip.length >= 5) {
+        zipLookupTimeout = setTimeout(async () => {
+          try {
+            // Use Nominatim (OpenStreetMap) geocoding API
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(zip)}&country=${encodeURIComponent(country)}&format=json&limit=1`,
+              {
+                headers: {
+                  'User-Agent': 'ISRS-Member-Portal/1.0'
+                }
+              }
+            );
+
+            if (response.ok) {
+              const data = await response.json();
+              if (data && data.length > 0) {
+                const result = data[0];
+                const addressParts = result.display_name.split(', ');
+
+                // Try to extract city and state
+                // Format varies but usually: Street, City, County, State, ZIP, Country
+                if (addressParts.length >= 3) {
+                  // Get city (usually second or third element)
+                  const city = addressParts[addressParts.length - 4] || addressParts[1];
+                  // Get state (usually second to last before country)
+                  const state = addressParts[addressParts.length - 2];
+
+                  if (city) {
+                    document.querySelector('input[name="city"]').value = city;
+                    document.querySelector('.value[data-field="city"]').textContent = city;
+                  }
+                  if (state) {
+                    document.querySelector('input[name="state"]').value = state;
+                    document.querySelector('.value[data-field="state"]').textContent = state;
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            console.error('ZIP lookup failed:', error);
+            // Silently fail - user can still enter manually
+          }
+        }, 500); // Debounce 500ms
+      }
+    });
+
     // Handle form submission
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -885,9 +961,12 @@
           first_name: form.first_name.value.trim(),
           last_name: form.last_name.value.trim(),
           contact_email: form.contact_email.value.trim(),
-          country: form.country.value.trim(),
-          city: form.city.value.trim(),
           phone: form.phone.value.trim(),
+          address: form.address.value.trim(),
+          city: form.city.value.trim(),
+          state: form.state.value.trim(),
+          zip_code: form.zip_code.value.trim(),
+          country: form.country.value.trim(),
           organization_name: form.organization_name.value.trim(),
           position: form.position.value.trim(),
           department: form.department.value.trim(),

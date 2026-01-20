@@ -63,8 +63,11 @@ class AttendeeProfile(Base, TimestampMixin):
 
     # Contact Details
     phone = Column(String(50))
-    country = Column(String(100))
+    address = Column(String(500))
     city = Column(String(100))
+    state = Column(String(100))
+    zip_code = Column(String(20), index=True)
+    country = Column(String(100))
 
     # Professional Profile
     bio = Column(Text)

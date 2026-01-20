@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 import logging
+import phonenumbers
+from phonenumbers import NumberParseException
 
 from app.database import get_db
 from app.models.conference import AttendeeProfile
@@ -441,8 +443,11 @@ class UpdateProfileRequest(BaseModel):
     position: Optional[str] = None
     department: Optional[str] = None
     phone: Optional[str] = None
-    country: Optional[str] = None
+    address: Optional[str] = None
     city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+    country: Optional[str] = None
     bio: Optional[str] = None
     notifications_enabled: Optional[bool] = None
     notification_preferences: Optional[dict] = None
@@ -464,8 +469,11 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
         "position": current_user.position,
         "department": current_user.department,
         "phone": current_user.phone,
-        "country": current_user.country,
+        "address": current_user.address,
         "city": current_user.city,
+        "state": current_user.state,
+        "zip_code": current_user.zip_code,
+        "country": current_user.country,
         "bio": current_user.bio,
         "email_verified": current_user.email_verified,
         "last_login_at": current_user.last_login_at,
@@ -490,6 +498,31 @@ async def update_current_user_profile(
     try:
         # Update only provided fields
         update_data = profile_data.model_dump(exclude_unset=True)
+
+        # Validate phone number if provided
+        if 'phone' in update_data and update_data['phone']:
+            phone = update_data['phone']
+            country = update_data.get('country') or current_user.country or 'US'
+
+            try:
+                # Parse and validate phone number
+                parsed_number = phonenumbers.parse(phone, country)
+                if phonenumbers.is_valid_number(parsed_number):
+                    # Format phone number to E.164 international format
+                    update_data['phone'] = phonenumbers.format_number(
+                        parsed_number,
+                        phonenumbers.PhoneNumberFormat.E164
+                    )
+                else:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Invalid phone number for country {country}"
+                    )
+            except NumberParseException as e:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid phone number format: {str(e)}"
+                )
 
         for field, value in update_data.items():
             if value is not None:  # Only update non-None values
