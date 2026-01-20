@@ -366,11 +366,11 @@
       try {
         const response = await MemberAuth.getProfile();
 
-        if (!response.success) {
-          throw new Error('Failed to load profile');
-        }
-
-        profileData = response.data;
+        // Backend returns profile data directly (not wrapped in {success, data})
+        profileData = {
+          profile: response,
+          conferenceHistory: [] // TODO: Add conference history endpoint
+        };
         displayProfile();
 
       } catch (error) {
