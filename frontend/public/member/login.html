@@ -13,23 +13,27 @@
 
   <script src="/js/theme.js"></script>
   <script src="/js/analytics.js"></script>
+  <script src="/js/components.js"></script>
   <script src="/js/member-auth.js"></script>
 </head>
 <body>
   <header id="site-header"></header>
 
+  <script>
+    // Load header with language switcher
+    loadHeader();
+  </script>
+
   <main id="main-content">
     <div class="container" style="max-width: 600px; margin: 4rem auto; padding: 2rem;">
       <!-- Login Form -->
       <div id="loginForm" style="text-align: center;">
-        <h1 style="margin-bottom: 1rem;">Member Login</h1>
-        <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem;">
-          Enter your email address and we'll send you a secure login link
-        </p>
+        <h1 id="loginHeading" style="margin-bottom: 1rem;"></h1>
+        <p id="loginSubtitle" style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem;"></p>
 
         <form id="magicLinkForm" style="max-width: 500px; margin: 0 auto;">
           <div class="form-group">
-            <label for="email" style="display: block; text-align: left; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+            <label for="email" id="emailLabel" style="display: block; text-align: left; margin-bottom: 0.5rem; font-weight: 600;"></label>
             <input
               type="email"
               id="email"
@@ -43,27 +47,22 @@
 
           <button
             type="submit"
+            id="submitBtn"
             class="btn btn-primary"
             style="width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem;"
-          >
-            Send Magic Link
-          </button>
+          ></button>
 
           <div id="error" style="display: none; margin-top: 1rem; padding: 1rem; background: #fee; border: 1px solid #fcc; border-radius: 4px; color: #c00;"></div>
         </form>
 
         <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
-          <p style="color: var(--text-light); margin-bottom: 0.5rem;">
-            Don't have an account yet?
-          </p>
+          <p id="noAccountText" style="color: var(--text-light); margin-bottom: 0.5rem;"></p>
           <p style="margin-top: 1rem;">
-            <a href="/member/signup.html" class="btn btn-primary">Create New Account</a>
+            <a href="/member/signup.html" id="createAccountBtn" class="btn btn-primary"></a>
           </p>
-          <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 1.5rem;">
-            Attended a past ICSR conference? You likely already have an account! Just enter the email you used for registration above.
-          </p>
+          <p id="pastAttendeeText" style="font-size: 0.9rem; color: var(--text-light); margin-top: 1.5rem;"></p>
           <p style="margin-top: 1rem;">
-            <a href="/icsr2026.html" class="btn btn-secondary">Learn About ICSR2026</a>
+            <a href="/icsr2026.html" id="learnICSRBtn" class="btn btn-secondary"></a>
           </p>
         </div>
       </div>
@@ -71,15 +70,13 @@
       <!-- Success Message -->
       <div id="successMessage" style="display: none; text-align: center;">
         <div style="font-size: 4rem; color: var(--primary-blue); margin-bottom: 1rem;">✓</div>
-        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Check Your Email!</h2>
-        <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
-          We've sent a secure login link to <strong id="sentEmail"></strong>
+        <h2 id="successHeading" style="color: var(--primary-blue); margin-bottom: 1rem;"></h2>
+        <p id="successText" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+          <span id="magicLinkSentPrefix"></span> <strong id="sentEmail"></strong>
         </p>
-        <p style="color: var(--text-light); font-size: 0.95rem;">
-          Click the link in the email to access your member profile. The link will expire in 15 minutes.
-        </p>
+        <p id="magicLinkInstructions" style="color: var(--text-light); font-size: 0.95rem;"></p>
         <p style="margin-top: 2rem;">
-          <button onclick="showLoginForm()" class="btn btn-secondary">Send Another Link</button>
+          <button onclick="showLoginForm()" id="sendAnotherBtn" class="btn btn-secondary"></button>
         </p>
       </div>
     </div>
@@ -87,8 +84,37 @@
 
   <footer id="site-footer"></footer>
 
-  <script src="/js/components.js"></script>
   <script>
+    // Load footer
+    loadFooter();
+  </script>
+
+  <script>
+    // Update page content with translations
+    function updateLoginPageText() {
+      document.getElementById('loginHeading').textContent = t('memberLogin');
+      document.getElementById('loginSubtitle').textContent = t('loginSubtitle');
+      document.getElementById('emailLabel').textContent = t('emailAddress');
+      document.getElementById('submitBtn').textContent = t('sendMagicLink');
+      document.getElementById('noAccountText').textContent = t('dontHaveAccount');
+      document.getElementById('createAccountBtn').textContent = t('createAccount');
+      document.getElementById('pastAttendeeText').textContent = t('pastAttendeeNote');
+      document.getElementById('learnICSRBtn').textContent = t('learnAboutICSR');
+      document.getElementById('successHeading').textContent = t('checkYourEmail');
+      document.getElementById('magicLinkSentPrefix').textContent = t('magicLinkSentTo');
+      document.getElementById('magicLinkInstructions').textContent = t('magicLinkInstructions');
+      document.getElementById('sendAnotherBtn').textContent = t('sendAnotherLink');
+
+      // Update page title
+      document.title = t('memberLogin') + ' - ISRS';
+    }
+
+    // Initial text update
+    updateLoginPageText();
+
+    // Listen for language changes
+    window.addEventListener('languageChanged', updateLoginPageText);
+
     // Check if already logged in
     if (MemberAuth.isAuthenticated()) {
       // Get redirect URL from query params or default to profile
