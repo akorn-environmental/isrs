@@ -100,28 +100,33 @@
 <body>
   <header id="site-header"></header>
 
+  <script>
+    // Load header with language switcher
+    loadHeader();
+  </script>
+
   <main id="main-content">
     <div class="container" style="max-width: 900px; margin: 2rem auto 4rem; padding: 0 2rem;">
 
       <!-- Profile Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-          <h1 style="margin: 0 0 0.5rem 0; color: var(--primary-blue);">My Profile</h1>
+          <h1 id="pageHeading" style="margin: 0 0 0.5rem 0; color: var(--primary-blue);">My Profile</h1>
           <div style="display: flex; align-items: center; gap: 1rem;">
             <span id="completionBadge" class="badge">Loading...</span>
             <span id="memberSince" style="color: var(--text-light); font-size: 0.95rem;"></span>
           </div>
         </div>
         <div class="btn-group" style="margin-top: 0;">
-          <button id="editBtn" class="btn btn-primary" onclick="enableEditMode()">Edit Profile</button>
-          <button id="viewDirectoryBtn" class="btn btn-secondary" onclick="window.location.href='/member/directory.html'">View Directory</button>
+          <button id="editBtn" class="btn btn-primary" onclick="enableEditMode()"></button>
+          <button id="viewDirectoryBtn" class="btn btn-secondary" onclick="window.location.href='/member/directory.html'"></button>
         </div>
       </div>
 
       <!-- Profile Completion Progress -->
       <div id="completionProgress" class="profile-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <span style="font-weight: 600;">Profile Completion</span>
+          <span id="profileCompletionLabel" style="font-weight: 600;">Profile Completion</span>
           <span id="completionPercent" style="font-weight: 600; color: var(--primary-blue); font-size: 1.1rem;">0%</span>
         </div>
         <div style="width: 100%; height: 10px; background: #dee2e6; border-radius: 5px; overflow: hidden;">
@@ -134,44 +139,44 @@
 
         <!-- Basic Information -->
         <div class="profile-section">
-          <h2>Basic Information</h2>
+          <h2 id="basicInfoHeading">Basic Information</h2>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="profile-field">
-              <label>First Name</label>
+              <label id="firstNameLabel">First Name</label>
               <div class="value" data-field="first_name"></div>
               <input type="text" name="first_name" style="display: none;">
             </div>
 
             <div class="profile-field">
-              <label>Last Name</label>
+              <label id="lastNameLabel">Last Name</label>
               <div class="value" data-field="last_name"></div>
               <input type="text" name="last_name" style="display: none;">
             </div>
           </div>
 
           <div class="profile-field">
-            <label>Email Address</label>
+            <label id="emailLabel">Email Address</label>
             <div class="value" data-field="user_email"></div>
-            <small style="color: var(--text-light);">Email cannot be changed. Contact support if needed.</small>
+            <small id="emailNote" style="color: var(--text-light);">Email cannot be changed. Contact support if needed.</small>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="profile-field">
-              <label>Country</label>
+              <label id="countryLabel">Country</label>
               <div class="value" data-field="country"></div>
               <input type="text" name="country" style="display: none;">
             </div>
 
             <div class="profile-field">
-              <label>City</label>
+              <label id="cityLabel">City</label>
               <div class="value" data-field="city"></div>
               <input type="text" name="city" style="display: none;">
             </div>
           </div>
 
           <div class="profile-field">
-            <label>Phone</label>
+            <label id="phoneLabel">Phone</label>
             <div class="value" data-field="phone"></div>
             <input type="tel" name="phone" style="display: none;">
           </div>
@@ -179,30 +184,30 @@
 
         <!-- Professional Information -->
         <div class="profile-section">
-          <h2>Professional Information</h2>
+          <h2 id="professionalInfoHeading">Professional Information</h2>
 
           <div class="profile-field">
-            <label>Organization</label>
+            <label id="organizationLabel">Organization</label>
             <div class="value" data-field="organization_name"></div>
             <input type="text" name="organization_name" style="display: none;">
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="profile-field">
-              <label>Position/Title</label>
+              <label id="positionLabel">Position/Title</label>
               <div class="value" data-field="position"></div>
               <input type="text" name="position" style="display: none;">
             </div>
 
             <div class="profile-field">
-              <label>Department</label>
+              <label id="departmentLabel">Department</label>
               <div class="value" data-field="department"></div>
               <input type="text" name="department" style="display: none;">
             </div>
           </div>
 
           <div class="profile-field">
-            <label>Bio / About Me</label>
+            <label id="bioLabel">Bio / About Me</label>
             <div class="value" data-field="bio" style="white-space: pre-wrap;"></div>
             <textarea name="bio" style="display: none;"></textarea>
           </div>
@@ -249,18 +254,18 @@
 
         <!-- Conference History -->
         <div id="conferenceHistorySection" class="profile-section" style="display: none;">
-          <h2>ICSR Conference History</h2>
+          <h2 id="conferenceHistoryHeading">ICSR Conference History</h2>
           <div id="conferenceHistory"></div>
         </div>
 
         <!-- Directory & Privacy Settings -->
         <div class="profile-section">
-          <h2>Directory & Privacy Settings</h2>
+          <h2 id="privacyHeading">Directory & Privacy Settings</h2>
 
           <div class="profile-field">
             <label style="display: flex; align-items: center; cursor: pointer;">
               <input type="checkbox" name="directory_opt_in" id="directoryOptIn" disabled style="width: 20px; height: 20px; margin-right: 0.75rem;">
-              <span>Include me in the public member directory</span>
+              <span id="showInDirectoryLabel">Include me in the public member directory</span>
             </label>
           </div>
 
@@ -312,8 +317,8 @@
           </div>
 
           <div class="btn-group" style="justify-content: center;">
-            <button type="submit" class="btn btn-primary" style="min-width: 150px;">Save Changes</button>
-            <button type="button" class="btn btn-secondary" onclick="cancelEdit()" style="min-width: 150px;">Cancel</button>
+            <button id="saveBtn" type="submit" class="btn btn-primary" style="min-width: 150px;"></button>
+            <button id="cancelBtn" type="button" class="btn btn-secondary" onclick="cancelEdit()" style="min-width: 150px;"></button>
           </div>
         </div>
 
@@ -353,6 +358,57 @@
 
   <script src="/js/components.js"></script>
   <script>
+    // Load footer
+    loadFooter();
+
+    // Update page content with translations
+    function updateProfilePageText() {
+      // Page heading and buttons
+      document.getElementById('pageHeading').textContent = t('myProfile');
+      document.getElementById('editBtn').textContent = t('editProfile');
+      document.getElementById('viewDirectoryBtn').textContent = t('viewDirectory');
+
+      // Profile completion section
+      document.getElementById('profileCompletionLabel').textContent = t('profileCompletion');
+
+      // Basic Information section
+      document.getElementById('basicInfoHeading').textContent = t('basicInformation');
+      document.getElementById('firstNameLabel').textContent = t('firstName');
+      document.getElementById('lastNameLabel').textContent = t('lastName');
+      document.getElementById('emailLabel').textContent = t('emailAddress');
+      document.getElementById('emailNote').textContent = t('emailCannotChange');
+      document.getElementById('countryLabel').textContent = t('country');
+      document.getElementById('cityLabel').textContent = t('city');
+      document.getElementById('phoneLabel').textContent = t('phone');
+
+      // Professional Information section
+      document.getElementById('professionalInfoHeading').textContent = t('professionalInformation');
+      document.getElementById('organizationLabel').textContent = t('organization');
+      document.getElementById('positionLabel').textContent = t('positionTitle');
+      document.getElementById('departmentLabel').textContent = t('department');
+      document.getElementById('bioLabel').textContent = t('bioAboutMe');
+
+      // Privacy Settings section
+      document.getElementById('privacyHeading').textContent = t('privacySettings');
+      document.getElementById('showInDirectoryLabel').textContent = t('showInDirectory');
+
+      // Conference History section
+      document.getElementById('conferenceHistoryHeading').textContent = t('conferenceHistory');
+
+      // Edit controls
+      document.getElementById('saveBtn').textContent = t('saveChanges');
+      document.getElementById('cancelBtn').textContent = t('cancel');
+
+      // Update page title
+      document.title = t('myProfile') + ' - ISRS';
+    }
+
+    // Initial text update
+    updateProfilePageText();
+
+    // Listen for language changes
+    window.addEventListener('languageChanged', updateProfilePageText);
+
     // Require authentication
     if (!MemberAuth.requireAuth()) {
       throw new Error('Not authenticated');
@@ -443,7 +499,9 @@
       // Member since
       if (profile.created_at) {
         const date = new Date(profile.created_at);
-        document.getElementById('memberSince').textContent = `Member since ${date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+        const lang = currentLang || 'en';
+        const locale = lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : 'en-US';
+        document.getElementById('memberSince').textContent = t('memberSince') + ' ' + date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
       }
 
       // Update completion
@@ -458,17 +516,17 @@
 
       const badge = document.getElementById('completionBadge');
       if (score >= 80) {
-        badge.textContent = '✓ Complete Profile';
+        badge.textContent = '✓ ' + t('profileCompleteMessage');
         badge.className = 'badge complete';
-        document.getElementById('completionMessage').textContent = 'Your profile is complete and looking great!';
+        document.getElementById('completionMessage').textContent = t('profileCompleteMessage');
       } else if (score >= 50) {
         badge.textContent = score + '% Complete';
         badge.className = 'badge';
-        document.getElementById('completionMessage').textContent = 'Good progress! Add more information to help members find you.';
+        document.getElementById('completionMessage').textContent = t('completeProfileMessage');
       } else {
         badge.textContent = score + '% Complete';
         badge.className = 'badge incomplete';
-        document.getElementById('completionMessage').textContent = 'Complete more fields to increase your profile visibility.';
+        document.getElementById('completionMessage').textContent = t('completeProfileMessage');
       }
     }
 
@@ -545,7 +603,7 @@
       const submitBtn = form.querySelector('button[type="submit"]');
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Saving...';
+      submitBtn.textContent = t('savingProfile');
 
       try {
         // Gather visibility settings
@@ -585,14 +643,14 @@
         cancelEdit();
 
         // Show success message
-        alert('Profile updated successfully!');
+        alert(t('profileSaved'));
 
       } catch (error) {
         console.error('Error saving profile:', error);
-        alert('Failed to save profile: ' + error.message);
+        alert(t('profileSaveFailed'));
 
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Save Changes';
+        submitBtn.textContent = t('saveChanges');
       }
     });
 
