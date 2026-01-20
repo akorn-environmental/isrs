@@ -151,9 +151,16 @@
           </div>
 
           <div class="profile-field">
-            <label id="emailLabel">Email Address <span style="color: #d32f2f;">*</span></label>
+            <label id="emailLabel">Account Email <span style="color: #d32f2f;">*</span></label>
             <div class="value" data-field="email"></div>
-            <small id="emailNote" style="color: var(--text-light);">Email cannot be changed. Contact support if needed.</small>
+            <small id="emailNote" style="color: var(--text-light);">Used for login only. Cannot be changed. Contact support if needed.</small>
+          </div>
+
+          <div class="profile-field">
+            <label id="contactEmailLabel">Contact Email</label>
+            <div class="value" data-field="contact_email"></div>
+            <input type="email" name="contact_email" placeholder="your.email@example.com" style="display: none;">
+            <small style="color: var(--text-light);">Optional. Shown in member directory if you choose. Different from your account email.</small>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
@@ -321,7 +328,7 @@
               </label>
               <label style="display: flex; align-items: center;">
                 <input type="checkbox" class="visibility-field" data-field="contact_email" disabled style="margin-right: 0.5rem;">
-                <span>Email</span>
+                <span>Contact Email</span>
               </label>
             </div>
           </div>
@@ -395,7 +402,8 @@
       document.getElementById('basicInfoHeading').textContent = t('basicInformation');
       document.getElementById('firstNameLabel').textContent = t('firstName');
       document.getElementById('lastNameLabel').textContent = t('lastName');
-      document.getElementById('emailLabel').textContent = t('emailAddress');
+      document.getElementById('emailLabel').textContent = 'Account Email';
+      document.getElementById('contactEmailLabel').textContent = 'Contact Email (Optional)';
       document.getElementById('emailNote').textContent = t('emailCannotChange');
       document.getElementById('countryLabel').textContent = t('country');
       document.getElementById('cityLabel').textContent = t('city');
@@ -697,6 +705,7 @@
         const updates = {
           first_name: form.first_name.value.trim(),
           last_name: form.last_name.value.trim(),
+          contact_email: form.contact_email.value.trim(),
           country: form.country.value.trim(),
           city: form.city.value.trim(),
           phone: form.phone.value.trim(),

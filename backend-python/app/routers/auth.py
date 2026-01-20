@@ -436,6 +436,7 @@ class UpdateProfileRequest(BaseModel):
     """Request body for profile update."""
     first_name: Optional[str] = None
     last_name: Optional[str] = None
+    contact_email: Optional[str] = None
     organization_name: Optional[str] = None
     position: Optional[str] = None
     department: Optional[str] = None
@@ -454,6 +455,7 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
     return {
         "id": str(current_user.id),
         "email": current_user.user_email,
+        "contact_email": current_user.contact_email,
         "first_name": current_user.first_name,
         "last_name": current_user.last_name,
         "organization_name": current_user.organization_name,
@@ -500,6 +502,7 @@ async def update_current_user_profile(
             "profile": {
                 "id": str(current_user.id),
                 "email": current_user.user_email,
+                "contact_email": current_user.contact_email,
                 "first_name": current_user.first_name,
                 "last_name": current_user.last_name,
                 "organization_name": current_user.organization_name,

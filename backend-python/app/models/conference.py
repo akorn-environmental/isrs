@@ -50,6 +50,7 @@ class AttendeeProfile(Base, TimestampMixin):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_email = Column(String(255), unique=True, nullable=False, index=True)
+    contact_email = Column(String(255), index=True)  # Optional public contact email
     contact_id = Column(UUID(as_uuid=True), ForeignKey("contacts.id"), index=True)
 
     # Basic Info
@@ -93,17 +94,22 @@ class AttendeeProfile(Base, TimestampMixin):
 
         Counts filled fields out of total editable fields.
         Fields included:
-        - first_name, last_name, email (always present) = 3
+        - first_name, last_name, user_email (always present) = 3
+        - contact_email (optional public email) = 1
         - organization_name, position, department = 3
         - phone, country, city = 3
         - bio = 1
-        Total: 10 fields, each worth 10%
+        Total: 11 fields, each worth ~9%
         """
-        total_fields = 10
+        total_fields = 11
         filled_fields = 0
 
         # These 3 are always present for logged-in users
-        filled_fields += 3  # first_name, last_name, email
+        filled_fields += 3  # first_name, last_name, user_email
+
+        # Contact email (optional)
+        if self.contact_email and self.contact_email.strip():
+            filled_fields += 1
 
         # Professional info
         if self.organization_name and self.organization_name.strip():
