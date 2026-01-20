@@ -506,16 +506,22 @@ async def update_current_user_profile(
     Only updates fields that are provided (not None).
     """
     try:
+        logger.info(f"=== PROFILE UPDATE START for user {current_user.user_email} ===")
+
         # Parse request body manually to handle any content-type issues
+        logger.info("Step 1: Reading request body")
         body = await request.body()
         body_str = body.decode('utf-8')
+        logger.info(f"Body length: {len(body_str)} bytes")
 
         # If body is double-encoded JSON string, parse it twice
+        logger.info("Step 2: Parsing JSON")
         try:
             body_data = json.loads(body_str)
             if isinstance(body_data, str):
                 # Double-encoded, parse again
                 body_data = json.loads(body_data)
+            logger.info(f"Parsed {len(body_data)} fields")
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse request body: {e}")
             raise HTTPException(
@@ -524,15 +530,20 @@ async def update_current_user_profile(
             )
 
         # Validate with Pydantic
+        logger.info("Step 3: Validating with Pydantic")
         profile_data = UpdateProfileRequest(**body_data)
 
         # Update only provided fields
+        logger.info("Step 4: Extracting update data")
         update_data = profile_data.model_dump(exclude_unset=True)
+        logger.info(f"Updating fields: {list(update_data.keys())}")
 
         # Validate phone number if provided
+        logger.info("Step 5: Phone validation")
         if 'phone' in update_data and update_data['phone']:
             phone = update_data['phone']
             country_raw = update_data.get('country') or current_user.country or 'US'
+            logger.info(f"Phone: {phone}, Country: {country_raw}")
 
             # Normalize country code (USA -> US, United States -> US, etc.)
             country_map = {
@@ -555,6 +566,7 @@ async def update_current_user_profile(
                         parsed_number,
                         phonenumbers.PhoneNumberFormat.E164
                     )
+                    logger.info(f"Phone formatted to: {update_data['phone']}")
                 else:
                     # If validation fails, just keep the original phone number
                     logger.warning(f"Phone number validation failed for {phone} with country {country}, keeping original")
@@ -562,14 +574,22 @@ async def update_current_user_profile(
                 # If parsing fails, just keep the original phone number
                 logger.warning(f"Phone number parsing failed: {str(e)}, keeping original")
 
+        logger.info("Step 6: Updating user attributes")
         for field, value in update_data.items():
             if value is not None:  # Only update non-None values
                 setattr(current_user, field, value)
 
+        logger.info("Step 7: Committing to database - START")
         db.commit()
-        db.refresh(current_user)
+        logger.info("Step 7: Committing to database - COMPLETE")
 
+        logger.info("Step 8: Refreshing user object")
+        db.refresh(current_user)
+        logger.info("Step 8: Refresh complete")
+
+        logger.info("Step 9: Building response")
         logger.info(f"Profile updated for user {current_user.user_email}")
+        logger.info("=== PROFILE UPDATE COMPLETE ===")
 
         return {
             "success": True,
