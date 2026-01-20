@@ -86,6 +86,41 @@ class AttendeeProfile(Base, TimestampMixin):
     def __repr__(self):
         return f"<AttendeeProfile(id={self.id}, email='{self.user_email}', name='{self.first_name} {self.last_name}')>"
 
+    @property
+    def profile_completion_score(self) -> int:
+        """
+        Calculate profile completion percentage (0-100).
+
+        Weighted scoring:
+        - Basic info (40%): first_name, last_name, email (always present)
+        - Professional (30%): organization_name, position, country, city
+        - Extended (30%): phone, department, bio
+        """
+        score = 0
+
+        # Basic info - 40 points (email, first_name, last_name always present)
+        score += 40
+
+        # Professional info - 30 points (7.5 each)
+        if self.organization_name and self.organization_name.strip():
+            score += 7.5
+        if self.position and self.position.strip():
+            score += 7.5
+        if self.country and self.country.strip():
+            score += 7.5
+        if self.city and self.city.strip():
+            score += 7.5
+
+        # Extended profile - 30 points (10 each)
+        if self.phone and self.phone.strip():
+            score += 10
+        if self.department and self.department.strip():
+            score += 10
+        if self.bio and self.bio.strip():
+            score += 10
+
+        return int(score)
+
 
 class ConferenceRegistration(Base, TimestampMixin):
     """Conference registration linking attendees to specific conferences."""

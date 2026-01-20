@@ -466,6 +466,7 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
         "email_verified": current_user.email_verified,
         "last_login_at": current_user.last_login_at,
         "login_count": current_user.login_count,
+        "profile_completion_score": current_user.profile_completion_score,
     }
 
 
