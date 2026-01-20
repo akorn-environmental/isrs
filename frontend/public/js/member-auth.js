@@ -165,10 +165,10 @@ const MemberAuth = (() => {
 
     return apiCall('/me', {
       method: 'PUT',
-      body: JSON.stringify({
-        sessionToken,
-        ...updates
-      })
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`
+      },
+      body: JSON.stringify(updates)
     });
   }
 
