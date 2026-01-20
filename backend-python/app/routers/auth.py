@@ -436,6 +436,8 @@ async def refresh_access_token(request: Request, db: Session = Depends(get_db)):
 
 class UpdateProfileRequest(BaseModel):
     """Request body for profile update."""
+    model_config = {"strict": False}
+
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     contact_email: Optional[str] = None
