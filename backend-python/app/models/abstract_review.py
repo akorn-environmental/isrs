@@ -38,12 +38,12 @@ class AbstractReviewer(Base, TimestampMixin):
         index=True
     )
     reviewer_id = Column(
-        UUID(as_uuid=True),
+        Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
-    assigned_by = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    assigned_by = Column(Integer, ForeignKey("users.id"))
     status = Column(String(50), default="pending", index=True)
     notified_at = Column(DateTime(timezone=True))
 
@@ -90,7 +90,7 @@ class AbstractReview(Base, TimestampMixin):
         index=True
     )
     reviewer_id = Column(
-        UUID(as_uuid=True),
+        Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True
@@ -190,12 +190,12 @@ class AbstractDecision(Base, TimestampMixin):
         index=True
     )
     decision = Column(String(50), nullable=False, index=True)  # accepted, rejected, revise_and_resubmit
-    decided_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    decided_at = Column(TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc))
+    decided_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+    decided_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     average_score = Column(DECIMAL(5, 2))
     review_count = Column(Integer)
     notes = Column(Text)  # Internal notes, not shown to submitter
-    notified_at = Column(TIMESTAMP(timezone=True))
+    notified_at = Column(DateTime(timezone=True))
 
     # Relationships
     abstract = relationship(

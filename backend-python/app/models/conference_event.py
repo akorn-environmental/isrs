@@ -113,7 +113,7 @@ class EventSignup(Base, TimestampMixin):
         index=True
     )
     user_id = Column(
-        UUID(as_uuid=True),
+        Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True
