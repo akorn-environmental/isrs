@@ -38,23 +38,23 @@ class AbstractReviewer(Base, TimestampMixin):
         index=True
     )
     reviewer_id = Column(
-        Integer,
-        ForeignKey("users.id", ondelete="CASCADE"),
+        UUID(as_uuid=True),
+        ForeignKey("attendee_profiles.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
-    assigned_by = Column(Integer, ForeignKey("users.id"))
+    assigned_by = Column(UUID(as_uuid=True), ForeignKey("attendee_profiles.id"))
     status = Column(String(50), default="pending", index=True)
     notified_at = Column(DateTime(timezone=True))
 
     # Relationships
     abstract = relationship("ConferenceAbstract", back_populates="reviewers")
     reviewer = relationship(
-        "User",
+        "AttendeeProfile",
         foreign_keys=[reviewer_id],
         back_populates="abstract_assignments"
     )
-    assigner = relationship("User", foreign_keys=[assigned_by])
+    assigner = relationship("AttendeeProfile", foreign_keys=[assigned_by])
 
     __table_args__ = (
         UniqueConstraint('abstract_id', 'reviewer_id', name='uq_abstract_reviewer'),
@@ -90,8 +90,8 @@ class AbstractReview(Base, TimestampMixin):
         index=True
     )
     reviewer_id = Column(
-        Integer,
-        ForeignKey("users.id", ondelete="CASCADE"),
+        UUID(as_uuid=True),
+        ForeignKey("attendee_profiles.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -127,7 +127,7 @@ class AbstractReview(Base, TimestampMixin):
 
     # Relationships
     abstract = relationship("ConferenceAbstract", back_populates="reviews")
-    reviewer = relationship("User", back_populates="abstract_reviews")
+    reviewer = relationship("AttendeeProfile", back_populates="abstract_reviews")
 
     __table_args__ = (
         UniqueConstraint('abstract_id', 'reviewer_id', name='uq_abstract_review'),
@@ -190,7 +190,7 @@ class AbstractDecision(Base, TimestampMixin):
         index=True
     )
     decision = Column(String(50), nullable=False, index=True)  # accepted, rejected, revise_and_resubmit
-    decided_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+    decided_by = Column(UUID(as_uuid=True), ForeignKey("attendee_profiles.id"), nullable=False)
     decided_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     average_score = Column(DECIMAL(5, 2))
     review_count = Column(Integer)
@@ -203,7 +203,7 @@ class AbstractDecision(Base, TimestampMixin):
         back_populates="decision",
         uselist=False  # One-to-one relationship
     )
-    decider = relationship("User")
+    decider = relationship("AttendeeProfile")
 
     def __repr__(self):
         return f"<AbstractDecision(abstract_id={self.abstract_id}, decision={self.decision}, average_score={self.average_score})>"

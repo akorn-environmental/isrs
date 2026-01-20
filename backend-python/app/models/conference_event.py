@@ -113,8 +113,8 @@ class EventSignup(Base, TimestampMixin):
         index=True
     )
     user_id = Column(
-        Integer,
-        ForeignKey("users.id", ondelete="CASCADE"),
+        UUID(as_uuid=True),
+        ForeignKey("attendee_profiles.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -126,7 +126,7 @@ class EventSignup(Base, TimestampMixin):
 
     # Relationships
     event = relationship("ConferenceEvent", back_populates="signups")
-    user = relationship("User", back_populates="event_signups")
+    user = relationship("AttendeeProfile", back_populates="event_signups")
 
     __table_args__ = (
         UniqueConstraint('event_id', 'user_id', name='uq_event_user'),
