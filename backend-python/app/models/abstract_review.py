@@ -8,7 +8,7 @@ Models for peer review workflow:
 - ReviewCriteria: Configurable review criteria per conference
 """
 
-from sqlalchemy import Column, String, Integer, Text, ForeignKey, UniqueConstraint, CheckConstraint, Boolean
+from sqlalchemy import Column, String, Integer, Text, ForeignKey, UniqueConstraint, CheckConstraint, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import DECIMAL
@@ -45,7 +45,7 @@ class AbstractReviewer(Base, TimestampMixin):
     )
     assigned_by = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     status = Column(String(50), default="pending", index=True)
-    notified_at = Column(TIMESTAMP(timezone=True))
+    notified_at = Column(DateTime(timezone=True))
 
     # Relationships
     abstract = relationship("ConferenceAbstract", back_populates="reviewers")

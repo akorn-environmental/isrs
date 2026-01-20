@@ -6,10 +6,10 @@ Models for special event signups:
 - EventSignup: User registrations with capacity management and waitlist
 """
 
-from sqlalchemy import Column, String, Integer, Text, ForeignKey, UniqueConstraint, Boolean
+from sqlalchemy import Column, String, Integer, Text, ForeignKey, UniqueConstraint, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import DECIMAL, TIMESTAMP
+from sqlalchemy.types import DECIMAL
 from datetime import datetime, timezone
 from app.models.base import Base, TimestampMixin
 import uuid
@@ -43,7 +43,7 @@ class ConferenceEvent(Base, TimestampMixin):
     name = Column(String(200), nullable=False)
     description = Column(Text)
     event_type = Column(String(50), nullable=False, index=True)  # networking, field_trip, workshop, social, golf
-    event_date = Column(TIMESTAMP(timezone=True))
+    event_date = Column(DateTime(timezone=True))
     capacity = Column(Integer)  # NULL = unlimited
     current_signups = Column(Integer, default=0, nullable=False)
     allows_guests = Column(Boolean, default=False, nullable=False)
@@ -122,7 +122,7 @@ class EventSignup(Base, TimestampMixin):
     total_fee = Column(DECIMAL(10, 2), default=0, nullable=False)
     status = Column(String(50), default="confirmed", nullable=False, index=True)  # confirmed, waitlist, cancelled
     waitlist_position = Column(Integer)  # Only set if status = waitlist
-    signed_up_at = Column(TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    signed_up_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
 
     # Relationships
     event = relationship("ConferenceEvent", back_populates="signups")
