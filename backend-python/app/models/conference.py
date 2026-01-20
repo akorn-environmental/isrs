@@ -103,48 +103,50 @@ class AttendeeProfile(Base, TimestampMixin):
     @property
     def profile_completion_score(self) -> int:
         """
-        Calculate profile completion percentage (0-100).
+        Calculate profile completion percentage (0-100) using weighted scoring.
 
-        Counts filled fields out of total editable fields.
-        Fields included:
-        - first_name, last_name, user_email (always present) = 3
-        - contact_email (optional public email) = 1
-        - organization_name, position, department = 3
-        - phone, country, city = 3
-        - bio = 1
-        Total: 11 fields, each worth ~9%
+        Weighted by importance:
+        - Core fields (40%): first_name, last_name, user_email, country
+        - Professional (30%): organization_name, position
+        - Contact (20%): contact_email, phone, city
+        - Extended (10%): department, bio
         """
-        total_fields = 11
-        filled_fields = 0
+        score = 0
 
-        # These 3 are always present for logged-in users
-        filled_fields += 3  # first_name, last_name, user_email
+        # Core fields - 40 points total (10 each)
+        # These are always present for logged-in users
+        score += 10  # first_name (required)
+        score += 10  # last_name (required)
+        score += 10  # user_email (required)
 
-        # Contact email (optional)
-        if self.contact_email and self.contact_email.strip():
-            filled_fields += 1
-
-        # Professional info
-        if self.organization_name and self.organization_name.strip():
-            filled_fields += 1
-        if self.position and self.position.strip():
-            filled_fields += 1
-        if self.department and self.department.strip():
-            filled_fields += 1
-
-        # Contact details
-        if self.phone and self.phone.strip():
-            filled_fields += 1
         if self.country and self.country.strip():
-            filled_fields += 1
+            score += 10  # country (required but can be empty in DB)
+
+        # Professional - 30 points total (15 each)
+        if self.organization_name and self.organization_name.strip():
+            score += 15
+
+        if self.position and self.position.strip():
+            score += 15
+
+        # Contact details - 20 points total (7, 7, 6)
+        if self.contact_email and self.contact_email.strip():
+            score += 7
+
+        if self.phone and self.phone.strip():
+            score += 7
+
         if self.city and self.city.strip():
-            filled_fields += 1
+            score += 6
 
-        # Bio
+        # Extended profile - 10 points total (5 each)
+        if self.department and self.department.strip():
+            score += 5
+
         if self.bio and self.bio.strip():
-            filled_fields += 1
+            score += 5
 
-        return int((filled_fields / total_fields) * 100)
+        return int(score)
 
 
 class ConferenceRegistration(Base, TimestampMixin):

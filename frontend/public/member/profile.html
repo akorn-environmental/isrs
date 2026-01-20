@@ -460,7 +460,7 @@
         <!-- Digest Options -->
         <div style="margin-top: 1.5rem; padding: 1rem; background: #f5f5f5; border-radius: 4px;">
           <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem;">Email Delivery Preference</h3>
-          <select id="digestFrequency" style="width: 100%; max-width: 300px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.95rem;">
+          <select id="digestFrequency" style="width: 100%; max-width: 300px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.95rem; font-family: inherit;">
             <option value="off">Send immediately (no digest)</option>
             <option value="daily">Daily digest (once per day)</option>
             <option value="weekly">Weekly digest (once per week)</option>
@@ -600,6 +600,11 @@
       document.querySelectorAll('.value[data-field]').forEach(el => {
         const field = el.dataset.field;
         let value = profile[field];
+
+        // Special handling for email field (account email)
+        if (field === 'email') {
+          value = profile.email || profile.user_email || 'Not provided';
+        }
 
         if (value === null || value === undefined || value === '') {
           el.textContent = 'Not provided';
