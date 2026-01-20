@@ -1094,7 +1094,26 @@ const translations = {
     fieldsMarkedRequired: 'Fields marked with * are required',
     mustAcceptTerms: 'You must accept the Privacy Policy and Terms of Service to continue.',
     savingProfile: 'Saving Profile...',
-    failedToSave: 'Failed to save your profile. Please try again.'
+    failedToSave: 'Failed to save your profile. Please try again.',
+
+    // Member Portal - Directory
+    memberDirectory: 'Member Directory',
+    directorySubtitle: 'Connect with researchers, practitioners, and stakeholders working in shellfish restoration worldwide',
+    resultsCount: 'Showing %COUNT% members',
+    searchLabel: 'Search',
+    searchPlaceholder: 'Search members...',
+    searchHint: '(name, organization, bio, research areas)',
+    countryFilterLabel: 'Country',
+    allCountries: 'All Countries',
+    conferenceYearLabel: 'Conference Year',
+    allYears: 'All Years',
+    clearFiltersBtn: 'Clear Filters',
+    loadingMembers: 'Loading members...',
+    noMembersFound: 'No Members Found',
+    tryAdjustingFilters: 'Try adjusting your search criteria or filters',
+    joinISRSCommunity: 'Join the ISRS Community',
+    connectColleagues: 'Connect with colleagues, share your research, and stay updated on shellfish restoration initiatives worldwide.',
+    loginToProfile: 'Login to Your Profile'
   },
   es: {
     // Navegación
@@ -2186,7 +2205,26 @@ const translations = {
     fieldsMarkedRequired: 'Los campos marcados con * son requeridos',
     mustAcceptTerms: 'Debe aceptar la Política de Privacidad y los Términos de Servicio para continuar.',
     savingProfile: 'Guardando Perfil...',
-    failedToSave: 'No se pudo guardar su perfil. Por favor intente de nuevo.'
+    failedToSave: 'No se pudo guardar su perfil. Por favor intente de nuevo.',
+
+    // Portal de Miembros - Directorio
+    memberDirectory: 'Directorio de Miembros',
+    directorySubtitle: 'Conéctese con investigadores, practicantes y partes interesadas que trabajan en la restauración de moluscos en todo el mundo',
+    resultsCount: 'Mostrando %COUNT% miembros',
+    searchLabel: 'Buscar',
+    searchPlaceholder: 'Buscar miembros...',
+    searchHint: '(nombre, organización, biografía, áreas de investigación)',
+    countryFilterLabel: 'País',
+    allCountries: 'Todos los Países',
+    conferenceYearLabel: 'Año de Conferencia',
+    allYears: 'Todos los Años',
+    clearFiltersBtn: 'Limpiar Filtros',
+    loadingMembers: 'Cargando miembros...',
+    noMembersFound: 'No se Encontraron Miembros',
+    tryAdjustingFilters: 'Intente ajustar sus criterios de búsqueda o filtros',
+    joinISRSCommunity: 'Únase a la Comunidad ISRS',
+    connectColleagues: 'Conéctese con colegas, comparta su investigación y manténgase actualizado sobre las iniciativas de restauración de moluscos en todo el mundo.',
+    loginToProfile: 'Iniciar Sesión en Su Perfil'
   },
   fr: {
     // Navigation
@@ -3278,7 +3316,26 @@ const translations = {
     fieldsMarkedRequired: 'Les champs marqués d\'un * sont requis',
     mustAcceptTerms: 'Vous devez accepter la Politique de Confidentialité et les Conditions de Service pour continuer.',
     savingProfile: 'Enregistrement du Profil...',
-    failedToSave: 'Échec de l\'enregistrement de votre profil. Veuillez réessayer.'
+    failedToSave: 'Échec de l\'enregistrement de votre profil. Veuillez réessayer.',
+
+    // Portail des Membres - Répertoire
+    memberDirectory: 'Répertoire des Membres',
+    directorySubtitle: 'Connectez-vous avec des chercheurs, des praticiens et des parties prenantes travaillant dans la restauration des mollusques dans le monde entier',
+    resultsCount: 'Affichage de %COUNT% membres',
+    searchLabel: 'Rechercher',
+    searchPlaceholder: 'Rechercher des membres...',
+    searchHint: '(nom, organisation, biographie, domaines de recherche)',
+    countryFilterLabel: 'Pays',
+    allCountries: 'Tous les Pays',
+    conferenceYearLabel: 'Année de Conférence',
+    allYears: 'Toutes les Années',
+    clearFiltersBtn: 'Effacer les Filtres',
+    loadingMembers: 'Chargement des membres...',
+    noMembersFound: 'Aucun Membre Trouvé',
+    tryAdjustingFilters: 'Essayez d\'ajuster vos critères de recherche ou filtres',
+    joinISRSCommunity: 'Rejoignez la Communauté ISRS',
+    connectColleagues: 'Connectez-vous avec des collègues, partagez vos recherches et restez informé des initiatives de restauration des mollusques dans le monde entier.',
+    loginToProfile: 'Se Connecter à Votre Profil'
   }
 };
 

@@ -159,13 +159,18 @@
 <body>
   <header id="site-header"></header>
 
+  <script>
+    // Load header with language switcher
+    loadHeader();
+  </script>
+
   <main id="main-content">
     <div class="container" style="max-width: 1000px; margin: 2rem auto 4rem; padding: 0 2rem;">
 
       <!-- Page Header -->
       <div style="text-align: center; margin-bottom: 2rem;">
-        <h1 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Member Directory</h1>
-        <p style="font-size: 1.1rem; color: var(--text-light); max-width: 700px; margin: 0 auto 1rem;">
+        <h1 id="pageHeading" style="color: var(--primary-blue); margin-bottom: 0.5rem;">Member Directory</h1>
+        <p id="pageSubtitle" style="font-size: 1.1rem; color: var(--text-light); max-width: 700px; margin: 0 auto 1rem;">
           Connect with researchers, practitioners, and stakeholders working in shellfish restoration worldwide
         </p>
         <div id="resultsCount" style="font-weight: 600; color: var(--primary-blue);"></div>
@@ -176,8 +181,8 @@
         <div class="filter-group">
           <label for="searchInput">
             <span style="display: flex; align-items: center; gap: 0.5rem;">
-              <span>Search</span>
-              <span style="font-weight: normal; font-size: 0.9rem; color: var(--text-light);">
+              <span id="searchLabel">Search</span>
+              <span id="searchHint" style="font-weight: normal; font-size: 0.9rem; color: var(--text-light);">
                 (name, organization, bio, research areas)
               </span>
             </span>
@@ -192,14 +197,14 @@
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
           <div class="filter-group">
-            <label for="countryFilter">Country</label>
+            <label id="countryLabel" for="countryFilter">Country</label>
             <select id="countryFilter" onchange="applyFilters()">
               <option value="">All Countries</option>
             </select>
           </div>
 
           <div class="filter-group">
-            <label for="conferenceFilter">Conference Year</label>
+            <label id="conferenceLabel" for="conferenceFilter">Conference Year</label>
             <select id="conferenceFilter" onchange="applyFilters()">
               <option value="">All Years</option>
               <option value="2022">ICSR 2022</option>
@@ -211,7 +216,7 @@
         </div>
 
         <div style="margin-top: 1rem; text-align: right;">
-          <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 0.5rem 1.5rem;">
+          <button id="clearFiltersBtn" class="btn btn-secondary" onclick="clearFilters()" style="padding: 0.5rem 1.5rem;">
             Clear Filters
           </button>
         </div>
@@ -220,7 +225,7 @@
       <!-- Loading State -->
       <div id="loadingState" style="text-align: center; padding: 3rem;">
         <div class="spinner" style="margin: 0 auto 1rem; width: 50px; height: 50px; border: 4px solid var(--border-color); border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <p style="color: var(--text-light);">Loading members...</p>
+        <p id="loadingText" style="color: var(--text-light);">Loading members...</p>
       </div>
 
       <!-- Members Grid -->
@@ -231,17 +236,17 @@
       <!-- Empty State -->
       <div id="emptyState" style="display: none;" class="empty-state">
         <div class="empty-state-icon">🔍</div>
-        <h2 style="color: var(--text-color); margin-bottom: 0.5rem;">No Members Found</h2>
-        <p>Try adjusting your search criteria or filters</p>
+        <h2 id="noMembersHeading" style="color: var(--text-color); margin-bottom: 0.5rem;">No Members Found</h2>
+        <p id="noMembersText">Try adjusting your search criteria or filters</p>
       </div>
 
       <!-- Call to Action (if not logged in) -->
       <div id="ctaSection" style="margin-top: 3rem; text-align: center; padding: 2rem; background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 4px;">
-        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Join the ISRS Community</h2>
-        <p style="color: var(--text-color); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <h2 id="ctaHeading" style="color: var(--primary-blue); margin-bottom: 1rem;">Join the ISRS Community</h2>
+        <p id="ctaText" style="color: var(--text-color); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
           Connect with colleagues, share your research, and stay updated on shellfish restoration initiatives worldwide.
         </p>
-        <a href="/member/login.html" class="btn btn-primary">Login to Your Profile</a>
+        <a id="ctaButton" href="/member/login.html" class="btn btn-primary">Login to Your Profile</a>
       </div>
 
     </div>
@@ -258,6 +263,46 @@
   </style>
 
   <script>
+    // Load footer
+    loadFooter();
+
+    // Update page content with translations
+    function updateDirectoryPageText() {
+      document.getElementById('pageHeading').textContent = t('memberDirectory');
+      document.getElementById('pageSubtitle').textContent = t('directorySubtitle');
+      document.getElementById('searchLabel').textContent = t('searchLabel');
+      document.getElementById('searchHint').textContent = t('searchHint');
+      document.getElementById('searchInput').placeholder = t('searchPlaceholder');
+      document.getElementById('countryLabel').textContent = t('countryFilterLabel');
+      document.getElementById('conferenceLabel').textContent = t('conferenceYearLabel');
+      document.getElementById('clearFiltersBtn').textContent = t('clearFiltersBtn');
+      document.getElementById('loadingText').textContent = t('loadingMembers');
+      document.getElementById('noMembersHeading').textContent = t('noMembersFound');
+      document.getElementById('noMembersText').textContent = t('tryAdjustingFilters');
+      document.getElementById('ctaHeading').textContent = t('joinISRSCommunity');
+      document.getElementById('ctaText').textContent = t('connectColleagues');
+      document.getElementById('ctaButton').textContent = t('loginToProfile');
+
+      // Update filter dropdowns
+      const countryFilter = document.getElementById('countryFilter');
+      if (countryFilter.options[0]) {
+        countryFilter.options[0].text = t('allCountries');
+      }
+
+      const conferenceFilter = document.getElementById('conferenceFilter');
+      if (conferenceFilter.options[0]) {
+        conferenceFilter.options[0].text = t('allYears');
+      }
+
+      document.title = t('memberDirectory') + ' - ISRS';
+    }
+
+    // Initial text update
+    updateDirectoryPageText();
+
+    // Listen for language changes
+    window.addEventListener('languageChanged', updateDirectoryPageText);
+
     let allMembers = [];
     let filteredMembers = [];
     let searchTimeout = null;
@@ -314,16 +359,16 @@
       if (filteredMembers.length === 0) {
         grid.style.display = 'none';
         emptyState.style.display = 'block';
-        resultsCount.textContent = 'No members found';
+        resultsCount.textContent = t('noMembersFound');
         return;
       }
 
       emptyState.style.display = 'none';
       grid.style.display = 'block';
 
-      // Update count
+      // Update count with translation
       const count = filteredMembers.length;
-      resultsCount.textContent = `${count} ${count === 1 ? 'member' : 'members'} found`;
+      resultsCount.textContent = t('resultsCount').replace('%COUNT%', count);
 
       // Generate member cards
       grid.innerHTML = filteredMembers.map(member => {
