@@ -89,12 +89,45 @@ fi
 CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
 print_info "Current branch: $CURRENT_BRANCH"
 
+# Check git remote URL
+REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+if [ -n "$REMOTE_URL" ]; then
+    print_info "Remote URL: $REMOTE_URL"
+
+    # Verify it's a GitHub URL
+    if [[ "$REMOTE_URL" =~ github\.com ]]; then
+        # Extract repo name for verification
+        REPO_NAME_CHECK=$(echo "$REMOTE_URL" | sed 's/.*github.com[:/]\(.*\)\.git/\1/')
+        if [ -n "$REPO_NAME_CHECK" ]; then
+            print_status 0 "GitHub repo: $REPO_NAME_CHECK"
+        fi
+    else
+        print_warning "Remote is not GitHub"
+    fi
+else
+    print_warning "No git remote configured"
+fi
+
 # Check if behind remote
 git fetch origin --quiet 2>/dev/null || true
 BEHIND=$(git rev-list HEAD..origin/$CURRENT_BRANCH --count 2>/dev/null || echo "0")
 if [ "$BEHIND" -gt 0 ]; then
     print_warning "Your branch is $BEHIND commits behind origin/$CURRENT_BRANCH"
     echo "  Run: git pull origin $CURRENT_BRANCH"
+fi
+
+# Check for Dependabot security alerts
+if command -v gh &> /dev/null; then
+    REPO_NAME=$(git remote get-url origin 2>/dev/null | sed 's/.*github.com[:/]\(.*\)\.git/\1/' || echo "")
+    if [ -n "$REPO_NAME" ]; then
+        VULNS=$(gh api repos/$REPO_NAME/vulnerability-alerts 2>/dev/null | jq '. | length' 2>/dev/null || echo "0")
+        if [ "$VULNS" -gt 0 ]; then
+            print_warning "$VULNS Dependabot security alerts found"
+            echo "  View at: https://github.com/$REPO_NAME/security/dependabot"
+        else
+            print_status 0 "No Dependabot security alerts"
+        fi
+    fi
 fi
 echo ""
 
