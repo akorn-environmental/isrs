@@ -67,7 +67,12 @@ const MemberAuth = (() => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Request failed');
+        console.error('API Error Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: data
+        });
+        throw new Error(data.error || data.detail || 'Request failed');
       }
 
       return data;
