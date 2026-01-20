@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reviews - ISRS Member Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-semibold text-gray-900">ISRS Member Portal</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/member/dashboard.html" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                    <a href="/member/my-reviews.html" class="text-blue-600 font-medium">My Reviews</a>
+                    <button id="logoutBtn" class="text-gray-600 hover:text-gray-900">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">My Review Assignments</h2>
+            <p class="mt-2 text-gray-600">Review assigned abstracts for conference submissions</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p class="mt-4 text-gray-600">Loading your assignments...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Error loading assignments</h3>
+                    <p id="errorMessage" class="mt-2 text-sm text-red-700"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">No review assignments</h3>
+            <p class="mt-2 text-gray-600">You don't have any abstracts assigned for review at this time.</p>
+        </div>
+
+        <!-- Assignments List -->
+        <div id="assignmentsList" class="hidden space-y-6">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <!-- Modal Header -->
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 sticky top-0">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Review Abstract</h3>
+                        <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="px-6 py-4">
+                    <!-- Abstract Details -->
+                    <div id="abstractDetails" class="mb-6">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Review Form -->
+                    <form id="reviewForm">
+                        <input type="hidden" id="abstractId" name="abstractId">
+
+                        <div class="space-y-6">
+                            <!-- Scoring Criteria -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                                <h4 class="font-semibold text-blue-900 mb-2">Scoring Guidelines</h4>
+                                <p class="text-sm text-blue-800">Rate each criterion on a scale of 1-5:</p>
+                                <ul class="text-sm text-blue-800 mt-2 space-y-1">
+                                    <li>• <strong>1</strong> - Poor/Inadequate</li>
+                                    <li>• <strong>2</strong> - Below Average</li>
+                                    <li>• <strong>3</strong> - Satisfactory</li>
+                                    <li>• <strong>4</strong> - Good</li>
+                                    <li>• <strong>5</strong> - Excellent</li>
+                                </ul>
+                            </div>
+
+                            <!-- Relevance Score -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Relevance to Conference Theme <span class="text-red-500">*</span>
+                                    <span class="text-gray-500 font-normal">(Weight: 1.2x)</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="relevance_score" name="relevance_score" min="1" max="5" step="1" value="3"
+                                           class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    <span id="relevance_value" class="text-lg font-semibold text-blue-600 w-8 text-center">3</span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">How relevant is this work to shellfish restoration?</p>
+                            </div>
+
+                            <!-- Originality Score -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Originality and Innovation <span class="text-red-500">*</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="originality_score" name="originality_score" min="1" max="5" step="1" value="3"
+                                           class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    <span id="originality_value" class="text-lg font-semibold text-blue-600 w-8 text-center">3</span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Does this present new ideas or approaches?</p>
+                            </div>
+
+                            <!-- Methodology Score -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Methodology and Rigor <span class="text-red-500">*</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="methodology_score" name="methodology_score" min="1" max="5" step="1" value="3"
+                                           class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    <span id="methodology_value" class="text-lg font-semibold text-blue-600 w-8 text-center">3</span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Is the approach sound and well-designed?</p>
+                            </div>
+
+                            <!-- Clarity Score -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Clarity and Presentation <span class="text-red-500">*</span>
+                                    <span class="text-gray-500 font-normal">(Weight: 0.8x)</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="clarity_score" name="clarity_score" min="1" max="5" step="1" value="3"
+                                           class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    <span id="clarity_value" class="text-lg font-semibold text-blue-600 w-8 text-center">3</span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Is the abstract clear and well-written?</p>
+                            </div>
+
+                            <!-- Impact Score -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Potential Impact <span class="text-red-500">*</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="impact_score" name="impact_score" min="1" max="5" step="1" value="3"
+                                           class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    <span id="impact_value" class="text-lg font-semibold text-blue-600 w-8 text-center">3</span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">What is the potential impact of this work?</p>
+                            </div>
+
+                            <!-- Weighted Score Display -->
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-medium text-green-900">Weighted Score:</span>
+                                    <span id="weighted_score" class="text-2xl font-bold text-green-600">3.00</span>
+                                </div>
+                                <p class="text-xs text-green-700 mt-1">Calculated using conference criteria weights</p>
+                            </div>
+
+                            <!-- Strengths -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Strengths
+                                </label>
+                                <textarea id="strengths" name="strengths" rows="3"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          placeholder="What are the main strengths of this abstract?"></textarea>
+                            </div>
+
+                            <!-- Weaknesses -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Weaknesses
+                                </label>
+                                <textarea id="weaknesses" name="weaknesses" rows="3"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          placeholder="What could be improved?"></textarea>
+                            </div>
+
+                            <!-- Comments -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Additional Comments
+                                </label>
+                                <textarea id="comments" name="comments" rows="4"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          placeholder="Any additional feedback for the organizing committee..."></textarea>
+                            </div>
+
+                            <!-- Recommendation -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Recommendation <span class="text-red-500">*</span>
+                                </label>
+                                <select id="recommendation" name="recommendation" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">Select recommendation...</option>
+                                    <option value="accept">Accept - Ready for presentation</option>
+                                    <option value="revise_and_resubmit">Revise and Resubmit - Needs improvements</option>
+                                    <option value="reject">Reject - Not suitable for conference</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="mt-6 flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                            <button type="button" id="cancelReview"
+                                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button type="submit" id="submitReview"
+                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+                                Submit Review
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/memberAuth.js"></script>
+    <script>
+        const API_BASE = 'https://isrs-python-backend.onrender.com';
+        let currentConferenceId = null;
+        let assignments = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Setup logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Setup modal
+            document.getElementById('closeModal').addEventListener('click', closeReviewModal);
+            document.getElementById('cancelReview').addEventListener('click', closeReviewModal);
+            document.getElementById('reviewForm').addEventListener('submit', submitReview);
+
+            // Setup score sliders
+            setupScoreSliders();
+
+            // Load assignments
+            await loadAssignments();
+        });
+
+        async function loadAssignments() {
+            try {
+                const token = localStorage.getItem('isrs_session_token');
+                if (!token) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+
+                // Get ICSR2026 conference ID
+                const conferencesResponse = await fetch(`${API_BASE}/conferences?search=ICSR2026`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!conferencesResponse.ok) throw new Error('Failed to load conference');
+
+                const conferencesData = await conferencesResponse.json();
+                const icsr2026 = conferencesData.conferences?.find(c =>
+                    c.name.includes('ICSR') && c.name.includes('2026')
+                );
+
+                if (!icsr2026) throw new Error('ICSR2026 conference not found');
+                currentConferenceId = icsr2026.id;
+
+                // Load my review assignments
+                const response = await fetch(`${API_BASE}/abstracts/my-assignments`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load assignments');
+
+                assignments = await response.json();
+
+                // Hide loading, show appropriate state
+                document.getElementById('loadingState').classList.add('hidden');
+
+                if (assignments.length === 0) {
+                    document.getElementById('emptyState').classList.remove('hidden');
+                } else {
+                    document.getElementById('assignmentsList').classList.remove('hidden');
+                    renderAssignments();
+                }
+
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = error.message;
+            }
+        }
+
+        function renderAssignments() {
+            const container = document.getElementById('assignmentsList');
+            container.innerHTML = assignments.map(assignment => {
+                const abstract = assignment.abstract;
+                const dueDate = new Date(abstract.conference.end_date);
+                const isOverdue = dueDate < new Date();
+                const hasReview = assignment.status === 'completed';
+
+                return `
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">${abstract.title}</h3>
+                                <p class="text-sm text-gray-600">
+                                    ${abstract.authors.map(a => `${a.first_name} ${a.last_name}`).join(', ')}
+                                </p>
+                            </div>
+                            <div class="ml-4">
+                                ${hasReview
+                                    ? `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        ✓ Reviewed
+                                       </span>`
+                                    : isOverdue
+                                    ? `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Overdue
+                                       </span>`
+                                    : `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        Pending
+                                       </span>`
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-700 line-clamp-3">${abstract.abstract_text}</p>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+                            <div class="text-sm text-gray-600">
+                                <span class="font-medium">Due:</span> ${dueDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                            </div>
+                            <button onclick="openReviewModal('${assignment.abstract_id}')"
+                                    class="px-4 py-2 ${hasReview ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-lg text-sm font-medium">
+                                ${hasReview ? 'View Review' : 'Submit Review'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function openReviewModal(abstractId) {
+            const assignment = assignments.find(a => a.abstract_id === abstractId);
+            if (!assignment) return;
+
+            const abstract = assignment.abstract;
+
+            // Populate abstract details
+            document.getElementById('abstractDetails').innerHTML = `
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-2">${abstract.title}</h4>
+                    <p class="text-sm text-gray-600 mb-3">
+                        ${abstract.authors.map(a => `${a.first_name} ${a.last_name}`).join(', ')}
+                    </p>
+                    <p class="text-sm text-gray-700">${abstract.abstract_text}</p>
+                </div>
+            `;
+
+            // Set abstract ID
+            document.getElementById('abstractId').value = abstractId;
+
+            // Check if review already exists
+            try {
+                const token = localStorage.getItem('isrs_session_token');
+                const response = await fetch(`${API_BASE}/abstracts/${abstractId}/reviews/my-review`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const review = await response.json();
+                    populateReviewForm(review);
+                }
+            } catch (error) {
+                // No existing review, that's fine
+            }
+
+            // Show modal
+            document.getElementById('reviewModal').classList.remove('hidden');
+        }
+
+        function populateReviewForm(review) {
+            document.getElementById('relevance_score').value = review.relevance_score;
+            document.getElementById('originality_score').value = review.originality_score;
+            document.getElementById('methodology_score').value = review.methodology_score;
+            document.getElementById('clarity_score').value = review.clarity_score;
+            document.getElementById('impact_score').value = review.impact_score;
+            document.getElementById('strengths').value = review.strengths || '';
+            document.getElementById('weaknesses').value = review.weaknesses || '';
+            document.getElementById('comments').value = review.comments || '';
+            document.getElementById('recommendation').value = review.recommendation || '';
+
+            // Update displayed values
+            updateScoreDisplays();
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+            document.getElementById('reviewForm').reset();
+        }
+
+        function setupScoreSliders() {
+            const sliders = ['relevance', 'originality', 'methodology', 'clarity', 'impact'];
+            sliders.forEach(slider => {
+                const input = document.getElementById(`${slider}_score`);
+                const display = document.getElementById(`${slider}_value`);
+
+                input.addEventListener('input', (e) => {
+                    display.textContent = e.target.value;
+                    calculateWeightedScore();
+                });
+            });
+        }
+
+        function updateScoreDisplays() {
+            const sliders = ['relevance', 'originality', 'methodology', 'clarity', 'impact'];
+            sliders.forEach(slider => {
+                const input = document.getElementById(`${slider}_score`);
+                const display = document.getElementById(`${slider}_value`);
+                display.textContent = input.value;
+            });
+            calculateWeightedScore();
+        }
+
+        function calculateWeightedScore() {
+            const relevance = parseFloat(document.getElementById('relevance_score').value);
+            const originality = parseFloat(document.getElementById('originality_score').value);
+            const methodology = parseFloat(document.getElementById('methodology_score').value);
+            const clarity = parseFloat(document.getElementById('clarity_score').value);
+            const impact = parseFloat(document.getElementById('impact_score').value);
+
+            const weighted = (
+                relevance * 1.2 +
+                originality * 1.0 +
+                methodology * 1.0 +
+                clarity * 0.8 +
+                impact * 1.0
+            ) / 5.0;
+
+            document.getElementById('weighted_score').textContent = weighted.toFixed(2);
+        }
+
+        async function submitReview(e) {
+            e.preventDefault();
+
+            const abstractId = document.getElementById('abstractId').value;
+            const token = localStorage.getItem('isrs_session_token');
+
+            // Get current user info
+            const userResponse = await fetch(`${API_BASE}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const userData = await userResponse.json();
+
+            const reviewData = {
+                abstract_id: abstractId,
+                reviewer_id: userData.id,
+                relevance_score: parseInt(document.getElementById('relevance_score').value),
+                originality_score: parseInt(document.getElementById('originality_score').value),
+                methodology_score: parseInt(document.getElementById('methodology_score').value),
+                clarity_score: parseInt(document.getElementById('clarity_score').value),
+                impact_score: parseInt(document.getElementById('impact_score').value),
+                strengths: document.getElementById('strengths').value,
+                weaknesses: document.getElementById('weaknesses').value,
+                comments: document.getElementById('comments').value,
+                recommendation: document.getElementById('recommendation').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/abstracts/${abstractId}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to submit review');
+                }
+
+                alert('Review submitted successfully!');
+                closeReviewModal();
+                await loadAssignments(); // Reload to update status
+
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('Error submitting review: ' + error.message);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isrs_session_token');
+            localStorage.removeItem('isrs_refresh_token');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>

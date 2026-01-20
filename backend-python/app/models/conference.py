@@ -35,6 +35,8 @@ class Conference(Base, TimestampMixin):
     registrations = relationship("ConferenceRegistration", back_populates="conference", cascade="all, delete-orphan")
     conference_sponsors = relationship("ConferenceSponsor", back_populates="conference", cascade="all, delete-orphan")
     abstracts = relationship("ConferenceAbstract", back_populates="conference", cascade="all, delete-orphan")
+    review_criteria = relationship("ReviewCriteria", back_populates="conference", cascade="all, delete-orphan")
+    events = relationship("ConferenceEvent", back_populates="conference", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Conference(id={self.id}, name='{self.name}', year={self.year})>"
@@ -99,6 +101,9 @@ class AttendeeProfile(Base, TimestampMixin):
     registrations = relationship("ConferenceRegistration", back_populates="attendee")
     user_sessions = relationship("UserSession", back_populates="attendee")
     refresh_tokens = relationship("RefreshToken", back_populates="attendee", cascade="all, delete-orphan")
+    abstract_assignments = relationship("AbstractReviewer", foreign_keys="[AbstractReviewer.reviewer_id]", back_populates="reviewer")
+    abstract_reviews = relationship("AbstractReview", back_populates="reviewer")
+    event_signups = relationship("EventSignup", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<AttendeeProfile(id={self.id}, email='{self.user_email}', name='{self.first_name} {self.last_name}')>"
@@ -222,6 +227,9 @@ class ConferenceAbstract(Base, TimestampMixin):
     # Relationships
     conference = relationship("Conference", back_populates="abstracts")
     submitter = relationship("Contact", back_populates="conference_abstracts")
+    reviewers = relationship("AbstractReviewer", back_populates="abstract", cascade="all, delete-orphan")
+    reviews = relationship("AbstractReview", back_populates="abstract", cascade="all, delete-orphan")
+    decision = relationship("AbstractDecision", back_populates="abstract", uselist=False, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<ConferenceAbstract(id={self.id}, title='{self.title}', status='{self.status}')>"

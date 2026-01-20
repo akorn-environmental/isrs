@@ -619,8 +619,9 @@
   </div>
 
   <script>
-    const API_BASE = 'https://isrs-python-backend.onrender.com/api';
+    const API_BASE = 'https://isrs-python-backend.onrender.com';
     let abstracts = [];
+    let currentConferenceId = null; // Will be set when loading
     let scores = { relevance: null, originality: null, methodology: null, clarity: null, impact: null };
 
     // Score selector interaction
@@ -644,26 +645,65 @@
 
     async function loadAbstracts() {
       try {
-        const token = localStorage.getItem('session_token');
-        const response = await fetch(`${API_BASE}/admin/abstracts`, {
+        const token = localStorage.getItem('isrs_session_token');
+
+        // First, get ICSR2026 conference ID
+        const conferencesResponse = await fetch(`${API_BASE}/conferences?search=ICSR2026`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!conferencesResponse.ok) throw new Error('Failed to load conferences');
+
+        const conferencesData = await conferencesResponse.json();
+        const icsr2026 = conferencesData.conferences?.find(c => c.name.includes('ICSR') && c.name.includes('2026'));
+
+        if (!icsr2026) {
+          throw new Error('ICSR2026 conference not found');
+        }
+
+        currentConferenceId = icsr2026.id;
+
+        // Now load abstracts for this conference
+        const response = await fetch(`${API_BASE}/conferences/${currentConferenceId}/abstracts`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (!response.ok) throw new Error('Failed to load abstracts');
 
-        const data = await response.json();
-        abstracts = data.abstracts || [];
+        abstracts = await response.json();
+
+        // Also load statistics
+        await loadStatistics();
 
         renderAbstracts('all', abstracts);
-        renderAbstracts('submitted', abstracts.filter(a => a.submission_status === 'submitted'));
-        renderAbstracts('under_review', abstracts.filter(a => a.submission_status === 'under_review'));
-        renderAbstracts('accepted', abstracts.filter(a => a.submission_status === 'accepted'));
+        renderAbstracts('submitted', abstracts.filter(a => a.status === 'submitted'));
+        renderAbstracts('under_review', abstracts.filter(a => a.status === 'under_review'));
+        renderAbstracts('accepted', abstracts.filter(a => a.status === 'accepted'));
 
         updateStats();
       } catch (error) {
         console.error('Error loading abstracts:', error);
         document.getElementById('abstracts-all').innerHTML =
-          '<div class="empty-state"><div class="empty-state-icon">📭</div><div>No abstracts found</div></div>';
+          `<div class="empty-state"><div class="empty-state-icon">📭</div><div>Error loading abstracts: ${error.message}</div></div>`;
+      }
+    }
+
+    async function loadStatistics() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/abstracts/statistics?conference_id=${currentConferenceId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const stats = await response.json();
+          document.getElementById('stat-total').textContent = stats.total_abstracts || 0;
+          document.getElementById('stat-review').textContent = stats.status_breakdown?.under_review || 0;
+          document.getElementById('stat-accepted').textContent = stats.status_breakdown?.accepted || 0;
+          document.getElementById('stat-avg').textContent = stats.average_review_score?.toFixed(1) || '0.0';
+        }
+      } catch (error) {
+        console.error('Error loading statistics:', error);
       }
     }
 
@@ -709,9 +749,9 @@
 
     function applySortAndRender() {
       renderAbstracts('all', abstracts);
-      renderAbstracts('submitted', abstracts.filter(a => a.submission_status === 'submitted'));
-      renderAbstracts('under_review', abstracts.filter(a => a.submission_status === 'under_review'));
-      renderAbstracts('accepted', abstracts.filter(a => a.submission_status === 'accepted'));
+      renderAbstracts('submitted', abstracts.filter(a => a.status === 'submitted'));
+      renderAbstracts('under_review', abstracts.filter(a => a.status === 'under_review'));
+      renderAbstracts('accepted', abstracts.filter(a => a.status === 'accepted'));
     }
 
     function renderAbstracts(containerId, abstractList) {
@@ -726,24 +766,24 @@
       const sortedList = sortAbstracts(abstractList);
 
       container.innerHTML = sortedList.map(abstract => `
-        <div class="abstract-card" onclick="viewAbstract(${abstract.id})">
+        <div class="abstract-card" onclick="viewAbstract('${abstract.id}')">
           <div class="abstract-header">
             <div class="abstract-title">${abstract.title}</div>
-            <div class="status-badge status-${abstract.submission_status}">${formatStatus(abstract.submission_status)}</div>
+            <div class="status-badge status-${abstract.status}">${formatStatus(abstract.status)}</div>
           </div>
           <div class="abstract-meta">
-            <div>👤 ${abstract.author_name}</div>
-            <div>📧 ${abstract.author_email || 'N/A'}</div>
+            <div>👤 ${abstract.authors ? abstract.authors[0] : 'Unknown'}</div>
             <div>🎤 ${abstract.presentation_type || 'N/A'}</div>
+            <div>📅 ${abstract.submission_date ? new Date(abstract.submission_date).toLocaleDateString() : 'N/A'}</div>
           </div>
           <div class="abstract-excerpt">${truncate(abstract.abstract_text, 200)}</div>
           <div class="abstract-stats">
             <div class="abstract-stat">
-              <div class="stat-item-value">${abstract.review_count || 0}</div>
+              <div class="stat-item-value">0</div>
               <div class="stat-item-label">Reviews</div>
             </div>
             <div class="abstract-stat">
-              <div class="stat-item-value">${abstract.average_score ? abstract.average_score.toFixed(1) : 'N/A'}</div>
+              <div class="stat-item-value">N/A</div>
               <div class="stat-item-label">Avg Score</div>
             </div>
           </div>
@@ -770,14 +810,15 @@
 
     function updateStats() {
       const total = abstracts.length;
-      const underReview = abstracts.filter(a => a.submission_status === 'under_review').length;
-      const accepted = abstracts.filter(a => a.submission_status === 'accepted').length;
-      const avgScore = abstracts.reduce((sum, a) => sum + (parseFloat(a.average_score) || 0), 0) / (abstracts.filter(a => a.average_score).length || 1);
+      const underReview = abstracts.filter(a => a.status === 'under_review').length;
+      const accepted = abstracts.filter(a => a.status === 'accepted').length;
 
-      document.getElementById('stat-total').textContent = total;
-      document.getElementById('stat-review').textContent = underReview;
-      document.getElementById('stat-accepted').textContent = accepted;
-      document.getElementById('stat-avg').textContent = avgScore.toFixed(1);
+      // Stats are now loaded separately via API
+      if (total > 0) {
+        document.getElementById('stat-total').textContent = total;
+        document.getElementById('stat-review').textContent = underReview;
+        document.getElementById('stat-accepted').textContent = accepted;
+      }
     }
 
     function switchTab(tab) {
@@ -795,16 +836,18 @@
       document.getElementById('abstractId').value = id;
       document.getElementById('reviewModalTitle').textContent = 'Review: ' + abstract.title;
 
+      const authors = abstract.authors && abstract.authors.length > 0 ? abstract.authors.join(', ') : 'Unknown';
+
       document.getElementById('abstractDetails').innerHTML = `
         <div style="background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
           <h3 style="margin-top: 0;">${abstract.title}</h3>
           <div style="color: #6b7280; margin-bottom: 1rem;">
-            <strong>Author:</strong> ${abstract.author_name} (${abstract.author_email || 'N/A'})<br>
+            <strong>Authors:</strong> ${authors}<br>
             <strong>Type:</strong> ${abstract.presentation_type || 'N/A'}<br>
-            ${abstract.co_authors ? `<strong>Co-authors:</strong> ${abstract.co_authors}<br>` : ''}
+            <strong>Status:</strong> ${formatStatus(abstract.status)}<br>
+            <strong>Submitted:</strong> ${abstract.submission_date ? new Date(abstract.submission_date).toLocaleDateString() : 'N/A'}
           </div>
-          <p style="line-height: 1.6;">${abstract.abstract_text}</p>
-          ${abstract.keywords ? `<div style="margin-top: 1rem;"><strong>Keywords:</strong> ${abstract.keywords.join(', ')}</div>` : ''}
+          <p style="line-height: 1.6;">${abstract.abstract_text || 'No abstract text provided.'}</p>
         </div>
       `;
 
@@ -823,8 +866,37 @@
 
       const abstractId = document.getElementById('abstractId').value;
 
+      // Validate all scores are filled
+      if (!scores.relevance || !scores.originality || !scores.methodology || !scores.clarity || !scores.impact) {
+        alert('Please provide scores for all criteria');
+        return;
+      }
+
+      // Get current user info to set reviewer_id
+      const token = localStorage.getItem('isrs_session_token');
+      const userResponse = await fetch(`${API_BASE}/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!userResponse.ok) {
+        alert('Failed to get user info. Please log in again.');
+        return;
+      }
+
+      const userData = await userResponse.json();
+
+      // Map recommendation to match new schema (accept, reject, revise_and_resubmit)
+      const recommendationValue = document.getElementById('recommendation').value;
+      let mappedRecommendation = 'accept';
+      if (recommendationValue.includes('reject')) {
+        mappedRecommendation = 'reject';
+      } else if (recommendationValue === 'borderline') {
+        mappedRecommendation = 'revise_and_resubmit';
+      }
+
       const data = {
         abstract_id: abstractId,
+        reviewer_id: userData.id,
         relevance_score: scores.relevance,
         originality_score: scores.originality,
         methodology_score: scores.methodology,
@@ -832,20 +904,12 @@
         impact_score: scores.impact,
         strengths: document.getElementById('strengths').value,
         weaknesses: document.getElementById('weaknesses').value,
-        comments_for_authors: document.getElementById('comments').value,
-        confidential_comments: document.getElementById('confidential').value,
-        recommendation: document.getElementById('recommendation').value
+        comments: document.getElementById('comments').value, // Changed from comments_for_authors
+        recommendation: mappedRecommendation
       };
 
-      // Validate all scores are filled
-      if (!scores.relevance || !scores.originality || !scores.methodology || !scores.clarity || !scores.impact) {
-        alert('Please provide scores for all criteria');
-        return;
-      }
-
       try {
-        const token = localStorage.getItem('session_token');
-        const response = await fetch(`${API_BASE}/admin/abstracts/${abstractId}/review`, {
+        const response = await fetch(`${API_BASE}/abstracts/${abstractId}/reviews`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -854,27 +918,31 @@
           body: JSON.stringify(data)
         });
 
-        if (!response.ok) throw new Error('Failed to submit review');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Failed to submit review');
+        }
 
         closeReviewModal();
         loadAbstracts();
         alert('Review submitted successfully!');
       } catch (error) {
         console.error('Error submitting review:', error);
-        alert('Failed to submit review. Please try again.');
+        alert(`Failed to submit review: ${error.message}`);
       }
     }
 
     function logout() {
-      localStorage.removeItem('session_token');
-      window.location.href = '/admin/login.html';
+      localStorage.removeItem('isrs_session_token');
+      localStorage.removeItem('isrs_refresh_token');
+      window.location.href = '/login.html';
     }
 
     // Check auth and load
     window.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('session_token');
+      const token = localStorage.getItem('isrs_session_token');
       if (!token) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/login.html';
         return;
       }
       loadAbstracts();

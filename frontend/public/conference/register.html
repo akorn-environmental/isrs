@@ -1325,9 +1325,10 @@
       });
     }
 
-    // Session selection management
-    let selectedSessions = [];
-    let availableSessions = [];
+    // Event selection management
+    let selectedEvents = [];
+    let availableEvents = [];
+    const PYTHON_API_BASE = 'https://isrs-python-backend.onrender.com';
 
     async function loadSessions() {
       if (!conferenceData || !conferenceData.id) {
@@ -1337,18 +1338,27 @@
       }
 
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/conference/${conferenceData.id}/sessions`
-        );
-        const result = await response.json();
+        const token = localStorage.getItem('isrs_session_token');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
-        if (result.success && result.data && result.data.length > 0) {
-          availableSessions = result.data;
+        const response = await fetch(
+          `${PYTHON_API_BASE}/conferences/${conferenceData.id}/events`,
+          { headers }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to load events');
+        }
+
+        const events = await response.json();
+
+        if (events && events.length > 0) {
+          availableEvents = events;
           renderSessions();
           document.getElementById('sessionsLoading').style.display = 'none';
           document.getElementById('sessionsContainer').style.display = 'block';
         } else {
-          // No sessions available - not an error, just show a message
+          // No events available - not an error, just show a message
           document.getElementById('sessionsLoading').style.display = 'none';
           document.getElementById('sessionsContainer').innerHTML = `
             <div class="no-sessions-message">
@@ -1358,14 +1368,14 @@
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
-              <p>No sessions are currently available for selection.</p>
+              <p>No events are currently available for selection.</p>
               <p style="font-size: 0.95rem;">Check back later or continue with your registration.</p>
             </div>
           `;
           document.getElementById('sessionsContainer').style.display = 'block';
         }
       } catch (error) {
-        console.error('Error loading sessions:', error);
+        console.error('Error loading events:', error);
         document.getElementById('sessionsLoading').style.display = 'none';
         document.getElementById('sessionsError').style.display = 'block';
       }
@@ -1374,84 +1384,82 @@
     function renderSessions() {
       const container = document.getElementById('sessionsContainer');
 
-      if (!availableSessions || availableSessions.length === 0) {
+      if (!availableEvents || availableEvents.length === 0) {
         container.innerHTML = `
           <div class="no-sessions-message">
-            <p>No sessions are currently available for selection.</p>
+            <p>No events are currently available for selection.</p>
           </div>
         `;
         return;
       }
 
-      // Group sessions by date
-      const sessionsByDate = {};
-      availableSessions.forEach(session => {
-        const date = session.session_date;
-        if (!sessionsByDate[date]) {
-          sessionsByDate[date] = [];
+      // Group events by date
+      const eventsByDate = {};
+      availableEvents.forEach(event => {
+        const date = event.event_date ? event.event_date.split('T')[0] : 'TBD';
+        if (!eventsByDate[date]) {
+          eventsByDate[date] = [];
         }
-        sessionsByDate[date].push(session);
+        eventsByDate[date].push(event);
       });
 
       let html = '';
-      Object.keys(sessionsByDate).sort().forEach(date => {
+      Object.keys(eventsByDate).sort().forEach(date => {
         html += `
           <h3 class="session-date-header">
-            ${new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
+            ${date !== 'TBD' ? new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
               weekday: 'long',
               month: 'long',
               day: 'numeric',
               year: 'numeric'
-            })}
+            }) : 'Date To Be Determined'}
           </h3>
         `;
 
-        sessionsByDate[date].forEach(session => {
-          const isSelected = selectedSessions.includes(session.id);
-          const isFull = session.is_full || false;
-          const hasSpots = session.available_spots;
+        eventsByDate[date].forEach(event => {
+          const isSelected = selectedEvents.includes(event.id);
+          const isFull = event.is_full || false;
+          const spotsRemaining = event.spots_remaining;
 
           let availabilityBadgeClass = 'available';
           let availabilityBadgeText = 'Available';
 
-          if (isFull && session.enable_waitlist) {
+          if (isFull) {
             availabilityBadgeClass = 'waitlist';
-            availabilityBadgeText = 'Waitlist Only';
-          } else if (isFull) {
-            availabilityBadgeClass = 'waitlist';
-            availabilityBadgeText = 'Full';
-          } else if (hasSpots !== null && hasSpots < 10) {
+            availabilityBadgeText = event.waitlist_count > 0 ? `Waitlist (${event.waitlist_count})` : 'Full';
+          } else if (event.capacity && spotsRemaining !== null && spotsRemaining < 10) {
             availabilityBadgeClass = 'limited';
-            availabilityBadgeText = `${hasSpots} spots left`;
+            availabilityBadgeText = `${spotsRemaining} spots left`;
           }
 
-          const canSelect = !isFull || session.enable_waitlist;
+          const canSelect = event.status === 'open';
 
           html += `
             <div class="session-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'full' : ''}"
-                 onclick="${canSelect ? `toggleSession('${session.id}')` : ''}"
-                 id="session-${session.id}">
+                 onclick="${canSelect ? `toggleSession('${event.id}')` : ''}"
+                 id="session-${event.id}">
               <div class="session-header">
                 <div style="flex: 1;">
-                  <div class="session-title">${session.session_name || 'Untitled Session'}</div>
+                  <div class="session-title">${event.name}</div>
                   <div class="session-meta">
-                    ${session.start_time || ''} ${session.end_time ? '- ' + session.end_time : ''} ${session.room ? '• ' + session.room : ''}
+                    ${event.event_date ? new Date(event.event_date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : ''}
+                    ${event.capacity ? `• Capacity: ${event.current_signups}/${event.capacity}` : ''}
                   </div>
                 </div>
                 <div class="session-badges">
-                  ${session.session_type ? `<span class="session-badge ${session.session_type.toLowerCase().replace(' ', '-')}">${session.session_type}</span>` : ''}
+                  ${event.event_type ? `<span class="session-badge ${event.event_type.toLowerCase().replace(' ', '-')}">${event.event_type}</span>` : ''}
                   <span class="session-badge ${availabilityBadgeClass}">${availabilityBadgeText}</span>
                 </div>
               </div>
-              ${session.description ? `
-                <p class="session-description">${session.description}</p>
+              ${event.description ? `
+                <p class="session-description">${event.description}</p>
               ` : ''}
-              ${session.chair_name ? `
-                <div class="session-chair">Chair: ${session.chair_name}</div>
+              ${event.allows_guests ? `
+                <div class="session-chair">Guests welcome (additional fee applies)</div>
               ` : ''}
-              ${session.requires_additional_fee ? `
+              ${event.fee_per_person > 0 ? `
                 <div class="session-fee-notice">
-                  <strong>Additional fee:</strong> $${parseFloat(session.additional_fee || 0).toFixed(2)}
+                  <strong>Fee:</strong> $${parseFloat(event.fee_per_person).toFixed(2)} per person
                 </div>
               ` : ''}
               ${isSelected ? `
@@ -1462,6 +1470,11 @@
                   <span>Selected</span>
                 </div>
               ` : ''}
+              ${event.user_signup ? `
+                <div style="margin-top: 0.75rem; padding: 0.5rem; background: #fff3cd; border-radius: 4px; color: #856404; font-size: 0.9rem;">
+                  Already signed up ${event.user_signup.status === 'waitlist' ? '(Waitlist)' : ''}
+                </div>
+              ` : ''}
             </div>
           `;
         });
@@ -1470,25 +1483,32 @@
       container.innerHTML = html;
     }
 
-    function toggleSession(sessionId) {
-      const session = availableSessions.find(s => s.id === sessionId);
-      if (!session) return;
+    function toggleSession(eventId) {
+      const event = availableEvents.find(e => e.id === eventId);
+      if (!event) return;
 
-      // Check if full and no waitlist
-      const isFull = session.is_full || false;
-      if (isFull && !session.enable_waitlist) {
-        showError('This session is full and does not have a waitlist.');
+      // Check if already signed up
+      if (event.user_signup) {
+        showError('You are already signed up for this event.');
         setTimeout(() => hideError(), 3000);
         return;
       }
 
-      const index = selectedSessions.indexOf(sessionId);
+      // Check if full
+      const isFull = event.is_full || false;
+      if (isFull && event.status !== 'open') {
+        showError('This event is full.');
+        setTimeout(() => hideError(), 3000);
+        return;
+      }
+
+      const index = selectedEvents.indexOf(eventId);
       if (index > -1) {
         // Remove selection
-        selectedSessions.splice(index, 1);
+        selectedEvents.splice(index, 1);
       } else {
         // Add selection
-        selectedSessions.push(sessionId);
+        selectedEvents.push(eventId);
       }
 
       renderSessions();
