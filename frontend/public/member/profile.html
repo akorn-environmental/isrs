@@ -100,11 +100,6 @@
 <body>
   <header id="site-header"></header>
 
-  <script>
-    // Load header with language switcher
-    loadHeader();
-  </script>
-
   <main id="main-content">
     <div class="container" style="max-width: 900px; margin: 2rem auto 4rem; padding: 0 2rem;">
 
@@ -271,6 +266,13 @@
 
           <div id="visibilitySettings" style="display: none; background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1rem; margin-top: 1rem;">
             <label style="font-weight: 600; display: block; margin-bottom: 0.75rem;">Visible Fields in Directory:</label>
+
+            <!-- Select All Control -->
+            <label style="display: flex; align-items: center; margin-bottom: 0.75rem; cursor: pointer; padding: 0.5rem; background: white; border-radius: 4px; border: 1px solid #e0e0e0;">
+              <input type="checkbox" id="selectAllVisibility" disabled style="margin-right: 0.5rem; cursor: pointer;">
+              <span style="font-weight: 600; color: #0066cc;">Select All / Deselect All</span>
+            </label>
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
               <label style="display: flex; align-items: center;">
                 <input type="checkbox" class="visibility-field" data-field="organization" disabled style="margin-right: 0.5rem;">
@@ -358,7 +360,8 @@
 
   <script src="/js/components.js"></script>
   <script>
-    // Load footer
+    // Load header and footer
+    loadHeader();
     loadFooter();
 
     // Update page content with translations
@@ -553,11 +556,49 @@
       // Enable checkboxes
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
 
+      // Initialize Select All functionality
+      initializeSelectAllVisibility();
+
       // Toggle buttons
       document.getElementById('editBtn').style.display = 'none';
       document.getElementById('viewDirectoryBtn').style.display = 'none';
       document.getElementById('editControls').style.display = 'block';
       document.getElementById('completionProgress').style.display = 'none';
+    }
+
+    // Initialize Select All Visibility functionality
+    function initializeSelectAllVisibility() {
+      const selectAll = document.getElementById('selectAllVisibility');
+      const visibilityFields = document.querySelectorAll('.visibility-field');
+
+      if (!selectAll || visibilityFields.length === 0) return;
+
+      // Update Select All state based on individual checkboxes
+      function updateSelectAllState() {
+        const enabledFields = Array.from(visibilityFields).filter(cb => !cb.disabled);
+        const allChecked = enabledFields.every(cb => cb.checked);
+        const someChecked = enabledFields.some(cb => cb.checked);
+
+        selectAll.checked = allChecked;
+        selectAll.indeterminate = someChecked && !allChecked;
+      }
+
+      // Handle Select All click
+      selectAll.addEventListener('change', function() {
+        visibilityFields.forEach(checkbox => {
+          if (!checkbox.disabled) {
+            checkbox.checked = this.checked;
+          }
+        });
+      });
+
+      // Handle individual checkbox clicks
+      visibilityFields.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectAllState);
+      });
+
+      // Initialize state
+      updateSelectAllState();
     }
 
     // Cancel edit

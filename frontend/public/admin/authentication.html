@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Authentication - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin.css">
+
+  <style>
+    .auth-section {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .auth-section h2 {
+      color: var(--primary-blue);
+      margin-top: 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .flow-diagram {
+      background: #f8f9fa;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: white;
+      border-left: 4px solid var(--primary-blue);
+      border-radius: 4px;
+    }
+
+    .flow-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--primary-blue);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-right: 1rem;
+    }
+
+    .flow-content h4 {
+      margin: 0 0 0.5rem 0;
+      color: var(--primary-blue);
+    }
+
+    .flow-content p {
+      margin: 0;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .permission-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .permission-table th,
+    .permission-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+
+    .permission-table th {
+      background: var(--primary-blue);
+      color: white;
+      font-weight: 600;
+    }
+
+    .permission-table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .badge-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .badge-warning {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .badge-info {
+      background: var(--accent-teal);
+      color: white;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      border-left: 4px solid;
+    }
+
+    .alert-info {
+      background: #e7f3ff;
+      border-color: var(--primary-blue);
+      color: #004085;
+    }
+
+    .alert-warning {
+      background: #fff3cd;
+      border-color: #ffc107;
+      color: #856404;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .feature-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .feature-card h4 {
+      color: var(--primary-blue);
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-card p {
+      margin: 0.5rem 0 0 0;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .troubleshooting-item {
+      background: #f8f9fa;
+      border-left: 4px solid #ffc107;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+
+    .troubleshooting-item h4 {
+      margin: 0 0 0.5rem 0;
+      color: #856404;
+    }
+
+    .troubleshooting-item p {
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .troubleshooting-item strong {
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">
+        <h2>ISRS Admin</h2>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="/admin/dashboard.html">
+          <span class="icon">📊</span>
+          Dashboard
+        </a>
+        <a href="/admin/users.html">
+          <span class="icon">👥</span>
+          Users
+        </a>
+        <a href="/admin/authentication.html" class="active">
+          <span class="icon">🔐</span>
+          Authentication
+        </a>
+        <a href="/admin/conferences.html">
+          <span class="icon">📅</span>
+          Conferences
+        </a>
+        <a href="/admin/settings.html">
+          <span class="icon">⚙️</span>
+          Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1>Member Authentication</h1>
+        <p>Complete documentation of the passwordless magic link authentication system</p>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- Overview -->
+        <div class="auth-section">
+          <h2>🔐 Authentication Overview</h2>
+
+          <div class="alert alert-info">
+            <strong>Passwordless Authentication:</strong> ISRS uses a secure magic link system for member authentication. No passwords to remember, no password resets, no credential breaches.
+          </div>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>🔒 Secure</h4>
+              <p>256-bit encrypted tokens with 15-minute expiration. One-time use only.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🌐 Multilingual</h4>
+              <p>Full support for English, Spanish, and French across all 6 member portal pages.</p>
+            </div>
+            <div class="feature-card">
+              <h4>📧 Email-Based</h4>
+              <p>Sent via verified email addresses. No SMS or third-party auth required.</p>
+            </div>
+            <div class="feature-card">
+              <h4>♿ Accessible</h4>
+              <p>Works on all devices, screen readers supported, no complex requirements.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Flow -->
+        <div class="auth-section">
+          <h2>📋 Complete Login Flow</h2>
+
+          <div class="flow-diagram">
+            <div class="flow-step">
+              <div class="flow-number">1</div>
+              <div class="flow-content">
+                <h4>User visits /member/login.html</h4>
+                <p>Member navigates to the login page. Can switch language (🌐) to English, Spanish, or French.</p>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">2</div>
+              <div class="flow-content">
+                <h4>Enter email address</h4>
+                <p>User enters their registered email address in the form.</p>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">3</div>
+              <div class="flow-content">
+                <h4>Click "Send Magic Link"</h4>
+                <p>Frontend calls: <code>POST /api/auth/request-magic-link</code></p>
+                <div class="code-block">
+{
+  "email": "user@example.com",
+  "redirect_url": "/member/profile.html"
+}
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">4</div>
+              <div class="flow-content">
+                <h4>Backend generates magic link token</h4>
+                <p>Server creates a unique, encrypted token valid for 15 minutes.</p>
+                <div class="code-block">
+Token: JWT with:
+  - user_email: "user@example.com"
+  - exp: 15 minutes from now
+  - iat: current timestamp
+  - redirect: target URL
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">5</div>
+              <div class="flow-content">
+                <h4>Email sent to user</h4>
+                <p>Email contains magic link: <code>https://shellfish-society.org/member/verify.html?token=...</code></p>
+                <p><strong>Email subject:</strong> "Your ISRS Login Link"</p>
+                <p><strong>Expiration:</strong> 15 minutes</p>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">6</div>
+              <div class="flow-content">
+                <h4>User clicks magic link</h4>
+                <p>Opens in browser, automatically redirects to /member/verify.html with token parameter.</p>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">7</div>
+              <div class="flow-content">
+                <h4>Token verification</h4>
+                <p>Frontend calls: <code>POST /api/auth/verify-magic-link</code></p>
+                <div class="code-block">
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+Response:
+{
+  "success": true,
+  "session_token": "session_token_here",
+  "user": { "email": "user@example.com", ... }
+}
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">8</div>
+              <div class="flow-content">
+                <h4>Session token stored</h4>
+                <p>Frontend stores session token in <code>localStorage</code> as <code>isrs_session_token</code></p>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">9</div>
+              <div class="flow-content">
+                <h4>Redirect based on profile status</h4>
+                <p><strong>First-time user:</strong> → /member/welcome.html (onboarding)</p>
+                <p><strong>Returning user:</strong> → /member/profile.html (dashboard)</p>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-number">10</div>
+              <div class="flow-content">
+                <h4>User authenticated</h4>
+                <p>Session token included in all API requests via Authorization header:</p>
+                <div class="code-block">
+Authorization: Bearer {session_token}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-success">
+            <strong>Success!</strong> User is now logged in and can access all member portal pages. Session persists across page navigation.
+          </div>
+        </div>
+
+        <!-- Permission Levels -->
+        <div class="auth-section">
+          <h2>🔑 Permission Levels</h2>
+
+          <table class="permission-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Access Level</th>
+                <th>Capabilities</th>
+                <th>Pages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-info">Member</span></td>
+                <td>Standard</td>
+                <td>
+                  • View/edit own profile<br>
+                  • Browse member directory<br>
+                  • Register for conferences<br>
+                  • Submit abstracts
+                </td>
+                <td>
+                  /member/login.html<br>
+                  /member/signup.html<br>
+                  /member/verify.html<br>
+                  /member/profile.html<br>
+                  /member/welcome.html<br>
+                  /member/directory.html
+                </td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-warning">Board Member</span></td>
+                <td>Elevated</td>
+                <td>
+                  • All member capabilities<br>
+                  • Access board documents<br>
+                  • Vote on proposals<br>
+                  • View meeting minutes
+                </td>
+                <td>
+                  All member pages +<br>
+                  /admin/board-documents.html<br>
+                  /admin/votes.html
+                </td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-danger">Admin</span></td>
+                <td>Full</td>
+                <td>
+                  • All member capabilities<br>
+                  • User management<br>
+                  • Conference management<br>
+                  • System settings<br>
+                  • Analytics access<br>
+                  • Email campaigns
+                </td>
+                <td>
+                  All member pages +<br>
+                  /admin/* (all admin pages)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="alert alert-info">
+            <strong>Note:</strong> Permission levels are stored in the database user record. Backend API endpoints check permissions before allowing access to protected resources.
+          </div>
+        </div>
+
+        <!-- Security Features -->
+        <div class="auth-section">
+          <h2>🛡️ Security Features</h2>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>🔐 Token Expiration</h4>
+              <p><strong>15 minutes</strong> - Magic links expire quickly to prevent unauthorized access.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🔒 One-Time Use</h4>
+              <p>Each magic link can only be used <strong>once</strong>. Subsequent attempts fail.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🔑 Encrypted Tokens</h4>
+              <p>JWT tokens signed with <strong>256-bit secret key</strong>. Cannot be forged.</p>
+            </div>
+            <div class="feature-card">
+              <h4>📧 Email Verification</h4>
+              <p>Only sent to verified email addresses. User must have email access.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🌐 HTTPS Only</h4>
+              <p>All authentication happens over <strong>encrypted HTTPS</strong> connections.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🚫 Rate Limiting</h4>
+              <p>Prevents brute force attacks. Max <strong>5 requests per minute</strong> per IP.</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 2rem;">Session Management</h3>
+          <p>Sessions are managed client-side using localStorage:</p>
+          <div class="code-block">
+// Session token storage
+localStorage.setItem('isrs_session_token', session_token);
+
+// Session token retrieval
+const token = localStorage.getItem('isrs_session_token');
+
+// Session logout
+localStorage.removeItem('isrs_session_token');
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Important:</strong> Session tokens do not expire automatically. Users must explicitly log out or clear browser data. Consider implementing server-side session expiration for enhanced security.
+          </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <div class="auth-section">
+          <h2>🔌 API Endpoints</h2>
+
+          <h3>1. Request Magic Link</h3>
+          <div class="code-block">
+POST /api/auth/request-magic-link
+
+Request Body:
+{
+  "email": "user@example.com",
+  "redirect_url": "/member/profile.html"  // Optional
+}
+
+Response:
+{
+  "success": true,
+  "message": "Magic link sent to user@example.com"
+}
+          </div>
+
+          <h3>2. Verify Magic Link</h3>
+          <div class="code-block">
+POST /api/auth/verify-magic-link
+
+Request Body:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+Response:
+{
+  "success": true,
+  "session_token": "session_xyz123",
+  "user": {
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "requiresFirstTimeSetup": false
+  }
+}
+          </div>
+
+          <h3>3. Get Current User Profile</h3>
+          <div class="code-block">
+GET /api/auth/me
+
+Headers:
+Authorization: Bearer {session_token}
+
+Response:
+{
+  "email": "user@example.com",
+  "first_name": "John",
+  "last_name": "Doe",
+  "country": "United States",
+  "organization_name": "University of Example",
+  "directory_opt_in": true,
+  "profile_completion_score": 85,
+  ...
+}
+          </div>
+
+          <h3>4. Update User Profile</h3>
+          <div class="code-block">
+PUT /api/auth/me
+
+Headers:
+Authorization: Bearer {session_token}
+
+Request Body:
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "organization_name": "New University",
+  ...
+}
+
+Response:
+{
+  "success": true,
+  "message": "Profile updated successfully",
+  "profile": { ... }
+}
+          </div>
+
+          <h3>5. Logout</h3>
+          <div class="code-block">
+POST /api/auth/logout
+
+Headers:
+Authorization: Bearer {session_token}
+
+Response:
+{
+  "success": true,
+  "message": "Logged out successfully"
+}
+
+// Frontend also clears localStorage
+localStorage.removeItem('isrs_session_token');
+          </div>
+        </div>
+
+        <!-- Multilingual Support -->
+        <div class="auth-section">
+          <h2>🌐 Multilingual Authentication</h2>
+
+          <p>All 6 member portal pages support language switching (EN/ES/FR):</p>
+
+          <table class="permission-table">
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th>Translation Keys</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>/member/login.html</td>
+                <td>10 keys</td>
+                <td><span class="badge badge-success">✓ Complete</span></td>
+              </tr>
+              <tr>
+                <td>/member/signup.html</td>
+                <td>16 keys</td>
+                <td><span class="badge badge-success">✓ Complete</span></td>
+              </tr>
+              <tr>
+                <td>/member/verify.html</td>
+                <td>10 keys</td>
+                <td><span class="badge badge-success">✓ Complete</span></td>
+              </tr>
+              <tr>
+                <td>/member/profile.html</td>
+                <td>32 keys</td>
+                <td><span class="badge badge-success">✓ Complete</span></td>
+              </tr>
+              <tr>
+                <td>/member/welcome.html</td>
+                <td>45 keys</td>
+                <td><span class="badge badge-success">✓ Complete</span></td>
+              </tr>
+              <tr>
+                <td>/member/directory.html</td>
+                <td>17 keys</td>
+                <td><span class="badge badge-success">✓ Complete</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="alert alert-success">
+            <strong>Total:</strong> 130 translation keys × 3 languages = 390 translations. All pages support instant language switching with no page reload.
+          </div>
+
+          <p><strong>Language switcher location:</strong> Globe icon (🌐) in header navigation on all member pages.</p>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="auth-section">
+          <h2>🔧 Troubleshooting Common Issues</h2>
+
+          <div class="troubleshooting-item">
+            <h4>Issue: "Magic link expired"</h4>
+            <p>
+              <strong>Cause:</strong> User waited more than 15 minutes to click the link.<br>
+              <strong>Solution:</strong> Request a new magic link from /member/login.html. Only the most recent link is valid.
+            </p>
+          </div>
+
+          <div class="troubleshooting-item">
+            <h4>Issue: "Link already used"</h4>
+            <p>
+              <strong>Cause:</strong> Magic link can only be used once.<br>
+              <strong>Solution:</strong> If user needs to log in again, request a new magic link.
+            </p>
+          </div>
+
+          <div class="troubleshooting-item">
+            <h4>Issue: "Email not received"</h4>
+            <p>
+              <strong>Causes:</strong> Spam folder, incorrect email, email server delay.<br>
+              <strong>Solution:</strong> Check spam/junk folders. Verify email address is correct. Wait 2-3 minutes. Request new link if needed.
+            </p>
+          </div>
+
+          <div class="troubleshooting-item">
+            <h4>Issue: "Session expired / logged out automatically"</h4>
+            <p>
+              <strong>Cause:</strong> User cleared browser data or session token was removed.<br>
+              <strong>Solution:</strong> Log in again via /member/login.html. Sessions persist in localStorage until explicitly cleared.
+            </p>
+          </div>
+
+          <div class="troubleshooting-item">
+            <h4>Issue: "Cannot update profile (401 Unauthorized)"</h4>
+            <p>
+              <strong>Cause:</strong> Session token invalid or missing from API request.<br>
+              <strong>Solution:</strong> Check Authorization header includes: <code>Bearer {token}</code>. Token must be retrieved from localStorage as <code>isrs_session_token</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Testing -->
+        <div class="auth-section">
+          <h2>🧪 Testing Authentication</h2>
+
+          <h3>Manual Testing</h3>
+          <ol>
+            <li>Navigate to: <a href="/member/login.html" target="_blank">https://shellfish-society.org/member/login.html</a></li>
+            <li>Enter a valid member email address</li>
+            <li>Click "Send Magic Link"</li>
+            <li>Check email inbox (and spam folder)</li>
+            <li>Click the magic link in email</li>
+            <li>Verify redirect to verify.html → profile.html or welcome.html</li>
+            <li>Check that profile loads with correct user data</li>
+            <li>Test language switching (click 🌐 icon)</li>
+            <li>Verify all text translates correctly</li>
+          </ol>
+
+          <h3>Developer Testing (Console)</h3>
+          <div class="code-block">
+// Check if session token exists
+localStorage.getItem('isrs_session_token');
+
+// Test API call with session token
+await fetch('https://isrs-python-backend.onrender.com/api/auth/me', {
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('isrs_session_token')}`
+  }
+}).then(r => r.json()).then(console.log);
+
+// Test logout
+localStorage.removeItem('isrs_session_token');
+window.location.href = '/member/login.html';
+          </div>
+        </div>
+
+        <!-- Implementation Files -->
+        <div class="auth-section">
+          <h2>📁 Implementation Files</h2>
+
+          <h3>Frontend</h3>
+          <ul>
+            <li><code>/frontend/public/member/login.html</code> - Login page UI</li>
+            <li><code>/frontend/public/member/signup.html</code> - New account registration</li>
+            <li><code>/frontend/public/member/verify.html</code> - Magic link verification</li>
+            <li><code>/frontend/public/member/profile.html</code> - User profile management</li>
+            <li><code>/frontend/public/member/welcome.html</code> - First-time user onboarding</li>
+            <li><code>/frontend/public/member/directory.html</code> - Member directory browser</li>
+            <li><code>/frontend/public/js/member-auth.js</code> - Authentication JavaScript library</li>
+            <li><code>/frontend/public/js/components.js</code> - Translation keys (130 keys × 3 languages)</li>
+          </ul>
+
+          <h3>Backend</h3>
+          <ul>
+            <li><code>/backend-python/app/routers/auth.py</code> - Authentication API endpoints</li>
+            <li><code>/backend-python/app/models.py</code> - User/AttendeeProfile database models</li>
+            <li><code>/backend-python/app/services/email_service.py</code> - Magic link email sending</li>
+          </ul>
+
+          <h3>Documentation</h3>
+          <ul>
+            <li><code>/LANGUAGE-SWITCHING-COMPLETE-6-OF-6.md</code> - Translation project completion</li>
+            <li><code>/STARTUP-SCRIPT-USAGE.md</code> - Startup script with translation checker</li>
+            <li><code>/admin/authentication.html</code> - This page (you are here)</li>
+          </ul>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="auth-section">
+          <h2>📋 Quick Reference</h2>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div>
+              <h4>Key URLs</h4>
+              <ul>
+                <li>Login: <code>/member/login.html</code></li>
+                <li>Signup: <code>/member/signup.html</code></li>
+                <li>Verify: <code>/member/verify.html?token=...</code></li>
+                <li>Profile: <code>/member/profile.html</code></li>
+                <li>Directory: <code>/member/directory.html</code></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4>API Endpoints</h4>
+              <ul>
+                <li>Request: <code>POST /api/auth/request-magic-link</code></li>
+                <li>Verify: <code>POST /api/auth/verify-magic-link</code></li>
+                <li>Profile: <code>GET /api/auth/me</code></li>
+                <li>Update: <code>PUT /api/auth/me</code></li>
+                <li>Logout: <code>POST /api/auth/logout</code></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4>Key Settings</h4>
+              <ul>
+                <li>Token expiration: <strong>15 minutes</strong></li>
+                <li>Token usage: <strong>One-time only</strong></li>
+                <li>Session storage: <strong>localStorage</strong></li>
+                <li>Session key: <code>isrs_session_token</code></li>
+                <li>Languages: <strong>EN, ES, FR</strong></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4>Security</h4>
+              <ul>
+                <li>Encryption: <strong>256-bit JWT</strong></li>
+                <li>Transport: <strong>HTTPS only</strong></li>
+                <li>Rate limit: <strong>5 req/min</strong></li>
+                <li>Email verification: <strong>Required</strong></li>
+                <li>Password: <strong>None (passwordless)</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/components.js"></script>
+  <script>
+    // Load admin components
+    if (typeof loadAdminComponents === 'function') {
+      loadAdminComponents();
+    }
+
+    // Highlight current nav item
+    document.querySelectorAll('.admin-nav a').forEach(link => {
+      if (link.getAttribute('href') === window.location.pathname) {
+        link.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>
