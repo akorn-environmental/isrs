@@ -11,9 +11,18 @@ const API_CONFIG = {
 
   // Get the appropriate API base URL
   get baseURL() {
-    return this.isLocalhost
-      ? 'http://localhost:3000'
-      : '';  // Use same-origin (relative URLs) in production
+    if (this.isLocalhost) {
+      return 'http://localhost:3000';
+    }
+
+    // In production, point to Render backend
+    // www subdomain uses same-origin, others use direct Render URL
+    if (window.location.hostname === 'www.shellfish-society.org') {
+      return '';  // same-origin for www (Render serves both frontend and API)
+    }
+
+    // Root domain (Cloudflare Pages) points directly to Render backend
+    return 'https://isrs-python-backend.onrender.com';
   },
 
   // Get API base with /api suffix
