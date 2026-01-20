@@ -15,13 +15,8 @@ const API_CONFIG = {
       return 'http://localhost:3000';
     }
 
-    // In production, point to Render backend
-    // www subdomain uses same-origin, others use direct Render URL
-    if (window.location.hostname === 'www.shellfish-society.org') {
-      return '';  // same-origin for www (Render serves both frontend and API)
-    }
-
-    // Root domain (Cloudflare Pages) points directly to Render backend
+    // In production, all domains point directly to Render backend
+    // (Frontend is on Cloudflare Pages, backend is on Render)
     return 'https://isrs-python-backend.onrender.com';
   },
 
