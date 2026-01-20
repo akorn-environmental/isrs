@@ -350,6 +350,134 @@
 
       </form>
 
+      <!-- Notification Settings -->
+      <div class="profile-section">
+        <h2>🔔 Notification Settings</h2>
+
+        <!-- Master Switch -->
+        <div style="background: #f0f8ff; border: 1px solid #b3d9ff; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem;">
+          <label style="display: flex; align-items: center; cursor: pointer; margin: 0;">
+            <input type="checkbox" id="notificationsEnabled" checked style="width: 20px; height: 20px; margin-right: 0.75rem; cursor: pointer;">
+            <div>
+              <strong style="font-size: 1rem; color: #0066cc;">Receive Notifications</strong>
+              <p style="margin: 0.25rem 0 0 0; color: #555; font-size: 0.9rem;">
+                Master control - turn off to stop all notifications except critical account security alerts
+              </p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Individual Notification Types -->
+        <div id="notificationTypes" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+
+          <!-- Member Directory -->
+          <div style="padding: 1rem; background: white; border: 1px solid var(--border-color); border-radius: 4px;">
+            <label style="display: flex; align-items: start; cursor: pointer;">
+              <input type="checkbox" class="notification-pref" data-pref="member_directory" checked style="margin-top: 3px; margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer;">
+              <div>
+                <strong>Member Directory Updates</strong>
+                <p style="margin: 0.25rem 0 0 0; color: var(--text-light); font-size: 0.9rem;">
+                  New members join, profile updates from your connections
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Conference Announcements -->
+          <div style="padding: 1rem; background: white; border: 1px solid var(--border-color); border-radius: 4px;">
+            <label style="display: flex; align-items: start; cursor: pointer;">
+              <input type="checkbox" class="notification-pref" data-pref="conference_announcements" checked style="margin-top: 3px; margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer;">
+              <div>
+                <strong>Conference Announcements (ICSR)</strong>
+                <p style="margin: 0.25rem 0 0 0; color: var(--text-light); font-size: 0.9rem;">
+                  Event news, registration opens, deadlines, important updates
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Admin Announcements -->
+          <div style="padding: 1rem; background: white; border: 1px solid var(--border-color); border-radius: 4px;">
+            <label style="display: flex; align-items: start; cursor: pointer;">
+              <input type="checkbox" class="notification-pref" data-pref="admin_announcements" checked style="margin-top: 3px; margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer;">
+              <div>
+                <strong>Admin Announcements</strong>
+                <p style="margin: 0.25rem 0 0 0; color: var(--text-light); font-size: 0.9rem;">
+                  Organization news, policy changes, important ISRS updates
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Admin-Only Notifications (hidden by default) -->
+          <div id="adminNotifications" style="display: none;">
+            <h3 style="margin: 1.5rem 0 1rem 0; padding-top: 1.5rem; border-top: 2px solid #e0e0e0; font-size: 1rem; color: #d32f2f;">
+              🔒 Admin-Only Notifications
+            </h3>
+
+            <!-- New Registrations -->
+            <div style="padding: 1rem; background: #fff8e1; border: 1px solid #ffecb3; border-radius: 4px; margin-bottom: 1rem;">
+              <label style="display: flex; align-items: start; cursor: pointer;">
+                <input type="checkbox" class="notification-pref" data-pref="admin_new_registrations" style="margin-top: 3px; margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer;">
+                <div>
+                  <strong>New Member Registrations</strong>
+                  <p style="margin: 0.25rem 0 0 0; color: #555; font-size: 0.9rem;">
+                    Notified when new members sign up and need approval
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            <!-- Moderation Alerts -->
+            <div style="padding: 1rem; background: #fff8e1; border: 1px solid #ffecb3; border-radius: 4px; margin-bottom: 1rem;">
+              <label style="display: flex; align-items: start; cursor: pointer;">
+                <input type="checkbox" class="notification-pref" data-pref="admin_moderation_alerts" style="margin-top: 3px; margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer;">
+                <div>
+                  <strong>Moderation Alerts</strong>
+                  <p style="margin: 0.25rem 0 0 0; color: #555; font-size: 0.9rem;">
+                    Profile flags, reported content, member concerns
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            <!-- System Alerts -->
+            <div style="padding: 1rem; background: #fff8e1; border: 1px solid #ffecb3; border-radius: 4px;">
+              <label style="display: flex; align-items: start; cursor: pointer;">
+                <input type="checkbox" class="notification-pref" data-pref="admin_system_alerts" style="margin-top: 3px; margin-right: 0.75rem; width: 18px; height: 18px; cursor: pointer;">
+                <div>
+                  <strong>System Alerts</strong>
+                  <p style="margin: 0.25rem 0 0 0; color: #555; font-size: 0.9rem;">
+                    Technical issues, deployment notifications, critical errors
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Digest Options -->
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+          <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem;">Email Delivery Preference</h3>
+          <select id="digestFrequency" style="width: 100%; max-width: 300px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.95rem;">
+            <option value="off">Send immediately (no digest)</option>
+            <option value="daily">Daily digest (once per day)</option>
+            <option value="weekly">Weekly digest (once per week)</option>
+          </select>
+          <p style="margin: 0.5rem 0 0 0; color: var(--text-light); font-size: 0.85rem;">
+            Digest emails combine multiple notifications into a single summary email
+          </p>
+        </div>
+
+        <!-- Save Button -->
+        <div style="margin-top: 1.5rem;">
+          <button id="saveNotificationPrefs" class="btn btn-primary" style="min-width: 200px;">
+            Save Notification Settings
+          </button>
+        </div>
+      </div>
+
       <!-- Data Privacy & GDPR -->
       <div class="profile-section" style="background: #fafafa;">
         <h2>Data Privacy & Account</h2>
@@ -534,6 +662,52 @@
 
       // Update completion
       updateCompletion(profile);
+
+      // Load notification preferences
+      loadNotificationPreferences(profile);
+    }
+
+    // Load notification preferences
+    function loadNotificationPreferences(profile) {
+      // Master switch
+      document.getElementById('notificationsEnabled').checked = profile.notifications_enabled !== false;
+
+      // Individual preferences
+      const prefs = profile.notification_preferences || {};
+      document.querySelectorAll('.notification-pref').forEach(checkbox => {
+        const pref = checkbox.dataset.pref;
+        checkbox.checked = prefs[pref] !== false;
+      });
+
+      // Digest frequency
+      document.getElementById('digestFrequency').value = prefs.digest_frequency || 'off';
+
+      // Show/hide admin notifications based on user role
+      // Check if user has admin or board member role
+      const isAdmin = profile.role === 'admin' || profile.role === 'board_member';
+      if (isAdmin) {
+        document.getElementById('adminNotifications').style.display = 'block';
+      }
+
+      // Toggle notification types based on master switch
+      toggleNotificationTypes();
+    }
+
+    // Toggle notification types visibility
+    function toggleNotificationTypes() {
+      const enabled = document.getElementById('notificationsEnabled').checked;
+      const typesDiv = document.getElementById('notificationTypes');
+      const digestSelect = document.getElementById('digestFrequency');
+
+      if (enabled) {
+        typesDiv.style.opacity = '1';
+        typesDiv.style.pointerEvents = 'auto';
+        digestSelect.disabled = false;
+      } else {
+        typesDiv.style.opacity = '0.5';
+        typesDiv.style.pointerEvents = 'none';
+        digestSelect.disabled = true;
+      }
     }
 
     // Update completion score
@@ -789,6 +963,50 @@
         alert('Failed to request account deletion: ' + error.message);
       }
     }
+
+    // Notification preferences - master switch toggle
+    document.getElementById('notificationsEnabled').addEventListener('change', toggleNotificationTypes);
+
+    // Save notification preferences
+    document.getElementById('saveNotificationPrefs').addEventListener('click', async () => {
+      const btn = document.getElementById('saveNotificationPrefs');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        // Gather all notification preferences
+        const prefs = {};
+        document.querySelectorAll('.notification-pref').forEach(checkbox => {
+          prefs[checkbox.dataset.pref] = checkbox.checked;
+        });
+        prefs.digest_frequency = document.getElementById('digestFrequency').value;
+
+        const updates = {
+          notifications_enabled: document.getElementById('notificationsEnabled').checked,
+          notification_preferences: prefs
+        };
+
+        const response = await MemberAuth.updateProfile(updates);
+
+        if (!response.success) {
+          throw new Error(response.error || 'Failed to update notification preferences');
+        }
+
+        // Show success message
+        alert('Notification settings saved successfully!');
+
+        // Reload profile
+        await loadProfile();
+
+      } catch (error) {
+        console.error('Error saving notification preferences:', error);
+        alert('Failed to save notification settings. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
 
     // Load profile on page load
     document.addEventListener('DOMContentLoaded', loadProfile);

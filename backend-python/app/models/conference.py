@@ -4,7 +4,7 @@ Conference-related models for ICSR events, registrations, sponsors, and abstract
 import uuid
 from decimal import Decimal
 from sqlalchemy import Column, String, Text, Integer, Boolean, Date, ForeignKey, ARRAY, UniqueConstraint, DECIMAL
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base, TimestampMixin
@@ -76,6 +76,19 @@ class AttendeeProfile(Base, TimestampMixin):
     email_verified_at = Column(Date)
     last_login_at = Column(Date)
     login_count = Column(Integer, default=0)
+
+    # Notification Preferences
+    notifications_enabled = Column(Boolean, default=True)
+    notification_preferences = Column(JSONB, default={
+        "member_directory": True,
+        "conference_announcements": True,
+        "admin_announcements": True,
+        "direct_messages": True,
+        "digest_frequency": "off",  # "off", "daily", "weekly"
+        "admin_new_registrations": False,
+        "admin_moderation_alerts": False,
+        "admin_system_alerts": False
+    })
 
     # Relationships
     contact = relationship("Contact", back_populates="attendee_profile")

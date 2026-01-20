@@ -444,6 +444,8 @@ class UpdateProfileRequest(BaseModel):
     country: Optional[str] = None
     city: Optional[str] = None
     bio: Optional[str] = None
+    notifications_enabled: Optional[bool] = None
+    notification_preferences: Optional[dict] = None
 
 
 @router.get("/me")
@@ -469,6 +471,8 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
         "last_login_at": current_user.last_login_at,
         "login_count": current_user.login_count,
         "profile_completion_score": current_user.profile_completion_score,
+        "notifications_enabled": current_user.notifications_enabled,
+        "notification_preferences": current_user.notification_preferences or {},
     }
 
 
