@@ -14,6 +14,7 @@ from app.models.conference import Conference, ConferenceRegistration, Conference
 from app.models.conference import AttendeeProfile
 from app.models.abstract_review import AbstractReviewer, AbstractReview, AbstractDecision
 from app.routers.auth import get_current_user
+from app.dependencies.permissions import get_current_admin, verify_abstract_reviewer, verify_abstract_owner
 from app.schemas.conference import (
     ConferenceCreate,
     ConferenceUpdate,
@@ -413,25 +414,11 @@ async def update_abstract(
     abstract_id: UUID,
     abstract_data: ConferenceAbstractUpdate,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    abstract: ConferenceAbstract = Depends(verify_abstract_owner),
 ):
     """
     Update an abstract (submitter only, before review starts).
     """
-    abstract = db.query(ConferenceAbstract).filter(ConferenceAbstract.id == abstract_id).first()
-
-    if not abstract:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Abstract not found",
-        )
-
-    # Only submitter can update (before reviews start)
-    if abstract.submitter_id != current_user.contact_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only the submitter can update this abstract",
-        )
 
     # Check if reviews have started
     review_count = db.query(func.count(AbstractReview.id)).filter(
@@ -460,25 +447,11 @@ async def update_abstract(
 async def delete_abstract(
     abstract_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    abstract: ConferenceAbstract = Depends(verify_abstract_owner),
 ):
     """
     Delete an abstract (submitter only, before review starts).
     """
-    abstract = db.query(ConferenceAbstract).filter(ConferenceAbstract.id == abstract_id).first()
-
-    if not abstract:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Abstract not found",
-        )
-
-    # Only submitter can delete
-    if abstract.submitter_id != current_user.contact_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only the submitter can delete this abstract",
-        )
 
     # Check if reviews have started
     review_count = db.query(func.count(AbstractReview.id)).filter(
@@ -501,10 +474,10 @@ async def delete_abstract(
 async def withdraw_abstract(
     abstract_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    abstract: ConferenceAbstract = Depends(verify_abstract_owner),
 ):
     """
-    Withdraw an abstract (can be done at any stage).
+    Withdraw an abstract (submitter only, can be done at any stage).
     """
     abstract = db.query(ConferenceAbstract).filter(ConferenceAbstract.id == abstract_id).first()
 
@@ -544,15 +517,13 @@ async def assign_reviewer(
     abstract_id: UUID,
     reviewer_data: AbstractReviewerCreate,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Assign a reviewer to an abstract (admin only).
     Prevents self-review and duplicate assignments.
     Sends email notification to reviewer.
     """
-    # TODO: Add admin check when admin role is implemented
-    # For now, any authenticated user can assign
 
     # Validate abstract exists
     abstract = db.query(ConferenceAbstract).filter(ConferenceAbstract.id == abstract_id).first()
@@ -628,12 +599,11 @@ async def remove_reviewer(
     abstract_id: UUID,
     reviewer_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Remove a reviewer assignment (admin only, before review is submitted).
     """
-    # TODO: Add admin check
 
     assignment = db.query(AbstractReviewer).filter(
         AbstractReviewer.abstract_id == abstract_id,
@@ -916,14 +886,13 @@ async def make_decision(
     abstract_id: UUID,
     decision_data: AbstractDecisionCreate,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Make final decision on an abstract (admin only).
     Calculates average score from all reviews.
     Sends notification email to submitter.
     """
-    # TODO: Add admin check
 
     # Verify abstract exists
     abstract = db.query(ConferenceAbstract).filter(ConferenceAbstract.id == abstract_id).first()

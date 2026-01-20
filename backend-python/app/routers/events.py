@@ -17,6 +17,7 @@ from app.database import get_db
 from app.models.conference import Conference, AttendeeProfile
 from app.models.conference_event import ConferenceEvent, EventSignup
 from app.routers.auth import get_current_user
+from app.dependencies.permissions import get_current_admin
 from app.schemas.conference_event import (
     ConferenceEventCreate,
     ConferenceEventUpdate,
@@ -102,12 +103,11 @@ async def create_event(
     conference_id: UUID,
     event_data: ConferenceEventCreate,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Create a new conference event (admin only).
     """
-    # TODO: Add admin check
 
     # Verify conference exists
     conference = db.query(Conference).filter(Conference.id == conference_id).first()
@@ -187,12 +187,11 @@ async def update_event(
     event_id: UUID,
     event_data: ConferenceEventUpdate,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Update event details (admin only).
     """
-    # TODO: Add admin check
 
     event = db.query(ConferenceEvent).filter(ConferenceEvent.id == event_id).first()
 
@@ -240,13 +239,12 @@ async def update_event(
 async def delete_event(
     event_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Delete an event (admin only).
     Cascade deletes all signups.
     """
-    # TODO: Add admin check
 
     event = db.query(ConferenceEvent).filter(ConferenceEvent.id == event_id).first()
 
