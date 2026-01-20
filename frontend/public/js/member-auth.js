@@ -67,12 +67,18 @@ const MemberAuth = (() => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('API Error Response:', {
-          status: response.status,
-          statusText: response.statusText,
-          data: data
-        });
-        throw new Error(data.error || data.detail || 'Request failed');
+        console.error('=== API ERROR DETAILS ===');
+        console.error('Status:', response.status);
+        console.error('Status Text:', response.statusText);
+        console.error('Full Response Data:', JSON.stringify(data, null, 2));
+        console.error('Error Detail:', data.detail);
+        console.error('Error Message:', data.error);
+        console.error('========================');
+
+        const errorMsg = typeof data.detail === 'string'
+          ? data.detail
+          : (data.error || JSON.stringify(data.detail) || 'Request failed');
+        throw new Error(errorMsg);
       }
 
       return data;

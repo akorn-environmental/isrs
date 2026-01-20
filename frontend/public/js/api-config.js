@@ -12,7 +12,7 @@ const API_CONFIG = {
   // Get the appropriate API base URL
   get baseURL() {
     if (this.isLocalhost) {
-      return 'http://localhost:3000';
+      return 'http://localhost:8000';
     }
 
     // In production, all domains point directly to Render backend
