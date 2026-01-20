@@ -18,25 +18,30 @@
 <body>
   <header id="site-header"></header>
 
+  <script>
+    // Load header with language switcher
+    loadHeader();
+  </script>
+
   <main id="main-content">
     <div class="container" style="max-width: 800px; margin: 2rem auto 4rem; padding: 2rem;">
 
       <!-- Welcome Header -->
       <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="color: var(--primary-blue); margin-bottom: 1rem;">Welcome to ISRS!</h1>
+        <h1 id="welcomeHeading" style="color: var(--primary-blue); margin-bottom: 1rem;">Welcome to ISRS!</h1>
         <p id="welcomeMessage" style="font-size: 1.2rem; line-height: 1.6; color: var(--text-color);"></p>
       </div>
 
       <!-- Profile Completion Progress -->
       <div style="background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1.5rem; margin-bottom: 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <span style="font-weight: 600; color: var(--text-color);">Profile Completion</span>
+          <span id="profileCompletionLabel" style="font-weight: 600; color: var(--text-color);">Profile Completion</span>
           <span id="completionPercent" style="font-weight: 600; color: var(--primary-blue);">0%</span>
         </div>
         <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
           <div id="completionBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal)); transition: width 0.3s ease;"></div>
         </div>
-        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem; margin-bottom: 0;">
+        <p id="profileCompletionPromptText" style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem; margin-bottom: 0;">
           Complete your profile to connect with other members and unlock all features
         </p>
       </div>
@@ -45,19 +50,19 @@
 
         <!-- Basic Information -->
         <section style="margin-bottom: 2.5rem;">
-          <h2 style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
+          <h2 id="basicInfoHeading" style="color: var(--primary-blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">
             Basic Information
           </h2>
 
           <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
             <div class="form-group">
-              <label for="firstName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <label id="firstNameLabel" for="firstName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
                 First Name <span style="color: #c00;">*</span>
               </label>
               <input type="text" id="firstName" name="firstName" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
             </div>
             <div class="form-group">
-              <label for="lastName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <label id="lastNameLabel" for="lastName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
                 Last Name <span style="color: #c00;">*</span>
               </label>
               <input type="text" id="lastName" name="lastName" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
@@ -65,20 +70,20 @@
           </div>
 
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+            <label id="emailLabel" for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
             <input type="email" id="email" name="email" disabled style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem; background: #f5f5f5; color: var(--text-light);">
-            <small style="color: var(--text-light); display: block; margin-top: 0.25rem;">Email cannot be changed</small>
+            <small id="emailNote" style="color: var(--text-light); display: block; margin-top: 0.25rem;">Email cannot be changed</small>
           </div>
 
           <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
             <div class="form-group">
-              <label for="country" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <label id="countryLabel" for="country" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
                 Country <span style="color: #c00;">*</span>
               </label>
               <input type="text" id="country" name="country" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
             </div>
             <div class="form-group">
-              <label for="city" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">City</label>
+              <label id="cityLabel" for="city" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">City</label>
               <input type="text" id="city" name="city" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;">
             </div>
           </div>
@@ -243,6 +248,31 @@
 
   <script src="/js/components.js"></script>
   <script>
+    // Load footer
+    loadFooter();
+
+    // Update page content with translations
+    function updateWelcomePageText() {
+      document.getElementById('welcomeHeading').textContent = t('welcomeToISRS');
+      document.getElementById('profileCompletionLabel').textContent = t('profileCompletion');
+      document.getElementById('profileCompletionPromptText').textContent = t('profileCompletionPrompt');
+      document.getElementById('basicInfoHeading').textContent = t('basicInformation');
+      document.getElementById('firstNameLabel').innerHTML = t('firstNameRequired');
+      document.getElementById('lastNameLabel').innerHTML = t('lastNameRequired');
+      document.getElementById('emailLabel').textContent = t('emailAddress');
+      document.getElementById('emailNote').textContent = t('emailCannotBeChanged');
+      document.getElementById('countryLabel').innerHTML = t('countryRequired');
+      document.getElementById('cityLabel').textContent = t('cityLabel');
+
+      document.title = t('welcomeToISRS') + ' - ISRS';
+    }
+
+    // Initial text update
+    updateWelcomePageText();
+
+    // Listen for language changes
+    window.addEventListener('languageChanged', updateWelcomePageText);
+
     // Require authentication
     if (!MemberAuth.requireAuth()) {
       // Will redirect to login
@@ -264,11 +294,11 @@
         const profile = profileData.profile;
         const conferenceHistory = profileData.conferenceHistory || [];
 
-        // Set welcome message
+        // Set welcome message with translation
         const years = conferenceHistory.map(c => c.year).sort().join(', ');
         const welcomeMsg = conferenceHistory.length > 0
-          ? `We're so glad you're here! We have your information from ICSR ${years}. Please review and complete your profile below.`
-          : `We're excited to have you join the ISRS community! Please complete your profile to get started.`;
+          ? t('welcomeMessageExisting').replace('%YEARS%', years)
+          : t('welcomeMessageNew');
         document.getElementById('welcomeMessage').textContent = welcomeMsg;
 
         // Populate form fields
