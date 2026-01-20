@@ -213,6 +213,7 @@ const translations = {
     profileSaved: 'Profile saved successfully!',
     profileSaveFailed: 'Failed to save profile. Please try again.',
     completeProfileMessage: 'Complete your profile to connect with other members!',
+    almostCompleteMessage: 'Almost there! Just a few more fields to complete.',
     profileCompleteMessage: 'Your profile is complete!',
 
     // Member Portal - Verification
@@ -1324,6 +1325,7 @@ const translations = {
     profileSaved: '¡Perfil guardado exitosamente!',
     profileSaveFailed: 'No se pudo guardar el perfil. Por favor, inténtelo de nuevo.',
     completeProfileMessage: '¡Complete su perfil para conectarse con otros miembros!',
+    almostCompleteMessage: '¡Casi terminado! Solo faltan algunos campos más.',
     profileCompleteMessage: '¡Su perfil está completo!',
 
     // Portal de Miembros - Verificación
@@ -2435,6 +2437,7 @@ const translations = {
     profileSaved: 'Profil enregistré avec succès!',
     profileSaveFailed: 'Échec de l\'enregistrement du profil. Veuillez réessayer.',
     completeProfileMessage: 'Complétez votre profil pour vous connecter avec d\'autres membres!',
+    almostCompleteMessage: 'Vous y êtes presque! Encore quelques champs à compléter.',
     profileCompleteMessage: 'Votre profil est complet!',
 
     // Portail des Membres - Vérification
