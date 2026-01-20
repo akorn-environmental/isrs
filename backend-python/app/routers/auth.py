@@ -432,6 +432,19 @@ async def refresh_access_token(request: Request, db: Session = Depends(get_db)):
         )
 
 
+class UpdateProfileRequest(BaseModel):
+    """Request body for profile update."""
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    organization_name: Optional[str] = None
+    position: Optional[str] = None
+    department: Optional[str] = None
+    phone: Optional[str] = None
+    country: Optional[str] = None
+    city: Optional[str] = None
+    bio: Optional[str] = None
+
+
 @router.get("/me")
 async def get_current_user_info(current_user: AttendeeProfile = Depends(get_current_user)):
     """
@@ -445,9 +458,64 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
         "last_name": current_user.last_name,
         "organization_name": current_user.organization_name,
         "position": current_user.position,
+        "department": current_user.department,
+        "phone": current_user.phone,
         "country": current_user.country,
         "city": current_user.city,
+        "bio": current_user.bio,
         "email_verified": current_user.email_verified,
         "last_login_at": current_user.last_login_at,
         "login_count": current_user.login_count,
     }
+
+
+@router.put("/me")
+async def update_current_user_profile(
+    profile_data: UpdateProfileRequest,
+    current_user: AttendeeProfile = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update the current user's profile information.
+    Requires authentication.
+    Only updates fields that are provided (not None).
+    """
+    try:
+        # Update only provided fields
+        update_data = profile_data.model_dump(exclude_unset=True)
+
+        for field, value in update_data.items():
+            if value is not None:  # Only update non-None values
+                setattr(current_user, field, value)
+
+        db.commit()
+        db.refresh(current_user)
+
+        logger.info(f"Profile updated for user {current_user.user_email}")
+
+        return {
+            "success": True,
+            "message": "Profile updated successfully",
+            "profile": {
+                "id": str(current_user.id),
+                "email": current_user.user_email,
+                "first_name": current_user.first_name,
+                "last_name": current_user.last_name,
+                "organization_name": current_user.organization_name,
+                "position": current_user.position,
+                "department": current_user.department,
+                "phone": current_user.phone,
+                "country": current_user.country,
+                "city": current_user.city,
+                "bio": current_user.bio,
+                "email_verified": current_user.email_verified,
+            }
+        }
+
+    except Exception as e:
+        logger.error(f"Error updating profile: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update profile"
+        )
