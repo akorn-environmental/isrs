@@ -123,7 +123,7 @@ class AbstractReview(Base, TimestampMixin):
     weaknesses = Column(Text)
     comments = Column(Text)
     recommendation = Column(String(50))  # accept, reject, revise
-    submitted_at = Column(TIMESTAMP(timezone=True))
+    submitted_at = Column(DateTime(timezone=True))
 
     # Relationships
     abstract = relationship("ConferenceAbstract", back_populates="reviews")
@@ -247,7 +247,3 @@ class ReviewCriteria(Base, TimestampMixin):
 
     def __repr__(self):
         return f"<ReviewCriteria(name={self.name}, weight={self.weight}, display_order={self.display_order})>"
-
-
-# Import TIMESTAMP after other imports to avoid circular dependency
-from sqlalchemy import TIMESTAMP
