@@ -91,35 +91,41 @@ class AttendeeProfile(Base, TimestampMixin):
         """
         Calculate profile completion percentage (0-100).
 
-        Weighted scoring:
-        - Basic info (40%): first_name, last_name, email (always present)
-        - Professional (30%): organization_name, position, country, city
-        - Extended (30%): phone, department, bio
+        Counts filled fields out of total editable fields.
+        Fields included:
+        - first_name, last_name, email (always present) = 3
+        - organization_name, position, department = 3
+        - phone, country, city = 3
+        - bio = 1
+        Total: 10 fields, each worth 10%
         """
-        score = 0
+        total_fields = 10
+        filled_fields = 0
 
-        # Basic info - 40 points (email, first_name, last_name always present)
-        score += 40
+        # These 3 are always present for logged-in users
+        filled_fields += 3  # first_name, last_name, email
 
-        # Professional info - 30 points (7.5 each)
+        # Professional info
         if self.organization_name and self.organization_name.strip():
-            score += 7.5
+            filled_fields += 1
         if self.position and self.position.strip():
-            score += 7.5
-        if self.country and self.country.strip():
-            score += 7.5
-        if self.city and self.city.strip():
-            score += 7.5
-
-        # Extended profile - 30 points (10 each)
-        if self.phone and self.phone.strip():
-            score += 10
+            filled_fields += 1
         if self.department and self.department.strip():
-            score += 10
-        if self.bio and self.bio.strip():
-            score += 10
+            filled_fields += 1
 
-        return int(score)
+        # Contact details
+        if self.phone and self.phone.strip():
+            filled_fields += 1
+        if self.country and self.country.strip():
+            filled_fields += 1
+        if self.city and self.city.strip():
+            filled_fields += 1
+
+        # Bio
+        if self.bio and self.bio.strip():
+            filled_fields += 1
+
+        return int((filled_fields / total_fields) * 100)
 
 
 class ConferenceRegistration(Base, TimestampMixin):
