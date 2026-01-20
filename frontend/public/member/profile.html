@@ -138,29 +138,29 @@
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="profile-field">
-              <label id="firstNameLabel">First Name</label>
+              <label id="firstNameLabel">First Name <span style="color: #d32f2f;">*</span></label>
               <div class="value" data-field="first_name"></div>
-              <input type="text" name="first_name" style="display: none;">
+              <input type="text" name="first_name" required style="display: none;">
             </div>
 
             <div class="profile-field">
-              <label id="lastNameLabel">Last Name</label>
+              <label id="lastNameLabel">Last Name <span style="color: #d32f2f;">*</span></label>
               <div class="value" data-field="last_name"></div>
-              <input type="text" name="last_name" style="display: none;">
+              <input type="text" name="last_name" required style="display: none;">
             </div>
           </div>
 
           <div class="profile-field">
-            <label id="emailLabel">Email Address</label>
-            <div class="value" data-field="user_email"></div>
+            <label id="emailLabel">Email Address <span style="color: #d32f2f;">*</span></label>
+            <div class="value" data-field="email"></div>
             <small id="emailNote" style="color: var(--text-light);">Email cannot be changed. Contact support if needed.</small>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="profile-field">
-              <label id="countryLabel">Country</label>
+              <label id="countryLabel">Country <span style="color: #d32f2f;">*</span></label>
               <div class="value" data-field="country"></div>
-              <input type="text" name="country" style="display: none;">
+              <input type="text" name="country" required style="display: none;">
             </div>
 
             <div class="profile-field">
@@ -255,13 +255,30 @@
 
         <!-- Directory & Privacy Settings -->
         <div class="profile-section">
-          <h2 id="privacyHeading">Directory & Privacy Settings</h2>
+          <h2 id="privacyHeading">Privacy Settings</h2>
+
+          <div style="background: #f0f8ff; border: 1px solid #b3d9ff; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0 0 0.5rem 0; font-size: 1rem; color: #0066cc;">
+              <span style="font-size: 1.2rem;">🔒</span> Member Directory & GDPR Compliance
+            </h3>
+            <p style="margin: 0 0 0.75rem 0; font-size: 0.9rem; line-height: 1.5; color: #333;">
+              The <strong>Member Directory</strong> helps ISRS members connect and collaborate. Your participation is <strong>entirely optional</strong> and you have full control over which information is visible.
+            </p>
+            <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #333;">
+              <strong>Your Privacy Rights (GDPR):</strong> You can opt in/out at any time, choose which fields to display, export your data, or delete your account. We never share your information with third parties without your explicit consent.
+            </p>
+          </div>
 
           <div class="profile-field">
             <label style="display: flex; align-items: center; cursor: pointer;">
-              <input type="checkbox" name="directory_opt_in" id="directoryOptIn" disabled style="width: 20px; height: 20px; margin-right: 0.75rem;">
-              <span id="showInDirectoryLabel">Include me in the public member directory</span>
+              <input type="checkbox" name="directory_opt_in" id="directoryOptIn" required disabled style="width: 20px; height: 20px; margin-right: 0.75rem;">
+              <span id="showInDirectoryLabel">
+                <strong>Show in Member Directory</strong> <span style="color: #d32f2f;">*</span>
+              </span>
             </label>
+            <small style="color: var(--text-light); display: block; margin-top: 0.5rem; margin-left: 2.25rem;">
+              Required: Choose to be visible or hidden in the directory. You can change this anytime.
+            </small>
           </div>
 
           <div id="visibilitySettings" style="display: none; background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 4px; padding: 1rem; margin-top: 1rem;">
@@ -642,6 +659,29 @@
 
       const form = e.target;
       const submitBtn = form.querySelector('button[type="submit"]');
+
+      // Validate required fields
+      const requiredFields = [
+        { name: 'first_name', label: 'First Name' },
+        { name: 'last_name', label: 'Last Name' },
+        { name: 'country', label: 'Country' }
+      ];
+
+      for (const field of requiredFields) {
+        const value = form[field.name].value.trim();
+        if (!value) {
+          alert(`${field.label} is required. Please fill in this field.`);
+          form[field.name].focus();
+          return;
+        }
+      }
+
+      // Validate directory opt-in choice has been made
+      // (checkbox required attribute handles this, but double-check)
+      if (!form.directory_opt_in.checked && form.directory_opt_in.value === '') {
+        alert('Please choose whether to show in the Member Directory.');
+        return;
+      }
 
       submitBtn.disabled = true;
       submitBtn.textContent = t('savingProfile');
