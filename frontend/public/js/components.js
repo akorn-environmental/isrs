@@ -730,6 +730,7 @@ const translations = {
 
     // ========== ICSR2026 PAGE ==========
     // ICSR2026 - Hero
+    icsr2026SaveDateHeading: 'SAVE THE DATE!',
     icsr2026HeroHeading: 'ICSR2026',
     icsr2026HostedBy: 'Hosted by <a href="https://restorationfund.org/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Puget Sound Restoration Fund</a>',
     icsr2026Location: 'Puget Sound, Washington State',
