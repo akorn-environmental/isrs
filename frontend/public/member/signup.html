@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your ISRS member account">
+  <title>Member Signup - ISRS</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/member-auth.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 600px; margin: 4rem auto; padding: 2rem;">
+      <!-- Signup Form -->
+      <div id="signupForm">
+        <h1 style="margin-bottom: 0.5rem; text-align: center;">Join ISRS</h1>
+        <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem; text-align: center;">
+          Create your member account to access the directory and member benefits
+        </p>
+
+        <form id="registrationForm" style="max-width: 500px; margin: 0 auto;">
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="your.email@example.com"
+              style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;"
+              autofocus
+            />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="firstName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">First Name *</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              required
+              placeholder="Jane"
+              style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;"
+            />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="lastName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Last Name *</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              required
+              placeholder="Smith"
+              style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;"
+            />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="organization" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Organization</label>
+            <input
+              type="text"
+              id="organization"
+              name="organization"
+              placeholder="University of Marine Sciences"
+              style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;"
+            />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="country" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Country</label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              placeholder="United States"
+              style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color); border-radius: 4px; font-size: 1rem;"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem;"
+          >
+            Create Account
+          </button>
+
+          <div id="error" style="display: none; margin-top: 1rem; padding: 1rem; background: #fee; border: 1px solid #fcc; border-radius: 4px; color: #c00;"></div>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center;">
+          <p style="color: var(--text-light); margin-bottom: 0.5rem;">
+            Already have an account?
+          </p>
+          <p>
+            <a href="/member/login.html" class="btn btn-secondary">Login Here</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div id="successMessage" style="display: none; text-align: center;">
+        <div style="font-size: 4rem; color: var(--primary-blue); margin-bottom: 1rem;">✓</div>
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Welcome to ISRS!</h2>
+        <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem;">
+          We've sent a verification link to <strong id="sentEmail"></strong>
+        </p>
+        <p style="color: var(--text-light); font-size: 0.95rem; margin-bottom: 2rem;">
+          Click the link in the email to verify your account and complete registration. The link will expire in 15 minutes.
+        </p>
+        <p>
+          <a href="/member/login.html" class="btn btn-primary">Go to Login</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="/js/components.js"></script>
+  <script>
+    // Check if already logged in
+    if (MemberAuth.isAuthenticated()) {
+      window.location.href = '/member/profile.html';
+    }
+
+    const form = document.getElementById('registrationForm');
+    const errorDiv = document.getElementById('error');
+    const signupForm = document.getElementById('signupForm');
+    const successMessage = document.getElementById('successMessage');
+    const sentEmailSpan = document.getElementById('sentEmail');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        email: document.getElementById('email').value.trim(),
+        first_name: document.getElementById('firstName').value.trim(),
+        last_name: document.getElementById('lastName').value.trim(),
+        organization_name: document.getElementById('organization').value.trim() || undefined,
+        country: document.getElementById('country').value.trim() || undefined
+      };
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      // Clear previous error
+      errorDiv.style.display = 'none';
+
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating Account...';
+
+      try {
+        const response = await MemberAuth.register(formData);
+
+        if (response.success) {
+          // Show success message
+          sentEmailSpan.textContent = formData.email;
+          signupForm.style.display = 'none';
+          successMessage.style.display = 'block';
+        } else {
+          throw new Error(response.error || 'Failed to create account');
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+
+        let errorMessage = 'Failed to create account. Please try again.';
+
+        // Check for specific error messages
+        if (error.message.includes('already exists')) {
+          errorMessage = 'An account with this email already exists. Please login instead.';
+        }
+
+        errorDiv.textContent = errorMessage;
+        errorDiv.style.display = 'block';
+
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

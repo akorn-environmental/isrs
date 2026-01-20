@@ -26,11 +26,29 @@ class LoginRequest(BaseModel):
     email: EmailStr
 
 
+class RegisterRequest(BaseModel):
+    """Request body for registration."""
+
+    email: EmailStr
+    first_name: str
+    last_name: str
+    organization_name: Optional[str] = None
+    country: Optional[str] = None
+
+
 class LoginResponse(BaseModel):
     """Response for login request."""
 
     success: bool
     message: str
+
+
+class RegisterResponse(BaseModel):
+    """Response for registration request."""
+
+    success: bool
+    message: str
+    user_id: Optional[str] = None
 
 
 class VerifyTokenRequest(BaseModel):
@@ -88,6 +106,88 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)) -> A
         )
 
     return attendee
+
+
+@router.post("/register", response_model=RegisterResponse)
+@limiter.limit("3/hour")
+async def register(register_data: RegisterRequest, request: Request, db: Session = Depends(get_db)):
+    """
+    Register a new member account.
+    Creates an AttendeeProfile and sends a verification magic link.
+    Rate limited to 3 requests per hour per IP to prevent abuse.
+    """
+    try:
+        email = register_data.email.lower()
+
+        # Check if user already exists
+        existing_user = db.query(AttendeeProfile).filter(AttendeeProfile.user_email == email).first()
+
+        if existing_user:
+            logger.warning(f"Registration attempted for existing email: {email}")
+            # Don't reveal that user exists for security
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="An account with this email already exists. Please use the login page instead."
+            )
+
+        # Create new attendee profile
+        new_attendee = AttendeeProfile(
+            user_email=email,
+            first_name=register_data.first_name.strip(),
+            last_name=register_data.last_name.strip(),
+            organization_name=register_data.organization_name.strip() if register_data.organization_name else None,
+            country=register_data.country.strip() if register_data.country else None,
+            account_status="active",
+            email_verified=False,
+            login_count=0
+        )
+
+        db.add(new_attendee)
+        db.commit()
+        db.refresh(new_attendee)
+
+        logger.info(f"New member registered: {email} (ID: {new_attendee.id})")
+
+        # Get client IP and user agent
+        client_ip = request.client.host if request.client else None
+        user_agent = request.headers.get("User-Agent")
+
+        # Create magic link session for email verification
+        user_session, magic_link = await auth_service.create_magic_link_session(
+            db, email, str(new_attendee.id), client_ip, user_agent
+        )
+
+        # Send verification magic link email
+        email_sent = await email_service.send_magic_link(
+            email,
+            magic_link,
+            subject="Welcome to ISRS - Verify Your Email"
+        )
+
+        if not email_sent:
+            logger.error(f"Failed to send verification email to {email}")
+            # Still return success since account was created
+            return RegisterResponse(
+                success=True,
+                message="Account created successfully. Please contact support if you don't receive a verification email.",
+                user_id=str(new_attendee.id)
+            )
+
+        return RegisterResponse(
+            success=True,
+            message="Registration successful! Please check your email for a verification link.",
+            user_id=str(new_attendee.id)
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during registration: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred during registration. Please try again later."
+        )
 
 
 @router.post("/request-login", response_model=LoginResponse)

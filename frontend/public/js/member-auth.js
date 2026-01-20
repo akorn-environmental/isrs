@@ -80,6 +80,23 @@ const MemberAuth = (() => {
   // Authentication API Calls
 
   /**
+   * Register a new member account
+   * @param {Object} userData - User registration data
+   * @param {string} userData.email - User email address
+   * @param {string} userData.first_name - First name
+   * @param {string} userData.last_name - Last name
+   * @param {string} [userData.organization_name] - Organization name (optional)
+   * @param {string} [userData.country] - Country (optional)
+   * @returns {Promise} API response
+   */
+  async function register(userData) {
+    return apiCall('/register', {
+      method: 'POST',
+      body: JSON.stringify(userData)
+    });
+  }
+
+  /**
    * Request magic link login
    * @param {string} email - User email address
    * @returns {Promise} API response
@@ -239,6 +256,7 @@ const MemberAuth = (() => {
     setUserData,
 
     // Authentication
+    register,
     login,
     verifyMagicLink,
     logout,
