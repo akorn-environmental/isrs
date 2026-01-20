@@ -532,7 +532,19 @@ async def update_current_user_profile(
         # Validate phone number if provided
         if 'phone' in update_data and update_data['phone']:
             phone = update_data['phone']
-            country = update_data.get('country') or current_user.country or 'US'
+            country_raw = update_data.get('country') or current_user.country or 'US'
+
+            # Normalize country code (USA -> US, United States -> US, etc.)
+            country_map = {
+                'USA': 'US',
+                'United States': 'US',
+                'United States of America': 'US',
+                'US': 'US',
+                'Canada': 'CA',
+                'UK': 'GB',
+                'United Kingdom': 'GB'
+            }
+            country = country_map.get(country_raw, country_raw[:2].upper() if country_raw else 'US')
 
             try:
                 # Parse and validate phone number
@@ -544,15 +556,11 @@ async def update_current_user_profile(
                         phonenumbers.PhoneNumberFormat.E164
                     )
                 else:
-                    raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST,
-                        detail=f"Invalid phone number for country {country}"
-                    )
+                    # If validation fails, just keep the original phone number
+                    logger.warning(f"Phone number validation failed for {phone} with country {country}, keeping original")
             except NumberParseException as e:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Invalid phone number format: {str(e)}"
-                )
+                # If parsing fails, just keep the original phone number
+                logger.warning(f"Phone number parsing failed: {str(e)}, keeping original")
 
         for field, value in update_data.items():
             if value is not None:  # Only update non-None values
