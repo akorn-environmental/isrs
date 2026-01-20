@@ -13,10 +13,16 @@
 
   <script src="/js/theme.js"></script>
   <script src="/js/analytics.js"></script>
+  <script src="/js/components.js"></script>
   <script src="/js/member-auth.js"></script>
 </head>
 <body>
   <header id="site-header"></header>
+
+  <script>
+    // Load header with language switcher
+    loadHeader();
+  </script>
 
   <main id="main-content">
     <div class="container" style="max-width: 600px; margin: 4rem auto; padding: 2rem;">
@@ -24,30 +30,23 @@
       <!-- Loading State -->
       <div id="loadingState" style="text-align: center;">
         <div class="spinner" style="margin: 2rem auto 1rem; width: 60px; height: 60px; border: 4px solid var(--border-color); border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <h1 style="color: var(--text-light); margin-bottom: 0.5rem;">Verifying Your Login</h1>
-        <p style="color: var(--text-light);">Please wait while we securely log you in...</p>
+        <h1 id="verifyingHeading" style="color: var(--text-light); margin-bottom: 0.5rem;"></h1>
+        <p id="verifyingText" style="color: var(--text-light);"></p>
       </div>
 
       <!-- Error State -->
       <div id="errorState" style="display: none; text-align: center;">
         <div style="font-size: 4rem; color: #c00; margin-bottom: 1rem;">✗</div>
-        <h1 style="color: #c00; margin-bottom: 1rem;">Login Failed</h1>
-        <p id="errorMessage" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; color: var(--text-color);">
-          This login link is invalid or has expired.
-        </p>
+        <h1 id="errorHeading" style="color: #c00; margin-bottom: 1rem;"></h1>
+        <p id="errorMessage" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; color: var(--text-color);"></p>
         <div style="padding: 1.5rem; background: #fef8e7; border: 1px solid #f4d03f; border-radius: 4px; margin-bottom: 2rem;">
-          <p style="margin: 0; color: var(--text-color);">
-            <strong>Troubleshooting:</strong><br>
-            • Magic links expire after 15 minutes<br>
-            • Each link can only be used once<br>
-            • Make sure you clicked the latest link sent to your email
-          </p>
+          <p id="troubleshootingText" style="margin: 0; color: var(--text-color);"></p>
         </div>
         <p>
-          <a href="/member/login.html" class="btn btn-primary">Request New Login Link</a>
+          <a href="/member/login.html" id="requestNewLinkBtn" class="btn btn-primary"></a>
         </p>
         <p style="margin-top: 1rem;">
-          <a href="/" class="btn btn-secondary">Return to Home</a>
+          <a href="/" id="returnHomeBtn" class="btn btn-secondary"></a>
         </p>
       </div>
 
@@ -56,7 +55,35 @@
 
   <footer id="site-footer"></footer>
 
-  <script src="/js/components.js"></script>
+  <script>
+    // Load footer
+    loadFooter();
+
+    // Update page content with translations
+    function updateVerifyPageText() {
+      document.getElementById('verifyingHeading').textContent = t('verifyingLogin');
+      document.getElementById('verifyingText').textContent = t('verifyingLoginText');
+      document.getElementById('errorHeading').textContent = t('loginFailed');
+      document.getElementById('requestNewLinkBtn').textContent = t('requestNewLoginLink');
+      document.getElementById('returnHomeBtn').textContent = t('returnToHome');
+
+      // Troubleshooting section needs HTML
+      document.getElementById('troubleshootingText').innerHTML =
+        '<strong>' + t('troubleshooting') + '</strong><br>' +
+        '• ' + t('linksExpire') + '<br>' +
+        '• ' + t('oneTimeUse') + '<br>' +
+        '• ' + t('useLatestLink');
+
+      // Update page title
+      document.title = t('verifyingLogin') + ' - ISRS';
+    }
+
+    // Initial text update
+    updateVerifyPageText();
+
+    // Listen for language changes
+    window.addEventListener('languageChanged', updateVerifyPageText);
+  </script>
 
   <style>
     @keyframes spin {
@@ -75,7 +102,7 @@
       const token = urlParams.get('token');
 
       if (!token) {
-        showError('No login token provided in the URL.');
+        showError(t('noTokenProvided'));
         return;
       }
 
@@ -116,7 +143,7 @@
 
       } catch (error) {
         console.error('Verification error:', error);
-        showError(error.message || 'An unexpected error occurred during login verification.');
+        showError(error.message || t('verificationError'));
       }
     }
 
