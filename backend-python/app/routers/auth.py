@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 import logging
+import json
 import phonenumbers
 from phonenumbers import NumberParseException
 
@@ -495,7 +496,7 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
 
 @router.put("/me")
 async def update_current_user_profile(
-    profile_data: UpdateProfileRequest,
+    request: Request,
     current_user: AttendeeProfile = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -505,6 +506,26 @@ async def update_current_user_profile(
     Only updates fields that are provided (not None).
     """
     try:
+        # Parse request body manually to handle any content-type issues
+        body = await request.body()
+        body_str = body.decode('utf-8')
+
+        # If body is double-encoded JSON string, parse it twice
+        try:
+            body_data = json.loads(body_str)
+            if isinstance(body_data, str):
+                # Double-encoded, parse again
+                body_data = json.loads(body_data)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse request body: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid JSON in request body: {str(e)}"
+            )
+
+        # Validate with Pydantic
+        profile_data = UpdateProfileRequest(**body_data)
+
         # Update only provided fields
         update_data = profile_data.model_dump(exclude_unset=True)
 
