@@ -163,6 +163,24 @@ const translations = {
     magicLinkInstructions: 'Click the link in the email to access your member profile. The link will expire in 15 minutes.',
     sendAnotherLink: 'Send Another Link',
 
+    // Member Portal - Signup
+    signupHeading: 'Join ISRS',
+    signupSubtitle: 'Create your member account to access the directory and member benefits',
+    emailAddressRequired: 'Email Address *',
+    firstNameRequired: 'First Name *',
+    lastNameRequired: 'Last Name *',
+    organizationOptional: 'Organization',
+    countryOptional: 'Country',
+    alreadyHaveAccount: 'Already have an account?',
+    loginHere: 'Login Here',
+    welcomeToISRS: 'Welcome to ISRS!',
+    verificationSent: 'We\'ve sent a verification link to',
+    verificationInstructions: 'Click the link in the email to verify your account and complete registration. The link will expire in 15 minutes.',
+    goToLogin: 'Go to Login',
+    creatingAccount: 'Creating Account...',
+    accountCreationFailed: 'Failed to create account. Please try again.',
+    accountExistsError: 'An account with this email already exists. Please login instead.',
+
     // Member Portal - Verification
     verifyingLogin: 'Verifying Your Login',
     verifyingMessage: 'Please wait while we securely log you in...',
@@ -1148,6 +1166,24 @@ const translations = {
     magicLinkSentTo: 'Hemos enviado un enlace de inicio de sesión seguro a',
     magicLinkInstructions: 'Haga clic en el enlace del correo electrónico para acceder a su perfil de miembro. El enlace expirará en 15 minutos.',
     sendAnotherLink: 'Enviar Otro Enlace',
+
+    // Portal de Miembros - Registro
+    signupHeading: 'Únase a ISRS',
+    signupSubtitle: 'Cree su cuenta de miembro para acceder al directorio y beneficios',
+    emailAddressRequired: 'Correo Electrónico *',
+    firstNameRequired: 'Nombre *',
+    lastNameRequired: 'Apellido *',
+    organizationOptional: 'Organización',
+    countryOptional: 'País',
+    alreadyHaveAccount: '¿Ya tienes una cuenta?',
+    loginHere: 'Iniciar Sesión Aquí',
+    welcomeToISRS: '¡Bienvenido a ISRS!',
+    verificationSent: 'Hemos enviado un enlace de verificación a',
+    verificationInstructions: 'Haga clic en el enlace del correo electrónico para verificar su cuenta y completar el registro. El enlace expirará en 15 minutos.',
+    goToLogin: 'Ir a Iniciar Sesión',
+    creatingAccount: 'Creando Cuenta...',
+    accountCreationFailed: 'No se pudo crear la cuenta. Por favor, inténtelo de nuevo.',
+    accountExistsError: 'Ya existe una cuenta con este correo electrónico. Por favor inicie sesión.',
 
     // Portal de Miembros - Verificación
     verifyingLogin: 'Verificando su Inicio de Sesión',
@@ -2135,6 +2171,24 @@ const translations = {
     magicLinkSentTo: 'Nous avons envoyé un lien de connexion sécurisé à',
     magicLinkInstructions: 'Cliquez sur le lien dans l\'e-mail pour accéder à votre profil de membre. Le lien expirera dans 15 minutes.',
     sendAnotherLink: 'Envoyer un Autre Lien',
+
+    // Portail des Membres - Inscription
+    signupHeading: 'Rejoindre ISRS',
+    signupSubtitle: 'Créez votre compte membre pour accéder au répertoire et aux avantages',
+    emailAddressRequired: 'Adresse E-mail *',
+    firstNameRequired: 'Prénom *',
+    lastNameRequired: 'Nom *',
+    organizationOptional: 'Organisation',
+    countryOptional: 'Pays',
+    alreadyHaveAccount: 'Vous avez déjà un compte?',
+    loginHere: 'Se Connecter Ici',
+    welcomeToISRS: 'Bienvenue à ISRS!',
+    verificationSent: 'Nous avons envoyé un lien de vérification à',
+    verificationInstructions: 'Cliquez sur le lien dans l\'e-mail pour vérifier votre compte et terminer l\'inscription. Le lien expirera dans 15 minutes.',
+    goToLogin: 'Aller à la Connexion',
+    creatingAccount: 'Création du Compte...',
+    accountCreationFailed: 'Échec de la création du compte. Veuillez réessayer.',
+    accountExistsError: 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter.',
 
     // Portail des Membres - Vérification
     verifyingLogin: 'Vérification de Votre Connexion',
