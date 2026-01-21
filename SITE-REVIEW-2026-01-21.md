@@ -192,6 +192,13 @@
 - [x] Accessibility (/legal/accessibility.html) - Working, WCAG 2.1 AA statement
 - [x] Code of Conduct (/legal/code-of-conduct.html) - Working, conference conduct policy
 
+### Round 9: Additional Pages (2026-01-21)
+- [x] ICSR (/icsr.html) - Working, conference history and info displays
+- [x] ICSR 2024 Photos (/icsr2024-photos.html) - Working, Jekyll Island photos display
+- [x] Travel (/travel/index.html) - Working, Travel & Roommate Finder with forms
+- [x] Meeting Calendar (/meetings/calendar.html) - Working, calendar with filters, empty state
+- [x] Conference Confirmation (/conference/confirmation.html) - Working, shows error without valid token (correct)
+
 ### Round 6: API Endpoints
 - [x] GET /health - Working
 - [x] GET /api/zones/public/page/* - Fixed and working
