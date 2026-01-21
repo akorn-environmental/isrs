@@ -297,3 +297,15 @@ TourManager.isCompleted('member-portal');
 - Checks `isrs_session_token` in localStorage before showing
 - Stores completion in `isrs_tours_completed` (localStorage)
 - Session dismissals in `isrs_tours_session_dismissed` (sessionStorage)
+
+### Restart Tour Buttons (commit 5f94221)
+
+Added "Restart Tour" buttons to allow users to replay the walkthrough:
+
+**Member Profile Page (`/member/profile.html`):**
+- Added "? Tour" button in the header button group
+- Resets member-portal tour and redirects to `/member/index.html`
+
+**Admin Settings Page (`/admin/settings.html`):**
+- Added "Help & Support" section with "Restart Tour" button
+- Resets admin-portal tour and redirects to `/admin/index.html`
