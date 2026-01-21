@@ -98,6 +98,7 @@ app.include_router(contacts.router, prefix="/api/contacts", tags=["Contacts"])
 app.include_router(votes.router, prefix="/api/votes", tags=["Board Votes"])
 app.include_router(conferences.router, prefix="/api/conferences", tags=["Conferences"])
 app.include_router(conferences.router, prefix="/api/conference", tags=["Conference"])  # Alias for frontend compatibility
+app.include_router(conferences.router, prefix="/api", tags=["Abstracts"])  # Exposes /api/abstracts/* routes for My Reviews page
 app.include_router(events.router, prefix="/api/events", tags=["Conference Events"])
 app.include_router(funding.router, prefix="/api/funding", tags=["Funding"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
