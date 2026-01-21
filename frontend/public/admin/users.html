@@ -11,28 +11,524 @@
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/admin-layout.css">
   <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    /* Page-specific styles */
+    .role-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: var(--admin-text-xs);
+      font-weight: 500;
+      margin: 0.1rem;
+    }
+    .role-super_admin, .role-developer { background: #fee2e2; color: #991b1b; }
+    .role-board_president, .role-board_vice_president { background: #fef3c7; color: #92400e; }
+    .role-board_secretary, .role-board_treasurer { background: #d1fae5; color: #065f46; }
+    .role-board_member { background: #dbeafe; color: #1e40af; }
+    .role-advisory_panel { background: #e0e7ff; color: #3730a3; }
+    .role-member { background: #f3f4f6; color: #6b7280; }
+    .roles-cell { max-width: 250px; }
+    .user-name { font-weight: 500; }
+    .user-email { font-size: var(--admin-text-xs); color: var(--admin-text-secondary); }
+  </style>
   <script src="/js/errorReporter.js"></script>
 </head>
 <body class="admin-page">
-  <div class="admin-content-padded" style="max-width: 900px; margin: 0 auto;">
-    <div class="admin-page-header" style="background: transparent; border: none; padding-left: 0;">
-      <h1>User Management</h1>
-      <p class="admin-text-muted">Manage admin users, roles, and permissions</p>
-    </div>
-
+  <div class="admin-content-padded">
     <div class="admin-card">
-      <div class="admin-card-body" style="text-align: center; padding: 4rem 2rem;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">👥</div>
-        <h2>User Management Interface</h2>
-        <p class="admin-text-muted" style="margin: 1rem 0 2rem;">
-          The dedicated user management interface is coming soon. For now, user administration is available through the settings page.
-        </p>
-        <a href="/admin/settings.html" class="admin-btn admin-btn-primary">Go to Settings</a>
-        <a href="/admin/" class="admin-btn admin-btn-secondary" style="margin-left: 1rem;">Back to Dashboard</a>
+      <div class="admin-page-header">
+        <h1>User Management</h1>
+        <p class="admin-text-muted" style="margin: 0.5rem 0 0 0;">Manage admin users, roles, and permissions</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="admin-toolbar">
+        <input type="text" class="admin-input" id="searchInput" placeholder="Search by name, email, or organization..." style="flex: 1; max-width: 400px;" oninput="debounceSearch()">
+        <select class="admin-select" id="roleFilter" onchange="loadUsers()" style="width: 180px;">
+          <option value="">All Roles</option>
+        </select>
+        <button class="admin-btn admin-btn-secondary" onclick="resetFilters()">Reset</button>
+      </div>
+
+      <div class="admin-table-wrapper">
+        <div id="tableContent">
+          <div class="admin-loading">
+            <span class="admin-spinner"></span>
+            Loading users...
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card-footer" id="paginationBar" style="display: none;">
+        <span id="statsText">Showing 0 users</span>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="admin-btn admin-btn-secondary" id="prevBtn" onclick="prevPage()" disabled>Previous</button>
+          <span id="pageInfo">Page 1</span>
+          <button class="admin-btn admin-btn-secondary" id="nextBtn" onclick="nextPage()" disabled>Next</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- User Detail Modal -->
+  <div id="userModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 600px;">
+      <div class="admin-modal-header">
+        <h2 id="modalTitle">User Details</h2>
+        <button class="admin-modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="admin-modal-body" id="modalContent">
+        <div class="admin-loading">
+          <span class="admin-spinner"></span>
+          Loading user details...
+        </div>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-btn admin-btn-secondary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign Role Modal -->
+  <div id="assignRoleModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="max-width: 500px;">
+      <div class="admin-modal-header">
+        <h2>Assign Role</h2>
+        <button class="admin-modal-close" onclick="closeAssignModal()">&times;</button>
+      </div>
+      <form id="assignRoleForm" onsubmit="handleAssignRole(event)">
+        <div class="admin-modal-body">
+          <input type="hidden" id="assignUserId" name="user_id">
+          <p id="assignUserName" style="margin-bottom: 1rem; font-weight: 500;"></p>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="assignRoleSelect">Select Role *</label>
+            <select class="admin-select" id="assignRoleSelect" name="role_id" required style="width: 100%;">
+              <option value="">-- Select a role --</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="activeFrom">Active From (Optional)</label>
+            <input type="datetime-local" class="admin-input" id="activeFrom" name="active_from" style="width: 100%;">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="activeUntil">Active Until (Optional)</label>
+            <input type="datetime-local" class="admin-input" id="activeUntil" name="active_until" style="width: 100%;">
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAssignModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-success" id="assignBtn">Assign Role</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Layout -->
   <script src="/js/admin-layout.js"></script>
+
+  <script>
+    const API_BASE_URL = '';
+    let allUsers = [];
+    let allRoles = [];
+    let currentPage = 1;
+    let pageSize = 50;
+    let totalUsers = 0;
+    let searchTimeout = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      loadAdminLayout('users');
+      loadRoles();
+      loadUsers();
+    });
+
+    function getAuthHeaders() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      return {
+        'Authorization': `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json'
+      };
+    }
+
+    async function loadRoles() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/roles`, {
+          headers: getAuthHeaders()
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          allRoles = data.data;
+          populateRoleFilters();
+        }
+      } catch (error) {
+        console.error('Error loading roles:', error);
+      }
+    }
+
+    function populateRoleFilters() {
+      const filterSelect = document.getElementById('roleFilter');
+      const assignSelect = document.getElementById('assignRoleSelect');
+
+      allRoles.forEach(role => {
+        // Add to filter dropdown
+        const filterOpt = document.createElement('option');
+        filterOpt.value = role.name;
+        filterOpt.textContent = role.display_name || role.name;
+        filterSelect.appendChild(filterOpt);
+
+        // Add to assign dropdown
+        const assignOpt = document.createElement('option');
+        assignOpt.value = role.id;
+        assignOpt.textContent = role.display_name || role.name;
+        assignSelect.appendChild(assignOpt);
+      });
+    }
+
+    function debounceSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        currentPage = 1;
+        loadUsers();
+      }, 300);
+    }
+
+    async function loadUsers() {
+      const search = document.getElementById('searchInput').value;
+      const role = document.getElementById('roleFilter').value;
+
+      const params = new URLSearchParams({
+        page: currentPage,
+        page_size: pageSize
+      });
+      if (search) params.append('search', search);
+      if (role) params.append('role', role);
+
+      document.getElementById('tableContent').innerHTML = `
+        <div class="admin-loading">
+          <span class="admin-spinner"></span>
+          Loading users...
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users?${params}`, {
+          headers: getAuthHeaders()
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          allUsers = data.data;
+          totalUsers = data.total;
+          displayUsers();
+        } else {
+          document.getElementById('tableContent').innerHTML = `
+            <div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">
+              Failed to load users: ${data.detail || data.error || 'Unknown error'}
+            </div>
+          `;
+        }
+      } catch (error) {
+        document.getElementById('tableContent').innerHTML = `
+          <div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">
+            Error: ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    function displayUsers() {
+      if (allUsers.length === 0) {
+        document.getElementById('tableContent').innerHTML = `
+          <div class="admin-empty">
+            <div class="admin-empty-title">No users found</div>
+            <p class="admin-text-muted">Try adjusting your search or filters</p>
+          </div>
+        `;
+        document.getElementById('paginationBar').style.display = 'none';
+        return;
+      }
+
+      const html = `
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Organization</th>
+              <th>Country</th>
+              <th class="roles-cell">Roles</th>
+              <th>Last Active</th>
+              <th style="width: 120px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allUsers.map(user => `
+              <tr>
+                <td>
+                  <div class="user-name">${escapeHtml(user.full_name || 'Unknown')}</div>
+                  <div class="user-email">${escapeHtml(user.email)}</div>
+                </td>
+                <td>${escapeHtml(user.organization_name || '-')}</td>
+                <td>${escapeHtml(user.country || '-')}</td>
+                <td class="roles-cell">
+                  ${user.roles.length > 0 ? user.roles.map(r => `
+                    <span class="role-badge role-${r.role_name}">${escapeHtml(r.role_display_name || r.role_name)}</span>
+                  `).join('') : '<span class="admin-text-muted">No roles</span>'}
+                </td>
+                <td>${user.last_login ? formatDate(user.last_login) : '-'}</td>
+                <td>
+                  <div style="display: flex; gap: 0.25rem;">
+                    <button class="admin-btn admin-btn-secondary" style="padding: 0.25rem 0.5rem; font-size: var(--admin-text-xs);" onclick="viewUser('${user.id}')">View</button>
+                    <button class="admin-btn admin-btn-primary" style="padding: 0.25rem 0.5rem; font-size: var(--admin-text-xs);" onclick="showAssignRole('${user.id}', '${escapeHtml(user.full_name || user.email)}')">+ Role</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('tableContent').innerHTML = html;
+
+      // Update pagination
+      const totalPages = Math.ceil(totalUsers / pageSize);
+      document.getElementById('statsText').textContent = `Showing ${allUsers.length} of ${totalUsers} users`;
+      document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages || 1}`;
+      document.getElementById('prevBtn').disabled = currentPage <= 1;
+      document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+      document.getElementById('paginationBar').style.display = 'flex';
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        loadUsers();
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(totalUsers / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        loadUsers();
+      }
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('roleFilter').value = '';
+      currentPage = 1;
+      loadUsers();
+    }
+
+    async function viewUser(userId) {
+      document.getElementById('userModal').classList.add('active');
+      document.getElementById('modalContent').innerHTML = `
+        <div class="admin-loading">
+          <span class="admin-spinner"></span>
+          Loading user details...
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+          headers: getAuthHeaders()
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          const user = data.data;
+          document.getElementById('modalTitle').textContent = user.full_name || 'User Details';
+          document.getElementById('modalContent').innerHTML = `
+            <div style="display: grid; gap: 1rem;">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Email</label>
+                <div>${escapeHtml(user.email)}</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="admin-form-group">
+                  <label class="admin-form-label">First Name</label>
+                  <div>${escapeHtml(user.first_name || '-')}</div>
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Last Name</label>
+                  <div>${escapeHtml(user.last_name || '-')}</div>
+                </div>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Organization</label>
+                <div>${escapeHtml(user.organization_name || '-')}</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Position</label>
+                  <div>${escapeHtml(user.position || '-')}</div>
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Country</label>
+                  <div>${escapeHtml(user.country || '-')}</div>
+                </div>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Created</label>
+                <div>${user.created_at ? formatDateTime(user.created_at) : '-'}</div>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Last Active</label>
+                <div>${user.last_activity ? formatDateTime(user.last_activity) : '-'}</div>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Roles</label>
+                <div style="margin-top: 0.5rem;">
+                  ${user.roles.length > 0 ? user.roles.map(r => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem; background: var(--admin-gray-50); border-radius: var(--admin-radius-sm); margin-bottom: 0.5rem;">
+                      <div>
+                        <span class="role-badge role-${r.role_name}">${escapeHtml(r.role_display_name || r.role_name)}</span>
+                        <span class="admin-text-muted" style="font-size: var(--admin-text-xs); margin-left: 0.5rem;">
+                          ${r.assigned_at ? 'Assigned ' + formatDate(r.assigned_at) : ''}
+                        </span>
+                      </div>
+                      <button class="admin-btn admin-btn-danger" style="padding: 0.2rem 0.5rem; font-size: var(--admin-text-xs);" onclick="revokeRole('${userId}', '${r.role_id}', '${escapeHtml(r.role_name)}')">Revoke</button>
+                    </div>
+                  `).join('') : '<span class="admin-text-muted">No roles assigned</span>'}
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          document.getElementById('modalContent').innerHTML = `
+            <div class="admin-alert admin-alert-danger">
+              Failed to load user: ${data.detail || data.error || 'Unknown error'}
+            </div>
+          `;
+        }
+      } catch (error) {
+        document.getElementById('modalContent').innerHTML = `
+          <div class="admin-alert admin-alert-danger">
+            Error: ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('userModal').classList.remove('active');
+    }
+
+    function showAssignRole(userId, userName) {
+      document.getElementById('assignUserId').value = userId;
+      document.getElementById('assignUserName').textContent = `Assigning role to: ${userName}`;
+      document.getElementById('assignRoleSelect').value = '';
+      document.getElementById('activeFrom').value = '';
+      document.getElementById('activeUntil').value = '';
+      document.getElementById('assignRoleModal').classList.add('active');
+    }
+
+    function closeAssignModal() {
+      document.getElementById('assignRoleModal').classList.remove('active');
+    }
+
+    async function handleAssignRole(event) {
+      event.preventDefault();
+
+      const userId = document.getElementById('assignUserId').value;
+      const roleId = document.getElementById('assignRoleSelect').value;
+      const activeFrom = document.getElementById('activeFrom').value;
+      const activeUntil = document.getElementById('activeUntil').value;
+
+      const btn = document.getElementById('assignBtn');
+      btn.disabled = true;
+      btn.textContent = 'Assigning...';
+
+      try {
+        const body = {
+          user_id: userId,
+          role_id: roleId
+        };
+        if (activeFrom) body.active_from = new Date(activeFrom).toISOString();
+        if (activeUntil) body.active_until = new Date(activeUntil).toISOString();
+
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/assign-role`, {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify(body)
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          closeAssignModal();
+          loadUsers();
+          alert('Role assigned successfully!');
+        } else {
+          alert('Failed to assign role: ' + (data.detail || data.error || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Assign Role';
+      }
+    }
+
+    async function revokeRole(userId, roleId, roleName) {
+      if (!confirm(`Are you sure you want to revoke the "${roleName}" role from this user?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/revoke-role`, {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({
+            user_id: userId,
+            role_id: roleId
+          })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          closeModal();
+          loadUsers();
+          alert('Role revoked successfully!');
+        } else {
+          alert('Failed to revoke role: ' + (data.detail || data.error || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Utility functions
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function formatDateTime(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+  </script>
+
+  <!-- Feedback Widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    initFeedbackWidget({ isAdminPortal: true });
+  </script>
 </body>
 </html>

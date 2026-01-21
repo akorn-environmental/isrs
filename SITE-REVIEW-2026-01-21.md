@@ -117,7 +117,8 @@
 
 ### Admin Portal Functions
 - [x] Dashboard loads with stats - Redirects to login without auth (correct)
-- [ ] User management CRUD - Placeholder page
+- [x] User management CRUD - IMPLEMENTED: Full API + UI with search, filter, role assignment
+- [x] Audit logs - IMPLEMENTED: Full API + UI with filters by table, action, date, user
 - [ ] Contact management CRUD - Requires auth
 - [ ] Organization management CRUD - Requires auth
 - [ ] Conference management CRUD - Requires auth
@@ -167,7 +168,8 @@
 
 ### Round 3: Admin Portal
 - [x] Dashboard (/admin/index.html) - Redirects to /login.html (placeholder)
-- [x] Users (/admin/users.html) - Placeholder page ("coming soon")
+- [x] Users (/admin/users.html) - IMPLEMENTED: Full user management with search, role filter, role assignment/revocation
+- [x] Audit Logs (/admin/audit-logs.html) - IMPLEMENTED: Full audit log viewer with filters (table, action, date, user)
 - [x] Contacts (/admin/contacts.html) - Redirects to homepage without auth (correct behavior)
 - [ ] Conferences - Not tested
 - [ ] Abstracts - Not tested
