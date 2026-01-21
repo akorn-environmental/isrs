@@ -512,7 +512,9 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
 
 
 @router.get("/directory")
+@limiter.limit("30/hour")
 async def get_member_directory(
+    request: Request,
     search: Optional[str] = None,
     country: Optional[str] = None,
     expertise: Optional[str] = None,
@@ -522,6 +524,8 @@ async def get_member_directory(
 ):
     """
     Get the member directory with optional filters.
+
+    Rate limited to 30 requests per hour to prevent email harvesting.
     Only returns members who have opted into the directory.
     Requires authentication.
     """
@@ -532,6 +536,12 @@ async def get_member_directory(
 
     # Apply search filter (searches name, organization, bio, research areas)
     if search:
+        # Limit search term length to prevent ReDoS and performance issues
+        if len(search) > 100:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Search term too long (max 100 characters)"
+            )
         search_term = f"%{search.lower()}%"
         query = query.filter(
             (AttendeeProfile.first_name.ilike(search_term)) |
@@ -590,6 +600,7 @@ async def get_member_directory(
 
 
 @router.put("/me")
+@limiter.limit("20/hour")
 async def update_current_user_profile(
     request: Request,
     current_user: AttendeeProfile = Depends(get_current_user),
@@ -599,6 +610,8 @@ async def update_current_user_profile(
     Update the current user's profile information.
     Requires authentication.
     Only updates fields that are provided (not None).
+
+    Rate limited to 20 requests per hour to prevent abuse.
     """
     try:
         logger.info(f"=== PROFILE UPDATE START for user {current_user.user_email} ===")

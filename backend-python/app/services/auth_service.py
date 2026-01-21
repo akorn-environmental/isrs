@@ -139,12 +139,16 @@ class AuthService:
         user_session = db.query(UserSession).filter(UserSession.magic_link_token == magic_link_token).first()
 
         if not user_session:
-            logger.warning(f"Magic link token not found: {magic_link_token}")
+            # Only log first 8 characters of token to prevent exposure in logs
+            token_prefix = magic_link_token[:8] if magic_link_token else "empty"
+            logger.warning(f"Magic link token not found: {token_prefix}...")
             return None
 
         # Check if token is valid
         if not user_session.is_magic_link_valid():
-            logger.warning(f"Magic link token expired or already used: {magic_link_token}")
+            # Only log first 8 characters of token to prevent exposure in logs
+            token_prefix = magic_link_token[:8] if magic_link_token else "empty"
+            logger.warning(f"Magic link token expired or already used: {token_prefix}...")
             return None
 
         # Mark magic link as used
@@ -195,7 +199,9 @@ class AuthService:
 
         # Check if session is valid
         if not user_session.is_session_valid():
-            logger.warning(f"Session expired: {session_token}")
+            # Only log first 8 characters of token to prevent exposure in logs
+            token_prefix = session_token[:8] if session_token else "empty"
+            logger.warning(f"Session expired: {token_prefix}...")
             return None
 
         # Update last activity

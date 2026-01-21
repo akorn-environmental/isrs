@@ -3,12 +3,26 @@ Authorization and permission checking dependencies.
 """
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from uuid import UUID
+from datetime import datetime
 
 from app.database import get_db
 from app.models.conference import AttendeeProfile, ConferenceAbstract
 from app.models.abstract_review import AbstractReviewer
 from app.routers.auth import get_current_user
+
+# Admin role names that grant admin access
+ADMIN_ROLES = frozenset([
+    'super_admin',
+    'developer',
+    'board_president',
+    'board_vice_president',
+    'board_secretary',
+    'board_treasurer',
+    'board_member',
+    'advisory_panel',
+])
 
 
 async def get_current_admin(
@@ -18,11 +32,11 @@ async def get_current_admin(
     """
     Verify current user has admin privileges.
 
-    Admin privileges are determined by checking notification_preferences for admin flags.
-    A user is an admin if any of these notification preferences are enabled:
-    - admin_new_registrations
-    - admin_moderation_alerts
-    - admin_system_alerts
+    Admin privileges are determined by checking the user_roles table for active
+    admin role assignments. Admin roles include:
+    - super_admin, developer (full system access)
+    - board_president, board_vice_president, board_secretary, board_treasurer, board_member
+    - advisory_panel
 
     Raises:
         HTTPException: 403 if user is not an admin
@@ -30,15 +44,29 @@ async def get_current_admin(
     Returns:
         AttendeeProfile: The authenticated admin user
     """
-    # Check if user has admin notification preferences enabled
-    prefs = current_user.notification_preferences or {}
-    is_admin = (
-        prefs.get('admin_new_registrations', False) or
-        prefs.get('admin_moderation_alerts', False) or
-        prefs.get('admin_system_alerts', False)
-    )
+    # Query user_roles table to check for admin role assignments
+    # Using raw SQL since Role models aren't defined yet
+    admin_role_check = db.execute(
+        text("""
+            SELECT r.name
+            FROM user_roles ur
+            JOIN roles r ON ur.role_id = r.id
+            WHERE ur.user_id = :user_id
+              AND ur.is_active = true
+              AND (ur.active_until IS NULL OR ur.active_until > :now)
+              AND (ur.active_from IS NULL OR ur.active_from <= :now)
+              AND ur.revoked_at IS NULL
+              AND r.name IN :admin_roles
+            LIMIT 1
+        """),
+        {
+            "user_id": current_user.id,
+            "now": datetime.utcnow(),
+            "admin_roles": tuple(ADMIN_ROLES),
+        }
+    ).fetchone()
 
-    if not is_admin:
+    if not admin_role_check:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required for this operation"

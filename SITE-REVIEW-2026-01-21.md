@@ -143,6 +143,9 @@
 | Profile update 500 error | /member/profile.html | Critical | FIXED | Array field mismatch in auth.py |
 | Asset zones API 500 error | /api/zones/public/page/* | Critical | FIXED | Missing columns in assets table (focal_point_x, focal_point_y, alt_text, caption) |
 | i18n placeholder showing | /icsr2026.html | Minor | FIXED | Added missing icsr2026OverviewText3 translation key |
+| Member directory 404 error | /member/directory.html | Critical | FIXED | Added /api/auth/directory endpoint + fixed getDirectory() auth header |
+| Directory names not showing | /member/directory.html | Medium | FIXED | Added full_name and organization fields to directory API response |
+| My Reviews API missing | /member/my-reviews.html | Medium | OPEN | Backend missing /api/abstracts/* router - abstract review feature not implemented |
 
 ---
 
@@ -156,19 +159,61 @@
 
 ### Round 2: Member Portal
 - [x] Login page - Working, magic link auth
-- [ ] Profile page (requires login)
-- [ ] Directory page (requires login)
-- [ ] My Reviews page (requires login)
+- [x] Profile page - Working, edit saves correctly
+- [x] Directory page - FIXED (was missing endpoint, now working)
+- [x] My Reviews page - Backend API not implemented (abstracts router missing)
 
 ### Round 3: Admin Portal
-- [ ] Dashboard
-- [ ] Users
-- [ ] Contacts
-- [ ] Conferences
-- [ ] Abstracts
+- [x] Dashboard (/admin/index.html) - Redirects to /login.html (placeholder)
+- [x] Users (/admin/users.html) - Placeholder page ("coming soon")
+- [x] Contacts (/admin/contacts.html) - Working, loads with admin UI
+- [ ] Conferences - Not tested
+- [ ] Abstracts - Not tested
 
 ### Round 4: API Endpoints
 - [x] GET /health - Working
 - [x] GET /api/zones/public/page/* - Fixed and working
 - [x] GET /api/auth/me - Returns 401 without auth (correct)
 - [x] GET /api/conferences/ - Returns 401 without auth (correct)
+
+---
+
+## Security Audit (2026-01-21)
+
+### Dependency Vulnerabilities (6 found)
+| Package | Version | CVE/ID | Fix Version |
+|---------|---------|--------|-------------|
+| fastapi | 0.109.0 | PYSEC-2024-38 | 0.109.1 |
+| pdfminer-six | 20221105 | CVE-2025-64512 | 20251107 |
+| pdfminer-six | 20221105 | GHSA-f83h-ghpp-7wcc | 20251230 |
+| starlette | 0.35.1 | CVE-2024-47874 | 0.40.0 |
+| starlette | 0.35.1 | CVE-2025-54121 | 0.47.2 |
+| ecdsa | 0.19.1 | CVE-2024-23342 | - |
+
+### API Security Vulnerabilities (12 found)
+
+#### Critical (ALL FIXED - commit 4541dc1)
+1. ~~**IDOR in withdraw_abstract()** - conferences.py:491 - undefined `current_user.contact_id`~~ **FIXED**
+2. ~~**Missing admin auth checks** - conferences.py:644,792,995 - TODO comments for admin checks~~ **FIXED**
+3. ~~**Broken authorization** - conferences.py:473-508 - `verify_abstract_owner` bypassed~~ **FIXED**
+
+#### High
+4. **Weak admin privilege detection** - permissions.py:14-47 - Uses notification_preferences
+5. **Excessive CORS** - main.py:37-43 - `allow_credentials=True` with `allow_methods=["*"]`
+6. **Token exposure in logs** - auth.py:142,257 - Magic link tokens in queries
+
+#### Medium
+7. **No session inactivity timeout** - auth.py:81-111 - `last_activity` not enforced
+8. **Missing rate limiting** - auth.py:592-746 - Profile update has no rate limit
+9. **IP detection behind proxy** - auth.py:155,218,260,402 - `request.client.host` not proxy-aware
+10. **Directory search risks** - auth.py:534-541 - No length limits, ReDoS potential
+11. **Sensitive data in directory** - auth.py:514-589 - Email harvest risk
+
+### Positive Security Findings
+- Rate limiting on auth endpoints (3/5/10/60 per hour)
+- Secure token generation (secrets.token_urlsafe 32/64 bytes)
+- Magic link 15-minute expiry
+- One-time token usage enforced
+- Token rotation on refresh
+- SQLAlchemy ORM prevents SQL injection
+- Pydantic input validation
