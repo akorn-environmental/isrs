@@ -3,346 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Parser | ISRS Admin</title>
-  <link rel="stylesheet" href="/css/safmc-style.css">
+  <title>Email Parser - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <script src="/js/errorReporter.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-    }
-
-    .admin-header {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .admin-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1800px;
-      margin: 0 auto;
-    }
-
-    .nav-links a {
-      margin-left: 2rem;
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .logout-btn {
-      background: #dc2626;
-      color: white;
-      border: none;
-      padding: 0.5rem 1.5rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      font-weight: 500;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 2rem;
-    }
-
-    .page-header {
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      margin-bottom: 2rem;
-    }
-
-    .page-header h1 {
-      margin: 0 0 0.5rem 0;
-      color: #111827;
-      font-size: 2rem;
-    }
-
-    .page-header p {
-      margin: 0;
-      color: #6b7280;
-    }
-
     .two-column {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: var(--admin-space-xl);
     }
-
-    .card {
-      background: white;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    @media (max-width: 1024px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
     }
-
-    .card h2 {
-      margin: 0 0 1rem 0;
-      color: #111827;
-      font-size: 1.25rem;
+    .parse-form textarea {
+      min-height: 250px;
+      font-family: monospace;
+      font-size: var(--admin-text-sm);
     }
-
-    .form-group {
-      margin-bottom: 1rem;
+    .confidence-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 600;
     }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #374151;
+    .confidence-high {
+      background: var(--admin-success-bg);
+      color: var(--admin-success-text);
     }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-      font-family: inherit;
+    .confidence-medium {
+      background: var(--admin-warning-bg);
+      color: var(--admin-warning-text);
     }
-
-    .form-group textarea {
-      min-height: 300px;
-      font-size: 0.875rem;
+    .confidence-low {
+      background: var(--admin-danger-bg);
+      color: var(--admin-danger-text);
     }
-
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 0.375rem;
-      font-weight: 500;
+    .contact-card {
+      background: var(--admin-gray-50);
+      padding: var(--admin-space-md);
+      border-radius: var(--admin-radius-md);
+      margin-bottom: var(--admin-space-sm);
+    }
+    .contact-card h4 {
+      margin: 0 0 var(--admin-space-xs) 0;
+      font-size: var(--admin-text-md);
+    }
+    .contact-info {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-gray-600);
+    }
+    .action-item {
+      background: var(--admin-info-bg);
+      border-left: 3px solid var(--admin-info);
+      padding: var(--admin-space-md);
+      margin-bottom: var(--admin-space-sm);
+      border-radius: var(--admin-radius-sm);
+    }
+    .flag-item {
+      background: var(--admin-danger-bg);
+      border-left: 3px solid var(--admin-danger);
+      padding: var(--admin-space-sm) var(--admin-space-md);
+      margin-bottom: var(--admin-space-sm);
+      border-radius: var(--admin-radius-sm);
+      font-size: var(--admin-text-sm);
+    }
+    .email-item {
+      background: var(--admin-gray-50);
+      padding: var(--admin-space-md);
+      border-radius: var(--admin-radius-md);
+      margin-bottom: var(--admin-space-md);
       cursor: pointer;
       transition: all 0.15s;
+      border: 1px solid var(--admin-gray-200);
     }
-
-    .btn-primary {
-      background: #667eea;
-      color: white;
+    .email-item:hover {
+      background: var(--admin-surface-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--admin-shadow-sm);
     }
-
-    .btn-primary:hover {
-      background: #5a67d8;
+    .email-subject {
+      font-weight: 600;
+      color: var(--admin-text);
+      margin-bottom: var(--admin-space-xs);
     }
-
-    .btn-primary:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
+    .email-from {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-gray-600);
     }
-
-    .loading {
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .spinner {
+    .review-status {
       display: inline-block;
-      width: 3rem;
-      height: 3rem;
-      border: 3px solid #e5e7eb;
-      border-top-color: #667eea;
+      padding: 0.125rem 0.5rem;
+      border-radius: var(--admin-radius-sm);
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: var(--admin-space-sm);
+    }
+    .status-approved {
+      background: var(--admin-success-bg);
+      color: var(--admin-success-text);
+    }
+    .status-pending {
+      background: var(--admin-warning-bg);
+      color: var(--admin-warning-text);
+    }
+    .result-section {
+      margin-top: var(--admin-space-lg);
+      padding-top: var(--admin-space-lg);
+      border-top: 1px solid var(--admin-gray-200);
+    }
+    .result-section:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .result-section h3 {
+      margin: 0 0 var(--admin-space-md) 0;
+      font-size: var(--admin-text-md);
+    }
+    .parsed-emails-list {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .empty-state {
+      text-align: center;
+      padding: var(--admin-space-2xl);
+      color: var(--admin-gray-500);
+    }
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--admin-space-md);
+    }
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--admin-gray-200);
+      border-top-color: var(--admin-primary);
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin: 0 auto var(--admin-space-md);
     }
-
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    .result-section {
-      margin-top: 1rem;
-    }
-
-    .confidence-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .confidence-high {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    .confidence-medium {
-      background: #fed7aa;
-      color: #92400e;
-    }
-
-    .confidence-low {
-      background: #fecaca;
-      color: #991b1b;
-    }
-
-    .contact-card {
-      background: #f9fafb;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .contact-card h4 {
-      margin: 0 0 0.5rem 0;
-      color: #111827;
-    }
-
-    .contact-info {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-
-    .action-item {
-      background: #eff6ff;
-      border-left: 3px solid #3b82f6;
-      padding: 1rem;
-      margin-bottom: 0.5rem;
-      border-radius: 0.25rem;
-    }
-
-    .flag {
-      background: #fee2e2;
-      border-left: 3px solid #dc2626;
-      padding: 0.75rem;
-      margin-bottom: 0.5rem;
-      border-radius: 0.25rem;
-      font-size: 0.875rem;
-    }
-
-    .parsed-emails-list {
-      max-height: 600px;
-      overflow-y: auto;
-    }
-
-    .email-item {
-      background: #f9fafb;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .email-item:hover {
-      background: #f3f4f6;
-      transform: translateY(-2px);
-    }
-
-    .email-subject {
-      font-weight: 600;
-      color: #111827;
-      margin-bottom: 0.25rem;
-    }
-
-    .email-from {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-
-    .review-status {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-top: 0.5rem;
-    }
-
-    .status-approved {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    .status-pending {
-      background: #fed7aa;
-      color: #92400e;
-    }
   </style>
-  <!-- Error Reporter - Logs frontend errors to backend/Render -->
-  <script src="/js/errorReporter.js"></script>
 </head>
-<body>
-  <!-- Header -->
-  <div class="admin-header">
-    <nav class="admin-nav">
-      <h2 style="margin:0;color:#667eea;">ISRS Email Parser</h2>
-      <div class="nav-links">
-        <a href="/admin/analytics.html">Analytics</a>
-        <a href="/admin/funding-pipeline.html">Funding</a>
-        <a href="/admin/email-campaigns.html">Campaigns</a>
-        <a href="/admin/email-parser.html">Email Parser</a>
-        <a href="/admin/email-analytics.html">Email Analytics</a>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-    </nav>
-  </div>
-
-  <div class="container">
+<body class="admin-page">
+  <div class="admin-content-padded" style="max-width: 1400px; margin: 0 auto;">
     <!-- Page Header -->
-    <div class="page-header">
-      <h1>🤖 Intelligent Email Parser</h1>
-      <p>Paste emails to automatically extract contacts, action items, fundraising signals, and more</p>
+    <div class="admin-page-header" style="background: transparent; border: none; padding-left: 0;">
+      <h1>Email Parser</h1>
+      <p class="admin-text-muted">Automatically extract contacts, action items, and fundraising signals from emails</p>
     </div>
 
-    <!-- Two Column Layout -->
     <div class="two-column">
       <!-- Left: Parse New Email -->
       <div>
-        <div class="card">
-          <h2>Parse New Email</h2>
-          <form id="parseForm" onsubmit="parseEmail(event)">
-            <div class="form-group">
-              <label>Subject</label>
-              <input type="text" id="subject" placeholder="Email subject line" required>
-            </div>
-            <div class="form-group">
-              <label>From Name</label>
-              <input type="text" id="fromName" placeholder="Sender name">
-            </div>
-            <div class="form-group">
-              <label>From Email</label>
-              <input type="email" id="fromEmail" placeholder="sender@example.com" required>
-            </div>
-            <div class="form-group">
-              <label>Email Body</label>
-              <textarea id="emailBody" placeholder="Paste full email content here..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" id="parseBtn">Parse Email</button>
-          </form>
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 style="margin: 0;">Parse New Email</h2>
+          </div>
+          <div class="admin-card-body">
+            <form id="parseForm" class="parse-form" onsubmit="parseEmail(event)">
+              <div class="admin-form-group">
+                <label class="admin-label">Subject</label>
+                <input type="text" id="subject" class="admin-input" placeholder="Email subject line" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label">From Name</label>
+                <input type="text" id="fromName" class="admin-input" placeholder="Sender name">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label">From Email</label>
+                <input type="email" id="fromEmail" class="admin-input" placeholder="sender@example.com" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label">Email Body</label>
+                <textarea id="emailBody" class="admin-input" placeholder="Paste full email content here..." required></textarea>
+              </div>
+              <button type="submit" class="admin-btn admin-btn-primary" id="parseBtn" style="width: 100%;">
+                Parse Email
+              </button>
+            </form>
+          </div>
         </div>
 
         <!-- Results -->
-        <div id="results" style="display:none;margin-top:2rem;">
-          <div class="card">
-            <h2>Parsed Results</h2>
-            <div id="resultsContent"></div>
+        <div id="results" class="admin-card" style="display: none; margin-top: var(--admin-space-lg);">
+          <div class="admin-card-header">
+            <h2 style="margin: 0;">Parsed Results</h2>
+          </div>
+          <div class="admin-card-body" id="resultsContent">
+            <!-- Populated dynamically -->
           </div>
         </div>
       </div>
 
       <!-- Right: Recent Parsed Emails -->
       <div>
-        <div class="card">
-          <h2>Recently Parsed Emails</h2>
-          <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>Loading parsed emails...</p>
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 style="margin: 0;">Recently Parsed Emails</h2>
+            <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="loadParsedEmails()">
+              <span style="margin-right: 0.25rem;">↻</span> Refresh
+            </button>
           </div>
-          <div id="parsedEmailsList" class="parsed-emails-list" style="display:none;"></div>
+          <div class="admin-card-body" style="padding: 0;">
+            <div id="loading" class="empty-state">
+              <div class="loading-spinner"></div>
+              <p>Loading parsed emails...</p>
+            </div>
+            <div id="parsedEmailsList" class="parsed-emails-list" style="display: none; padding: var(--admin-space-lg);"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <script src="/js/email-utils.js"></script>
+  <script src="/js/admin-layout.js"></script>
   <script>
-    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : ''  // Use same-origin (relative URLs) in production;
+    const API_BASE = '';  // Use same-origin
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+
+      loadAdminLayout('email-parser');
+      loadParsedEmails();
+    });
 
     async function parseEmail(event) {
       event.preventDefault();
@@ -352,12 +253,13 @@
       const fromEmail = document.getElementById('fromEmail').value;
       const emailBody = document.getElementById('emailBody').value;
 
-      document.getElementById('parseBtn').disabled = true;
-      document.getElementById('parseBtn').textContent = 'Parsing...';
+      const btn = document.getElementById('parseBtn');
+      btn.disabled = true;
+      btn.textContent = 'Parsing...';
       document.getElementById('results').style.display = 'none';
 
       try {
-        const token = localStorage.getItem('session_token');
+        const token = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE}/api/email-parsing/parse`, {
           method: 'POST',
           headers: {
@@ -373,6 +275,13 @@
           })
         });
 
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Email parsing API not available. This feature requires backend configuration.');
+          }
+          throw new Error('Failed to parse email');
+        }
+
         const data = await response.json();
 
         if (data.success) {
@@ -384,27 +293,35 @@
         }
       } catch (error) {
         console.error('Parse error:', error);
-        alert('Failed to parse email. Please try again.');
+        alert(error.message || 'Failed to parse email. Please try again.');
       } finally {
-        document.getElementById('parseBtn').disabled = false;
-        document.getElementById('parseBtn').textContent = 'Parse Email';
+        btn.disabled = false;
+        btn.textContent = 'Parse Email';
       }
     }
 
     function displayResults(data) {
       const { parsed, overallConfidence } = data;
-      
-      let html = `
-        <div style="margin-bottom:1rem;">
-          <strong>Overall Confidence:</strong> ${getConfidenceBadge(overallConfidence)}
-          <span style="margin-left:1rem;color:#6b7280;">Review Status: ${data.reviewStatus}</span>
-        </div>
 
+      let html = `
         <div class="result-section">
-          <h3>Summary</h3>
-          <p>${parsed.summary || 'No summary available'}</p>
+          <div style="margin-bottom: var(--admin-space-md);">
+            <strong>Overall Confidence:</strong> ${getConfidenceBadge(overallConfidence)}
+            <span style="margin-left: var(--admin-space-md); color: var(--admin-gray-600);">
+              Review Status: ${data.reviewStatus || 'pending'}
+            </span>
+          </div>
         </div>
       `;
+
+      if (parsed.summary) {
+        html += `
+          <div class="result-section">
+            <h3>Summary</h3>
+            <p style="margin: 0; color: var(--admin-gray-700);">${escapeHtml(parsed.summary)}</p>
+          </div>
+        `;
+      }
 
       if (parsed.contacts && parsed.contacts.length > 0) {
         html += `
@@ -412,12 +329,12 @@
             <h3>Contacts Extracted (${parsed.contacts.length})</h3>
             ${parsed.contacts.map(c => `
               <div class="contact-card">
-                <h4>${c.name} ${getConfidenceBadge(c.confidence)}</h4>
+                <h4>${escapeHtml(c.name)} ${getConfidenceBadge(c.confidence)}</h4>
                 <div class="contact-info">
-                  ${c.email ? `📧 ${c.email}<br>` : ''}
-                  ${c.organization ? `🏢 ${c.organization}<br>` : ''}
-                  ${c.title ? `💼 ${c.title}<br>` : ''}
-                  ${c.phone ? `📞 ${c.phone}` : ''}
+                  ${c.email ? `<div>Email: ${escapeHtml(c.email)}</div>` : ''}
+                  ${c.organization ? `<div>Organization: ${escapeHtml(c.organization)}</div>` : ''}
+                  ${c.title ? `<div>Title: ${escapeHtml(c.title)}</div>` : ''}
+                  ${c.phone ? `<div>Phone: ${escapeHtml(c.phone)}</div>` : ''}
                 </div>
               </div>
             `).join('')}
@@ -431,12 +348,12 @@
             <h3>Action Items (${parsed.action_items.length})</h3>
             ${parsed.action_items.map(a => `
               <div class="action-item">
-                <strong>${a.item}</strong><br>
-                <small>
-                  ${a.owner ? `Owner: ${a.owner} | ` : ''}
-                  ${a.deadline ? `Deadline: ${a.deadline} | ` : ''}
-                  Priority: ${a.priority} ${getConfidenceBadge(a.confidence)}
-                </small>
+                <strong>${escapeHtml(a.item)}</strong>
+                <div style="font-size: var(--admin-text-sm); margin-top: var(--admin-space-xs); color: var(--admin-gray-600);">
+                  ${a.owner ? `Owner: ${escapeHtml(a.owner)} | ` : ''}
+                  ${a.deadline ? `Deadline: ${escapeHtml(a.deadline)} | ` : ''}
+                  Priority: ${a.priority || 'normal'} ${getConfidenceBadge(a.confidence)}
+                </div>
               </div>
             `).join('')}
           </div>
@@ -446,9 +363,9 @@
       if (parsed.fundraising && parsed.fundraising.signals && parsed.fundraising.signals.length > 0) {
         html += `
           <div class="result-section">
-            <h3>💰 Fundraising Signals</h3>
-            <ul>
-              ${parsed.fundraising.signals.map(s => `<li>${s}</li>`).join('')}
+            <h3>Fundraising Signals</h3>
+            <ul style="margin: 0; padding-left: var(--admin-space-lg);">
+              ${parsed.fundraising.signals.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
             </ul>
           </div>
         `;
@@ -457,8 +374,8 @@
       if (parsed.flags && parsed.flags.length > 0) {
         html += `
           <div class="result-section">
-            <h3>⚠️ Flags</h3>
-            ${parsed.flags.map(f => `<div class="flag">${f}</div>`).join('')}
+            <h3>Flags</h3>
+            ${parsed.flags.map(f => `<div class="flag-item">${escapeHtml(f)}</div>`).join('')}
           </div>
         `;
       }
@@ -467,8 +384,8 @@
         html += `
           <div class="result-section">
             <h3>Recommended Next Steps</h3>
-            <ol>
-              ${parsed.recommended_next_steps.map(s => `<li>${s}</li>`).join('')}
+            <ol style="margin: 0; padding-left: var(--admin-space-lg);">
+              ${parsed.recommended_next_steps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
             </ol>
           </div>
         `;
@@ -479,66 +396,94 @@
     }
 
     function getConfidenceBadge(confidence) {
+      if (!confidence && confidence !== 0) return '';
       const level = confidence >= 70 ? 'high' : confidence >= 50 ? 'medium' : 'low';
-      return `<span class="confidence-badge confidence-${level}">${confidence}% confidence</span>`;
+      return `<span class="confidence-badge confidence-${level}">${confidence}%</span>`;
     }
 
     async function loadParsedEmails() {
+      const loadingEl = document.getElementById('loading');
+      const listEl = document.getElementById('parsedEmailsList');
+
+      loadingEl.style.display = 'block';
+      listEl.style.display = 'none';
+
       try {
-        const token = localStorage.getItem('session_token');
+        const token = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE}/api/email-parsing`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
+        if (!response.ok) {
+          if (response.status === 404) {
+            displayParsedEmails([]);
+            return;
+          }
+          throw new Error('Failed to load emails');
+        }
+
         const data = await response.json();
 
         if (data.success) {
-          displayParsedEmails(data.emails);
+          displayParsedEmails(data.emails || []);
+        } else {
+          displayParsedEmails([]);
         }
       } catch (error) {
         console.error('Load error:', error);
-      } finally {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('parsedEmailsList').style.display = 'block';
+        displayParsedEmails([]);
       }
     }
 
     function displayParsedEmails(emails) {
-      const html = emails.map(email => `
-        <div class="email-item" onclick="viewEmail(${email.id})">
-          <div class="email-subject">${email.subject || '(No subject)'}</div>
-          <div class="email-from">From: ${email.from_name || email.from_email}</div>
-          <div class="review-status status-${email.review_status}">
-            ${email.review_status} (${email.overall_confidence}% confidence)
+      const loadingEl = document.getElementById('loading');
+      const listEl = document.getElementById('parsedEmailsList');
+
+      loadingEl.style.display = 'none';
+      listEl.style.display = 'block';
+
+      if (!emails || emails.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📧</div>
+            <h3 style="margin: 0 0 var(--admin-space-sm) 0;">No Parsed Emails Yet</h3>
+            <p style="margin: 0;">Parse an email using the form to see results here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = emails.map(email => `
+        <div class="email-item" onclick="viewEmail('${email.id}')">
+          <div class="email-subject">${escapeHtml(email.subject || '(No subject)')}</div>
+          <div class="email-from">From: ${escapeHtml(email.from_name || email.from_email || 'Unknown')}</div>
+          <div>
+            <span class="review-status status-${email.review_status || 'pending'}">
+              ${email.review_status || 'pending'}
+            </span>
+            ${email.overall_confidence ? `<span class="confidence-badge confidence-${email.overall_confidence >= 70 ? 'high' : email.overall_confidence >= 50 ? 'medium' : 'low'}" style="margin-left: var(--admin-space-sm);">${email.overall_confidence}%</span>` : ''}
           </div>
         </div>
       `).join('');
-
-      document.getElementById('parsedEmailsList').innerHTML = html || '<p style="text-align:center;color:#6b7280;">No parsed emails yet</p>';
     }
 
     function viewEmail(id) {
-      // In a full implementation, this would show the full parsed email details
-      alert(`Viewing email ID: ${id}\nFull details view coming soon!`);
+      // TODO: Implement full email details view
+      alert(`Email details view coming soon!\n\nEmail ID: ${id}`);
     }
 
-    function logout() {
-      localStorage.removeItem('session_token');
-      window.location.href = '/admin/login.html';
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
-
-    // Check auth and load
-    window.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('session_token');
-      if (!token) {
-        window.location.href = '/admin/login.html';
-        return;
-      }
-      loadParsedEmails();
-    });
   </script>
 
-  <!-- AI Assistant -->
-  <script src="/components/ai-assistant.html"></script>
+  <!-- Feedback Widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    initFeedbackWidget({ isAdminPortal: true });
+  </script>
 </body>
 </html>

@@ -420,6 +420,8 @@
     </div>
   </div>
 
+  <!-- Admin Layout -->
+  <script src="/js/admin-layout.js"></script>
   <!-- Claude AI Assistant -->
   <script src="/admin/claude-ai-dropdown.js"></script>
   <script>
@@ -439,6 +441,14 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
+      // Check auth
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+
+      loadAdminLayout('icsr2026-planning');
       updateDaysUntilEvent();
 
       // Initialize Claude AI if available
@@ -454,6 +464,12 @@
         });
       }
     });
+  </script>
+
+  <!-- Feedback Widget -->
+  <script src="/js/feedback-widget.js"></script>
+  <script>
+    initFeedbackWidget({ isAdminPortal: true });
   </script>
 </body>
 </html>
