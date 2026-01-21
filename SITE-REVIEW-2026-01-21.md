@@ -180,15 +180,15 @@
 
 ## Security Audit (2026-01-21)
 
-### Dependency Vulnerabilities (6 found)
-| Package | Version | CVE/ID | Fix Version |
-|---------|---------|--------|-------------|
-| fastapi | 0.109.0 | PYSEC-2024-38 | 0.109.1 |
-| pdfminer-six | 20221105 | CVE-2025-64512 | 20251107 |
-| pdfminer-six | 20221105 | GHSA-f83h-ghpp-7wcc | 20251230 |
-| starlette | 0.35.1 | CVE-2024-47874 | 0.40.0 |
-| starlette | 0.35.1 | CVE-2025-54121 | 0.47.2 |
-| ecdsa | 0.19.1 | CVE-2024-23342 | - |
+### Dependency Vulnerabilities (ALL FIXED - commit 8a5ba34)
+| Package | Version | CVE/ID | Fix Version | Status |
+|---------|---------|--------|-------------|--------|
+| fastapi | 0.109.0 | PYSEC-2024-38 | 0.109.1 | ✅ FIXED (>=0.115.0) |
+| pdfminer-six | 20221105 | CVE-2025-64512 | 20251107 | ✅ FIXED (>=20251230) |
+| pdfminer-six | 20221105 | GHSA-f83h-ghpp-7wcc | 20251230 | ✅ FIXED (>=20251230) |
+| starlette | 0.35.1 | CVE-2024-47874 | 0.40.0 | ✅ FIXED (transitive via fastapi) |
+| starlette | 0.35.1 | CVE-2025-54121 | 0.47.2 | ✅ FIXED (transitive via fastapi) |
+| ecdsa | 0.19.1 | CVE-2024-23342 | - | ⚠️ N/A (not exploitable - uses HS256) |
 
 ### API Security Vulnerabilities (12 found)
 
@@ -197,17 +197,17 @@
 2. ~~**Missing admin auth checks** - conferences.py:644,792,995 - TODO comments for admin checks~~ **FIXED**
 3. ~~**Broken authorization** - conferences.py:473-508 - `verify_abstract_owner` bypassed~~ **FIXED**
 
-#### High
-4. **Weak admin privilege detection** - permissions.py:14-47 - Uses notification_preferences
-5. **Excessive CORS** - main.py:37-43 - `allow_credentials=True` with `allow_methods=["*"]`
-6. **Token exposure in logs** - auth.py:142,257 - Magic link tokens in queries
+#### High (ALL FIXED - commit 0303a74)
+4. ~~**Weak admin privilege detection** - permissions.py:14-47 - Uses notification_preferences~~ **FIXED** - Now uses proper RBAC with user_roles table
+5. ~~**Excessive CORS** - main.py:37-43 - `allow_credentials=True` with `allow_methods=["*"]`~~ **FIXED** - Restricted methods and headers
+6. ~~**Token exposure in logs** - auth.py:142,257 - Magic link tokens in queries~~ **FIXED** - Only logs first 8 chars
 
-#### Medium
+#### Medium (PARTIALLY FIXED)
 7. **No session inactivity timeout** - auth.py:81-111 - `last_activity` not enforced
-8. **Missing rate limiting** - auth.py:592-746 - Profile update has no rate limit
+8. ~~**Missing rate limiting** - auth.py:592-746 - Profile update has no rate limit~~ **FIXED** - Added 20/hour limit
 9. **IP detection behind proxy** - auth.py:155,218,260,402 - `request.client.host` not proxy-aware
-10. **Directory search risks** - auth.py:534-541 - No length limits, ReDoS potential
-11. **Sensitive data in directory** - auth.py:514-589 - Email harvest risk
+10. ~~**Directory search risks** - auth.py:534-541 - No length limits, ReDoS potential~~ **FIXED** - Added 100 char limit + 30/hour rate limit
+11. **Sensitive data in directory** - auth.py:514-589 - Email harvest risk (mitigated with rate limiting)
 
 ### Positive Security Findings
 - Rate limiting on auth endpoints (3/5/10/60 per hour)
