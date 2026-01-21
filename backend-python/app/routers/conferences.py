@@ -478,22 +478,11 @@ async def withdraw_abstract(
 ):
     """
     Withdraw an abstract (submitter only, can be done at any stage).
+
+    Note: The verify_abstract_owner dependency already validates that the
+    current user is the submitter, so no additional authorization check needed.
     """
-    abstract = db.query(ConferenceAbstract).filter(ConferenceAbstract.id == abstract_id).first()
-
-    if not abstract:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Abstract not found",
-        )
-
-    # Only submitter can withdraw
-    if abstract.submitter_id != current_user.contact_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only the submitter can withdraw this abstract",
-        )
-
+    # Use the abstract from the dependency - it's already verified
     if abstract.status == "withdrawn":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -638,13 +627,13 @@ async def remove_reviewer(
 async def get_abstract_reviewers(
     abstract_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Get all reviewers assigned to an abstract (admin only).
-    """
-    # TODO: Add admin check
 
+    Requires admin privileges.
+    """
     reviewers = db.query(AbstractReviewer).filter(
         AbstractReviewer.abstract_id == abstract_id
     ).all()
@@ -784,13 +773,13 @@ async def submit_review(
 async def get_abstract_reviews(
     abstract_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Get all reviews for an abstract (admin only).
-    """
-    # TODO: Add admin check
 
+    Requires admin privileges.
+    """
     reviews = db.query(AbstractReview).filter(
         AbstractReview.abstract_id == abstract_id
     ).all()
@@ -987,13 +976,13 @@ async def make_decision(
 async def get_abstract_statistics(
     conference_id: Optional[UUID] = Query(None, description="Filter by conference"),
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Get abstract review statistics (admin dashboard).
-    """
-    # TODO: Add admin check
 
+    Requires admin privileges.
+    """
     query = db.query(ConferenceAbstract)
     if conference_id:
         query = query.filter(ConferenceAbstract.conference_id == conference_id)
