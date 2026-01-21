@@ -225,10 +225,10 @@
 5. ~~**Excessive CORS** - main.py:37-43 - `allow_credentials=True` with `allow_methods=["*"]`~~ **FIXED** - Restricted methods and headers
 6. ~~**Token exposure in logs** - auth.py:142,257 - Magic link tokens in queries~~ **FIXED** - Only logs first 8 chars
 
-#### Medium (PARTIALLY FIXED)
-7. **No session inactivity timeout** - auth.py:81-111 - `last_activity` not enforced
+#### Medium (ALL FIXED - commit f836dfa)
+7. ~~**No session inactivity timeout** - auth.py:81-111 - `last_activity` not enforced~~ **FIXED** - Added 60-min inactivity check in is_session_valid()
 8. ~~**Missing rate limiting** - auth.py:592-746 - Profile update has no rate limit~~ **FIXED** - Added 20/hour limit
-9. **IP detection behind proxy** - auth.py:155,218,260,402 - `request.client.host` not proxy-aware
+9. ~~**IP detection behind proxy** - auth.py:155,218,260,402 - `request.client.host` not proxy-aware~~ **FIXED** - Added get_client_ip() helper checking X-Forwarded-For/X-Real-IP
 10. ~~**Directory search risks** - auth.py:534-541 - No length limits, ReDoS potential~~ **FIXED** - Added 100 char limit + 30/hour rate limit
 11. **Sensitive data in directory** - auth.py:514-589 - Email harvest risk (mitigated with rate limiting)
 
