@@ -655,8 +655,11 @@
       });
 
       // Directory settings
-      document.getElementById('directoryOptIn').checked = profile.directory_opt_in || false;
+      const directoryOptIn = profile.directory_opt_in !== null ? profile.directory_opt_in : false;
+      document.getElementById('directoryOptIn').checked = directoryOptIn;
       toggleVisibilitySettings();
+
+      console.log('DEBUG: Loaded directory_opt_in:', directoryOptIn, 'from profile:', profile.directory_opt_in);
 
       // Visibility fields
       if (profile.directory_visible_fields) {
