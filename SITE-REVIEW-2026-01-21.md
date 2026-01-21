@@ -145,7 +145,7 @@
 | i18n placeholder showing | /icsr2026.html | Minor | FIXED | Added missing icsr2026OverviewText3 translation key |
 | Member directory 404 error | /member/directory.html | Critical | FIXED | Added /api/auth/directory endpoint + fixed getDirectory() auth header |
 | Directory names not showing | /member/directory.html | Medium | FIXED | Added full_name and organization fields to directory API response |
-| My Reviews API missing | /member/my-reviews.html | Medium | OPEN | Backend missing /api/abstracts/* router - abstract review feature not implemented |
+| My Reviews API missing | /member/my-reviews.html | Medium | FIXED | Added /api prefix router alias to expose abstracts routes (commit c17cb13) |
 | Conference registration error | /conference/register.html | Critical | FIXED | Added /api/conference/active endpoint + router alias (commit a763e74) |
 | Support page i18n missing | /support.html | Medium | FIXED | Added 46 translation keys for EN/ES/FR (commit ed53779) |
 
@@ -163,7 +163,7 @@
 - [x] Login page - Working, magic link auth
 - [x] Profile page - Working, edit saves correctly
 - [x] Directory page - FIXED (was missing endpoint, now working)
-- [x] My Reviews page - Backend API not implemented (abstracts router missing)
+- [x] My Reviews page - FIXED (added /api prefix alias for abstracts routes)
 
 ### Round 3: Admin Portal
 - [x] Dashboard (/admin/index.html) - Redirects to /login.html (placeholder)
