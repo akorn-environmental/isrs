@@ -54,6 +54,48 @@ router = APIRouter()
 # CONFERENCES ENDPOINTS
 # ============================================
 
+@router.get("/active")
+async def get_active_conference(
+    db: Session = Depends(get_db),
+):
+    """
+    Get the currently active conference for registration.
+    Public endpoint - no authentication required.
+    Returns the next upcoming conference or the most recent one if no upcoming.
+    """
+    today = date.today()
+
+    # Find the next upcoming conference (start_date >= today)
+    conference = db.query(Conference).filter(
+        Conference.start_date >= today
+    ).order_by(Conference.start_date).first()
+
+    # If no upcoming conference, get the most recent one
+    if not conference:
+        conference = db.query(Conference).order_by(
+            desc(Conference.start_date)
+        ).first()
+
+    if not conference:
+        return {
+            "success": False,
+            "message": "No conference found"
+        }
+
+    return {
+        "success": True,
+        "data": {
+            "id": str(conference.id),
+            "name": conference.name,
+            "year": conference.year,
+            "location": conference.location,
+            "start_date": conference.start_date.isoformat() if conference.start_date else None,
+            "end_date": conference.end_date.isoformat() if conference.end_date else None,
+            "website": conference.website,
+        }
+    }
+
+
 @router.get("/", response_model=ConferenceListResponse)
 async def get_conferences(
     page: int = Query(1, ge=1, description="Page number"),
