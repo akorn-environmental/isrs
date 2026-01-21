@@ -197,11 +197,11 @@ class AuthService:
         if not user_session:
             return None
 
-        # Check if session is valid
-        if not user_session.is_session_valid():
+        # Check if session is valid (including inactivity timeout)
+        if not user_session.is_session_valid(settings.SESSION_INACTIVITY_TIMEOUT_MINUTES):
             # Only log first 8 characters of token to prevent exposure in logs
             token_prefix = session_token[:8] if session_token else "empty"
-            logger.warning(f"Session expired: {token_prefix}...")
+            logger.warning(f"Session expired or inactive: {token_prefix}...")
             return None
 
         # Update last activity

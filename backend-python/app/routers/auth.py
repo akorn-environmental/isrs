@@ -22,6 +22,36 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+def get_client_ip(request: Request) -> Optional[str]:
+    """
+    Get the real client IP address, handling proxy headers.
+
+    Checks headers in order of preference:
+    1. X-Forwarded-For (may contain multiple IPs, take first)
+    2. X-Real-IP
+    3. request.client.host (fallback)
+
+    Args:
+        request: FastAPI Request object
+
+    Returns:
+        Client IP address or None
+    """
+    # Check X-Forwarded-For header (may contain comma-separated list)
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    if forwarded_for:
+        # Take the first IP in the chain (original client)
+        return forwarded_for.split(",")[0].strip()
+
+    # Check X-Real-IP header
+    real_ip = request.headers.get("X-Real-IP")
+    if real_ip:
+        return real_ip.strip()
+
+    # Fallback to direct connection IP
+    return request.client.host if request.client else None
+
+
 # Request/Response Models
 class LoginRequest(BaseModel):
     """Request body for login."""
@@ -152,7 +182,7 @@ async def register(register_data: RegisterRequest, request: Request, db: Session
         logger.info(f"New member registered: {email} (ID: {new_attendee.id})")
 
         # Get client IP and user agent
-        client_ip = request.client.host if request.client else None
+        client_ip = get_client_ip(request)
         user_agent = request.headers.get("User-Agent")
 
         # Create magic link session for email verification
@@ -215,7 +245,7 @@ async def request_login(login_data: LoginRequest, request: Request, db: Session 
             )
 
         # Get client IP and user agent
-        client_ip = request.client.host if request.client else None
+        client_ip = get_client_ip(request)
         user_agent = request.headers.get("User-Agent")
 
         # Create magic link session
@@ -257,7 +287,7 @@ async def verify_token(verify_data: VerifyTokenRequest, request: Request, db: Se
         magic_link_token = verify_data.token
 
         # Get client IP and user agent
-        client_ip = request.client.host if request.client else None
+        client_ip = get_client_ip(request)
         user_agent = request.headers.get("User-Agent")
 
         # Verify magic link and create session
@@ -399,7 +429,7 @@ async def refresh_access_token(request: Request, db: Session = Depends(get_db)):
             )
 
         # Get client IP and user agent
-        ip_address = request.client.host if request.client else None
+        ip_address = get_client_ip(request)
         user_agent = request.headers.get("User-Agent")
 
         # Rotate the refresh token (validates old, revokes it, creates new)

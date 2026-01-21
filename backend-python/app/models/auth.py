@@ -50,9 +50,29 @@ class UserSession(Base):
         """Check if the magic link token is still valid."""
         return not self.token_used and self.token_expires_at > datetime.utcnow()
 
-    def is_session_valid(self) -> bool:
-        """Check if the session token is still valid."""
-        return self.session_token and self.session_expires_at and self.session_expires_at > datetime.utcnow()
+    def is_session_valid(self, inactivity_timeout_minutes: int = 60) -> bool:
+        """
+        Check if the session token is still valid.
+
+        Args:
+            inactivity_timeout_minutes: Maximum minutes of inactivity before session expires.
+                                       Set to 0 to disable inactivity timeout.
+        """
+        now = datetime.utcnow()
+
+        # Check session token exists and hasn't expired
+        if not self.session_token or not self.session_expires_at:
+            return False
+        if self.session_expires_at <= now:
+            return False
+
+        # Check inactivity timeout if enabled
+        if inactivity_timeout_minutes > 0 and self.last_activity:
+            inactivity_cutoff = now - timedelta(minutes=inactivity_timeout_minutes)
+            if self.last_activity < inactivity_cutoff:
+                return False
+
+        return True
 
 
 class RefreshToken(Base):
