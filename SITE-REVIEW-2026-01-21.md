@@ -82,7 +82,7 @@
 | ICSR2026 | /icsr2026.html | | 2026 conference |
 | Gallery | /gallery.html | | Photo gallery |
 | ICSR2024 Photos | /icsr2024-photos.html | | 2024 photos |
-| Support | /support.html | | Support/help |
+| Support | /support.html | FIXED | Support/help (i18n keys added) |
 | Press Kit | /press-kit.html | | Public press kit |
 | Travel | /travel/index.html | | Travel info |
 | Why Restoration | /why-restoration-matters.html | | Educational |
@@ -147,6 +147,7 @@
 | Directory names not showing | /member/directory.html | Medium | FIXED | Added full_name and organization fields to directory API response |
 | My Reviews API missing | /member/my-reviews.html | Medium | OPEN | Backend missing /api/abstracts/* router - abstract review feature not implemented |
 | Conference registration error | /conference/register.html | Critical | FIXED | Added /api/conference/active endpoint + router alias (commit a763e74) |
+| Support page i18n missing | /support.html | Medium | FIXED | Added 46 translation keys for EN/ES/FR (commit ed53779) |
 
 ---
 
@@ -178,6 +179,18 @@
 ### Round 5: Additional Public Pages (2026-01-21)
 - [x] ICSR2026 (/icsr2026.html) - Working, conference info displays correctly
 - [x] Gallery (/gallery.html) - Working, photos load with filters functional
+
+### Round 7: Extended Public Pages (2026-01-21)
+- [x] About (/about.html) - Working, mission/vision/values display correctly
+- [x] Support (/support.html) - FIXED (was showing translation keys, now working)
+- [x] Press Kit (/press-kit.html) - Working, quick facts and media resources display
+- [x] Why Restoration (/why-restoration-matters.html) - Working, ecosystem services info displays
+
+### Round 8: Legal Pages (2026-01-21)
+- [x] Privacy Policy (/legal/privacy.html) - Working, full policy displays
+- [x] Terms & Conditions (/legal/terms.html) - Working, conference terms included
+- [x] Accessibility (/legal/accessibility.html) - Working, WCAG 2.1 AA statement
+- [x] Code of Conduct (/legal/code-of-conduct.html) - Working, conference conduct policy
 
 ### Round 6: API Endpoints
 - [x] GET /health - Working
