@@ -209,6 +209,11 @@ const MemberAuth = (() => {
    * @returns {Promise} Directory results
    */
   async function getDirectory(filters = {}) {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) {
+      throw new Error('Not authenticated - no session token provided');
+    }
+
     const params = new URLSearchParams();
 
     if (filters.search) params.append('search', filters.search);
@@ -219,7 +224,11 @@ const MemberAuth = (() => {
     const queryString = params.toString();
     const endpoint = queryString ? `/directory?${queryString}` : '/directory';
 
-    return apiCall(endpoint);
+    return apiCall(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`
+      }
+    });
   }
 
   /**
