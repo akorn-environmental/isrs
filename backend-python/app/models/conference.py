@@ -81,8 +81,17 @@ class AttendeeProfile(Base, TimestampMixin):
     orcid = Column(String(19))  # Format: 0000-0000-0000-0000
 
     # Directory Settings
-    directory_opt_in = Column(Boolean, default=False, index=True)
-    directory_visible_fields = Column(JSONB, default={})
+    directory_opt_in = Column(Boolean, default=True, index=True)
+    directory_visible_fields = Column(JSONB, default={
+        "organization": True,
+        "position": True,
+        "country": True,
+        "city": True,
+        "bio": True,
+        "research_areas": True,
+        "conference_history": False,
+        "contact_email": False
+    })
 
     # Account Status (added by migration 012)
     account_status = Column(String(50), default="active")

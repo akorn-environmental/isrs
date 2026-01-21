@@ -166,7 +166,8 @@
           <div class="profile-field">
             <label id="addressLabel">Street Address</label>
             <div class="value" data-field="address"></div>
-            <input type="text" name="address" placeholder="123 Main Street" style="display: none;">
+            <input type="text" name="address" id="addressInput" placeholder="Start typing your address..." autocomplete="off" style="display: none;">
+            <small style="color: var(--text-light); display: none;" class="edit-only">Address autocomplete powered by Google Places</small>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
