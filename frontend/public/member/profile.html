@@ -14,6 +14,8 @@
   <script src="/js/theme.js"></script>
   <script src="/js/analytics.js"></script>
   <script src="/js/member-auth.js"></script>
+  <!-- Tour System -->
+  <link rel="stylesheet" href="/css/tour.css">
 
   <style>
     .profile-section {
@@ -115,6 +117,9 @@
         <div class="btn-group" style="margin-top: 0;">
           <button id="editBtn" class="btn btn-primary" onclick="enableEditMode()"></button>
           <button id="viewDirectoryBtn" class="btn btn-secondary" onclick="window.location.href='/member/directory.html'"></button>
+          <button id="restartTourBtn" class="btn btn-secondary" onclick="restartMemberTour()" title="Replay the member portal walkthrough">
+            <span style="margin-right: 0.25rem;">?</span> Tour
+          </button>
         </div>
       </div>
 
@@ -1102,6 +1107,21 @@
 
     // Load profile on page load
     document.addEventListener('DOMContentLoaded', loadProfile);
+
+    // Restart member portal tour
+    function restartMemberTour() {
+      if (window.TourManager) {
+        TourManager.reset('member-portal');
+        // Redirect to member index where tour runs
+        window.location.href = '/member/index.html';
+      } else {
+        alert('Tour system not available. Please refresh the page.');
+      }
+    }
   </script>
+
+  <!-- Tour System -->
+  <script src="/js/tour-manager.js"></script>
+  <script src="/js/tour-definitions.js"></script>
 </body>
 </html>

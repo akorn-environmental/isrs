@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/admin-layout.css">
   <link rel="stylesheet" href="/css/admin-unified.css">
+  <!-- Tour System -->
+  <link rel="stylesheet" href="/css/tour.css">
   <!-- Error Reporter - Logs frontend errors to backend/Render -->
   <script src="/js/errorReporter.js"></script>
 </head>
@@ -105,6 +107,26 @@
       </div>
     </div>
 
+    <!-- Help & Support -->
+    <div class="admin-card admin-mb-lg">
+      <div class="admin-card-header">
+        <h2>Help & Support</h2>
+      </div>
+      <div class="admin-card-body" style="padding: 0;">
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4 class="admin-mb-0">Admin Portal Tour</h4>
+            <p class="admin-text-muted admin-mb-0" style="font-size: var(--admin-text-sm);">Replay the guided walkthrough of admin features</p>
+          </div>
+          <div class="setting-action">
+            <button class="admin-btn admin-btn-secondary" onclick="restartAdminTour()">
+              <span style="margin-right: 0.25rem;">?</span> Restart Tour
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Info Box -->
     <div class="admin-alert admin-alert-info">
       <div>
@@ -156,6 +178,22 @@
   <script src="/js/feedback-widget.js"></script>
   <script>
     initFeedbackWidget({ isAdminPortal: true });
+  </script>
+
+  <!-- Tour System -->
+  <script src="/js/tour-manager.js"></script>
+  <script src="/js/tour-definitions.js"></script>
+  <script>
+    // Restart admin portal tour
+    function restartAdminTour() {
+      if (window.TourManager) {
+        TourManager.reset('admin-portal');
+        // Redirect to admin dashboard where tour runs
+        window.location.href = '/admin/index.html';
+      } else {
+        alert('Tour system not available. Please refresh the page.');
+      }
+    }
   </script>
 </body>
 </html>
