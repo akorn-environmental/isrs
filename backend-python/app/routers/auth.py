@@ -511,6 +511,78 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
     }
 
 
+@router.get("/directory")
+async def get_member_directory(
+    search: Optional[str] = None,
+    country: Optional[str] = None,
+    expertise: Optional[str] = None,
+    conference: Optional[str] = None,
+    current_user: AttendeeProfile = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get the member directory with optional filters.
+    Only returns members who have opted into the directory.
+    Requires authentication.
+    """
+    # Query all members who have opted into the directory
+    query = db.query(AttendeeProfile).filter(
+        AttendeeProfile.directory_opt_in == True
+    )
+
+    # Apply search filter (searches name, organization, bio, research areas)
+    if search:
+        search_term = f"%{search.lower()}%"
+        query = query.filter(
+            (AttendeeProfile.first_name.ilike(search_term)) |
+            (AttendeeProfile.last_name.ilike(search_term)) |
+            (AttendeeProfile.organization_name.ilike(search_term)) |
+            (AttendeeProfile.bio.ilike(search_term))
+        )
+
+    # Apply country filter
+    if country:
+        query = query.filter(AttendeeProfile.country == country)
+
+    # Get all matching members
+    members = query.order_by(AttendeeProfile.last_name, AttendeeProfile.first_name).all()
+
+    # Format response based on each member's visibility preferences
+    directory_data = []
+    for member in members:
+        visible_fields = member.directory_visible_fields or {}
+
+        member_data = {
+            "id": str(member.id),
+            "first_name": member.first_name,
+            "last_name": member.last_name,
+        }
+
+        # Add optional fields based on visibility settings
+        if visible_fields.get("organization", True):
+            member_data["organization_name"] = member.organization_name
+        if visible_fields.get("position", True):
+            member_data["position"] = member.position
+        if visible_fields.get("country", True):
+            member_data["country"] = member.country
+        if visible_fields.get("city", True):
+            member_data["city"] = member.city
+        if visible_fields.get("bio", True):
+            member_data["bio"] = member.bio
+        if visible_fields.get("research_areas", True):
+            member_data["research_areas"] = array_to_string(member.research_areas)
+        if visible_fields.get("contact_email", False):
+            member_data["contact_email"] = member.contact_email
+
+        directory_data.append(member_data)
+
+    return {
+        "success": True,
+        "data": directory_data,
+        "total": len(directory_data)
+    }
+
+
 @router.put("/me")
 async def update_current_user_profile(
     request: Request,

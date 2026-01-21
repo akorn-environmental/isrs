@@ -140,26 +140,35 @@
 
 | Issue | Page | Severity | Status | Fix |
 |-------|------|----------|--------|-----|
-| Profile update 500 error | /member/profile.html | Critical | FIXED | Array field mismatch |
+| Profile update 500 error | /member/profile.html | Critical | FIXED | Array field mismatch in auth.py |
+| Asset zones API 500 error | /api/zones/public/page/* | Critical | FIXED | Missing columns in assets table (focal_point_x, focal_point_y, alt_text, caption) |
+| i18n placeholder showing | /icsr2026.html | Minor | FIXED | Added missing icsr2026OverviewText3 translation key |
 
 ---
 
 ## Testing Progress
 
-### Round 1: Member Portal
-- [ ] Login page
-- [ ] Profile page
-- [ ] Directory page
-- [ ] My Reviews page
+### Round 1: Public Pages (2026-01-21)
+- [x] Home - Working, no errors
+- [x] About - Working, no errors
+- [x] ICSR2026 - Fixed (missing translation key)
+- [x] Gallery - Working, photos load correctly
 
-### Round 2: Admin Portal
+### Round 2: Member Portal
+- [x] Login page - Working, magic link auth
+- [ ] Profile page (requires login)
+- [ ] Directory page (requires login)
+- [ ] My Reviews page (requires login)
+
+### Round 3: Admin Portal
 - [ ] Dashboard
 - [ ] Users
 - [ ] Contacts
 - [ ] Conferences
 - [ ] Abstracts
 
-### Round 3: Public Pages
-- [ ] Home
-- [ ] ICSR2026
-- [ ] Gallery
+### Round 4: API Endpoints
+- [x] GET /health - Working
+- [x] GET /api/zones/public/page/* - Fixed and working
+- [x] GET /api/auth/me - Returns 401 without auth (correct)
+- [x] GET /api/conferences/ - Returns 401 without auth (correct)
