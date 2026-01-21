@@ -74,6 +74,15 @@ class AttendeeProfile(Base, TimestampMixin):
     # Professional Profile
     bio = Column(Text)
     cv_url = Column(Text)
+    research_areas = Column(Text)
+    expertise_keywords = Column(Text)
+    website = Column(Text)
+    linkedin_url = Column(Text)
+    orcid = Column(String(19))  # Format: 0000-0000-0000-0000
+
+    # Directory Settings
+    directory_opt_in = Column(Boolean, default=False, index=True)
+    directory_visible_fields = Column(JSONB, default={})
 
     # Account Status (added by migration 012)
     account_status = Column(String(50), default="active")
