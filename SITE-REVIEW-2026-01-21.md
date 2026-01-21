@@ -146,6 +146,7 @@
 | Member directory 404 error | /member/directory.html | Critical | FIXED | Added /api/auth/directory endpoint + fixed getDirectory() auth header |
 | Directory names not showing | /member/directory.html | Medium | FIXED | Added full_name and organization fields to directory API response |
 | My Reviews API missing | /member/my-reviews.html | Medium | OPEN | Backend missing /api/abstracts/* router - abstract review feature not implemented |
+| Conference registration error | /conference/register.html | Critical | FIXED | Added /api/conference/active endpoint (commit a763e74) |
 
 ---
 
