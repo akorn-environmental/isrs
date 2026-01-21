@@ -463,6 +463,15 @@ class UpdateProfileRequest(BaseModel):
     notification_preferences: Optional[dict] = None
 
 
+def array_to_string(arr):
+    """Convert array to comma-separated string for frontend compatibility."""
+    if arr is None:
+        return ""
+    if isinstance(arr, list):
+        return ", ".join(str(item) for item in arr if item)
+    return str(arr)
+
+
 @router.get("/me")
 async def get_current_user_info(current_user: AttendeeProfile = Depends(get_current_user)):
     """
@@ -485,8 +494,8 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
         "zip_code": current_user.zip_code,
         "country": current_user.country,
         "bio": current_user.bio,
-        "research_areas": current_user.research_areas,
-        "expertise_keywords": current_user.expertise_keywords,
+        "research_areas": array_to_string(current_user.research_areas),
+        "expertise_keywords": array_to_string(current_user.expertise_keywords),
         "website": current_user.website,
         "linkedin_url": current_user.linkedin_url,
         "orcid": current_user.orcid,
@@ -582,6 +591,23 @@ async def update_current_user_profile(
                 # If parsing fails, just keep the original phone number
                 logger.warning(f"Phone number parsing failed: {str(e)}, keeping original")
 
+        # Convert string fields to arrays for database columns that expect arrays
+        logger.info("Step 5b: Converting text fields to arrays for database")
+        array_fields = ['research_areas', 'expertise_keywords']
+        for field in array_fields:
+            if field in update_data:
+                value = update_data[field]
+                if value is None or value == '':
+                    # Empty string or None -> empty array (not NULL)
+                    update_data[field] = []
+                elif isinstance(value, str):
+                    # Split comma-separated string into array, strip whitespace
+                    update_data[field] = [item.strip() for item in value.split(',') if item.strip()]
+                elif isinstance(value, list):
+                    # Already a list, just filter empty items
+                    update_data[field] = [item.strip() if isinstance(item, str) else item for item in value if item]
+                logger.info(f"Converted {field} to array: {update_data[field]}")
+
         logger.info("Step 6: Updating user attributes")
         for field, value in update_data.items():
             if value is not None:  # Only update non-None values
@@ -618,8 +644,8 @@ async def update_current_user_profile(
                 "zip_code": current_user.zip_code,
                 "country": current_user.country,
                 "bio": current_user.bio,
-                "research_areas": current_user.research_areas,
-                "expertise_keywords": current_user.expertise_keywords,
+                "research_areas": array_to_string(current_user.research_areas),
+                "expertise_keywords": array_to_string(current_user.expertise_keywords),
                 "website": current_user.website,
                 "linkedin_url": current_user.linkedin_url,
                 "orcid": current_user.orcid,

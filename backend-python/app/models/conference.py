@@ -74,8 +74,8 @@ class AttendeeProfile(Base, TimestampMixin):
     # Professional Profile
     bio = Column(Text)
     cv_url = Column(Text)
-    research_areas = Column(Text)
-    expertise_keywords = Column(Text)
+    research_areas = Column(ARRAY(Text))  # Database uses text[] array
+    expertise_keywords = Column(ARRAY(Text))  # Database uses text[] array
     website = Column(Text)
     linkedin_url = Column(Text)
     orcid = Column(String(19))  # Format: 0000-0000-0000-0000
