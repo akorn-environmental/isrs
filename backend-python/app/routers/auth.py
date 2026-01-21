@@ -552,15 +552,21 @@ async def get_member_directory(
     for member in members:
         visible_fields = member.directory_visible_fields or {}
 
+        # Build full_name for frontend compatibility
+        full_name = f"{member.first_name} {member.last_name}".strip()
+
         member_data = {
             "id": str(member.id),
             "first_name": member.first_name,
             "last_name": member.last_name,
+            "full_name": full_name,  # Frontend expects this field
         }
 
         # Add optional fields based on visibility settings
+        # Use both old and new field names for frontend compatibility
         if visible_fields.get("organization", True):
             member_data["organization_name"] = member.organization_name
+            member_data["organization"] = member.organization_name  # Frontend expects this
         if visible_fields.get("position", True):
             member_data["position"] = member.position
         if visible_fields.get("country", True):
