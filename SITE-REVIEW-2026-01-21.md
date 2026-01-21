@@ -63,7 +63,7 @@
 ### Conference Registration (`/conference/`)
 | Page | URL | Status | Notes |
 |------|-----|--------|-------|
-| Register | /conference/register.html | | Registration form |
+| Register | /conference/register.html | FIXED | Registration form |
 | Confirmation | /conference/confirmation.html | | Confirmation page |
 
 ### Meetings (`/meetings/`)
@@ -146,7 +146,7 @@
 | Member directory 404 error | /member/directory.html | Critical | FIXED | Added /api/auth/directory endpoint + fixed getDirectory() auth header |
 | Directory names not showing | /member/directory.html | Medium | FIXED | Added full_name and organization fields to directory API response |
 | My Reviews API missing | /member/my-reviews.html | Medium | OPEN | Backend missing /api/abstracts/* router - abstract review feature not implemented |
-| Conference registration error | /conference/register.html | Critical | FIXED | Added /api/conference/active endpoint (commit a763e74) |
+| Conference registration error | /conference/register.html | Critical | FIXED | Added /api/conference/active endpoint + router alias (commit a763e74) |
 
 ---
 
@@ -167,15 +167,24 @@
 ### Round 3: Admin Portal
 - [x] Dashboard (/admin/index.html) - Redirects to /login.html (placeholder)
 - [x] Users (/admin/users.html) - Placeholder page ("coming soon")
-- [x] Contacts (/admin/contacts.html) - Working, loads with admin UI
+- [x] Contacts (/admin/contacts.html) - Redirects to homepage without auth (correct behavior)
 - [ ] Conferences - Not tested
 - [ ] Abstracts - Not tested
 
-### Round 4: API Endpoints
+### Round 4: Conference & Abstract Submission
+- [x] Conference Registration (/conference/register.html) - FIXED (was missing /api/conference/active endpoint)
+- [x] Abstract Submission (/abstracts/submit.html) - Redirects to login (correct - requires auth)
+
+### Round 5: Additional Public Pages (2026-01-21)
+- [x] ICSR2026 (/icsr2026.html) - Working, conference info displays correctly
+- [x] Gallery (/gallery.html) - Working, photos load with filters functional
+
+### Round 6: API Endpoints
 - [x] GET /health - Working
 - [x] GET /api/zones/public/page/* - Fixed and working
 - [x] GET /api/auth/me - Returns 401 without auth (correct)
 - [x] GET /api/conferences/ - Returns 401 without auth (correct)
+- [x] GET /api/conference/active - Working (added in commit a763e74)
 
 ---
 
