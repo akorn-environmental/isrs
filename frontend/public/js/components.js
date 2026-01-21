@@ -743,6 +743,7 @@ const translations = {
     icsr2026OverviewHeading: 'Join Us in the Pacific Northwest',
     icsr2026OverviewText1: 'The 2026 International Conference on Shellfish Restoration will bring together the global restoration community for four days of cutting-edge research, practical workshops, and invaluable networking with restoration practitioners from around the world.',
     icsr2026OverviewText2: 'Set in the spectacular Puget Sound region, ICSR2026 will explore the intersection of traditional ecological knowledge, modern restoration science, and community-based conservation.',
+    icsr2026OverviewText3: 'The conference will open with a <strong>Traditional Coast Salish welcome ceremony</strong>, honoring the deep cultural connections between the Squaxin Island people and shellfish resources.',
     icsr2026MailingListCTA: 'Join Mailing List for Updates',
     icsr2026JoinMailingList: 'Join Mailing List for Updates',
 
@@ -1851,6 +1852,7 @@ const translations = {
     icsr2026OverviewHeading: 'Únase a Nosotros en el Noroeste del Pacífico',
     icsr2026OverviewText1: 'La Conferencia Internacional sobre Restauración de Moluscos 2026 reunirá a la comunidad global de restauración durante cuatro días de investigación de vanguardia, talleres prácticos y networking invaluable con profesionales de restauración de todo el mundo.',
     icsr2026OverviewText2: 'Situada en la espectacular región de Puget Sound, ICSR2026 explorará la intersección del conocimiento ecológico tradicional, la ciencia moderna de restauración y la conservación basada en la comunidad.',
+    icsr2026OverviewText3: 'La conferencia se abrirá con una <strong>ceremonia tradicional de bienvenida Coast Salish</strong>, honrando las profundas conexiones culturales entre el pueblo de la Isla Squaxin y los recursos de mariscos.',
     icsr2026MailingListCTA: 'Únase a la Lista de Correo para Actualizaciones',
     icsr2026JoinMailingList: 'Únase a la Lista de Correo para Actualizaciones',
 
@@ -2963,6 +2965,7 @@ const translations = {
     icsr2026OverviewHeading: 'Rejoignez-Nous dans le Nord-Ouest du Pacifique',
     icsr2026OverviewText1: 'La Conférence Internationale sur la Restauration des Mollusques 2026 réunira la communauté mondiale de restauration pendant quatre jours de recherche de pointe, d\'ateliers pratiques et de réseautage inestimable avec des praticiens de la restauration du monde entier.',
     icsr2026OverviewText2: 'Située dans la spectaculaire région de Puget Sound, ICSR2026 explorera l\'intersection du savoir écologique traditionnel, de la science moderne de restauration et de la conservation communautaire.',
+    icsr2026OverviewText3: 'La conférence s\'ouvrira avec une <strong>cérémonie de bienvenue traditionnelle Coast Salish</strong>, honorant les liens culturels profonds entre le peuple de l\'île Squaxin et les ressources en coquillages.',
     icsr2026MailingListCTA: 'Rejoindre la Liste de Diffusion pour les Mises à Jour',
     icsr2026JoinMailingList: 'Rejoindre la Liste de Diffusion pour les Mises à Jour',
 
