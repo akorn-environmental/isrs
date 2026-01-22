@@ -3,7 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Register for ICSR 2026 - The International Conference on Shellfish Restoration in Puget Sound, Washington. Join 350+ restoration practitioners from 25+ countries.">
   <title>Conference Registration - ISRS 2026</title>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.shellfish-society.org/conference/register.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.shellfish-society.org/conference/register.html">
+  <meta property="og:title" content="Register for ICSR 2026 - International Shellfish Restoration Society">
+  <meta property="og:description" content="Register for ICSR 2026 in Puget Sound, Washington. Join 350+ restoration practitioners from 25+ countries for cutting-edge research and workshops.">
+  <meta property="og:image" content="https://www.shellfish-society.org/images/hero-shellfish.jpg">
+  <meta property="og:site_name" content="International Shellfish Restoration Society">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Register for ICSR 2026 - International Shellfish Restoration Society">
+  <meta name="twitter:description" content="Register for ICSR 2026 in Puget Sound, Washington. Join 350+ restoration practitioners from 25+ countries.">
+  <meta name="twitter:image" content="https://www.shellfish-society.org/images/hero-shellfish.jpg">
+
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -583,29 +602,29 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        Back to Conference Info
+        <span data-i18n="confRegBackToConf">Back to Conference Info</span>
       </a>
-      <h1>ISRS Conference 2026</h1>
-      <p>Register for the International Shellfish Restoration Society Conference</p>
-      <p><strong>June 15-18, 2026</strong></p>
+      <h1 data-i18n="confRegHeading">ISRS Conference 2026</h1>
+      <p data-i18n="confRegSubtitle">Register for the International Shellfish Restoration Society Conference</p>
+      <p><strong data-i18n="confRegDate">June 15-18, 2026</strong></p>
     </div>
 
     <div class="progress-bar">
       <div class="progress-step active" data-step="1">
         <div class="step-number">1</div>
-        <div class="step-label">Your Profile</div>
+        <div class="step-label" data-i18n="confRegStep1">Your Profile</div>
       </div>
       <div class="progress-step" data-step="2">
         <div class="step-number">2</div>
-        <div class="step-label">Registration Details</div>
+        <div class="step-label" data-i18n="confRegStep2">Registration Details</div>
       </div>
       <div class="progress-step" data-step="3">
         <div class="step-number">3</div>
-        <div class="step-label">Sessions & Workshops</div>
+        <div class="step-label" data-i18n="confRegStep3">Sessions & Workshops</div>
       </div>
       <div class="progress-step" data-step="4">
         <div class="step-number">4</div>
-        <div class="step-label">Review & Payment</div>
+        <div class="step-label" data-i18n="confRegStep4">Review & Payment</div>
       </div>
     </div>
 
@@ -615,41 +634,41 @@
 
       <!-- Step 1: Profile -->
       <div class="form-section active" data-step="1">
-        <h2 class="section-title" id="profileTitle">Your Profile</h2>
+        <h2 class="section-title" id="profileTitle" data-i18n="confRegStep1">Your Profile</h2>
 
         <div class="form-row">
           <div class="form-group">
-            <label>First Name <span class="required">*</span></label>
+            <label><span data-i18n="confRegFirstName">First Name</span> <span class="required">*</span></label>
             <input type="text" id="firstName" required>
           </div>
           <div class="form-group">
-            <label>Last Name <span class="required">*</span></label>
+            <label><span data-i18n="confRegLastName">Last Name</span> <span class="required">*</span></label>
             <input type="text" id="lastName" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Email Address <span class="required">*</span></label>
+          <label><span data-i18n="confRegEmail">Email Address</span> <span class="required">*</span></label>
           <input type="email" id="email" required>
-          <small>This will be your login email for accessing your registration</small>
+          <small data-i18n="confRegEmailHint">This will be your login email for accessing your registration</small>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Organization</label>
+            <label data-i18n="confRegOrganization">Organization</label>
             <input type="text" id="organizationName">
           </div>
           <div class="form-group">
-            <label>Position/Title</label>
+            <label data-i18n="confRegPosition">Position/Title</label>
             <input type="text" id="position">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Country <span class="required">*</span></label>
+            <label><span data-i18n="confRegCountry">Country</span> <span class="required">*</span></label>
             <select id="country" required onchange="toggleStateField()">
-              <option value="">Select country...</option>
+              <option value="" data-i18n="confRegSelectCountry">Select country...</option>
               <option value="United States">United States</option>
               <option value="Canada">Canada</option>
               <option value="Mexico">Mexico</option>
@@ -726,58 +745,58 @@
             </select>
           </div>
           <div class="form-group" id="stateFieldGroup" style="display: none;">
-            <label id="stateLabel">State <span class="required">*</span></label>
+            <label id="stateLabel"><span data-i18n="confRegState">State</span> <span class="required">*</span></label>
             <select id="state"></select>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>City</label>
+            <label data-i18n="confRegCity">City</label>
             <input type="text" id="city">
           </div>
           <div class="form-group">
-            <label>Phone Number</label>
+            <label data-i18n="confRegPhone">Phone Number</label>
             <input type="tel" id="phone">
           </div>
         </div>
 
         <div class="form-group">
-          <label>Professional Bio</label>
-          <textarea id="bio" rows="4" placeholder="Tell us about your work in shellfish restoration..."></textarea>
-          <small>This will be visible in the attendee directory</small>
+          <label data-i18n="confRegBio">Professional Bio</label>
+          <textarea id="bio" rows="4" data-i18n-placeholder="confRegBioPlaceholder" placeholder="Tell us about your work in shellfish restoration..."></textarea>
+          <small data-i18n="confRegBioHint">This will be visible in the attendee directory</small>
         </div>
 
         <div class="form-group">
-          <label>CV/Resume Upload (Optional)</label>
+          <label data-i18n="confRegCV">CV/Resume Upload (Optional)</label>
           <input type="file" id="cvFile" accept=".pdf,.doc,.docx" style="padding: 0.5rem;">
-          <small>Or provide a link:</small>
+          <small data-i18n="confRegCVLink">Or provide a link:</small>
           <input type="url" id="cvUrl" placeholder="https://..." style="margin-top: 0.5rem;">
         </div>
 
         <div class="form-group">
-          <label>Research Areas (comma-separated)</label>
-          <input type="text" id="researchAreas" placeholder="e.g., oyster restoration, water quality, climate adaptation">
+          <label data-i18n="confRegResearchAreas">Research Areas (comma-separated)</label>
+          <input type="text" id="researchAreas" data-i18n-placeholder="confRegResearchPlaceholder" placeholder="e.g., oyster restoration, water quality, climate adaptation">
         </div>
 
         <div class="form-actions">
           <div></div>
-          <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
+          <button type="button" class="btn btn-primary" onclick="nextStep()" data-i18n="confRegNext">Next</button>
         </div>
       </div>
 
       <!-- Step 2: Registration Details -->
       <div class="form-section" data-step="2">
-        <h2 class="section-title">Registration Details</h2>
+        <h2 class="section-title" data-i18n="confRegStep2">Registration Details</h2>
 
         <div class="form-group">
-          <label>Registration Type <span class="required">*</span></label>
+          <label><span data-i18n="confRegType">Registration Type</span> <span class="required">*</span></label>
           <select id="registrationType" onchange="updateFee()">
-            <option value="">Select registration type...</option>
-            <option value="early_bird">Early Bird ($350)</option>
-            <option value="student">Student ($250)</option>
+            <option value="" data-i18n="confRegSelectType">Select registration type...</option>
+            <option value="early_bird"><span data-i18n="confRegEarlyBird">Early Bird</span> ($350)</option>
+            <option value="student"><span data-i18n="confRegStudent">Student</span> ($250)</option>
           </select>
-          <small style="color: var(--text-light); margin-top: 0.5rem; display: block;">
+          <small style="color: var(--text-light); margin-top: 0.5rem; display: block;" data-i18n="confRegEarlyBirdNotice">
             🎉 Early Bird pricing available now! Register before March 1, 2026 to save.
           </small>
         </div>
@@ -789,15 +808,16 @@
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path>
               <line x1="7" y1="7" x2="7.01" y2="7"></line>
             </svg>
-            Discount Code (Optional)
+            <span data-i18n="confRegDiscountCode">Discount Code (Optional)</span>
           </label>
-          <small style="display: block; margin-top: 0.25rem; margin-bottom: 0.75rem; color: var(--text-light);">
+          <small style="display: block; margin-top: 0.25rem; margin-bottom: 0.75rem; color: var(--text-light);" data-i18n="confRegDiscountHint">
             Have a promo code? Enter it here to save on your registration!
           </small>
           <div style="display: flex; gap: 0.5rem;">
             <input
               type="text"
               id="discountCode"
+              data-i18n-placeholder="confRegDiscountPlaceholder"
               placeholder="Enter promo code (e.g., EARLYBIRD2026)"
               style="flex: 1; text-transform: uppercase;"
               oninput="this.value = this.value.toUpperCase()"
@@ -808,6 +828,7 @@
               onclick="validateDiscountCode()"
               id="applyDiscountBtn"
               style="padding: 0.875rem 1.5rem; white-space: nowrap;"
+              data-i18n="confRegApplyCode"
             >
               Apply Code
             </button>
@@ -838,64 +859,64 @@
         </div>
 
         <div class="form-group">
-          <label>Attendance Type <span class="required">*</span></label>
+          <label><span data-i18n="confRegAttendanceType">Attendance Type</span> <span class="required">*</span></label>
           <select id="attendanceType">
-            <option value="in-person">In-Person</option>
-            <option value="virtual">Virtual</option>
+            <option value="in-person" data-i18n="confRegInPerson">In-Person</option>
+            <option value="virtual" data-i18n="confRegVirtual">Virtual</option>
           </select>
         </div>
 
         <div class="checkbox-group">
           <div class="checkbox-item">
             <input type="checkbox" id="isFirstTime">
-            <label for="isFirstTime">This is my first ISRS conference</label>
+            <label for="isFirstTime" data-i18n="confRegFirstTime">This is my first ISRS conference</label>
           </div>
           <div class="checkbox-item">
             <input type="checkbox" id="isPresenter">
-            <label for="isPresenter">I plan to submit an abstract for presentation</label>
+            <label for="isPresenter" data-i18n="confRegPresenter">I plan to submit an abstract for presentation</label>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Dietary Restrictions</label>
+          <label data-i18n="confRegDietary">Dietary Restrictions</label>
           <select id="dietaryRestrictions">
-            <option value="">None</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="vegan">Vegan</option>
-            <option value="gluten-free">Gluten-Free</option>
-            <option value="other">Other (specify below)</option>
+            <option value="" data-i18n="confRegDietaryNone">None</option>
+            <option value="vegetarian" data-i18n="confRegVegetarian">Vegetarian</option>
+            <option value="vegan" data-i18n="confRegVegan">Vegan</option>
+            <option value="gluten-free" data-i18n="confRegGlutenFree">Gluten-Free</option>
+            <option value="other" data-i18n="confRegDietaryOther">Other (specify below)</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Dietary Notes</label>
-          <textarea id="dietaryNotes" rows="2" placeholder="Please specify any allergies or dietary requirements..."></textarea>
+          <label data-i18n="confRegDietaryNotes">Dietary Notes</label>
+          <textarea id="dietaryNotes" rows="2" data-i18n-placeholder="confRegDietaryPlaceholder" placeholder="Please specify any allergies or dietary requirements..."></textarea>
         </div>
 
         <div class="form-group">
-          <label>Accessibility Needs</label>
-          <textarea id="accessibilityNeeds" rows="2" placeholder="Please let us know if you require any accommodations..."></textarea>
+          <label data-i18n="confRegAccessibility">Accessibility Needs</label>
+          <textarea id="accessibilityNeeds" rows="2" data-i18n-placeholder="confRegAccessibilityPlaceholder" placeholder="Please let us know if you require any accommodations..."></textarea>
         </div>
 
         <div class="form-group">
-          <label>Emergency Contact Name <span class="required">*</span></label>
+          <label><span data-i18n="confRegEmergencyName">Emergency Contact Name</span> <span class="required">*</span></label>
           <input type="text" id="emergencyName" required>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Emergency Contact Email <span class="required">*</span></label>
+            <label><span data-i18n="confRegEmergencyEmail">Emergency Contact Email</span> <span class="required">*</span></label>
             <input type="email" id="emergencyEmail" required>
           </div>
           <div class="form-group">
-            <label>Emergency Contact Phone <span class="required">*</span></label>
+            <label><span data-i18n="confRegEmergencyPhone">Emergency Contact Phone</span> <span class="required">*</span></label>
             <input type="tel" id="emergencyPhone" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Relationship <span class="required">*</span></label>
-          <input type="text" id="emergencyRelationship" placeholder="e.g., Spouse, Parent, Friend" required>
+          <label><span data-i18n="confRegEmergencyRelationship">Relationship</span> <span class="required">*</span></label>
+          <input type="text" id="emergencyRelationship" data-i18n-placeholder="confRegEmergencyRelationshipPlaceholder" placeholder="e.g., Spouse, Parent, Friend" required>
         </div>
 
         <div class="form-group" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 1.25rem; border-radius: 6px; border-left: 4px solid #f59e0b; margin-top: 1rem;">
@@ -903,42 +924,42 @@
             <input type="checkbox" id="emergencyContactAuthorization" required style="margin-top: 0.25rem; width: auto; flex-shrink: 0;">
             <label for="emergencyContactAuthorization" style="margin: 0; font-weight: 600;">
               <span class="required" style="margin-right: 0.25rem;">*</span>
-              I authorize ISRS conference administrators to contact my designated emergency contact in the event of a medical emergency or other urgent situation during the conference.
+              <span data-i18n="confRegEmergencyAuth">I authorize ISRS conference administrators to contact my designated emergency contact in the event of a medical emergency or other urgent situation during the conference.</span>
             </label>
           </div>
         </div>
 
         <!-- Special Events & Activities -->
-        <h3 style="font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-top: 2rem; border-top: 2px solid var(--border-color);">Special Events & Activities</h3>
-        <p style="margin-bottom: 1.5rem; color: var(--text-light);">Select the special events and activities you'd like to attend. Some events may have additional fees.</p>
+        <h3 style="font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-top: 2rem; border-top: 2px solid var(--border-color);" data-i18n="confRegSpecialEvents">Special Events & Activities</h3>
+        <p style="margin-bottom: 1.5rem; color: var(--text-light);" data-i18n="confRegSpecialEventsDesc">Select the special events and activities you'd like to attend. Some events may have additional fees.</p>
 
         <div class="form-group">
           <label style="display: flex; align-items: center; margin-bottom: 1rem;">
             <input type="checkbox" id="welcomeReception" style="width: auto; margin-right: 0.75rem;">
-            <span><strong>Welcome Reception</strong> - Join us for the opening night reception (Included in registration)</span>
+            <span><strong data-i18n="confRegWelcomeReception">Welcome Reception</strong> - <span data-i18n="confRegWelcomeReceptionDesc">Join us for the opening night reception (Included in registration)</span></span>
           </label>
 
           <label style="display: flex; align-items: center; margin-bottom: 1rem;">
             <input type="checkbox" id="lowCountryBoil" style="width: auto; margin-right: 0.75rem;">
-            <span><strong>Low Country Boil Dinner</strong> - Traditional seafood feast with colleagues (Included in registration)</span>
+            <span><strong data-i18n="confRegLowCountryBoil">Low Country Boil Dinner</strong> - <span data-i18n="confRegLowCountryBoilDesc">Traditional seafood feast with colleagues (Included in registration)</span></span>
           </label>
         </div>
 
         <!-- Field Trips -->
         <div class="form-group">
-          <label><strong>Field Trips</strong> (Select all that interest you - limited capacity, additional fees may apply)</label>
+          <label><strong data-i18n="confRegFieldTrips">Field Trips</strong> (<span data-i18n="confRegFieldTripsDesc">Select all that interest you - limited capacity, additional fees may apply</span>)</label>
           <div style="margin-top: 0.75rem;">
             <label style="display: flex; align-items: center; margin-bottom: 0.75rem;">
               <input type="checkbox" id="dolphinTours" style="width: auto; margin-right: 0.75rem;">
-              <span>Dolphin Watching Tours - Guided coastal wildlife tour</span>
+              <span data-i18n="confRegDolphinTours">Dolphin Watching Tours - Guided coastal wildlife tour</span>
             </label>
             <label style="display: flex; align-items: center; margin-bottom: 0.75rem;">
               <input type="checkbox" id="seaTurtleCenter" style="width: auto; margin-right: 0.75rem;">
-              <span>Sea Turtle Center Visit - Educational tour of conservation facility</span>
+              <span data-i18n="confRegSeaTurtleCenter">Sea Turtle Center Visit - Educational tour of conservation facility</span>
             </label>
             <label style="display: flex; align-items: center; margin-bottom: 0.75rem;">
               <input type="checkbox" id="restorationSiteTour" style="width: auto; margin-right: 0.75rem;">
-              <span>Local Restoration Site Tour - Visit active restoration projects</span>
+              <span data-i18n="confRegRestorationSiteTour">Local Restoration Site Tour - Visit active restoration projects</span>
             </label>
           </div>
         </div>
@@ -947,16 +968,16 @@
         <div class="form-group">
           <label style="display: flex; align-items: center; margin-bottom: 1rem;">
             <input type="checkbox" id="golfTournament" style="width: auto; margin-right: 0.75rem;">
-            <span><strong>Golf Tournament</strong> - Networking golf tournament (Additional fee: $75)</span>
+            <span><strong data-i18n="confRegGolfTournament">Golf Tournament</strong> - <span data-i18n="confRegGolfTournamentDesc">Networking golf tournament (Additional fee: $75)</span></span>
           </label>
         </div>
 
         <!-- T-Shirt Size -->
         <div class="form-row">
           <div class="form-group">
-            <label>Conference T-Shirt Size (Optional)</label>
+            <label data-i18n="confRegTshirtSize">Conference T-Shirt Size (Optional)</label>
             <select id="tshirtSize">
-              <option value="">No t-shirt needed</option>
+              <option value="" data-i18n="confRegNoTshirt">No t-shirt needed</option>
               <option value="XS">Extra Small (XS)</option>
               <option value="S">Small (S)</option>
               <option value="M">Medium (M)</option>
@@ -968,13 +989,13 @@
           </div>
 
           <div class="form-group">
-            <label>Bringing a Guest to Social Events?</label>
+            <label data-i18n="confRegGuests">Bringing a Guest to Social Events?</label>
             <select id="guestCount">
-              <option value="0">No guests</option>
-              <option value="1">1 guest (+$150)</option>
-              <option value="2">2 guests (+$300)</option>
+              <option value="0" data-i18n="confRegNoGuests">No guests</option>
+              <option value="1" data-i18n="confRegOneGuest">1 guest (+$150)</option>
+              <option value="2" data-i18n="confRegTwoGuests">2 guests (+$300)</option>
             </select>
-            <small>Guests may attend social events and meals (additional fee applies)</small>
+            <small data-i18n="confRegGuestsHint">Guests may attend social events and meals (additional fee applies)</small>
           </div>
         </div>
 
@@ -982,81 +1003,81 @@
         <div class="form-group">
           <label style="display: flex; align-items: center; margin-bottom: 1rem;">
             <input type="checkbox" id="continuingEducation" style="width: auto; margin-right: 0.75rem;">
-            <span><strong>Request Continuing Education Credits</strong> - Society for Ecological Restoration (SER) CE credits</span>
+            <span><strong data-i18n="confRegContinuingEd">Request Continuing Education Credits</strong> - <span data-i18n="confRegContinuingEdDesc">Society for Ecological Restoration (SER) CE credits</span></span>
           </label>
           <div id="ceDetails" style="display: none; margin-left: 2rem; background: var(--light-gray); padding: 1rem; border-radius: 4px;">
             <div class="form-group" style="margin-bottom: 0.5rem;">
-              <label>Professional License Number (if applicable)</label>
-              <input type="text" id="licenseNumber" placeholder="e.g., PWS #12345">
+              <label data-i18n="confRegLicenseNumber">Professional License Number (if applicable)</label>
+              <input type="text" id="licenseNumber" data-i18n-placeholder="confRegLicenseNumberPlaceholder" placeholder="e.g., PWS #12345">
             </div>
             <div class="form-group" style="margin-bottom: 0;">
-              <label>Licensing Organization</label>
-              <input type="text" id="licensingOrg" placeholder="e.g., Society for Ecological Restoration">
+              <label data-i18n="confRegLicensingOrg">Licensing Organization</label>
+              <input type="text" id="licensingOrg" data-i18n-placeholder="confRegLicensingOrgPlaceholder" placeholder="e.g., Society for Ecological Restoration">
             </div>
           </div>
         </div>
 
         <!-- Accommodation Preferences -->
-        <h3 style="font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-top: 2rem; border-top: 2px solid var(--border-color);">Accommodation Preferences</h3>
+        <h3 style="font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-top: 2rem; border-top: 2px solid var(--border-color);" data-i18n="confRegAccommodation">Accommodation Preferences</h3>
 
         <div class="checkbox-group">
           <div class="checkbox-item">
             <input type="checkbox" id="needsAccommodation">
-            <label for="needsAccommodation">I need help booking accommodation</label>
+            <label for="needsAccommodation" data-i18n="confRegNeedsAccommodation">I need help booking accommodation</label>
           </div>
           <div class="checkbox-item">
             <input type="checkbox" id="roomSharing">
-            <label for="roomSharing">I'm interested in sharing a room to reduce costs</label>
+            <label for="roomSharing" data-i18n="confRegRoomSharing">I'm interested in sharing a room to reduce costs</label>
           </div>
         </div>
 
         <div class="form-group" id="roomPreferences" style="display: none; background: var(--light-gray); padding: 1rem; border-radius: 4px;">
-          <label>Roommate Preferences/Notes</label>
-          <textarea id="roommateNotes" rows="2" placeholder="Any preferences for a roommate? Gender preference, quiet vs social, etc."></textarea>
+          <label data-i18n="confRegRoommatePrefs">Roommate Preferences/Notes</label>
+          <textarea id="roommateNotes" rows="2" data-i18n-placeholder="confRegRoommatePlaceholder" placeholder="Any preferences for a roommate? Gender preference, quiet vs social, etc."></textarea>
         </div>
 
         <!-- Other Preferences -->
-        <h3 style="font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-top: 2rem; border-top: 2px solid var(--border-color);">Additional Information</h3>
+        <h3 style="font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-top: 2rem; border-top: 2px solid var(--border-color);" data-i18n="confRegAdditionalInfo">Additional Information</h3>
 
         <div class="checkbox-group">
           <div class="checkbox-item">
             <input type="checkbox" id="willingVolunteer">
-            <label for="willingVolunteer">Willing to volunteer during the conference</label>
+            <label for="willingVolunteer" data-i18n="confRegWillingVolunteer">Willing to volunteer during the conference</label>
           </div>
           <div class="checkbox-item">
             <input type="checkbox" id="firstTimeAttendee">
-            <label for="firstTimeAttendee">This is my first ISRS/ICSR conference</label>
+            <label for="firstTimeAttendee" data-i18n="confRegFirstTimeAttendee">This is my first ISRS/ICSR conference</label>
           </div>
         </div>
 
         <div class="checkbox-group">
           <div class="checkbox-item">
             <input type="checkbox" id="optInMailingList" checked>
-            <label for="optInMailingList">Join ISRS mailing list</label>
+            <label for="optInMailingList" data-i18n="confRegOptInMailing">Join ISRS mailing list</label>
           </div>
           <div class="checkbox-item">
             <input type="checkbox" id="optInFutureConferences" checked>
-            <label for="optInFutureConferences">Receive updates about future conferences</label>
+            <label for="optInFutureConferences" data-i18n="confRegOptInFuture">Receive updates about future conferences</label>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-          <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
+          <button type="button" class="btn btn-secondary" onclick="prevStep()" data-i18n="confRegBack">Back</button>
+          <button type="button" class="btn btn-primary" onclick="nextStep()" data-i18n="confRegNext">Next</button>
         </div>
       </div>
 
       <!-- Step 3: Session Selection -->
       <div class="form-section" data-step="3">
-        <h2 class="section-title">Select Your Sessions & Workshops</h2>
+        <h2 class="section-title" data-i18n="confRegSelectSessions">Select Your Sessions & Workshops</h2>
 
-        <p style="color: var(--text-light); margin-bottom: 2rem;">
+        <p style="color: var(--text-light); margin-bottom: 2rem;" data-i18n="confRegSessionsDesc">
           Choose the workshops and sessions you'd like to attend. Some sessions have limited capacity and may have a waitlist. <strong>Session selection is optional</strong> - you can skip this step if you're not interested in specific sessions.
         </p>
 
         <div id="sessionsLoading" style="text-align: center; padding: 3rem;">
           <div class="spinner" style="margin: 0 auto 1rem;"></div>
-          <p>Loading available sessions...</p>
+          <p data-i18n="confRegLoadingSessions">Loading available sessions...</p>
         </div>
 
         <div id="sessionsContainer" style="display: none;">
@@ -1064,69 +1085,69 @@
         </div>
 
         <div id="sessionsError" style="display: none; padding: 2rem; text-align: center; color: #721c24; background: #f8d7da; border-radius: 4px;">
-          <p style="margin-bottom: 0.5rem; font-weight: 600;">Unable to load sessions</p>
-          <p style="font-size: 0.9rem;">You can continue with registration and add sessions later, or try refreshing the page.</p>
+          <p style="margin-bottom: 0.5rem; font-weight: 600;" data-i18n="confRegSessionsError">Unable to load sessions</p>
+          <p style="font-size: 0.9rem;" data-i18n="confRegSessionsErrorDesc">You can continue with registration and add sessions later, or try refreshing the page.</p>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-          <button type="button" class="btn btn-primary" onclick="nextStep()">Continue to Review</button>
+          <button type="button" class="btn btn-secondary" onclick="prevStep()" data-i18n="confRegBack">Back</button>
+          <button type="button" class="btn btn-primary" onclick="nextStep()" data-i18n="confRegContinueReview">Continue to Review</button>
         </div>
       </div>
 
       <!-- Step 4: Review & Payment -->
       <div class="form-section" data-step="4">
-        <h2 class="section-title">Review & Payment</h2>
+        <h2 class="section-title" data-i18n="confRegReviewPayment">Review & Payment</h2>
 
         <div id="registrationSummary"></div>
 
         <div class="fee-summary">
-          <h3>Registration Fee</h3>
+          <h3 data-i18n="confRegFeeSummary">Registration Fee</h3>
           <div class="fee-item">
-            <span id="feeType">Registration Type</span>
+            <span id="feeType" data-i18n="confRegType">Registration Type</span>
             <span id="feeAmount">$0.00</span>
           </div>
           <div class="fee-item">
-            <strong>Total</strong>
+            <strong data-i18n="confRegTotal">Total</strong>
             <strong id="totalAmount">$0.00</strong>
           </div>
         </div>
 
         <div class="form-group" style="margin-top: 2rem;">
-          <label>Payment Method <span class="required">*</span></label>
+          <label><span data-i18n="confRegPaymentMethod">Payment Method</span> <span class="required">*</span></label>
           <select id="paymentMethod" required onchange="togglePaymentInstructions()">
-            <option value="">Select payment method...</option>
-            <option value="zeffy">Online Payment (Credit/Debit Card via Zeffy)</option>
-            <option value="bank_transfer">Bank Transfer</option>
+            <option value="" data-i18n="confRegSelectPayment">Select payment method...</option>
+            <option value="zeffy" data-i18n="confRegOnlinePayment">Online Payment (Credit/Debit Card via Zeffy)</option>
+            <option value="bank_transfer" data-i18n="confRegBankTransfer">Bank Transfer</option>
           </select>
         </div>
 
         <!-- Zeffy Payment Info -->
         <div id="zeffyInfo" style="display: none; background: #f0f9ff; border: 2px solid #3b82f6; padding: 1.5rem; border-radius: 4px; margin-top: 1rem;">
-          <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">💳 Online Payment via Zeffy</h4>
-          <p style="margin-bottom: 0.5rem;"><strong>ISRS uses Zeffy, a 100% free payment platform for nonprofits.</strong></p>
-          <p style="margin-bottom: 0.5rem;">When you proceed to payment, you'll be redirected to Zeffy's secure checkout page.</p>
-          <p style="margin-bottom: 0.5rem; color: #1e40af;"><strong>Important:</strong> Zeffy may ask if you'd like to add an optional tip to help keep their platform free for nonprofits like ISRS. <strong>This tip is completely optional</strong> and goes to Zeffy, not ISRS. You can choose "$0" or any amount you wish.</p>
-          <p style="margin-bottom: 0;"><em>Your conference registration fee goes 100% to ISRS to support the conference and our mission.</em></p>
+          <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;" data-i18n="confRegZeffyTitle">💳 Online Payment via Zeffy</h4>
+          <p style="margin-bottom: 0.5rem;"><strong data-i18n="confRegZeffyDesc1">ISRS uses Zeffy, a 100% free payment platform for nonprofits.</strong></p>
+          <p style="margin-bottom: 0.5rem;" data-i18n="confRegZeffyDesc2">When you proceed to payment, you'll be redirected to Zeffy's secure checkout page.</p>
+          <p style="margin-bottom: 0.5rem; color: #1e40af;"><strong data-i18n="confRegZeffyImportant">Important:</strong> <span data-i18n="confRegZeffyTip">Zeffy may ask if you'd like to add an optional tip to help keep their platform free for nonprofits like ISRS. <strong>This tip is completely optional</strong> and goes to Zeffy, not ISRS. You can choose "$0" or any amount you wish.</span></p>
+          <p style="margin-bottom: 0;"><em data-i18n="confRegZeffyFee">Your conference registration fee goes 100% to ISRS to support the conference and our mission.</em></p>
         </div>
 
         <!-- Bank Transfer Info -->
         <div id="bankTransferInfo" style="display: none; background: #fef3c7; border: 2px solid #f59e0b; padding: 1.5rem; border-radius: 4px; margin-top: 1rem;">
-          <h4 style="color: #92400e; margin-bottom: 0.5rem;">🏦 Bank Transfer Instructions</h4>
-          <p style="margin-bottom: 1rem;">Please transfer the registration fee to the following ISRS bank account:</p>
+          <h4 style="color: #92400e; margin-bottom: 0.5rem;" data-i18n="confRegBankTitle">🏦 Bank Transfer Instructions</h4>
+          <p style="margin-bottom: 1rem;" data-i18n="confRegBankDesc">Please transfer the registration fee to the following ISRS bank account:</p>
           <div style="background: white; padding: 1rem; border-radius: 4px; font-family: monospace; margin-bottom: 1rem;">
-            <p style="margin: 0.25rem 0;"><strong>Bank Name:</strong> Chase Bank</p>
-            <p style="margin: 0.25rem 0;"><strong>Account Name:</strong> The International Shellfish Restoration Society</p>
-            <p style="margin: 0.25rem 0;"><strong>Account Number:</strong> 735867718</p>
-            <p style="margin: 0.25rem 0;"><strong>Routing Number (ACH/Direct Deposit):</strong> 044000037</p>
-            <p style="margin: 0.25rem 0;"><strong>Routing Number (Wire Transfer):</strong> 021000021</p>
-            <p style="margin: 0.25rem 0;"><strong>SWIFT Code:</strong> CHASUS33 (for international wire transfers)</p>
+            <p style="margin: 0.25rem 0;"><strong data-i18n="confRegBankName">Bank Name:</strong> Chase Bank</p>
+            <p style="margin: 0.25rem 0;"><strong data-i18n="confRegAccountName">Account Name:</strong> The International Shellfish Restoration Society</p>
+            <p style="margin: 0.25rem 0;"><strong data-i18n="confRegAccountNumber">Account Number:</strong> 735867718</p>
+            <p style="margin: 0.25rem 0;"><strong data-i18n="confRegRoutingACH">Routing Number (ACH/Direct Deposit):</strong> 044000037</p>
+            <p style="margin: 0.25rem 0;"><strong data-i18n="confRegRoutingWire">Routing Number (Wire Transfer):</strong> 021000021</p>
+            <p style="margin: 0.25rem 0;"><strong data-i18n="confRegSwiftCode">SWIFT Code:</strong> CHASUS33 <span data-i18n="confRegSwiftNote">(for international wire transfers)</span></p>
           </div>
-          <p style="margin-bottom: 0.5rem;"><strong>Important:</strong></p>
+          <p style="margin-bottom: 0.5rem;"><strong data-i18n="confRegBankImportant">Important:</strong></p>
           <ul style="margin-left: 1.5rem; line-height: 1.8;">
-            <li>Include your registration number in the transfer reference</li>
-            <li>Send proof of transfer to <a href="mailto:treasurer@shellfish-society.org" style="color: #2563eb;">treasurer@shellfish-society.org</a></li>
-            <li>Your registration will be confirmed once payment is received (typically 3-5 business days)</li>
+            <li data-i18n="confRegBankInstr1">Include your registration number in the transfer reference</li>
+            <li><span data-i18n="confRegBankInstr2">Send proof of transfer to</span> <a href="mailto:treasurer@shellfish-society.org" style="color: #2563eb;">treasurer@shellfish-society.org</a></li>
+            <li data-i18n="confRegBankInstr3">Your registration will be confirmed once payment is received (typically 3-5 business days)</li>
           </ul>
         </div>
 
@@ -1136,28 +1157,28 @@
             <input type="checkbox" id="agreeTerms" required style="margin-right: 0.5rem;">
             <label for="agreeTerms" style="font-size: 0.95rem;">
               <span class="required" style="margin-right: 0.25rem;">*</span>
-              I agree to the <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Terms and Conditions</a>
+              <span data-i18n="confRegAgreeTerms">I agree to the</span> <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="confRegTermsLink">Terms and Conditions</a>
             </label>
           </div>
           <div style="margin-bottom: 0.75rem;">
             <input type="checkbox" id="agreePrivacy" required style="margin-right: 0.5rem;">
             <label for="agreePrivacy" style="font-size: 0.95rem;">
               <span class="required" style="margin-right: 0.25rem;">*</span>
-              I acknowledge the <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Privacy Policy</a>
+              <span data-i18n="confRegAgreePrivacy">I acknowledge the</span> <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="confRegPrivacyLink">Privacy Policy</a>
             </label>
           </div>
           <div>
             <input type="checkbox" id="agreeCodeOfConduct" required style="margin-right: 0.5rem;">
             <label for="agreeCodeOfConduct" style="font-size: 0.95rem;">
               <span class="required" style="margin-right: 0.25rem;">*</span>
-              I agree to follow the <a href="/legal/code-of-conduct.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Code of Conduct</a>
+              <span data-i18n="confRegAgreeCode">I agree to follow the</span> <a href="/legal/code-of-conduct.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="confRegCodeLink">Code of Conduct</a>
             </label>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-          <button type="button" class="btn btn-primary" onclick="submitRegistration()">Complete Registration</button>
+          <button type="button" class="btn btn-secondary" onclick="prevStep()" data-i18n="confRegBack">Back</button>
+          <button type="button" class="btn btn-primary" onclick="submitRegistration()" data-i18n="confRegCompleteBtn">Complete Registration</button>
         </div>
       </div>
     </div>
@@ -1172,7 +1193,7 @@
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-content">
       <div class="spinner"></div>
-      <p>Processing your registration...</p>
+      <p data-i18n="confRegProcessing">Processing your registration...</p>
     </div>
   </div>
 
