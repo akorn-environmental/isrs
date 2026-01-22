@@ -549,13 +549,11 @@ async def get_member_directory(
     country: Optional[str] = None,
     expertise: Optional[str] = None,
     conference: Optional[str] = None,
-    page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(50, ge=1, le=100, description="Items per page (max 100)"),
     current_user: AttendeeProfile = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Get the member directory with optional filters and pagination.
+    Get the member directory with optional filters.
 
     Rate limited to 30 requests per hour to prevent email harvesting.
     Only returns members who have opted into the directory.
@@ -586,15 +584,8 @@ async def get_member_directory(
     if country:
         query = query.filter(AttendeeProfile.country == country)
 
-    # Get total count before pagination
-    total = query.count()
-
-    # Apply pagination
-    offset = (page - 1) * page_size
-    members = query.order_by(
-        AttendeeProfile.last_name,
-        AttendeeProfile.first_name
-    ).offset(offset).limit(page_size).all()
+    # Get all matching members
+    members = query.order_by(AttendeeProfile.last_name, AttendeeProfile.first_name).all()
 
     # Format response based on each member's visibility preferences
     directory_data = []
@@ -634,10 +625,7 @@ async def get_member_directory(
     return {
         "success": True,
         "data": directory_data,
-        "total": total,
-        "page": page,
-        "page_size": page_size,
-        "total_pages": (total + page_size - 1) // page_size  # Ceiling division
+        "total": len(directory_data)
     }
 
 
