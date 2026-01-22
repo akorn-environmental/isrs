@@ -3,7 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Join ISRS - Become a member of the International Shellfish Restoration Society. Access exclusive research, networking, and conference discounts.">
   <title>Join ISRS - Become a Member</title>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.shellfish-society.org/membership/join.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.shellfish-society.org/membership/join.html">
+  <meta property="og:title" content="Join ISRS - Become a Member">
+  <meta property="og:description" content="Join the International Shellfish Restoration Society. Access exclusive research, networking opportunities, and conference discounts.">
+  <meta property="og:image" content="https://www.shellfish-society.org/images/hero-shellfish.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Join ISRS - Become a Member">
+  <meta name="twitter:description" content="Join the International Shellfish Restoration Society. Access exclusive research, networking opportunities, and conference discounts.">
+  <meta name="twitter:image" content="https://www.shellfish-society.org/images/hero-shellfish.jpg">
+
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -346,48 +364,48 @@
   <main id="main-content">
   <div class="join-container">
     <div class="join-header">
-      <h1>Join the International Shellfish Restoration Society</h1>
-      <p>Be part of a global community advancing shellfish restoration and marine conservation</p>
+      <h1 data-i18n="joinHeading">Join the International Shellfish Restoration Society</h1>
+      <p data-i18n="joinSubtitle">Be part of a global community advancing shellfish restoration and marine conservation</p>
     </div>
 
     <div class="benefits-section">
-      <h3>🌊 Member Benefits</h3>
+      <h3 data-i18n="joinBenefitsHeading">🌊 Member Benefits</h3>
       <div class="benefits-list">
         <div class="benefit-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span>Access to exclusive research and publications</span>
+          <span data-i18n="joinBenefit1">Access to exclusive research and publications</span>
         </div>
         <div class="benefit-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span>Discounted conference registration</span>
+          <span data-i18n="joinBenefit2">Discounted conference registration</span>
         </div>
         <div class="benefit-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span>Networking opportunities worldwide</span>
+          <span data-i18n="joinBenefit3">Networking opportunities worldwide</span>
         </div>
         <div class="benefit-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span>Monthly newsletter and updates</span>
+          <span data-i18n="joinBenefit4">Monthly newsletter and updates</span>
         </div>
         <div class="benefit-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span>Voting rights in board elections</span>
+          <span data-i18n="joinBenefit5">Voting rights in board elections</span>
         </div>
         <div class="benefit-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span>Support global restoration efforts</span>
+          <span data-i18n="joinBenefit6">Support global restoration efforts</span>
         </div>
       </div>
     </div>
@@ -396,82 +414,82 @@
       <div id="errorContainer"></div>
       <div id="loadingContainer" style="display: none;" class="loading">
         <div class="spinner"></div>
-        <p>Processing your membership...</p>
+        <p data-i18n="joinProcessing">Processing your membership...</p>
       </div>
       <div id="successContainer" style="display: none;" class="success-message">
-        <h2>🎉 Welcome to ISRS!</h2>
-        <p>Your membership has been created successfully.</p>
-        <p>Check your email for confirmation and next steps.</p>
+        <h2 data-i18n="joinWelcome">🎉 Welcome to ISRS!</h2>
+        <p data-i18n="joinSuccess">Your membership has been created successfully.</p>
+        <p data-i18n="joinCheckEmail">Check your email for confirmation and next steps.</p>
       </div>
 
       <!-- Membership Type -->
       <div class="form-section">
-        <h2 class="section-title">Select Your Membership</h2>
+        <h2 class="section-title" data-i18n="joinSelectMembership">Select Your Membership</h2>
         <div class="membership-types">
           <label class="membership-card">
             <input type="radio" name="membership_type" value="regular" required>
-            <div class="type-name">Regular Member</div>
-            <div class="type-price">$50/year</div>
-            <div class="type-description">For professionals and researchers</div>
+            <div class="type-name" data-i18n="joinRegularMember">Regular Member</div>
+            <div class="type-price" data-i18n="joinRegularPrice">$50/year</div>
+            <div class="type-description" data-i18n="joinRegularDesc">For professionals and researchers</div>
           </label>
           <label class="membership-card">
             <input type="radio" name="membership_type" value="student" required>
-            <div class="type-name">Student Member</div>
-            <div class="type-price">$25/year</div>
-            <div class="type-description">For students with valid ID</div>
+            <div class="type-name" data-i18n="joinStudentMember">Student Member</div>
+            <div class="type-price" data-i18n="joinStudentPrice">$25/year</div>
+            <div class="type-description" data-i18n="joinStudentDesc">For students with valid ID</div>
           </label>
           <label class="membership-card">
             <input type="radio" name="membership_type" value="lifetime" required>
-            <div class="type-name">Lifetime Member</div>
-            <div class="type-price">$1,000</div>
-            <div class="type-description">One-time payment, lifetime access</div>
+            <div class="type-name" data-i18n="joinLifetimeMember">Lifetime Member</div>
+            <div class="type-price" data-i18n="joinLifetimePrice">$1,000</div>
+            <div class="type-description" data-i18n="joinLifetimeDesc">One-time payment, lifetime access</div>
           </label>
           <label class="membership-card">
             <input type="radio" name="membership_type" value="corporate" required>
-            <div class="type-name">Corporate</div>
-            <div class="type-price">$500/year</div>
-            <div class="type-description">For organizations (5 members)</div>
+            <div class="type-name" data-i18n="joinCorporateMember">Corporate</div>
+            <div class="type-price" data-i18n="joinCorporatePrice">$500/year</div>
+            <div class="type-description" data-i18n="joinCorporateDesc">For organizations (5 members)</div>
           </label>
         </div>
       </div>
 
       <!-- Personal Information -->
       <div class="form-section">
-        <h2 class="section-title">Personal Information</h2>
+        <h2 class="section-title" data-i18n="joinPersonalInfo">Personal Information</h2>
 
         <div class="form-row">
           <div class="form-group">
-            <label>First Name <span class="required">*</span></label>
+            <label><span data-i18n="confRegFirstName">First Name</span> <span class="required">*</span></label>
             <input type="text" id="firstName" required>
           </div>
           <div class="form-group">
-            <label>Last Name <span class="required">*</span></label>
+            <label><span data-i18n="confRegLastName">Last Name</span> <span class="required">*</span></label>
             <input type="text" id="lastName" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Email <span class="required">*</span></label>
+          <label><span data-i18n="confRegEmail">Email</span> <span class="required">*</span></label>
           <input type="email" id="email" required>
-          <small>This will be your login email</small>
+          <small data-i18n="confRegEmailHint">This will be your login email</small>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Organization</label>
+            <label data-i18n="confRegOrganization">Organization</label>
             <input type="text" id="organization">
           </div>
           <div class="form-group">
-            <label>Position/Title</label>
+            <label data-i18n="confRegPosition">Position/Title</label>
             <input type="text" id="position">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Country <span class="required">*</span></label>
+            <label><span data-i18n="confRegCountry">Country</span> <span class="required">*</span></label>
             <select id="country" required>
-              <option value="">Select country...</option>
+              <option value="" data-i18n="confRegSelectCountry">Select country...</option>
               <option value="United States">United States</option>
               <option value="Canada">Canada</option>
               <option value="United Kingdom">United Kingdom</option>
@@ -481,18 +499,18 @@
             </select>
           </div>
           <div class="form-group">
-            <label>State/Province</label>
+            <label data-i18n="confRegState">State/Province</label>
             <input type="text" id="state">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>City</label>
+            <label data-i18n="confRegCity">City</label>
             <input type="text" id="city">
           </div>
           <div class="form-group">
-            <label>Phone</label>
+            <label data-i18n="confRegPhone">Phone</label>
             <input type="tel" id="phone">
           </div>
         </div>
@@ -500,26 +518,26 @@
 
       <!-- Professional Information -->
       <div class="form-section">
-        <h2 class="section-title">Professional Background</h2>
+        <h2 class="section-title" data-i18n="joinProfessionalBg">Professional Background</h2>
 
         <div class="form-group">
-          <label>Research Areas/Interests</label>
-          <input type="text" id="researchAreas" placeholder="e.g., Oyster Restoration, Marine Ecology, Water Quality">
-          <small>Separate multiple areas with commas</small>
+          <label data-i18n="joinResearchAreas">Research Areas/Interests</label>
+          <input type="text" id="researchAreas" data-i18n-placeholder="joinResearchPlaceholder" placeholder="e.g., Oyster Restoration, Marine Ecology, Water Quality">
+          <small data-i18n="joinResearchHint">Separate multiple areas with commas</small>
         </div>
 
         <div class="form-group">
-          <label>Bio</label>
-          <textarea id="bio" rows="4" placeholder="Tell us about your work and interests in shellfish restoration..."></textarea>
+          <label data-i18n="joinBioLabel">Bio</label>
+          <textarea id="bio" rows="4" data-i18n-placeholder="joinBioPlaceholder" placeholder="Tell us about your work and interests in shellfish restoration..."></textarea>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Website URL</label>
+            <label data-i18n="joinWebsite">Website URL</label>
             <input type="url" id="website" placeholder="https://">
           </div>
           <div class="form-group">
-            <label>LinkedIn Profile</label>
+            <label data-i18n="joinLinkedIn">LinkedIn Profile</label>
             <input type="url" id="linkedin" placeholder="https://linkedin.com/in/">
           </div>
         </div>
@@ -527,8 +545,8 @@
 
       <!-- Optional Donation -->
       <div class="form-section donation-section">
-        <h2 class="section-title">💚 Support Our Mission (Optional)</h2>
-        <p style="margin-bottom: 1rem;">Your membership dues help us operate. An additional donation helps us grow our impact on global shellfish restoration.</p>
+        <h2 class="section-title" data-i18n="joinDonationHeading">💚 Support Our Mission (Optional)</h2>
+        <p style="margin-bottom: 1rem;" data-i18n="joinDonationDesc">Your membership dues help us operate. An additional donation helps us grow our impact on global shellfish restoration.</p>
 
         <div class="donation-amounts">
           <button type="button" class="donation-button" data-amount="25">$25</button>
@@ -536,17 +554,17 @@
           <button type="button" class="donation-button" data-amount="100">$100</button>
           <button type="button" class="donation-button" data-amount="250">$250</button>
           <button type="button" class="donation-button" data-amount="500">$500</button>
-          <button type="button" class="donation-button" data-amount="0">No Donation</button>
+          <button type="button" class="donation-button" data-amount="0" data-i18n="joinNoDonation">No Donation</button>
         </div>
 
         <div class="custom-donation">
-          <label style="white-space: nowrap;">Custom Amount:</label>
+          <label style="white-space: nowrap;" data-i18n="joinCustomAmount">Custom Amount:</label>
           <input type="number" id="customDonation" placeholder="Enter amount" min="0">
         </div>
 
         <div class="form-group" style="margin-top: 1.5rem;">
-          <label>In Honor/Memory Of (Optional)</label>
-          <input type="text" id="inHonorOf" placeholder="Dedicate this donation">
+          <label data-i18n="joinInHonorOf">In Honor/Memory Of (Optional)</label>
+          <input type="text" id="inHonorOf" data-i18n-placeholder="joinInHonorPlaceholder" placeholder="Dedicate this donation">
         </div>
 
         <input type="hidden" id="donationAmount" value="0">
@@ -554,15 +572,15 @@
 
       <!-- Communication Preferences -->
       <div class="form-section">
-        <h2 class="section-title">Communication Preferences</h2>
+        <h2 class="section-title" data-i18n="joinCommPrefs">Communication Preferences</h2>
         <div class="checkbox-group">
           <div class="checkbox-item">
             <input type="checkbox" id="optInEmails" checked>
-            <label for="optInEmails">Send me updates about ISRS activities and opportunities</label>
+            <label for="optInEmails" data-i18n="joinOptInEmails">Send me updates about ISRS activities and opportunities</label>
           </div>
           <div class="checkbox-item">
             <input type="checkbox" id="optInNewsletter" checked>
-            <label for="optInNewsletter">Subscribe to the monthly newsletter</label>
+            <label for="optInNewsletter" data-i18n="joinOptInNewsletter">Subscribe to the monthly newsletter</label>
           </div>
         </div>
       </div>
@@ -573,22 +591,22 @@
           <input type="checkbox" id="agreeTerms" required style="margin-right: 0.5rem;">
           <label for="agreeTerms" style="font-size: 0.95rem;">
             <span class="required" style="margin-right: 0.25rem;">*</span>
-            I agree to the <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Terms and Conditions</a>
+            <span data-i18n="confRegAgreeTerms">I agree to the</span> <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="confRegTermsLink">Terms and Conditions</a>
           </label>
         </div>
         <div>
           <input type="checkbox" id="agreePrivacy" required style="margin-right: 0.5rem;">
           <label for="agreePrivacy" style="font-size: 0.95rem;">
             <span class="required" style="margin-right: 0.25rem;">*</span>
-            I acknowledge the <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Privacy Policy</a>
+            <span data-i18n="confRegAgreePrivacy">I acknowledge the</span> <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="confRegPrivacyLink">Privacy Policy</a>
           </label>
         </div>
       </div>
 
       <!-- Submit -->
       <div class="submit-section">
-        <button type="submit" class="btn-submit" id="submitButton">Proceed to Payment</button>
-        <p style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.875rem;">
+        <button type="submit" class="btn-submit" id="submitButton" data-i18n="joinProceedPayment">Proceed to Payment</button>
+        <p style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.875rem;" data-i18n="joinPaymentNote">
           💳 Secure payment powered by Zeffy (100% free, no platform fees)
         </p>
       </div>
@@ -598,7 +616,7 @@
     <div id="zeffyModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
       <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative;">
         <button onclick="closeZeffyModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
-        <h2 style="margin-bottom: 1rem; font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue);">Complete Your Payment</h2>
+        <h2 style="margin-bottom: 1rem; font-family: 'Marcellus', Georgia, serif; color: var(--primary-blue);" data-i18n="joinCompletePayment">Complete Your Payment</h2>
         <div id="zeffyContainer"></div>
       </div>
     </div>

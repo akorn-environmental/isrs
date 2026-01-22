@@ -1426,7 +1426,64 @@ const translations = {
 
     // Registration type labels
     confRegEarlyBirdLabel: 'Early Bird Registration',
-    confRegStudentLabel: 'Student Registration'
+    confRegStudentLabel: 'Student Registration',
+
+    // Membership Join Page
+    joinTitle: 'Join ISRS - Become a Member',
+    joinHeading: 'Join the International Shellfish Restoration Society',
+    joinSubtitle: 'Be part of a global community advancing shellfish restoration and marine conservation',
+    joinBenefitsHeading: '🌊 Member Benefits',
+    joinBenefit1: 'Access to exclusive research and publications',
+    joinBenefit2: 'Discounted conference registration',
+    joinBenefit3: 'Networking opportunities worldwide',
+    joinBenefit4: 'Monthly newsletter and updates',
+    joinBenefit5: 'Voting rights in board elections',
+    joinBenefit6: 'Support global restoration efforts',
+
+    joinSelectMembership: 'Select Your Membership',
+    joinRegularMember: 'Regular Member',
+    joinRegularPrice: '$50/year',
+    joinRegularDesc: 'For professionals and researchers',
+    joinStudentMember: 'Student Member',
+    joinStudentPrice: '$25/year',
+    joinStudentDesc: 'For students with valid ID',
+    joinLifetimeMember: 'Lifetime Member',
+    joinLifetimePrice: '$1,000',
+    joinLifetimeDesc: 'One-time payment, lifetime access',
+    joinCorporateMember: 'Corporate',
+    joinCorporatePrice: '$500/year',
+    joinCorporateDesc: 'For organizations (5 members)',
+
+    joinPersonalInfo: 'Personal Information',
+    joinProfessionalBg: 'Professional Background',
+    joinResearchAreas: 'Research Areas/Interests',
+    joinResearchPlaceholder: 'e.g., Oyster Restoration, Marine Ecology, Water Quality',
+    joinResearchHint: 'Separate multiple areas with commas',
+    joinBioLabel: 'Bio',
+    joinBioPlaceholder: 'Tell us about your work and interests in shellfish restoration...',
+    joinWebsite: 'Website URL',
+    joinLinkedIn: 'LinkedIn Profile',
+
+    joinDonationHeading: '💚 Support Our Mission (Optional)',
+    joinDonationDesc: 'Your membership dues help us operate. An additional donation helps us grow our impact on global shellfish restoration.',
+    joinNoDonation: 'No Donation',
+    joinCustomAmount: 'Custom Amount:',
+    joinInHonorOf: 'In Honor/Memory Of (Optional)',
+    joinInHonorPlaceholder: 'Dedicate this donation',
+
+    joinCommPrefs: 'Communication Preferences',
+    joinOptInEmails: 'Send me updates about ISRS activities and opportunities',
+    joinOptInNewsletter: 'Subscribe to the monthly newsletter',
+
+    joinProceedPayment: 'Proceed to Payment',
+    joinPaymentNote: '💳 Secure payment powered by Zeffy (100% free, no platform fees)',
+    joinProcessing: 'Processing your membership...',
+    joinWelcome: '🎉 Welcome to ISRS!',
+    joinSuccess: 'Your membership has been created successfully.',
+    joinCheckEmail: 'Check your email for confirmation and next steps.',
+    joinSelectType: 'Please select a membership type',
+    joinCompletePayment: 'Complete Your Payment',
+    joinCompletedPayment: "I've Completed Payment"
   },
   es: {
     // Navegación
@@ -2850,7 +2907,64 @@ const translations = {
 
     // Etiquetas de tipo de inscripción
     confRegEarlyBirdLabel: 'Inscripción Anticipada',
-    confRegStudentLabel: 'Inscripción de Estudiante'
+    confRegStudentLabel: 'Inscripción de Estudiante',
+
+    // Página de Unirse a la Membresía
+    joinTitle: 'Unirse a ISRS - Convertirse en Miembro',
+    joinHeading: 'Únase a la Sociedad Internacional de Restauración de Moluscos',
+    joinSubtitle: 'Sea parte de una comunidad global que avanza la restauración de moluscos y la conservación marina',
+    joinBenefitsHeading: '🌊 Beneficios de Membresía',
+    joinBenefit1: 'Acceso a investigación y publicaciones exclusivas',
+    joinBenefit2: 'Inscripción con descuento a conferencias',
+    joinBenefit3: 'Oportunidades de networking mundial',
+    joinBenefit4: 'Boletín mensual y actualizaciones',
+    joinBenefit5: 'Derecho a voto en elecciones de la junta',
+    joinBenefit6: 'Apoye los esfuerzos globales de restauración',
+
+    joinSelectMembership: 'Seleccione Su Membresía',
+    joinRegularMember: 'Miembro Regular',
+    joinRegularPrice: '$50/año',
+    joinRegularDesc: 'Para profesionales e investigadores',
+    joinStudentMember: 'Miembro Estudiante',
+    joinStudentPrice: '$25/año',
+    joinStudentDesc: 'Para estudiantes con identificación válida',
+    joinLifetimeMember: 'Miembro Vitalicio',
+    joinLifetimePrice: '$1,000',
+    joinLifetimeDesc: 'Pago único, acceso de por vida',
+    joinCorporateMember: 'Corporativo',
+    joinCorporatePrice: '$500/año',
+    joinCorporateDesc: 'Para organizaciones (5 miembros)',
+
+    joinPersonalInfo: 'Información Personal',
+    joinProfessionalBg: 'Antecedentes Profesionales',
+    joinResearchAreas: 'Áreas de Investigación/Intereses',
+    joinResearchPlaceholder: 'ej., Restauración de Ostras, Ecología Marina, Calidad del Agua',
+    joinResearchHint: 'Separe múltiples áreas con comas',
+    joinBioLabel: 'Biografía',
+    joinBioPlaceholder: 'Cuéntenos sobre su trabajo e intereses en la restauración de moluscos...',
+    joinWebsite: 'URL del Sitio Web',
+    joinLinkedIn: 'Perfil de LinkedIn',
+
+    joinDonationHeading: '💚 Apoye Nuestra Misión (Opcional)',
+    joinDonationDesc: 'Sus cuotas de membresía nos ayudan a operar. Una donación adicional nos ayuda a aumentar nuestro impacto en la restauración global de moluscos.',
+    joinNoDonation: 'Sin Donación',
+    joinCustomAmount: 'Cantidad Personalizada:',
+    joinInHonorOf: 'En Honor/Memoria De (Opcional)',
+    joinInHonorPlaceholder: 'Dedique esta donación',
+
+    joinCommPrefs: 'Preferencias de Comunicación',
+    joinOptInEmails: 'Envíenme actualizaciones sobre actividades y oportunidades de ISRS',
+    joinOptInNewsletter: 'Suscribirse al boletín mensual',
+
+    joinProceedPayment: 'Proceder al Pago',
+    joinPaymentNote: '💳 Pago seguro proporcionado por Zeffy (100% gratis, sin comisiones)',
+    joinProcessing: 'Procesando su membresía...',
+    joinWelcome: '🎉 ¡Bienvenido a ISRS!',
+    joinSuccess: 'Su membresía ha sido creada exitosamente.',
+    joinCheckEmail: 'Revise su correo electrónico para confirmación y próximos pasos.',
+    joinSelectType: 'Por favor seleccione un tipo de membresía',
+    joinCompletePayment: 'Complete Su Pago',
+    joinCompletedPayment: 'He Completado el Pago'
   },
   fr: {
     // Navigation
@@ -4274,7 +4388,64 @@ const translations = {
 
     // Étiquettes de type d'inscription
     confRegEarlyBirdLabel: 'Inscription Anticipée',
-    confRegStudentLabel: 'Inscription Étudiant'
+    confRegStudentLabel: 'Inscription Étudiant',
+
+    // Page d'Adhésion
+    joinTitle: 'Rejoindre ISRS - Devenir Membre',
+    joinHeading: 'Rejoignez la Société Internationale de Restauration des Mollusques',
+    joinSubtitle: 'Faites partie d\'une communauté mondiale qui fait progresser la restauration des mollusques et la conservation marine',
+    joinBenefitsHeading: '🌊 Avantages des Membres',
+    joinBenefit1: 'Accès à la recherche et aux publications exclusives',
+    joinBenefit2: 'Inscription à prix réduit aux conférences',
+    joinBenefit3: 'Opportunités de réseautage mondial',
+    joinBenefit4: 'Bulletin mensuel et mises à jour',
+    joinBenefit5: 'Droit de vote aux élections du conseil',
+    joinBenefit6: 'Soutenez les efforts mondiaux de restauration',
+
+    joinSelectMembership: 'Sélectionnez Votre Adhésion',
+    joinRegularMember: 'Membre Régulier',
+    joinRegularPrice: '50 $/an',
+    joinRegularDesc: 'Pour les professionnels et les chercheurs',
+    joinStudentMember: 'Membre Étudiant',
+    joinStudentPrice: '25 $/an',
+    joinStudentDesc: 'Pour les étudiants avec une pièce d\'identité valide',
+    joinLifetimeMember: 'Membre à Vie',
+    joinLifetimePrice: '1 000 $',
+    joinLifetimeDesc: 'Paiement unique, accès à vie',
+    joinCorporateMember: 'Entreprise',
+    joinCorporatePrice: '500 $/an',
+    joinCorporateDesc: 'Pour les organisations (5 membres)',
+
+    joinPersonalInfo: 'Informations Personnelles',
+    joinProfessionalBg: 'Parcours Professionnel',
+    joinResearchAreas: 'Domaines de Recherche/Intérêts',
+    joinResearchPlaceholder: 'ex., Restauration d\'Huîtres, Écologie Marine, Qualité de l\'Eau',
+    joinResearchHint: 'Séparez plusieurs domaines par des virgules',
+    joinBioLabel: 'Biographie',
+    joinBioPlaceholder: 'Parlez-nous de votre travail et de vos intérêts dans la restauration des mollusques...',
+    joinWebsite: 'URL du Site Web',
+    joinLinkedIn: 'Profil LinkedIn',
+
+    joinDonationHeading: '💚 Soutenez Notre Mission (Optionnel)',
+    joinDonationDesc: 'Vos cotisations nous aident à fonctionner. Un don supplémentaire nous aide à accroître notre impact sur la restauration mondiale des mollusques.',
+    joinNoDonation: 'Pas de Don',
+    joinCustomAmount: 'Montant Personnalisé:',
+    joinInHonorOf: 'En l\'Honneur/Mémoire De (Optionnel)',
+    joinInHonorPlaceholder: 'Dédiez ce don',
+
+    joinCommPrefs: 'Préférences de Communication',
+    joinOptInEmails: 'Envoyez-moi des mises à jour sur les activités et opportunités d\'ISRS',
+    joinOptInNewsletter: 'S\'abonner au bulletin mensuel',
+
+    joinProceedPayment: 'Procéder au Paiement',
+    joinPaymentNote: '💳 Paiement sécurisé par Zeffy (100% gratuit, sans frais de plateforme)',
+    joinProcessing: 'Traitement de votre adhésion...',
+    joinWelcome: '🎉 Bienvenue à ISRS!',
+    joinSuccess: 'Votre adhésion a été créée avec succès.',
+    joinCheckEmail: 'Vérifiez votre e-mail pour la confirmation et les prochaines étapes.',
+    joinSelectType: 'Veuillez sélectionner un type d\'adhésion',
+    joinCompletePayment: 'Complétez Votre Paiement',
+    joinCompletedPayment: 'J\'ai Complété le Paiement'
   }
 };
 
