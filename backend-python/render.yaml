@@ -1,21 +1,13 @@
 services:
   - type: web
     name: isrs-python-backend
-    env: python
+    runtime: docker
     region: oregon
     plan: starter
-    buildCommand: |
-      echo "=== Copying Frontend Files ==="
-      mkdir -p ../frontend
-      cp -r ../frontend ../frontend_temp || echo "Frontend already at correct location"
-      echo "✓ Frontend files ready"
-      echo "=== Installing Python Dependencies ==="
-      pip install -r requirements.txt
-      echo "✓ Backend dependencies installed"
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.0
+      - key: PORT
+        value: 8000
       - key: DATABASE_URL
         sync: false
       - key: ASYNC_DATABASE_URL

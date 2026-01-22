@@ -1947,6 +1947,7 @@ const translations = {
 
     // ========== PÁGINA ICSR2026 ==========
     // ICSR2026 - Hero
+    icsr2026SaveDateHeading: '¡RESERVE LA FECHA!',
     icsr2026HeroHeading: 'ICSR2026',
     icsr2026HostedBy: 'Organizado por <a href="https://restorationfund.org/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Puget Sound Restoration Fund</a>',
     icsr2026Location: 'Puget Sound, Estado de Washington',
@@ -3113,6 +3114,7 @@ const translations = {
 
     // ========== PAGE ICSR2026 ==========
     // ICSR2026 - Hero
+    icsr2026SaveDateHeading: 'RÉSERVEZ LA DATE !',
     icsr2026HeroHeading: 'ICSR2026',
     icsr2026HostedBy: 'Organisé par <a href="https://restorationfund.org/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Puget Sound Restoration Fund</a>',
     icsr2026Location: 'Puget Sound, État de Washington',
