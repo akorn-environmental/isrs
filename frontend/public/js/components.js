@@ -1653,7 +1653,32 @@ const translations = {
     welcomeJoinNow: 'Join Now',
     welcomeSignupComingSoon: 'Membership signup coming soon! For now, please contact info@shellfish-society.org',
     welcomeNetworkError: 'Network error. Please check your connection and try again.',
-    welcomeSomethingWrong: 'Something went wrong. Please try again.'
+    welcomeSomethingWrong: 'Something went wrong. Please try again.',
+
+    // Profile Login Page
+    loginTitle: 'Login to Your Profile - ISRS',
+    loginHeading: 'Access Your Profile',
+    loginSubtitle: "We'll send you a secure login link via email",
+    loginMagicLinkSent: '✓ Magic Link Sent!',
+    loginCheckEmail: 'Check your email for a secure login link. The link will expire in 15 minutes.',
+    loginError: '⚠ Error',
+    loginEmailLabel: 'Email Address',
+    loginEmailPlaceholder: 'your.email@example.com',
+    loginSendMagicLink: 'Send Magic Link',
+    loginWhatIsMagicLink: 'What is a Magic Link?',
+    loginMagicLinkExplain: 'A magic link is a secure, one-time use link sent to your email. Click the link to access your profile without needing a password.',
+    loginMagicLinkBenefit1: 'No passwords to remember',
+    loginMagicLinkBenefit2: 'Expires after 15 minutes',
+    loginMagicLinkBenefit3: 'Can only be used once',
+    loginBackToHome: '← Back to Homepage',
+    loginSending: 'Sending...',
+    loginVerifying: 'Verifying...',
+    loginEnterEmail: 'Please enter your email address',
+    loginFailedSend: 'Failed to send magic link',
+    loginNetworkError: 'Network error. Please try again.',
+    loginInvalidLink: 'Invalid or expired magic link',
+    loginFailedVerify: 'Failed to verify magic link',
+    loginDevMode: 'Development Mode:'
   },
   es: {
     // Navegación
@@ -3304,7 +3329,32 @@ const translations = {
     welcomeJoinNow: 'Únase Ahora',
     welcomeSignupComingSoon: '¡Registro de membresía próximamente! Por ahora, contacte a info@shellfish-society.org',
     welcomeNetworkError: 'Error de red. Por favor verifique su conexión e intente de nuevo.',
-    welcomeSomethingWrong: 'Algo salió mal. Por favor intente de nuevo.'
+    welcomeSomethingWrong: 'Algo salió mal. Por favor intente de nuevo.',
+
+    // Página de Inicio de Sesión de Perfil
+    loginTitle: 'Iniciar Sesión en Su Perfil - ISRS',
+    loginHeading: 'Acceda a Su Perfil',
+    loginSubtitle: 'Le enviaremos un enlace seguro de inicio de sesión por correo electrónico',
+    loginMagicLinkSent: '✓ ¡Enlace Mágico Enviado!',
+    loginCheckEmail: 'Revise su correo para el enlace seguro de inicio de sesión. El enlace expirará en 15 minutos.',
+    loginError: '⚠ Error',
+    loginEmailLabel: 'Dirección de Correo',
+    loginEmailPlaceholder: 'su.correo@ejemplo.com',
+    loginSendMagicLink: 'Enviar Enlace Mágico',
+    loginWhatIsMagicLink: '¿Qué es un Enlace Mágico?',
+    loginMagicLinkExplain: 'Un enlace mágico es un enlace seguro de un solo uso enviado a su correo. Haga clic en el enlace para acceder a su perfil sin necesidad de contraseña.',
+    loginMagicLinkBenefit1: 'Sin contraseñas que recordar',
+    loginMagicLinkBenefit2: 'Expira después de 15 minutos',
+    loginMagicLinkBenefit3: 'Solo puede usarse una vez',
+    loginBackToHome: '← Volver al Inicio',
+    loginSending: 'Enviando...',
+    loginVerifying: 'Verificando...',
+    loginEnterEmail: 'Por favor ingrese su dirección de correo electrónico',
+    loginFailedSend: 'Error al enviar enlace mágico',
+    loginNetworkError: 'Error de red. Por favor intente de nuevo.',
+    loginInvalidLink: 'Enlace mágico inválido o expirado',
+    loginFailedVerify: 'Error al verificar enlace mágico',
+    loginDevMode: 'Modo de Desarrollo:'
   },
   fr: {
     // Navigation
@@ -4955,7 +5005,32 @@ const translations = {
     welcomeJoinNow: 'Rejoignez-nous',
     welcomeSignupComingSoon: 'Inscription bientôt disponible! Pour l\'instant, contactez info@shellfish-society.org',
     welcomeNetworkError: 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
-    welcomeSomethingWrong: 'Quelque chose s\'est mal passé. Veuillez réessayer.'
+    welcomeSomethingWrong: 'Quelque chose s\'est mal passé. Veuillez réessayer.',
+
+    // Page de Connexion Profil
+    loginTitle: 'Connexion à Votre Profil - ISRS',
+    loginHeading: 'Accédez à Votre Profil',
+    loginSubtitle: 'Nous vous enverrons un lien de connexion sécurisé par e-mail',
+    loginMagicLinkSent: '✓ Lien Magique Envoyé!',
+    loginCheckEmail: 'Vérifiez votre e-mail pour le lien de connexion sécurisé. Le lien expirera dans 15 minutes.',
+    loginError: '⚠ Erreur',
+    loginEmailLabel: 'Adresse E-mail',
+    loginEmailPlaceholder: 'votre.email@exemple.com',
+    loginSendMagicLink: 'Envoyer le Lien Magique',
+    loginWhatIsMagicLink: 'Qu\'est-ce qu\'un Lien Magique?',
+    loginMagicLinkExplain: 'Un lien magique est un lien sécurisé à usage unique envoyé à votre e-mail. Cliquez sur le lien pour accéder à votre profil sans mot de passe.',
+    loginMagicLinkBenefit1: 'Pas de mots de passe à retenir',
+    loginMagicLinkBenefit2: 'Expire après 15 minutes',
+    loginMagicLinkBenefit3: 'Ne peut être utilisé qu\'une fois',
+    loginBackToHome: '← Retour à l\'Accueil',
+    loginSending: 'Envoi...',
+    loginVerifying: 'Vérification...',
+    loginEnterEmail: 'Veuillez entrer votre adresse e-mail',
+    loginFailedSend: 'Échec de l\'envoi du lien magique',
+    loginNetworkError: 'Erreur réseau. Veuillez réessayer.',
+    loginInvalidLink: 'Lien magique invalide ou expiré',
+    loginFailedVerify: 'Échec de la vérification du lien magique',
+    loginDevMode: 'Mode Développement:'
   }
 };
 
