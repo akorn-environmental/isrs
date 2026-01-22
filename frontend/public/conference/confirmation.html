@@ -3,12 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registration Confirmation - ISRS 2026</title>
+  <meta name="description" content="Your ISRS 2026 conference registration confirmation. Complete your payment and prepare for the International Shellfish Restoration Society Conference.">
+  <title data-i18n="confConfirmTitle">Registration Confirmation - ISRS 2026</title>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.shellfish-society.org/conference/confirmation.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.shellfish-society.org/conference/confirmation.html">
+  <meta property="og:title" content="Registration Confirmation - ISRS 2026">
+  <meta property="og:description" content="Your ISRS 2026 conference registration confirmation. Complete your payment and prepare for the International Shellfish Restoration Society Conference.">
+  <meta property="og:image" content="https://www.shellfish-society.org/images/conference-hero.jpg">
+  <meta property="og:site_name" content="International Shellfish Restoration Society">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Registration Confirmation - ISRS 2026">
+  <meta name="twitter:description" content="Your ISRS 2026 conference registration confirmation. Complete your payment and prepare for the International Shellfish Restoration Society Conference.">
+  <meta name="twitter:image" content="https://www.shellfish-society.org/images/conference-hero.jpg">
+
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/theme.js"></script>
   <script src="/js/analytics.js"></script>
   <style>
     body {
@@ -313,147 +333,147 @@
     <div class="confirmation-card">
       <div id="loadingContent" class="loading">
         <div class="spinner"></div>
-        <p>Loading registration details...</p>
+        <p data-i18n="confConfirmLoading">Loading registration details...</p>
       </div>
 
       <div id="confirmationContent" style="display: none;">
         <div class="success-icon">✓</div>
 
-        <h1>Registration Created!</h1>
-        <p>Thank you for registering for the ISRS International Conference 2026</p>
+        <h1 data-i18n="confConfirmHeading">Registration Created!</h1>
+        <p data-i18n="confConfirmThankYou">Thank you for registering for the ISRS International Conference 2026</p>
 
         <div class="registration-number">
-          <p>Your Registration Number:</p>
+          <p data-i18n="confConfirmRegNumber">Your Registration Number:</p>
           <strong id="registrationNumber">Loading...</strong>
         </div>
 
         <!-- Zeffy Payment Section -->
         <div class="payment-section" id="zeffyPaymentSection" style="display: none;">
-          <h2>⚠️ Complete Your Payment</h2>
-          <p>Your registration is currently <strong>pending payment</strong>. Please complete your payment to confirm your attendance.</p>
-          <p><strong>Amount Due:</strong> <span id="amountDue">$0.00</span></p>
-          <p style="background: #f0f9ff; padding: 1rem; border-radius: 4px; border-left: 4px solid var(--primary-blue);">
+          <h2 data-i18n="confConfirmCompletePayment">⚠️ Complete Your Payment</h2>
+          <p data-i18n="confConfirmPendingPayment">Your registration is currently <strong>pending payment</strong>. Please complete your payment to confirm your attendance.</p>
+          <p><strong data-i18n="confConfirmAmountDue">Amount Due:</strong> <span id="amountDue">$0.00</span></p>
+          <p style="background: #f0f9ff; padding: 1rem; border-radius: 4px; border-left: 4px solid var(--primary-blue);" data-i18n="confConfirmAboutZeffy">
             <strong>About Zeffy:</strong> ISRS uses Zeffy, a 100% free payment platform for nonprofits. Zeffy may ask if you'd like to add an <strong>optional tip</strong> - you can choose $0 or any amount. This tip goes to Zeffy, not ISRS.
           </p>
-          <a href="#" id="paymentLink" class="btn" target="_blank">Pay Now with Zeffy</a>
+          <a href="#" id="paymentLink" class="btn" target="_blank" data-i18n="confConfirmPayNow">Pay Now with Zeffy</a>
           <p style="margin-top: 1rem; font-size: 0.9rem;">
-            <em>You will receive a confirmation email once your payment is processed.</em>
+            <em data-i18n="confConfirmPaymentProcessed">You will receive a confirmation email once your payment is processed.</em>
           </p>
         </div>
 
         <!-- Bank Transfer Section -->
         <div class="payment-section" id="bankTransferSection" style="display: none; background: #fef3c7; border-color: #f59e0b;">
-          <h2>🏦 Bank Transfer Instructions</h2>
-          <p>Your registration is currently <strong>pending payment</strong>. Please transfer the registration fee to complete your registration.</p>
-          <p><strong>Amount Due:</strong> <span id="amountDueBank">$0.00</span></p>
+          <h2 data-i18n="confConfirmBankTransfer">🏦 Bank Transfer Instructions</h2>
+          <p data-i18n="confConfirmBankPending">Your registration is currently <strong>pending payment</strong>. Please transfer the registration fee to complete your registration.</p>
+          <p><strong data-i18n="confConfirmAmountDue">Amount Due:</strong> <span id="amountDueBank">$0.00</span></p>
 
           <div style="background: white; padding: 1.5rem; border-radius: 4px; font-family: monospace; margin: 1.5rem 0;">
-            <p style="margin: 0.5rem 0;"><strong>Bank Name:</strong> Chase Bank</p>
-            <p style="margin: 0.5rem 0;"><strong>Account Name:</strong> The International Shellfish Restoration Society</p>
-            <p style="margin: 0.5rem 0;"><strong>Account Number:</strong> 735867718</p>
-            <p style="margin: 0.5rem 0;"><strong>Routing Number (ACH/Direct Deposit):</strong> 044000037</p>
-            <p style="margin: 0.5rem 0;"><strong>Routing Number (Wire Transfer):</strong> 021000021</p>
-            <p style="margin: 0.5rem 0;"><strong>SWIFT Code:</strong> CHASUS33 (for international wire transfers)</p>
-            <p style="margin: 0.5rem 0; color: #dc2626; font-weight: bold; font-size: 1.1rem;"><strong>⚠️ REQUIRED - Transfer Reference:</strong> <span id="bankRefNumber"></span></p>
+            <p style="margin: 0.5rem 0;"><strong data-i18n="confConfirmBankName">Bank Name:</strong> Chase Bank</p>
+            <p style="margin: 0.5rem 0;"><strong data-i18n="confConfirmAccountName">Account Name:</strong> The International Shellfish Restoration Society</p>
+            <p style="margin: 0.5rem 0;"><strong data-i18n="confConfirmAccountNumber">Account Number:</strong> 735867718</p>
+            <p style="margin: 0.5rem 0;"><strong data-i18n="confConfirmRoutingACH">Routing Number (ACH/Direct Deposit):</strong> 044000037</p>
+            <p style="margin: 0.5rem 0;"><strong data-i18n="confConfirmRoutingWire">Routing Number (Wire Transfer):</strong> 021000021</p>
+            <p style="margin: 0.5rem 0;"><strong data-i18n="confConfirmSwiftCode">SWIFT Code:</strong> CHASUS33 <span data-i18n="confConfirmSwiftNote">(for international wire transfers)</span></p>
+            <p style="margin: 0.5rem 0; color: #dc2626; font-weight: bold; font-size: 1.1rem;"><strong data-i18n="confConfirmTransferRef">⚠️ REQUIRED - Transfer Reference:</strong> <span id="bankRefNumber"></span></p>
           </div>
 
-          <p style="margin-bottom: 0.5rem;"><strong>Important Steps:</strong></p>
+          <p style="margin-bottom: 0.5rem;"><strong data-i18n="confConfirmImportantSteps">Important Steps:</strong></p>
           <ol style="margin-left: 1.5rem; line-height: 2;">
-            <li>Transfer the exact amount shown above</li>
-            <li><strong>Include your registration number (<span id="bankRefNumber2"></span>) in the transfer reference</strong></li>
-            <li>Email proof of transfer to <a href="mailto:treasurer@shellfish-society.org" style="color: #2563eb;">treasurer@shellfish-society.org</a></li>
-            <li>Your registration will be confirmed once payment is received (typically 3-5 business days)</li>
+            <li data-i18n="confConfirmBankStep1">Transfer the exact amount shown above</li>
+            <li><strong data-i18n="confConfirmBankStep2Include">Include your registration number (<span id="bankRefNumber2"></span>) in the transfer reference</strong></li>
+            <li><span data-i18n="confConfirmBankStep3">Email proof of transfer to</span> <a href="mailto:treasurer@shellfish-society.org" style="color: #2563eb;">treasurer@shellfish-society.org</a></li>
+            <li data-i18n="confConfirmBankStep4">Your registration will be confirmed once payment is received (typically 3-5 business days)</li>
           </ol>
         </div>
 
         <div class="next-steps">
-          <h3>What's Next?</h3>
+          <h3 data-i18n="confConfirmWhatsNext">What's Next?</h3>
           <ul>
-            <li>Complete your payment using the button above</li>
-            <li>Check your email for registration confirmation</li>
-            <li>Abstract submission opens April 1, 2026</li>
-            <li>Submit your presentation abstract (if applicable)</li>
-            <li>Book your travel and accommodation</li>
-            <li>Join us June 15-18, 2026!</li>
+            <li data-i18n="confConfirmNext1">Complete your payment using the button above</li>
+            <li data-i18n="confConfirmNext2">Check your email for registration confirmation</li>
+            <li data-i18n="confConfirmNext3">Abstract submission opens April 1, 2026</li>
+            <li data-i18n="confConfirmNext4">Submit your presentation abstract (if applicable)</li>
+            <li data-i18n="confConfirmNext5">Book your travel and accommodation</li>
+            <li data-i18n="confConfirmNext6">Join us June 15-18, 2026!</li>
           </ul>
         </div>
 
         <!-- Profile Access Section -->
         <div class="profile-access-section" style="background: linear-gradient(135deg, #2e5a8a 0%, #1e3a5f 100%); color: white; padding: 2rem; border-radius: 8px; margin: 2rem 0;">
-          <h3 style="color: white; margin-bottom: 1rem;">Your Profile Dashboard</h3>
-          <p style="margin-bottom: 1.5rem;">Access your personalized dashboard to view all your registrations, manage your information, and track your conference activity.</p>
+          <h3 style="color: white; margin-bottom: 1rem;" data-i18n="confConfirmProfileDashboard">Your Profile Dashboard</h3>
+          <p style="margin-bottom: 1.5rem;" data-i18n="confConfirmProfileDesc">Access your personalized dashboard to view all your registrations, manage your information, and track your conference activity.</p>
 
           <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
-            <a href="/profile/login.html" class="btn" style="background: white; color: #2e5a8a; border: none;">
+            <a href="/profile/login.html" class="btn" style="background: white; color: #2e5a8a; border: none;" data-i18n="confConfirmAccessProfile">
               Access Your Profile
             </a>
-            <button id="abstractSubmitBtn" class="btn" style="background: rgba(255, 255, 255, 0.2); border: 2px solid white; display: none;" onclick="window.location.href='/abstracts/submit.html'">
+            <button id="abstractSubmitBtn" class="btn" style="background: rgba(255, 255, 255, 0.2); border: 2px solid white; display: none;" onclick="window.location.href='/abstracts/submit.html'" data-i18n="confConfirmSubmitAbstract">
               Submit Your Abstract
             </button>
           </div>
 
           <div style="background: rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 6px; font-size: 0.9rem;">
-            <p style="margin: 0;"><strong>Secure Access:</strong> We use magic link authentication - no passwords needed! Check your email (<span id="profileEmail" style="font-weight: 600;"></span>) for a secure login link that expires in 15 minutes.</p>
+            <p style="margin: 0;" id="secureAccessText"><strong>Secure Access:</strong> We use magic link authentication - no passwords needed! Check your email (<span id="profileEmail" style="font-weight: 600;"></span>) for a secure login link that expires in 15 minutes.</p>
           </div>
 
           <div style="margin-top: 1rem; font-size: 0.9rem;">
-            <p style="margin: 0;"><strong>From your dashboard you can:</strong></p>
+            <p style="margin: 0;"><strong data-i18n="confConfirmDashboardFeatures">From your dashboard you can:</strong></p>
             <ul style="margin-top: 0.5rem; margin-bottom: 0;">
-              <li>View all your conference registrations</li>
-              <li>Submit and manage multiple abstracts</li>
-              <li>Update your contact information</li>
-              <li>Track your payment status</li>
+              <li data-i18n="confConfirmDashboardFeature1">View all your conference registrations</li>
+              <li data-i18n="confConfirmDashboardFeature2">Submit and manage multiple abstracts</li>
+              <li data-i18n="confConfirmDashboardFeature3">Update your contact information</li>
+              <li data-i18n="confConfirmDashboardFeature4">Track your payment status</li>
             </ul>
           </div>
         </div>
 
         <!-- Share Section -->
         <div class="share-section">
-          <h3>🎉 Spread the Word!</h3>
-          <p>Help us grow the shellfish restoration community! Share this conference with colleagues, friends, and family who care about marine conservation.</p>
+          <h3 data-i18n="confConfirmSpreadWord">🎉 Spread the Word!</h3>
+          <p data-i18n="confConfirmShareText">Help us grow the shellfish restoration community! Share this conference with colleagues, friends, and family who care about marine conservation.</p>
 
           <div class="share-buttons">
             <a href="#" class="share-btn" id="shareTwitter" target="_blank" rel="noopener">
               <svg fill="currentColor" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
-              Share on X
+              <span data-i18n="confConfirmShareX">Share on X</span>
             </a>
             <a href="#" class="share-btn" id="shareLinkedIn" target="_blank" rel="noopener">
               <svg fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
               </svg>
-              Share on LinkedIn
+              <span data-i18n="confConfirmShareLinkedIn">Share on LinkedIn</span>
             </a>
             <a href="#" class="share-btn" id="shareFacebook" target="_blank" rel="noopener">
               <svg fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              Share on Facebook
+              <span data-i18n="confConfirmShareFacebook">Share on Facebook</span>
             </a>
           </div>
 
           <div class="email-share-box">
-            <h4>📧 Invite Colleagues by Email</h4>
-            <p style="font-size: 0.95rem; margin-bottom: 1rem;">Enter email addresses of colleagues who might be interested in attending:</p>
+            <h4 data-i18n="confConfirmInviteColleagues">📧 Invite Colleagues by Email</h4>
+            <p style="font-size: 0.95rem; margin-bottom: 1rem;" data-i18n="confConfirmInviteDesc">Enter email addresses of colleagues who might be interested in attending:</p>
             <div class="email-input-group">
-              <input type="email" id="emailInput" placeholder="colleague@example.com">
-              <button onclick="addEmail()">Add</button>
+              <input type="email" id="emailInput" data-i18n-placeholder="confConfirmEmailPlaceholder" placeholder="colleague@example.com">
+              <button onclick="addEmail()" data-i18n="confConfirmAddEmail">Add</button>
             </div>
             <div class="email-tags" id="emailTags"></div>
-            <button class="btn" onclick="sendInvites()" style="margin-top: 1rem; width: 100%;">Send Invitations</button>
-            <div id="emailSuccess" style="display: none;" class="success-message">
+            <button class="btn" onclick="sendInvites()" style="margin-top: 1rem; width: 100%;" data-i18n="confConfirmSendInvites">Send Invitations</button>
+            <div id="emailSuccess" style="display: none;" class="success-message" data-i18n="confConfirmInvitesSent">
               ✓ Invitations sent successfully!
             </div>
           </div>
         </div>
 
         <div style="margin-top: 2rem;">
-          <p><strong>Questions?</strong> Contact us at <a href="mailto:conference@shellfish-society.org">conference@shellfish-society.org</a></p>
+          <p><strong data-i18n="confConfirmQuestions">Questions?</strong> <span data-i18n="confConfirmContactUs">Contact us at</span> <a href="mailto:conference@shellfish-society.org">conference@shellfish-society.org</a></p>
         </div>
 
         <div style="margin-top: 2rem;">
-          <a href="/" class="btn btn-secondary">Return to Homepage</a>
+          <a href="/" class="btn btn-secondary" data-i18n="confConfirmReturnHome">Return to Homepage</a>
         </div>
       </div>
     </div>
@@ -476,8 +496,9 @@
 
       if (!registrationId) {
         document.getElementById('loadingContent').innerHTML = `
-          <p style="color: #dc3545;">Invalid registration link. Please check your email or contact support.</p>
+          <p style="color: #dc3545;" data-i18n="confConfirmInvalidLink">Invalid registration link. Please check your email or contact support.</p>
         `;
+        if (typeof translatePage === 'function') translatePage();
         return;
       }
 
@@ -520,8 +541,9 @@
       } catch (error) {
         console.error('Error loading registration:', error);
         document.getElementById('loadingContent').innerHTML = `
-          <p style="color: #dc3545;">Unable to load registration details. Please contact support with your registration number.</p>
+          <p style="color: #dc3545;" data-i18n="confConfirmLoadError">Unable to load registration details. Please contact support with your registration number.</p>
         `;
+        if (typeof translatePage === 'function') translatePage();
       }
     });
 
@@ -550,12 +572,12 @@
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address');
+        alert(typeof t === 'function' ? t('confConfirmValidEmail') : 'Please enter a valid email address');
         return;
       }
 
       if (emails.includes(email)) {
-        alert('This email has already been added');
+        alert(typeof t === 'function' ? t('confConfirmEmailAdded') : 'This email has already been added');
         return;
       }
 
@@ -584,7 +606,7 @@
 
     async function sendInvites() {
       if (emails.length === 0) {
-        alert('Please add at least one email address');
+        alert(typeof t === 'function' ? t('confConfirmAddAtLeastOne') : 'Please add at least one email address');
         return;
       }
 
@@ -628,7 +650,7 @@ Hope to see you there!`,
         }
       } catch (error) {
         console.error('Error sending invites:', error);
-        alert('Failed to send invitations. Please try again or contact support.');
+        alert(typeof t === 'function' ? t('confConfirmInviteFailed') : 'Failed to send invitations. Please try again or contact support.');
       }
     }
 
