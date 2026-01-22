@@ -1678,7 +1678,22 @@ const translations = {
     loginNetworkError: 'Network error. Please try again.',
     loginInvalidLink: 'Invalid or expired magic link',
     loginFailedVerify: 'Failed to verify magic link',
-    loginDevMode: 'Development Mode:'
+    loginDevMode: 'Development Mode:',
+
+    // Legal Pages
+    legalPrivacyTitle: 'Privacy Policy - ISRS',
+    legalPrivacyHeading: 'Privacy Policy',
+    legalTermsTitle: 'Terms and Conditions - ISRS',
+    legalTermsHeading: 'Terms and Conditions',
+    legalAccessibilityTitle: 'Accessibility Statement - ISRS',
+    legalAccessibilityHeading: 'Accessibility Statement',
+    legalCodeOfConductTitle: 'Code of Conduct - ISRS',
+    legalCodeOfConductHeading: 'Code of Conduct',
+    legalOrganization: 'International Shellfish Restoration Society',
+    legalLastUpdated: 'Last Updated:',
+    legalHome: 'Home',
+    legalBackToHome: '← Back to Homepage',
+    legalNote: 'Note: This legal document is provided in English. Translations are for reference only; the English version is the legally binding document.'
   },
   es: {
     // Navegación
@@ -3354,7 +3369,22 @@ const translations = {
     loginNetworkError: 'Error de red. Por favor intente de nuevo.',
     loginInvalidLink: 'Enlace mágico inválido o expirado',
     loginFailedVerify: 'Error al verificar enlace mágico',
-    loginDevMode: 'Modo de Desarrollo:'
+    loginDevMode: 'Modo de Desarrollo:',
+
+    // Páginas Legales
+    legalPrivacyTitle: 'Política de Privacidad - ISRS',
+    legalPrivacyHeading: 'Política de Privacidad',
+    legalTermsTitle: 'Términos y Condiciones - ISRS',
+    legalTermsHeading: 'Términos y Condiciones',
+    legalAccessibilityTitle: 'Declaración de Accesibilidad - ISRS',
+    legalAccessibilityHeading: 'Declaración de Accesibilidad',
+    legalCodeOfConductTitle: 'Código de Conducta - ISRS',
+    legalCodeOfConductHeading: 'Código de Conducta',
+    legalOrganization: 'Sociedad Internacional para la Restauración de Mariscos',
+    legalLastUpdated: 'Última Actualización:',
+    legalHome: 'Inicio',
+    legalBackToHome: '← Volver al Inicio',
+    legalNote: 'Nota: Este documento legal se proporciona en inglés. Las traducciones son solo para referencia; la versión en inglés es el documento legalmente vinculante.'
   },
   fr: {
     // Navigation
@@ -5030,7 +5060,22 @@ const translations = {
     loginNetworkError: 'Erreur réseau. Veuillez réessayer.',
     loginInvalidLink: 'Lien magique invalide ou expiré',
     loginFailedVerify: 'Échec de la vérification du lien magique',
-    loginDevMode: 'Mode Développement:'
+    loginDevMode: 'Mode Développement:',
+
+    // Pages Légales
+    legalPrivacyTitle: 'Politique de Confidentialité - ISRS',
+    legalPrivacyHeading: 'Politique de Confidentialité',
+    legalTermsTitle: 'Conditions Générales - ISRS',
+    legalTermsHeading: 'Conditions Générales',
+    legalAccessibilityTitle: 'Déclaration d\'Accessibilité - ISRS',
+    legalAccessibilityHeading: 'Déclaration d\'Accessibilité',
+    legalCodeOfConductTitle: 'Code de Conduite - ISRS',
+    legalCodeOfConductHeading: 'Code de Conduite',
+    legalOrganization: 'Société Internationale pour la Restauration des Mollusques',
+    legalLastUpdated: 'Dernière Mise à Jour:',
+    legalHome: 'Accueil',
+    legalBackToHome: '← Retour à l\'Accueil',
+    legalNote: 'Note: Ce document juridique est fourni en anglais. Les traductions sont fournies à titre indicatif uniquement; la version anglaise est le document juridiquement contraignant.'
   }
 };
 
