@@ -3,12 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Abstract - ISRS 2026</title>
+  <meta name="description" content="Submit your abstract for the ISRS International Conference 2026. Share your research on shellfish restoration with the global community.">
+  <title data-i18n="abstractTitle">Submit Abstract - ISRS 2026</title>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.shellfish-society.org/abstracts/submit.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.shellfish-society.org/abstracts/submit.html">
+  <meta property="og:title" content="Submit Abstract - ISRS 2026">
+  <meta property="og:description" content="Submit your abstract for the ISRS International Conference 2026. Share your research on shellfish restoration with the global community.">
+  <meta property="og:image" content="https://www.shellfish-society.org/images/conference-hero.jpg">
+  <meta property="og:site_name" content="International Shellfish Restoration Society">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Submit Abstract - ISRS 2026">
+  <meta name="twitter:description" content="Submit your abstract for the ISRS International Conference 2026. Share your research on shellfish restoration with the global community.">
+  <meta name="twitter:image" content="https://www.shellfish-society.org/images/conference-hero.jpg">
+
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <script src="/js/theme.js"></script>
   <script src="/js/analytics.js?v=2.0"></script>
   <style>
     body {
@@ -390,12 +410,12 @@
   <main id="main-content">
   <div class="submit-container">
     <div class="submit-header">
-      <h1>Submit Your Abstract</h1>
-      <p>ISRS International Conference 2026</p>
-      <p><strong>June 15-18, 2026 | Jekyll Island, Georgia</strong></p>
+      <h1 data-i18n="abstractHeading">Submit Your Abstract</h1>
+      <p data-i18n="abstractConference">ISRS International Conference 2026</p>
+      <p><strong data-i18n="abstractLocation">June 15-18, 2026 | Jekyll Island, Georgia</strong></p>
       <div class="deadline-notice">
-        <strong>📅 Submission Deadline: March 15, 2026</strong>
-        <p>Notification of acceptance: April 15, 2026</p>
+        <strong data-i18n="abstractDeadline">📅 Submission Deadline: March 15, 2026</strong>
+        <p data-i18n="abstractNotification">Notification of acceptance: April 15, 2026</p>
       </div>
     </div>
 
@@ -403,44 +423,44 @@
       <div id="errorContainer"></div>
       <div id="loadingContainer" style="display: none;" class="loading">
         <div class="spinner"></div>
-        <p>Submitting your abstract...</p>
+        <p data-i18n="abstractSubmitting">Submitting your abstract...</p>
       </div>
       <div id="successContainer" style="display: none;" class="success-message">
-        <h2>🎉 Abstract Submitted Successfully!</h2>
-        <p>Your submission number is:</p>
+        <h2 data-i18n="abstractSuccessHeading">🎉 Abstract Submitted Successfully!</h2>
+        <p data-i18n="abstractSuccessNumber">Your submission number is:</p>
         <div class="submission-number" id="submissionNumber">ABS2026-XXX</div>
-        <p>You will receive a confirmation email shortly.</p>
+        <p data-i18n="abstractSuccessEmail">You will receive a confirmation email shortly.</p>
         <p style="margin-top: 1rem;">
-          <a href="/profile/dashboard.html" style="color: var(--primary-blue); font-weight: 600;">View Your Profile Dashboard →</a>
+          <a href="/profile/dashboard.html" style="color: var(--primary-blue); font-weight: 600;" data-i18n="abstractViewDashboard">View Your Profile Dashboard →</a>
         </p>
       </div>
 
       <div id="formContainer">
         <!-- Basic Information -->
         <div class="form-section">
-          <h2 class="section-title">Basic Information</h2>
+          <h2 class="section-title" data-i18n="abstractBasicInfo">Basic Information</h2>
 
           <div class="form-group">
-            <label>Abstract Title <span class="required">*</span></label>
+            <label><span data-i18n="abstractTitleLabel">Abstract Title</span> <span class="required">*</span></label>
             <input type="text" id="title" required maxlength="250">
-            <small>Maximum 250 characters</small>
+            <small data-i18n="abstractTitleMax">Maximum 250 characters</small>
             <div class="char-counter" id="titleCounter">0 / 250</div>
           </div>
 
           <div class="form-group">
-            <label>Abstract Text <span class="required">*</span></label>
+            <label><span data-i18n="abstractTextLabel">Abstract Text</span> <span class="required">*</span></label>
             <textarea id="abstract" rows="12" required maxlength="3000"></textarea>
-            <small>Maximum 3000 characters. Please do not include author names or affiliations in the abstract text.</small>
+            <small data-i18n="abstractTextMax">Maximum 3000 characters. Please do not include author names or affiliations in the abstract text.</small>
             <div class="char-counter" id="abstractCounter">0 / 3000</div>
           </div>
 
           <div class="form-group">
-            <label>Keywords</label>
+            <label data-i18n="abstractKeywords">Keywords</label>
             <div class="keywords-input-wrapper">
-              <input type="text" id="keywordInput" placeholder="Enter a keyword">
-              <button type="button" onclick="addKeyword()">Add Keyword</button>
+              <input type="text" id="keywordInput" data-i18n-placeholder="abstractKeywordPlaceholder" placeholder="Enter a keyword">
+              <button type="button" onclick="addKeyword()" data-i18n="abstractAddKeyword">Add Keyword</button>
             </div>
-            <small>Add 3-6 keywords to help categorize your abstract</small>
+            <small data-i18n="abstractKeywordHint">Add 3-6 keywords to help categorize your abstract</small>
             <div class="keywords-list" id="keywordsList"></div>
             <input type="hidden" id="keywords" value="[]">
           </div>
@@ -448,110 +468,110 @@
 
         <!-- Presentation Type -->
         <div class="form-section">
-          <h2 class="section-title">Presentation Format</h2>
+          <h2 class="section-title" data-i18n="abstractPresentationFormat">Presentation Format</h2>
 
           <div class="presentation-types">
             <label class="presentation-card">
               <input type="radio" name="presentation_type" value="oral" required>
-              <div class="type-name">🎤 Oral Presentation</div>
-              <div class="type-description">15-minute talk with 5 minutes Q&A</div>
+              <div class="type-name" data-i18n="abstractOral">🎤 Oral Presentation</div>
+              <div class="type-description" data-i18n="abstractOralDesc">15-minute talk with 5 minutes Q&A</div>
             </label>
             <label class="presentation-card">
               <input type="radio" name="presentation_type" value="poster" required>
-              <div class="type-name">📊 Poster Presentation</div>
-              <div class="type-description">Display and discuss your research</div>
+              <div class="type-name" data-i18n="abstractPoster">📊 Poster Presentation</div>
+              <div class="type-description" data-i18n="abstractPosterDesc">Display and discuss your research</div>
             </label>
             <label class="presentation-card">
               <input type="radio" name="presentation_type" value="either" required>
-              <div class="type-name">🤷 Either Format</div>
-              <div class="type-description">You're flexible with the format</div>
+              <div class="type-name" data-i18n="abstractEither">🤷 Either Format</div>
+              <div class="type-description" data-i18n="abstractEitherDesc">You're flexible with the format</div>
             </label>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Topic Area <span class="required">*</span></label>
+              <label><span data-i18n="abstractTopicArea">Topic Area</span> <span class="required">*</span></label>
               <select id="topicArea" required>
-                <option value="">Select topic area...</option>
-                <option value="restoration_ecology">Restoration Ecology</option>
-                <option value="water_quality">Water Quality</option>
-                <option value="habitat_restoration">Habitat Restoration</option>
-                <option value="oyster_restoration">Oyster Restoration</option>
-                <option value="clam_restoration">Clam Restoration</option>
-                <option value="mussel_restoration">Mussel/Freshwater Restoration</option>
-                <option value="policy_management">Policy & Management</option>
-                <option value="aquaculture">Aquaculture</option>
-                <option value="community_engagement">Community Engagement</option>
-                <option value="climate_change">Climate Change Impacts</option>
-                <option value="monitoring">Monitoring & Assessment</option>
-                <option value="other">Other</option>
+                <option value="" data-i18n="abstractSelectTopic">Select topic area...</option>
+                <option value="restoration_ecology" data-i18n="abstractTopicRestoration">Restoration Ecology</option>
+                <option value="water_quality" data-i18n="abstractTopicWater">Water Quality</option>
+                <option value="habitat_restoration" data-i18n="abstractTopicHabitat">Habitat Restoration</option>
+                <option value="oyster_restoration" data-i18n="abstractTopicOyster">Oyster Restoration</option>
+                <option value="clam_restoration" data-i18n="abstractTopicClam">Clam Restoration</option>
+                <option value="mussel_restoration" data-i18n="abstractTopicMussel">Mussel/Freshwater Restoration</option>
+                <option value="policy_management" data-i18n="abstractTopicPolicy">Policy & Management</option>
+                <option value="aquaculture" data-i18n="abstractTopicAquaculture">Aquaculture</option>
+                <option value="community_engagement" data-i18n="abstractTopicCommunity">Community Engagement</option>
+                <option value="climate_change" data-i18n="abstractTopicClimate">Climate Change Impacts</option>
+                <option value="monitoring" data-i18n="abstractTopicMonitoring">Monitoring & Assessment</option>
+                <option value="other" data-i18n="abstractTopicOther">Other</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Preferred Session (Optional)</label>
-              <input type="text" id="sessionPreference" placeholder="e.g., Coastal Restoration">
-              <small>If you'd like to be grouped with similar topics</small>
+              <label data-i18n="abstractPreferredSession">Preferred Session (Optional)</label>
+              <input type="text" id="sessionPreference" data-i18n-placeholder="abstractSessionPlaceholder" placeholder="e.g., Coastal Restoration">
+              <small data-i18n="abstractSessionHint">If you'd like to be grouped with similar topics</small>
             </div>
           </div>
         </div>
 
         <!-- Author Information -->
         <div class="form-section">
-          <h2 class="section-title">Presenting Author</h2>
+          <h2 class="section-title" data-i18n="abstractPresentingAuthor">Presenting Author</h2>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Your Email <span class="required">*</span></label>
+              <label><span data-i18n="abstractYourEmail">Your Email</span> <span class="required">*</span></label>
               <input type="email" id="authorEmail" required>
-              <small>We'll use this to contact you about your submission</small>
+              <small data-i18n="abstractEmailHint">We'll use this to contact you about your submission</small>
             </div>
             <div class="form-group">
-              <label>Your Name <span class="required">*</span></label>
+              <label><span data-i18n="abstractYourName">Your Name</span> <span class="required">*</span></label>
               <input type="text" id="authorName" required>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Organization/Institution <span class="required">*</span></label>
+              <label><span data-i18n="abstractOrganization">Organization/Institution</span> <span class="required">*</span></label>
               <input type="text" id="organization" required>
             </div>
             <div class="form-group">
-              <label>ORCID (Optional)</label>
+              <label data-i18n="abstractOrcid">ORCID (Optional)</label>
               <input type="text" id="orcid" placeholder="0000-0000-0000-0000">
-              <small><a href="https://orcid.org/" target="_blank" style="color: var(--primary-blue);">Get your ORCID</a></small>
+              <small><a href="https://orcid.org/" target="_blank" style="color: var(--primary-blue);" data-i18n="abstractGetOrcid">Get your ORCID</a></small>
             </div>
           </div>
         </div>
 
         <!-- Co-Authors -->
         <div class="form-section">
-          <h2 class="section-title">Co-Authors (Optional)</h2>
-          <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+          <h2 class="section-title" data-i18n="abstractCoAuthors">Co-Authors (Optional)</h2>
+          <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="abstractCoAuthorsDesc">
             Add any co-authors who contributed to this work. They will be listed on the program.
           </p>
 
           <div class="co-authors-list" id="coAuthorsList"></div>
 
           <button type="button" class="add-author-btn" onclick="addCoAuthor()">
-            <span>➕</span> Add Co-Author
+            <span>➕</span> <span data-i18n="abstractAddCoAuthor">Add Co-Author</span>
           </button>
         </div>
 
         <!-- Additional Information -->
         <div class="form-section">
-          <h2 class="section-title">Additional Requirements</h2>
+          <h2 class="section-title" data-i18n="abstractAdditionalReq">Additional Requirements</h2>
 
           <div class="form-group">
             <label>
               <input type="checkbox" id="requiresAV" checked>
-              I will need audiovisual equipment (projector/screen)
+              <span data-i18n="abstractAVEquipment">I will need audiovisual equipment (projector/screen)</span>
             </label>
           </div>
 
           <div class="form-group">
-            <label>Special Equipment or Requirements (Optional)</label>
-            <textarea id="specialEquipment" rows="3" placeholder="e.g., Need electrical outlet for display, require internet connection, etc."></textarea>
+            <label data-i18n="abstractSpecialEquip">Special Equipment or Requirements (Optional)</label>
+            <textarea id="specialEquipment" rows="3" data-i18n-placeholder="abstractSpecialPlaceholder" placeholder="e.g., Need electrical outlet for display, require internet connection, etc."></textarea>
           </div>
         </div>
 
@@ -561,22 +581,22 @@
             <input type="checkbox" id="agreeTerms" required style="margin-right: 0.5rem;">
             <label for="agreeTerms" style="font-size: 0.95rem;">
               <span class="required" style="margin-right: 0.25rem;">*</span>
-              I agree to the <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Terms and Conditions</a>
+              <span data-i18n="abstractAgreeTerms">I agree to the</span> <a href="/legal/terms.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="abstractTermsLink">Terms and Conditions</a>
             </label>
           </div>
           <div>
             <input type="checkbox" id="agreePrivacy" required style="margin-right: 0.5rem;">
             <label for="agreePrivacy" style="font-size: 0.95rem;">
               <span class="required" style="margin-right: 0.25rem;">*</span>
-              I acknowledge the <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Privacy Policy</a>
+              <span data-i18n="abstractAcknowledgePrivacy">I acknowledge the</span> <a href="/legal/privacy.html" target="_blank" style="color: var(--primary-blue); text-decoration: underline;" data-i18n="abstractPrivacyLink">Privacy Policy</a>
             </label>
           </div>
         </div>
 
         <!-- Submit -->
         <div class="submit-section">
-          <button type="submit" class="btn-submit" id="submitButton">Submit Abstract</button>
-          <p style="margin-top: 1rem; color: var(--text-light); font-size: 0.9rem;">
+          <button type="submit" class="btn-submit" id="submitButton" data-i18n="abstractSubmitButton">Submit Abstract</button>
+          <p style="margin-top: 1rem; color: var(--text-light); font-size: 0.9rem;" data-i18n="abstractSubmitNote">
             By submitting, you agree to present if accepted
           </p>
         </div>
@@ -600,7 +620,7 @@
 
     // Check if logged in
     if (!sessionToken) {
-      alert('Please log in to submit an abstract');
+      alert(typeof t === 'function' ? t('abstractLoginRequired') : 'Please log in to submit an abstract');
       window.location.href = '/profile/login.html';
     }
 
@@ -614,7 +634,7 @@
         if (!profileData.success) {
           if (profileResponse.status === 401) {
             localStorage.removeItem('isrs_session_token');
-            alert('Your session has expired. Please log in again.');
+            alert(typeof t === 'function' ? t('abstractSessionExpired') : 'Your session has expired. Please log in again.');
             window.location.href = '/profile/login.html';
             return;
           }
@@ -677,12 +697,12 @@
       if (!keyword) return;
 
       if (keywords.length >= 6) {
-        alert('Maximum 6 keywords allowed');
+        alert(typeof t === 'function' ? t('abstractMaxKeywords') : 'Maximum 6 keywords allowed');
         return;
       }
 
       if (keywords.includes(keyword)) {
-        alert('This keyword has already been added');
+        alert(typeof t === 'function' ? t('abstractKeywordExists') : 'This keyword has already been added');
         return;
       }
 
@@ -792,15 +812,15 @@
         const presentationType = document.querySelector('input[name="presentation_type"]:checked')?.value;
 
         if (!presentationType) {
-          throw new Error('Please select a presentation format');
+          throw new Error(typeof t === 'function' ? t('abstractSelectFormat') : 'Please select a presentation format');
         }
 
         if (!activeConference) {
-          throw new Error('No active conference found. Please try again later.');
+          throw new Error(typeof t === 'function' ? t('abstractNoConference') : 'No active conference found. Please try again later.');
         }
 
         if (!userData || !userData.id) {
-          throw new Error('User profile not loaded. Please refresh the page.');
+          throw new Error(typeof t === 'function' ? t('abstractProfileError') : 'User profile not loaded. Please refresh the page.');
         }
 
         const abstractData = {
