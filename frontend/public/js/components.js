@@ -19,6 +19,18 @@ const translations = {
     heroHeading: 'Building community and advancing innovation in global shellfish restoration',
     heroSubtitle: 'The International Shellfish Restoration Society (ISRS) unites scientists, practitioners, and communities worldwide to protect and restore vital shellfish ecosystems. Through knowledge sharing, collaboration, and innovative approaches, we\'re working to ensure the resilience of coastal ecosystems for generations to come.',
 
+    // Homepage - ICSR2026 Banner
+    homeBannerTitle: 'ICSR2026 • Puget Sound, Washington',
+    homeBannerDates: 'October 4-8, 2026',
+    homeBannerVenue: 'Little Creek Casino Resort',
+    homeBannerDescription: 'Join 350+ shellfish restoration practitioners from 25+ countries for cutting-edge research, hands-on workshops, and field trips to Tribal restoration sites. Chaired by Puget Sound Restoration Fund.',
+    homeBannerViewDetails: 'View Full Details',
+    homeBannerBecomeSponsor: 'Become a Sponsor',
+    homeBannerSponsorshipProgress: 'Sponsorship Progress',
+    homeBannerGoal: 'Goal:',
+    homeBannerRaised: 'raised',
+    homeBannerEarlySponsors: 'Early sponsors:',
+
     // Homepage - Featured Initiatives
     icsrCardTitle: 'International Conference on Shellfish Restoration (ICSR)',
     icsrCardText: 'Join us in Washington\'s Puget Sound for ICSR 2026, the premier global gathering for shellfish restoration science and practice. Connect with leaders in the field, share your research, and discover innovative approaches to restoration challenges.',
@@ -1184,6 +1196,18 @@ const translations = {
     // Página de inicio - Hero
     heroHeading: 'Construyendo comunidad e innovación avanzada en la restauración global de moluscos',
     heroSubtitle: 'La Sociedad Internacional para la Restauración de Moluscos (ISRS) une a científicos, profesionales y comunidades de todo el mundo para proteger y restaurar ecosistemas vitales de moluscos. A través del intercambio de conocimientos, la colaboración y enfoques innovadores, trabajamos para garantizar la resiliencia de los ecosistemas costeros para las generaciones venideras.',
+
+    // Página de inicio - Banner ICSR2026
+    homeBannerTitle: 'ICSR2026 • Puget Sound, Washington',
+    homeBannerDates: '4-8 de Octubre de 2026',
+    homeBannerVenue: 'Little Creek Casino Resort',
+    homeBannerDescription: 'Únase a más de 350 profesionales de restauración de moluscos de más de 25 países para investigación de vanguardia, talleres prácticos y visitas de campo a sitios de restauración Tribal. Presidido por Puget Sound Restoration Fund.',
+    homeBannerViewDetails: 'Ver Detalles Completos',
+    homeBannerBecomeSponsor: 'Convertirse en Patrocinador',
+    homeBannerSponsorshipProgress: 'Progreso del Patrocinio',
+    homeBannerGoal: 'Meta:',
+    homeBannerRaised: 'recaudado',
+    homeBannerEarlySponsors: 'Patrocinadores iniciales:',
 
     // Página de inicio - Iniciativas Destacadas
     icsrCardTitle: 'Conferencia Internacional sobre Restauración de Moluscos (ICSR)',
@@ -2351,6 +2375,18 @@ const translations = {
     // Page d'accueil - Hero
     heroHeading: 'Construire une communauté et faire progresser l\'innovation dans la restauration mondiale des mollusques',
     heroSubtitle: 'La Société Internationale pour la Restauration des Mollusques (ISRS) réunit des scientifiques, des praticiens et des communautés du monde entier pour protéger et restaurer les écosystèmes de mollusques vitaux. Par le partage des connaissances, la collaboration et des approches innovantes, nous travaillons à assurer la résilience des écosystèmes côtiers pour les générations à venir.',
+
+    // Page d'accueil - Bannière ICSR2026
+    homeBannerTitle: 'ICSR2026 • Puget Sound, Washington',
+    homeBannerDates: '4-8 Octobre 2026',
+    homeBannerVenue: 'Little Creek Casino Resort',
+    homeBannerDescription: 'Rejoignez plus de 350 praticiens de la restauration des mollusques de plus de 25 pays pour des recherches de pointe, des ateliers pratiques et des visites de sites de restauration tribaux. Présidé par Puget Sound Restoration Fund.',
+    homeBannerViewDetails: 'Voir Tous les Détails',
+    homeBannerBecomeSponsor: 'Devenir Sponsor',
+    homeBannerSponsorshipProgress: 'Progrès du Parrainage',
+    homeBannerGoal: 'Objectif :',
+    homeBannerRaised: 'collecté',
+    homeBannerEarlySponsors: 'Sponsors initiaux :',
 
     // Page d'accueil - Initiatives Vedettes
     icsrCardTitle: 'Conférence Internationale sur la Restauration des Mollusques (ICSR)',
