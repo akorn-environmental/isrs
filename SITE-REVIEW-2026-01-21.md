@@ -250,6 +250,17 @@
 - SQLAlchemy ORM prevents SQL injection
 - Pydantic input validation
 
+### Additional Security Fixes (2026-01-22)
+- **FIXED**: Missing admin auth on GET /events/{event_id}/signups (was exposing all signups to any user)
+- **FIXED**: Missing admin auth on GET /events/{event_id}/summary (was exposing revenue data to any user)
+- **FIXED**: N+1 query in event signups lookup (now fetches all user signups in single query)
+
+### AWS SES DKIM Issue (2026-01-22)
+- **WARNING**: DKIM signing disabled for shellfish-society.org
+- **ACTION REQUIRED**: Re-add DKIM CNAME records to DNS within 5 days
+- See `/backend/docs/AWS_SES_SETUP.md` for DKIM setup instructions
+- Check AWS SES Console (us-east-1) → Verified Identities → shellfish-society.org for required CNAME records
+
 ---
 
 ## New Features Added (2026-01-21)

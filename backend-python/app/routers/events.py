@@ -68,14 +68,20 @@ async def get_conference_events(
 
     events = query.order_by(ConferenceEvent.event_date).all()
 
+    # Fetch all user signups for these events in a single query (avoid N+1)
+    event_ids = [e.id for e in events]
+    user_signups = {}
+    if event_ids:
+        signups = db.query(EventSignup).filter(
+            EventSignup.event_id.in_(event_ids),
+            EventSignup.user_id == current_user.id
+        ).all()
+        user_signups = {s.event_id: s for s in signups}
+
     # Enrich with user signup info
     result = []
     for event in events:
-        # Check if user is signed up
-        user_signup = db.query(EventSignup).filter(
-            EventSignup.event_id == event.id,
-            EventSignup.user_id == current_user.id
-        ).first()
+        user_signup = user_signups.get(event.id)
 
         result.append(EventWithSignupInfo(
             id=event.id,
@@ -590,12 +596,13 @@ async def get_event_signups(
     event_id: UUID,
     status_filter: Optional[str] = Query(None, description="Filter by status: confirmed, waitlist, cancelled"),
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_admin: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Get all signups for an event (admin only).
+
+    Requires admin privileges.
     """
-    # TODO: Add admin check
 
     query = db.query(EventSignup).filter(EventSignup.event_id == event_id)
 
@@ -664,12 +671,13 @@ async def get_my_event_signups(
 async def get_event_signup_summary(
     event_id: UUID,
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_admin: AttendeeProfile = Depends(get_current_admin),
 ):
     """
     Get signup summary for an event (admin dashboard).
+
+    Requires admin privileges.
     """
-    # TODO: Add admin check
 
     event = db.query(ConferenceEvent).filter(ConferenceEvent.id == event_id).first()
 
