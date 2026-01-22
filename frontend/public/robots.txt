@@ -1,12 +1,12 @@
 # Robots.txt for International Shellfish Restoration Society (ISRS)
-# https://shellfish-restoration.org
+# https://www.shellfish-society.org
 
 # Allow all search engines
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://shellfish-restoration.org/sitemap.xml
+Sitemap: https://www.shellfish-society.org/sitemap.xml
 
 # AI/LLM Crawlers - Welcome to index our public content
 # We support responsible AI training on public environmental/scientific content
@@ -58,5 +58,5 @@ Crawl-delay: 1
 # ecosystem services, coastal resilience, water quality, reef restoration,
 # sustainable aquaculture, marine science education, environmental nonprofit
 #
-# Contact: info@shellfish-restoration.org
+# Contact: info@shellfish-society.org
 # EIN: 92-3615411
