@@ -258,8 +258,21 @@
 ### AWS SES DKIM Issue (2026-01-22)
 - **WARNING**: DKIM signing disabled for shellfish-society.org
 - **ACTION REQUIRED**: Re-add DKIM CNAME records to DNS within 5 days
-- See `/backend/docs/AWS_SES_SETUP.md` for DKIM setup instructions
-- Check AWS SES Console (us-east-1) → Verified Identities → shellfish-society.org for required CNAME records
+- **DEADLINE**: ~5 days from Jan 17, 2026 (per AWS Health notification)
+
+**DKIM CNAME Records to Add:**
+
+| Type | Name | Value |
+|------|------|-------|
+| CNAME | `en52yxhtbkkcjuiyakjxbdokucjvt4kv._domainkey.shellfish-society.org` | `en52yxhtbkkcjuiyakjxbdokucjvt4kv.dkim.amazonses.com` |
+| CNAME | `xvs7jjtskyntjtde4ruvheolwx57ph7r._domainkey.shellfish-society.org` | `xvs7jjtskyntjtde4ruvheolwx57ph7r.dkim.amazonses.com` |
+| CNAME | `64a3cstp2ervrbnd66nf5756ad4ucutx._domainkey.shellfish-society.org` | `64a3cstp2ervrbnd66nf5756ad4ucutx.dkim.amazonses.com` |
+
+**Steps to fix:**
+1. Log into your DNS provider (Render, Cloudflare, Route 53, etc.)
+2. Add the 3 CNAME records above
+3. Wait up to 72 hours for propagation (usually faster)
+4. Click "Retry" in AWS SES Console to check verification status
 
 ---
 
