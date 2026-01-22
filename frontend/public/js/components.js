@@ -183,6 +183,13 @@ const translations = {
     footerPressKit: 'Press Kit',
     footerTaxDisclaimer: 'ISRS is a 501(c)(3) nonprofit organization (pending IRS approval). Donations are tax-deductible to the extent allowed by law.',
 
+    // Cookie Consent Banner
+    cookieConsentTitle: 'We Value Your Privacy',
+    cookieConsentText: 'We use cookies to enhance your browsing experience, analyze site traffic, and understand where our visitors come from. By continuing to use our site, you consent to our use of cookies.',
+    cookieConsentAccept: 'Accept All',
+    cookieConsentDecline: 'Decline Non-Essential',
+    cookieConsentLearnMore: 'Learn more in our Privacy Policy',
+
     // Member Portal - Login
     memberLogin: 'Member Login',
     loginSubtitle: 'Enter your email address and we\'ll send you a secure login link',
@@ -1342,6 +1349,13 @@ const translations = {
     footerPressKit: 'Kit de Prensa',
     footerTaxDisclaimer: 'ISRS es una organización sin fines de lucro 501(c)(3) (pendiente de aprobación del IRS). Las donaciones son deducibles de impuestos en la medida permitida por la ley.',
 
+    // Banner de Consentimiento de Cookies
+    cookieConsentTitle: 'Valoramos Su Privacidad',
+    cookieConsentText: 'Utilizamos cookies para mejorar su experiencia de navegación, analizar el tráfico del sitio y entender de dónde vienen nuestros visitantes. Al continuar usando nuestro sitio, usted consiente nuestro uso de cookies.',
+    cookieConsentAccept: 'Aceptar Todas',
+    cookieConsentDecline: 'Rechazar No Esenciales',
+    cookieConsentLearnMore: 'Más información en nuestra Política de Privacidad',
+
     // Portal de Miembros - Inicio de Sesión
     memberLogin: 'Inicio de Sesión de Miembro',
     loginSubtitle: 'Ingrese su dirección de correo electrónico y le enviaremos un enlace de inicio de sesión seguro',
@@ -2500,6 +2514,13 @@ const translations = {
     footerSupportISRS: 'Soutenir ISRS',
     footerPressKit: 'Kit de Presse',
     footerTaxDisclaimer: 'ISRS est une organisation à but non lucratif 501(c)(3) (en attente d\'approbation de l\'IRS). Les dons sont déductibles d\'impôts dans la mesure autorisée par la loi.',
+
+    // Bannière de Consentement aux Cookies
+    cookieConsentTitle: 'Nous Valorisons Votre Vie Privée',
+    cookieConsentText: 'Nous utilisons des cookies pour améliorer votre expérience de navigation, analyser le trafic du site et comprendre d\'où viennent nos visiteurs. En continuant à utiliser notre site, vous consentez à notre utilisation des cookies.',
+    cookieConsentAccept: 'Accepter Tout',
+    cookieConsentDecline: 'Refuser les Non-Essentiels',
+    cookieConsentLearnMore: 'En savoir plus dans notre Politique de Confidentialité',
 
     // Portail des Membres - Connexion
     memberLogin: 'Connexion Membre',
@@ -3840,6 +3861,186 @@ function loadFooter() {
   `;
 }
 
+// Cookie Consent Banner for GDPR Compliance
+function loadCookieConsent() {
+  // Check if user has already made a choice
+  const consentStatus = localStorage.getItem('isrs_cookie_consent');
+  if (consentStatus) return;
+
+  // Create cookie consent banner
+  const banner = document.createElement('div');
+  banner.id = 'cookie-consent-banner';
+  banner.setAttribute('role', 'dialog');
+  banner.setAttribute('aria-labelledby', 'cookie-consent-title');
+  banner.setAttribute('aria-describedby', 'cookie-consent-description');
+  banner.innerHTML = `
+    <div class="cookie-consent-content">
+      <div class="cookie-consent-text">
+        <h3 id="cookie-consent-title">${t('cookieConsentTitle')}</h3>
+        <p id="cookie-consent-description">${t('cookieConsentText')}</p>
+        <a href="/legal/privacy.html" class="cookie-consent-link">${t('cookieConsentLearnMore')}</a>
+      </div>
+      <div class="cookie-consent-buttons">
+        <button type="button" class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">${t('cookieConsentAccept')}</button>
+        <button type="button" class="cookie-btn cookie-btn-decline" onclick="declineCookies()">${t('cookieConsentDecline')}</button>
+      </div>
+    </div>
+  `;
+
+  // Add styles
+  const style = document.createElement('style');
+  style.textContent = `
+    #cookie-consent-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #1e5a8e, #2980b9);
+      color: white;
+      padding: 1rem;
+      z-index: 10000;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .cookie-consent-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .cookie-consent-text {
+      flex: 1;
+      min-width: 280px;
+    }
+    .cookie-consent-text h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .cookie-consent-text p {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9rem;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+    .cookie-consent-link {
+      color: white;
+      text-decoration: underline;
+      font-size: 0.85rem;
+    }
+    .cookie-consent-link:hover {
+      opacity: 0.8;
+    }
+    .cookie-consent-buttons {
+      display: flex;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .cookie-btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      border: none;
+    }
+    .cookie-btn-accept {
+      background: white;
+      color: #1e5a8e;
+    }
+    .cookie-btn-accept:hover {
+      background: #f0f0f0;
+      transform: translateY(-1px);
+    }
+    .cookie-btn-decline {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+    .cookie-btn-decline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+    @media (max-width: 600px) {
+      .cookie-consent-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      .cookie-consent-buttons {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+  document.body.appendChild(banner);
+}
+
+// Accept cookies and enable analytics
+function acceptCookies() {
+  localStorage.setItem('isrs_cookie_consent', 'accepted');
+  localStorage.setItem('isrs_cookie_consent_date', new Date().toISOString());
+
+  // Enable analytics if it was waiting for consent
+  if (window.ISRSAnalytics && typeof window.ISRSAnalytics.enableTracking === 'function') {
+    window.ISRSAnalytics.enableTracking();
+  }
+
+  hideCookieBanner();
+
+  // Track the consent for analytics
+  if (window.ISRSAnalytics) {
+    window.ISRSAnalytics.trackEvent('cookie_consent', 'accepted');
+  }
+}
+
+// Decline cookies - disable non-essential tracking
+function declineCookies() {
+  localStorage.setItem('isrs_cookie_consent', 'declined');
+  localStorage.setItem('isrs_cookie_consent_date', new Date().toISOString());
+
+  // Disable analytics tracking
+  if (window.ISRSAnalytics && typeof window.ISRSAnalytics.disableTracking === 'function') {
+    window.ISRSAnalytics.disableTracking();
+  }
+
+  hideCookieBanner();
+}
+
+// Hide the cookie banner with animation
+function hideCookieBanner() {
+  const banner = document.getElementById('cookie-consent-banner');
+  if (banner) {
+    banner.style.animation = 'slideDown 0.3s ease-in forwards';
+    banner.style.setProperty('--slideDown', 'translateY(100%)');
+
+    // Add slideDown animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideDown {
+        from { transform: translateY(0); }
+        to { transform: translateY(100%); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    setTimeout(() => banner.remove(), 300);
+  }
+}
+
+// Make cookie functions globally available
+window.acceptCookies = acceptCookies;
+window.declineCookies = declineCookies;
+
 // Handle contact form submission
 async function handleContactSubmit(event) {
   event.preventDefault();
@@ -3951,6 +4152,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof initFeedbackWidget !== 'undefined') {
     initFeedbackWidget({ isAdminPortal: false });
   }
+
+  // Load cookie consent banner (GDPR compliance)
+  loadCookieConsent();
 
   // Make functions globally available
   window.changeLanguage = changeLanguage;
