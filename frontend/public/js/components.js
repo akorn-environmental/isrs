@@ -1625,7 +1625,35 @@ const translations = {
     abstractNoConference: 'No active conference found. Please try again later.',
     abstractProfileError: 'User profile not loaded. Please refresh the page.',
     abstractMaxKeywords: 'Maximum 6 keywords allowed',
-    abstractKeywordExists: 'This keyword has already been added'
+    abstractKeywordExists: 'This keyword has already been added',
+
+    // Welcome Page
+    welcomeTitle: 'Welcome to ISRS - International Society for Shellfish Restoration',
+    welcomeHeading: 'Welcome to ISRS',
+    welcomeSubtitle: 'International Society for Shellfish Restoration',
+    welcomeAnnouncementHeading: '🎉 New Member Portal Launched!',
+    welcomeAnnouncementText: 'Access your profile, explore the member directory, register for ICSR2026 in Puget Sound, and connect with the global shellfish restoration community.',
+    welcomeGetStarted: 'Get Started',
+    welcomeEnterEmail: 'Enter your email to check your membership status or join our community.',
+    welcomeEmailPlaceholder: 'your@email.com',
+    welcomeContinue: 'Continue',
+    welcomeBenefit1: 'Free membership',
+    welcomeBenefit2: 'Member directory access',
+    welcomeBenefit3: 'Conference registration',
+    welcomeBenefit4: 'Global network',
+    welcomeAlreadyExploring: 'Already exploring?',
+    welcomeContinueToMain: 'Continue to main site',
+    welcomeLearnICRS: 'Learn about ICSR',
+    welcomeICRS2026Details: 'ICSR2026 Details',
+    welcomeEnterEmailError: 'Please enter your email address',
+    welcomeChecking: 'Checking...',
+    welcomeEmailSent: 'Email Sent!',
+    welcomeCheckEmail: '✅ Check your email! We\'ve sent you a magic link to log in.',
+    welcomeNoAccount: 'We don\'t have an account with that email yet. Would you like to become a member?',
+    welcomeJoinNow: 'Join Now',
+    welcomeSignupComingSoon: 'Membership signup coming soon! For now, please contact info@shellfish-society.org',
+    welcomeNetworkError: 'Network error. Please check your connection and try again.',
+    welcomeSomethingWrong: 'Something went wrong. Please try again.'
   },
   es: {
     // Navegación
@@ -3248,7 +3276,35 @@ const translations = {
     abstractNoConference: 'No se encontró conferencia activa. Por favor intente más tarde.',
     abstractProfileError: 'Perfil de usuario no cargado. Por favor actualice la página.',
     abstractMaxKeywords: 'Máximo 6 palabras clave permitidas',
-    abstractKeywordExists: 'Esta palabra clave ya ha sido agregada'
+    abstractKeywordExists: 'Esta palabra clave ya ha sido agregada',
+
+    // Página de Bienvenida
+    welcomeTitle: 'Bienvenido a ISRS - Sociedad Internacional para la Restauración de Mariscos',
+    welcomeHeading: 'Bienvenido a ISRS',
+    welcomeSubtitle: 'Sociedad Internacional para la Restauración de Mariscos',
+    welcomeAnnouncementHeading: '🎉 ¡Nuevo Portal de Miembros Lanzado!',
+    welcomeAnnouncementText: 'Acceda a su perfil, explore el directorio de miembros, regístrese para ICSR2026 en Puget Sound y conéctese con la comunidad global de restauración de mariscos.',
+    welcomeGetStarted: 'Comenzar',
+    welcomeEnterEmail: 'Ingrese su correo electrónico para verificar su estado de membresía o unirse a nuestra comunidad.',
+    welcomeEmailPlaceholder: 'su@correo.com',
+    welcomeContinue: 'Continuar',
+    welcomeBenefit1: 'Membresía gratuita',
+    welcomeBenefit2: 'Acceso al directorio de miembros',
+    welcomeBenefit3: 'Registro de conferencia',
+    welcomeBenefit4: 'Red global',
+    welcomeAlreadyExploring: '¿Ya está explorando?',
+    welcomeContinueToMain: 'Continuar al sitio principal',
+    welcomeLearnICRS: 'Conozca ICSR',
+    welcomeICRS2026Details: 'Detalles de ICSR2026',
+    welcomeEnterEmailError: 'Por favor ingrese su dirección de correo electrónico',
+    welcomeChecking: 'Verificando...',
+    welcomeEmailSent: '¡Correo Enviado!',
+    welcomeCheckEmail: '✅ ¡Revise su correo! Le hemos enviado un enlace mágico para iniciar sesión.',
+    welcomeNoAccount: 'No tenemos una cuenta con ese correo. ¿Le gustaría convertirse en miembro?',
+    welcomeJoinNow: 'Únase Ahora',
+    welcomeSignupComingSoon: '¡Registro de membresía próximamente! Por ahora, contacte a info@shellfish-society.org',
+    welcomeNetworkError: 'Error de red. Por favor verifique su conexión e intente de nuevo.',
+    welcomeSomethingWrong: 'Algo salió mal. Por favor intente de nuevo.'
   },
   fr: {
     // Navigation
@@ -4871,7 +4927,35 @@ const translations = {
     abstractNoConference: 'Aucune conférence active trouvée. Veuillez réessayer plus tard.',
     abstractProfileError: 'Profil utilisateur non chargé. Veuillez actualiser la page.',
     abstractMaxKeywords: 'Maximum 6 mots-clés autorisés',
-    abstractKeywordExists: 'Ce mot-clé a déjà été ajouté'
+    abstractKeywordExists: 'Ce mot-clé a déjà été ajouté',
+
+    // Page de Bienvenue
+    welcomeTitle: 'Bienvenue à ISRS - Société Internationale pour la Restauration des Mollusques',
+    welcomeHeading: 'Bienvenue à ISRS',
+    welcomeSubtitle: 'Société Internationale pour la Restauration des Mollusques',
+    welcomeAnnouncementHeading: '🎉 Nouveau Portail Membres Lancé!',
+    welcomeAnnouncementText: 'Accédez à votre profil, explorez le répertoire des membres, inscrivez-vous à ICSR2026 à Puget Sound et connectez-vous avec la communauté mondiale de restauration des mollusques.',
+    welcomeGetStarted: 'Commencer',
+    welcomeEnterEmail: 'Entrez votre e-mail pour vérifier votre statut de membre ou rejoindre notre communauté.',
+    welcomeEmailPlaceholder: 'votre@email.com',
+    welcomeContinue: 'Continuer',
+    welcomeBenefit1: 'Adhésion gratuite',
+    welcomeBenefit2: 'Accès au répertoire des membres',
+    welcomeBenefit3: 'Inscription à la conférence',
+    welcomeBenefit4: 'Réseau mondial',
+    welcomeAlreadyExploring: 'Déjà en exploration?',
+    welcomeContinueToMain: 'Continuer vers le site principal',
+    welcomeLearnICRS: 'En savoir plus sur ICSR',
+    welcomeICRS2026Details: 'Détails ICSR2026',
+    welcomeEnterEmailError: 'Veuillez entrer votre adresse e-mail',
+    welcomeChecking: 'Vérification...',
+    welcomeEmailSent: 'E-mail Envoyé!',
+    welcomeCheckEmail: '✅ Vérifiez votre e-mail! Nous vous avons envoyé un lien magique pour vous connecter.',
+    welcomeNoAccount: 'Nous n\'avons pas de compte avec cet e-mail. Souhaitez-vous devenir membre?',
+    welcomeJoinNow: 'Rejoignez-nous',
+    welcomeSignupComingSoon: 'Inscription bientôt disponible! Pour l\'instant, contactez info@shellfish-society.org',
+    welcomeNetworkError: 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
+    welcomeSomethingWrong: 'Quelque chose s\'est mal passé. Veuillez réessayer.'
   }
 };
 
