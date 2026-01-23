@@ -34,12 +34,14 @@ class CreateZoneRequest(BaseModel):
     page_path: str
     zone_name: Optional[str] = None
     display_mode: Optional[str] = "single"
+    max_assets: Optional[int] = 1
     configuration: Optional[dict] = {}
 
 
 class UpdateZoneRequest(BaseModel):
     zone_name: Optional[str] = None
     display_mode: Optional[str] = None
+    max_assets: Optional[int] = None
     configuration: Optional[dict] = None
     is_active: Optional[bool] = None
 
@@ -189,6 +191,7 @@ async def list_zones(
                 "page_path": zone.page_path,
                 "zone_name": zone.zone_name,
                 "display_mode": zone.display_mode,
+                "max_assets": zone.max_assets or 1,
                 "configuration": zone.configuration,
                 "is_active": zone.is_active,
                 "asset_count": len([a for a in zone.assets if a.is_active]),
@@ -226,6 +229,7 @@ async def create_zone(
         page_path=request.page_path,
         zone_name=request.zone_name or request.zone_id,
         display_mode=request.display_mode,
+        max_assets=request.max_assets or 1,
         configuration=request.configuration,
     )
 
@@ -243,6 +247,7 @@ async def create_zone(
                 "page_path": zone.page_path,
                 "zone_name": zone.zone_name,
                 "display_mode": zone.display_mode,
+                "max_assets": zone.max_assets,
                 "configuration": zone.configuration,
             }
         }
@@ -318,6 +323,8 @@ async def update_zone(
         zone.zone_name = request.zone_name
     if request.display_mode is not None:
         zone.display_mode = request.display_mode
+    if request.max_assets is not None:
+        zone.max_assets = request.max_assets
     if request.configuration is not None:
         zone.configuration = request.configuration
     if request.is_active is not None:

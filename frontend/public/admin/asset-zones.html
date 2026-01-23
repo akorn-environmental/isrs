@@ -236,7 +236,7 @@
 
   <script>
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:3001'
+      ? 'http://localhost:3000'
       : ''  // Use same-origin (relative URLs) in production;
 
     let allZones = [];
@@ -256,7 +256,7 @@
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/asset-zones/admin/all`, {
+        const response = await fetch(`${API_BASE_URL}/api/zones/`, {
           headers: {
             'Authorization': `Bearer ${sessionToken}`
           }
@@ -386,8 +386,14 @@
       };
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/asset-zones`, {
-          method: 'POST',
+        // Use PUT with zone database ID for updates, POST for new zones
+        const url = editingZone
+          ? `${API_BASE_URL}/api/zones/${editingZone.id}`
+          : `${API_BASE_URL}/api/zones/`;
+        const method = editingZone ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method: method,
           headers: {
             'Authorization': `Bearer ${sessionToken}`,
             'Content-Type': 'application/json'
@@ -425,7 +431,8 @@
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/asset-zones/${zoneId}`, {
+        // Use the zone's database ID (not zone_id string) for deletion
+        const response = await fetch(`${API_BASE_URL}/api/zones/${zone.id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${sessionToken}`

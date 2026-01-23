@@ -21,7 +21,8 @@ class AssetZone(Base, TimestampMixin):
     zone_id = Column(String(100), nullable=False, index=True, comment="Unique identifier for the zone (e.g., 'home-hero')")
     page_path = Column(String(255), nullable=False, index=True, comment="URL path where zone appears (e.g., '/' or '/about')")
     zone_name = Column(String(255), comment="Human-readable name for the zone")
-    display_mode = Column(String(50), default="single", comment="Display mode: single, slideshow, gallery")
+    display_mode = Column(String(50), default="single", comment="Display mode: single, slideshow, grid, lightbox")
+    max_assets = Column(Integer, default=1, comment="Maximum number of assets allowed in this zone")
     configuration = Column(JSON, default={}, comment="Zone-specific config (transition, speed, objectFit, etc.)")
     is_active = Column(Boolean, default=True, comment="Whether the zone is active")
 
