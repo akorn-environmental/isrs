@@ -1637,7 +1637,7 @@ footer {
 }
 
 .footer-social-link:hover {
-  background: var(--accent-teal);
+  background: rgba(255, 255, 255, 0.25);
   color: var(--white);
   transform: translateY(-2px);
 }

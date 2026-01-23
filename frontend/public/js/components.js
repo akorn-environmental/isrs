@@ -184,7 +184,7 @@ const translations = {
     quickLinks: 'Quick Links',
     connect: 'Connect',
     adminPortal: 'Admin Portal',
-    copyright: '© 2025 International Shellfish Restoration Society. All rights reserved.',
+    copyright: '© 2026 International Shellfish Restoration Society. All rights reserved.',
     taxId: 'Tax ID (EIN): 39-2829151',
 
     // Footer
