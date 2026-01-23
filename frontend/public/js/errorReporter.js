@@ -17,7 +17,10 @@
       if (this.initialized) return;
       this.initialized = true;
 
-      console.log('✅ Error reporting initialized - Frontend errors will be logged to backend');
+      // Silent initialization in production
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('✅ Error reporting initialized - Frontend errors will be logged to backend');
+      }
 
       // Catch all unhandled JavaScript errors
       window.onerror = (message, source, lineno, colno, error) => {
@@ -49,67 +52,29 @@
         });
       });
 
-      console.log('🔍 Error capture hooks installed');
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('🔍 Error capture hooks installed');
+      }
 
-      // Intercept console methods to send to Render logs
-      this.interceptConsole();
-    },
-
-    interceptConsole: function() {
-      const self = this;
-      const methods = ['log', 'warn', 'error', 'info', 'debug'];
-
-      methods.forEach(method => {
-        const original = console[method];
-
-        console[method] = function(...args) {
-          // Call original console method (so browser console still works)
-          original.apply(console, args);
-
-          // Send to Render logs (only in production, not localhost)
-          if (window.location.hostname !== 'localhost' &&
-              window.location.hostname !== '127.0.0.1') {
-
-            // Convert arguments to strings
-            const message = args.map(arg => {
-              if (typeof arg === 'object') {
-                try {
-                  return JSON.stringify(arg, null, 2);
-                } catch (e) {
-                  return String(arg);
-                }
-              }
-              return String(arg);
-            }).join(' ');
-
-            // Don't log our own error reporter messages (avoid loops)
-            if (message.includes('Error reporting') ||
-                message.includes('Error capture')) {
-              return;
-            }
-
-            // Send to backend
-            self.logError({
-              type: 'CONSOLE_' + method.toUpperCase(),
-              message: message,
-              level: method,
-              url: window.location.href,
-              timestamp: new Date().toISOString()
-            });
-          }
-        };
-      });
-
-      console.log('📊 Console interception enabled - All console output logged to Render');
+      // NOTE: Console interception disabled - no backend endpoint available
+      // this.interceptConsole();
     },
 
     logError: function(errorData) {
-      // Log to console for development
+      // Log to console for development only
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.error('🚨 FRONTEND ERROR:', errorData);
+        return; // Don't try to POST to backend in local development
       }
 
-      // Send to backend (fire and forget - don't block on error logging)
+      // In production, only log actual errors (not console messages) to avoid spam
+      if (errorData.type.startsWith('CONSOLE_')) {
+        return; // Skip console message forwarding - no backend endpoint available
+      }
+
+      // Send actual errors to backend (fire and forget)
+      // Note: This requires a backend endpoint at /api/errors/log
+      // If no endpoint exists, this will silently fail
       try {
         fetch(this.API_ENDPOINT, {
           method: 'POST',
@@ -117,15 +82,12 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(errorData),
-          // Don't wait for response
           keepalive: true
-        }).catch(err => {
-          // Silently fail if logging endpoint is unavailable
-          console.warn('Failed to send error to backend:', err.message);
+        }).catch(() => {
+          // Silently fail - don't spam console with logging errors
         });
       } catch (err) {
-        // Silently fail - don't throw errors while logging errors
-        console.warn('Error reporter failed:', err.message);
+        // Silently fail
       }
     },
 
