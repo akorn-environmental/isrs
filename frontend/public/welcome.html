@@ -150,7 +150,8 @@
       font-family: 'PT Serif', Georgia, serif;
       cursor: pointer;
       transition: all 0.3s;
-      white-space: nowrap;
+      /* i18n: Allow text to wrap for longer translations */
+      min-width: 120px;
     }
 
     .email-input-group button:hover:not(:disabled) {

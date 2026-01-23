@@ -196,7 +196,7 @@ header {
   transition: color 0.3s;
   position: relative;
   padding-bottom: 0.25rem;
-  white-space: nowrap;
+  /* Removed white-space: nowrap for i18n support - allows text to wrap in translated languages */
 }
 
 .nav-links a:hover {
