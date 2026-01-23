@@ -14,7 +14,7 @@ from app.models.conference import (
 )
 from app.models.funding import FundingProspect
 from app.models.auth import UserSession
-from app.models.system import AuditLog, DataQualityMetric
+from app.models.system import AuditLog, DataQualityMetric, UserFeedback
 from app.models.asset import Asset
 from app.models.asset_zone import AssetZone, AssetZoneAsset
 
@@ -34,6 +34,7 @@ __all__ = [
     "UserSession",
     "AuditLog",
     "DataQualityMetric",
+    "UserFeedback",
     "Asset",
     "AssetZone",
     "AssetZoneAsset",

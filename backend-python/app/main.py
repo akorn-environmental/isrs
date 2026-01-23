@@ -77,10 +77,13 @@ async def startup_event():
     logger.info(f"CORS Origins: {settings.CORS_ORIGINS}")
 
     # Initialize database (create tables if they don't exist)
-    # NOTE: In production, use Alembic migrations instead
-    if settings.DEBUG:
-        logger.info("Debug mode - ensuring database tables exist")
-        # init_db()  # Uncomment when ready to create tables
+    # This ensures all model tables exist, including user_feedback
+    logger.info("Ensuring database tables exist...")
+    try:
+        init_db()
+        logger.info("Database tables initialized successfully")
+    except Exception as e:
+        logger.error(f"Error initializing database tables: {e}")
 
 
 # Shutdown event
