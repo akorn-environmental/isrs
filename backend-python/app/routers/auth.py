@@ -284,8 +284,8 @@ async def preview_profile(preview_data: PreviewProfileRequest, request: Request,
                 message="No existing account found with this email"
             )
 
-        # Check account status
-        if attendee.account_status in ('suspended', 'deleted'):
+        # Check account status (handle None values)
+        if attendee.account_status and attendee.account_status in ('suspended', 'deleted'):
             logger.warning(f"Profile preview attempted for suspended/deleted account: {email}")
             return PreviewProfileResponse(
                 success=True,
@@ -293,24 +293,28 @@ async def preview_profile(preview_data: PreviewProfileRequest, request: Request,
                 message="No active account found with this email"
             )
 
-        # Get conference history via registrations
+        # Get conference history via registrations (with error handling)
         from app.models.conference import Conference, ConferenceRegistration
 
         conference_history = []
-        registrations = db.query(ConferenceRegistration, Conference).join(
-            Conference, ConferenceRegistration.conference_id == Conference.id
-        ).filter(
-            ConferenceRegistration.attendee_id == attendee.id
-        ).order_by(Conference.year.desc()).all()
+        try:
+            registrations = db.query(ConferenceRegistration, Conference).join(
+                Conference, ConferenceRegistration.conference_id == Conference.id
+            ).filter(
+                ConferenceRegistration.attendee_id == attendee.id
+            ).order_by(Conference.year.desc()).all()
 
-        for reg, conf in registrations:
-            history_item = {
-                "year": conf.year,
-                "name": conf.name,
-                "location": conf.location,
-                "registration_type": reg.registration_type
-            }
-            conference_history.append(history_item)
+            for reg, conf in registrations:
+                history_item = {
+                    "year": conf.year,
+                    "name": conf.name,
+                    "location": conf.location,
+                    "registration_type": reg.registration_type
+                }
+                conference_history.append(history_item)
+        except Exception as e:
+            logger.warning(f"Could not load conference history: {str(e)}")
+            # Continue without conference history
 
         # Build location string
         location_parts = [attendee.city, attendee.country]
