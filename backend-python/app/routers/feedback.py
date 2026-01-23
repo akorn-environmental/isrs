@@ -98,6 +98,7 @@ class FeedbackListResponse(BaseModel):
 # Public Endpoints (for submitting feedback)
 # ============================================================================
 
+@router.post("/submit", status_code=status.HTTP_201_CREATED)
 @router.post("", status_code=status.HTTP_201_CREATED)
 async def create_feedback(
     feedback: FeedbackCreate,
