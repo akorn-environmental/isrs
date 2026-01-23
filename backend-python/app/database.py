@@ -4,11 +4,11 @@ Sets up both sync and async SQLAlchemy engines.
 """
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator, AsyncGenerator
 
 from app.config import settings
+from app.models.base import Base
 
 # Synchronous engine for migrations and simple operations
 sync_engine = create_engine(
@@ -44,8 +44,7 @@ AsyncSessionLocal = sessionmaker(
     expire_on_commit=False,
 )
 
-# Base class for models
-Base = declarative_base()
+# Base class for models is imported from app.models.base
 
 
 # Dependency for FastAPI endpoints (sync)

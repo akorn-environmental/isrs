@@ -76,6 +76,15 @@ async def startup_event():
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"CORS Origins: {settings.CORS_ORIGINS}")
 
+    # Import all models to ensure they're registered with Base before init_db
+    # This is necessary for Base.metadata.create_all() to create all tables
+    from app.models import (
+        Base, Contact, Organization, BoardVote, BoardVoteDetail,
+        Conference, ConferenceRegistration, ConferenceSponsor, ConferenceAbstract,
+        AttendeeProfile, FundingProspect, UserSession, AuditLog, DataQualityMetric,
+        UserFeedback, Asset, AssetZone, AssetZoneAsset
+    )
+
     # Initialize database (create tables if they don't exist)
     # This ensures all model tables exist, including user_feedback
     logger.info("Ensuring database tables exist...")
