@@ -22,6 +22,42 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+# Request/Response Models for Profile Preview
+class PreviewProfileRequest(BaseModel):
+    """Request body for profile preview."""
+    email: EmailStr
+
+
+class ConferenceHistoryItem(BaseModel):
+    """Conference history entry for preview."""
+    year: int
+    name: str
+    location: Optional[str] = None
+    registration_type: Optional[str] = None
+
+
+class ProfilePreview(BaseModel):
+    """Profile preview data (non-sensitive)."""
+    firstName: str
+    lastInitial: str
+    fullName: str
+    organization: Optional[str] = None
+    position: Optional[str] = None
+    location: Optional[str] = None
+    hasProfilePhoto: bool = False
+    conferenceHistory: list = []
+    roles: list = []
+    memberSince: Optional[str] = None
+
+
+class PreviewProfileResponse(BaseModel):
+    """Response for profile preview."""
+    success: bool
+    found: bool
+    message: Optional[str] = None
+    preview: Optional[ProfilePreview] = None
+
+
 def get_client_ip(request: Request) -> Optional[str]:
     """
     Get the real client IP address, handling proxy headers.
@@ -220,6 +256,95 @@ async def register(register_data: RegisterRequest, request: Request, db: Session
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred during registration. Please try again later."
+        )
+
+
+@router.post("/preview-profile", response_model=PreviewProfileResponse)
+@limiter.limit("10/hour")
+async def preview_profile(preview_data: PreviewProfileRequest, request: Request, db: Session = Depends(get_db)):
+    """
+    Preview profile by email (pre-authentication).
+    Returns non-sensitive profile data to show returning users what we have on file.
+    This helps users recognize their account before requesting a magic link.
+
+    Rate limited to 10 requests per hour per IP to prevent email enumeration.
+    """
+    try:
+        email = preview_data.email.lower().strip()
+
+        # Look up user in attendee_profiles
+        attendee = db.query(AttendeeProfile).filter(AttendeeProfile.user_email == email).first()
+
+        if not attendee:
+            # No account found - return helpful response for new user flow
+            logger.info(f"Profile preview: no account found for {email}")
+            return PreviewProfileResponse(
+                success=True,
+                found=False,
+                message="No existing account found with this email"
+            )
+
+        # Check account status
+        if attendee.account_status in ('suspended', 'deleted'):
+            logger.warning(f"Profile preview attempted for suspended/deleted account: {email}")
+            return PreviewProfileResponse(
+                success=True,
+                found=False,
+                message="No active account found with this email"
+            )
+
+        # Get conference history via registrations
+        from app.models.conference import Conference, ConferenceRegistration
+
+        conference_history = []
+        registrations = db.query(ConferenceRegistration, Conference).join(
+            Conference, ConferenceRegistration.conference_id == Conference.id
+        ).filter(
+            ConferenceRegistration.attendee_id == attendee.id
+        ).order_by(Conference.year.desc()).all()
+
+        for reg, conf in registrations:
+            history_item = {
+                "year": conf.year,
+                "name": conf.name,
+                "location": conf.location,
+                "registration_type": reg.registration_type
+            }
+            conference_history.append(history_item)
+
+        # Build location string
+        location_parts = [attendee.city, attendee.country]
+        location = ', '.join([p for p in location_parts if p])
+
+        # Build preview data (non-sensitive information only)
+        last_initial = f"{attendee.last_name[0]}." if attendee.last_name else ""
+        full_name = f"{attendee.first_name} {last_initial}"
+
+        preview = ProfilePreview(
+            firstName=attendee.first_name,
+            lastInitial=last_initial,
+            fullName=full_name,
+            organization=attendee.organization_name,
+            position=attendee.position,
+            location=location if location else None,
+            hasProfilePhoto=False,  # We don't have profile photos in current schema
+            conferenceHistory=conference_history,
+            roles=[],  # Roles not implemented in Python backend yet
+            memberSince=attendee.created_at.isoformat() if attendee.created_at else None
+        )
+
+        logger.info(f"Profile preview returned for {email}")
+        return PreviewProfileResponse(
+            success=True,
+            found=True,
+            preview=preview
+        )
+
+    except Exception as e:
+        logger.error(f"Error during profile preview: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to look up profile"
         )
 
 
