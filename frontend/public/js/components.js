@@ -21,7 +21,7 @@ const translations = {
 
     // Homepage - ICSR2026 Banner
     homeBannerTitle: 'ICSR2026 • Puget Sound, Washington',
-    homeBannerDates: 'October 4-8, 2026',
+    homeBannerDates: 'October 5-8, 2026',
     homeBannerVenue: 'Little Creek Casino Resort',
     homeBannerDescription: 'Join 350+ shellfish restoration practitioners from 25+ countries for cutting-edge research, hands-on workshops, and field trips to Tribal restoration sites. Chaired by Puget Sound Restoration Fund.',
     homeBannerViewDetails: 'View Full Details',
@@ -1730,7 +1730,7 @@ const translations = {
 
     // Página de inicio - Banner ICSR2026
     homeBannerTitle: 'ICSR2026 • Puget Sound, Washington',
-    homeBannerDates: '4-8 de Octubre de 2026',
+    homeBannerDates: '5-8 de Octubre de 2026',
     homeBannerVenue: 'Little Creek Casino Resort',
     homeBannerDescription: 'Únase a más de 350 profesionales de restauración de moluscos de más de 25 países para investigación de vanguardia, talleres prácticos y visitas de campo a sitios de restauración Tribal. Presidido por Puget Sound Restoration Fund.',
     homeBannerViewDetails: 'Ver Detalles Completos',
@@ -1893,7 +1893,7 @@ const translations = {
     quickLinks: 'Enlaces Rápidos',
     connect: 'Conectar',
     adminPortal: 'Portal Administrativo',
-    copyright: '© 2025 Sociedad Internacional para la Restauración de Moluscos. Todos los derechos reservados.',
+    copyright: '© 2026 Sociedad Internacional para la Restauración de Moluscos. Todos los derechos reservados.',
     taxId: 'Identificación Fiscal (EIN): 39-2829151',
 
     // Pie de página
@@ -3440,7 +3440,7 @@ const translations = {
 
     // Page d'accueil - Bannière ICSR2026
     homeBannerTitle: 'ICSR2026 • Puget Sound, Washington',
-    homeBannerDates: '4-8 Octobre 2026',
+    homeBannerDates: '5-8 Octobre 2026',
     homeBannerVenue: 'Little Creek Casino Resort',
     homeBannerDescription: 'Rejoignez plus de 350 praticiens de la restauration des mollusques de plus de 25 pays pour des recherches de pointe, des ateliers pratiques et des visites de sites de restauration tribaux. Présidé par Puget Sound Restoration Fund.',
     homeBannerViewDetails: 'Voir Tous les Détails',
@@ -3603,7 +3603,7 @@ const translations = {
     quickLinks: 'Liens Rapides',
     connect: 'Connecter',
     adminPortal: 'Portail Admin',
-    copyright: '© 2025 Société Internationale pour la Restauration des Mollusques. Tous droits réservés.',
+    copyright: '© 2026 Société Internationale pour la Restauration des Mollusques. Tous droits réservés.',
     taxId: 'Numéro fiscal (EIN): 39-2829151',
 
     // Pied de page

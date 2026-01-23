@@ -309,6 +309,18 @@
 
     // Load directory on page load
     async function loadDirectory() {
+      // Check if user is authenticated first
+      if (!MemberAuth.isAuthenticated()) {
+        document.getElementById('loadingState').innerHTML = `
+          <div style="text-align: center; padding: 2rem;">
+            <p style="color: var(--primary-blue); font-size: 1.2rem; margin-bottom: 1rem;">🔐 Login Required</p>
+            <p style="color: var(--text-color); margin-bottom: 1.5rem;">Please log in to view the member directory.</p>
+            <a href="/member/login.html?redirect=/member/directory.html" class="btn btn-primary">Login to View Directory</a>
+          </div>
+        `;
+        return;
+      }
+
       try {
         const response = await MemberAuth.getDirectory();
 
