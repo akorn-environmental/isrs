@@ -102,6 +102,142 @@ async function uploadPhoto(req, res) {
 }
 
 /**
+ * Upload photos from URLs
+ * POST /api/photos/upload-url
+ */
+async function uploadFromUrls(req, res) {
+  try {
+    const { urls } = req.body;
+
+    if (!urls || !Array.isArray(urls) || urls.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No URLs provided. Expected { urls: ["url1", "url2", ...] }'
+      });
+    }
+
+    // Limit to 10 URLs at a time
+    if (urls.length > 10) {
+      return res.status(400).json({
+        success: false,
+        error: 'Maximum 10 URLs allowed per request'
+      });
+    }
+
+    // Get attendee ID from session
+    const sessionToken = req.headers.authorization?.replace('Bearer ', '');
+    if (!sessionToken) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentication required'
+      });
+    }
+
+    const { pool } = require('../config/database');
+    const sessionResult = await pool.query(
+      'SELECT attendee_id FROM user_sessions WHERE session_token = $1 AND session_expires_at > NOW()',
+      [sessionToken]
+    );
+
+    if (sessionResult.rows.length === 0) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid or expired session'
+      });
+    }
+
+    const attendeeId = sessionResult.rows[0].attendee_id;
+    const results = [];
+
+    // Process each URL
+    for (const url of urls) {
+      try {
+        // Validate URL
+        const parsedUrl = new URL(url);
+        if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+          results.push({ success: false, url, error: 'Invalid URL protocol' });
+          continue;
+        }
+
+        // Download image
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'ISRS-PhotoUploader/1.0'
+          },
+          timeout: 30000
+        });
+
+        if (!response.ok) {
+          results.push({ success: false, url, error: `Failed to download: ${response.status}` });
+          continue;
+        }
+
+        // Check content type
+        const contentType = response.headers.get('content-type') || '';
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        const mimeType = allowedTypes.find(t => contentType.includes(t.split('/')[1]));
+
+        if (!mimeType) {
+          results.push({ success: false, url, error: `Invalid content type: ${contentType}` });
+          continue;
+        }
+
+        // Get buffer
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        // Check file size (25MB max)
+        if (buffer.length > 25 * 1024 * 1024) {
+          results.push({ success: false, url, error: 'File too large (max 25MB)' });
+          continue;
+        }
+
+        // Extract filename from URL
+        const urlPath = parsedUrl.pathname;
+        let originalname = urlPath.split('/').pop() || 'image';
+
+        // Ensure proper extension
+        const ext = mimeType.split('/')[1].replace('jpeg', 'jpg');
+        if (!originalname.toLowerCase().endsWith(`.${ext}`)) {
+          originalname = `${originalname}.${ext}`;
+        }
+
+        // Upload using existing service
+        const photo = await photoService.uploadPhoto(
+          buffer,
+          { originalname, mimetype: mimeType },
+          {}, // No metadata for URL uploads
+          attendeeId
+        );
+
+        results.push({ success: true, photo });
+
+      } catch (error) {
+        console.error(`Error processing URL ${url}:`, error);
+        results.push({ success: false, url, error: error.message });
+      }
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const photos = results.filter(r => r.success).map(r => r.photo);
+
+    res.json({
+      success: successCount > 0,
+      data: photos,
+      results,
+      message: `Successfully uploaded ${successCount} of ${urls.length} photo(s)`
+    });
+
+  } catch (error) {
+    console.error('URL upload error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'URL upload failed'
+    });
+  }
+}
+
+/**
  * Upload multiple photos
  * POST /api/photos/upload-multiple
  */
@@ -410,6 +546,7 @@ async function deletePhoto(req, res) {
 module.exports = {
   upload,
   uploadPhoto,
+  uploadFromUrls,
   uploadMultiplePhotos,
   getAllPhotos,
   getMyPhotos,

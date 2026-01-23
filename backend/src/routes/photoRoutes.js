@@ -18,6 +18,9 @@ router.post('/upload-multiple',
   photoController.uploadMultiplePhotos
 );
 
+// Upload from URLs
+router.post('/upload-url', photoController.uploadFromUrls);
+
 // Admin photo management (all photos)
 router.get('/', photoController.getAllPhotos);
 
