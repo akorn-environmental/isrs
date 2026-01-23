@@ -98,18 +98,12 @@ class FeedbackListResponse(BaseModel):
 # Public Endpoints (for submitting feedback)
 # ============================================================================
 
-@router.post("/submit", status_code=status.HTTP_201_CREATED)
-@router.post("", status_code=status.HTTP_201_CREATED)
-async def create_feedback(
+async def _create_feedback_impl(
     feedback: FeedbackCreate,
-    current_user: Optional[AttendeeProfile] = Depends(get_current_user_optional),
-    db: Session = Depends(get_db)
+    current_user: Optional[AttendeeProfile],
+    db: Session
 ):
-    """
-    Submit user feedback.
-
-    Works for both authenticated and anonymous users.
-    """
+    """Internal implementation for creating feedback."""
     # Create feedback record
     new_feedback = UserFeedback(
         user_id=current_user.id if current_user else None,
@@ -135,6 +129,34 @@ async def create_feedback(
         "message": "Feedback submitted successfully",
         "id": str(new_feedback.id)
     }
+
+
+@router.post("/submit", status_code=status.HTTP_201_CREATED)
+async def submit_feedback(
+    feedback: FeedbackCreate,
+    current_user: Optional[AttendeeProfile] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
+):
+    """
+    Submit user feedback (alias for POST /api/feedback).
+
+    Works for both authenticated and anonymous users.
+    """
+    return await _create_feedback_impl(feedback, current_user, db)
+
+
+@router.post("", status_code=status.HTTP_201_CREATED)
+async def create_feedback(
+    feedback: FeedbackCreate,
+    current_user: Optional[AttendeeProfile] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
+):
+    """
+    Submit user feedback.
+
+    Works for both authenticated and anonymous users.
+    """
+    return await _create_feedback_impl(feedback, current_user, db)
 
 
 # ============================================================================
