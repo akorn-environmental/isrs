@@ -90,7 +90,7 @@ const translations = {
     getInvolvedHeading: 'Get Involved',
 
     joinNetworkTitle: 'Join Our Network',
-    joinNetworkText: 'Connect with restoration practitioners, scientists, and community leaders worldwide. Members gain access to exclusive resources, networking opportunities, and conference discounts.',
+    joinNetworkText: 'Connect with restoration practitioners, scientists, and community leaders worldwide.<br>Members gain access to exclusive resources, networking opportunities, and conference discounts.',
     joinNetworkButton: 'Become a Member',
 
     shareKnowledgeTitle: 'Share Your Knowledge',
@@ -149,9 +149,14 @@ const translations = {
     supportCTAPressKit: 'View Press Kit',
     supportCTAContactInfo: 'Questions? Contact us at aaron@shellfish-society.org',
 
+    // Why Shellfish Restoration Matters
+    whyMattersHeading: 'Why Shellfish Restoration Matters',
+    whyMattersIntro: 'Discover how shellfish ecosystems provide essential services—<br>from water filtration to coastal protection.',
+    whyMattersButton: 'Learn More',
+
     // Global Network
     globalNetworkHeading: 'Our Global Network',
-    globalNetworkIntro: 'Join our growing network of over 2,600 members working to advance shellfish restoration worldwide.',
+    globalNetworkIntro: 'Join our growing network of over 2,600 members<br>working to advance shellfish restoration worldwide.',
     globalNetworkText: 'ISRS connects restoration practitioners across six continents, fostering collaboration among:',
 
     stakeholder1: 'Research institutions',
@@ -1780,7 +1785,7 @@ const translations = {
     getInvolvedHeading: 'Participa',
 
     joinNetworkTitle: 'Únete a Nuestra Red',
-    joinNetworkText: 'Conéctate con profesionales de restauración, científicos y líderes comunitarios de todo el mundo. Los miembros obtienen acceso a recursos exclusivos, oportunidades de networking y descuentos en conferencias.',
+    joinNetworkText: 'Conéctate con profesionales de restauración, científicos y líderes comunitarios de todo el mundo.<br>Los miembros obtienen acceso a recursos exclusivos, oportunidades de networking y descuentos en conferencias.',
     joinNetworkButton: 'Hazte Miembro',
 
     shareKnowledgeTitle: 'Comparte Tu Conocimiento',
@@ -1839,9 +1844,14 @@ const translations = {
     supportCTAPressKit: 'Ver Kit de Prensa',
     supportCTAContactInfo: '¿Preguntas? Contáctanos en aaron@shellfish-society.org',
 
+    // Por qué Importa la Restauración de Moluscos
+    whyMattersHeading: 'Por Qué Importa la Restauración de Moluscos',
+    whyMattersIntro: 'Descubre cómo los ecosistemas de moluscos proporcionan servicios esenciales—<br>desde la filtración del agua hasta la protección costera.',
+    whyMattersButton: 'Más Información',
+
     // Red Global
     globalNetworkHeading: 'Nuestra Red Global',
-    globalNetworkIntro: 'Únete a nuestra red en crecimiento de más de 2,600 miembros trabajando para avanzar en la restauración de moluscos en todo el mundo.',
+    globalNetworkIntro: 'Únete a nuestra red en crecimiento de más de 2,600 miembros<br>trabajando para avanzar en la restauración de moluscos en todo el mundo.',
     globalNetworkText: 'ISRS conecta a profesionales de restauración en seis continentes, fomentando la colaboración entre:',
 
     stakeholder1: 'Instituciones de investigación',
@@ -3471,7 +3481,7 @@ const translations = {
     getInvolvedHeading: 'S\'impliquer',
 
     joinNetworkTitle: 'Rejoignez Notre Réseau',
-    joinNetworkText: 'Connectez-vous avec des praticiens de la restauration, des scientifiques et des leaders communautaires du monde entier. Les membres ont accès à des ressources exclusives, des opportunités de réseautage et des réductions pour les conférences.',
+    joinNetworkText: 'Connectez-vous avec des praticiens de la restauration, des scientifiques et des leaders communautaires du monde entier.<br>Les membres ont accès à des ressources exclusives, des opportunités de réseautage et des réductions pour les conférences.',
     joinNetworkButton: 'Devenir Membre',
 
     shareKnowledgeTitle: 'Partagez Vos Connaissances',
@@ -3530,9 +3540,14 @@ const translations = {
     supportCTAPressKit: 'Voir le Dossier de Presse',
     supportCTAContactInfo: 'Des questions? Contactez-nous à aaron@shellfish-society.org',
 
+    // Pourquoi la Restauration des Mollusques Est Importante
+    whyMattersHeading: 'Pourquoi la Restauration des Mollusques Est Importante',
+    whyMattersIntro: 'Découvrez comment les écosystèmes de mollusques fournissent des services essentiels—<br>de la filtration de l\'eau à la protection côtière.',
+    whyMattersButton: 'En Savoir Plus',
+
     // Réseau Global
     globalNetworkHeading: 'Notre Réseau Mondial',
-    globalNetworkIntro: 'Rejoignez notre réseau en croissance de plus de 2 600 membres travaillant à faire progresser la restauration des mollusques dans le monde entier.',
+    globalNetworkIntro: 'Rejoignez notre réseau en croissance de plus de 2 600 membres<br>travaillant à faire progresser la restauration des mollusques dans le monde entier.',
     globalNetworkText: 'ISRS connecte les praticiens de la restauration sur six continents, favorisant la collaboration entre:',
 
     stakeholder1: 'Institutions de recherche',
