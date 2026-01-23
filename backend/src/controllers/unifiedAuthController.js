@@ -14,6 +14,171 @@ const { pool } = require('../config/database');
 const crypto = require('crypto');
 const { sendMagicLink } = require('../services/emailService');
 
+/**
+ * Preview profile by email (pre-authentication)
+ * POST /api/auth/preview-profile
+ *
+ * Returns non-sensitive profile data to show returning users what we have on file
+ * This helps users recognize their account before requesting a magic link
+ */
+async function previewProfile(req, res) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email address is required'
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Look up user in attendee_profiles
+    const userResult = await pool.query(
+      `SELECT
+        ap.id,
+        ap.first_name,
+        ap.last_name,
+        ap.organization_name,
+        ap.position,
+        ap.country,
+        ap.city,
+        ap.profile_photo_url,
+        ap.account_status,
+        ap.created_at
+       FROM attendee_profiles ap
+       WHERE ap.user_email = $1`,
+      [normalizedEmail]
+    );
+
+    if (userResult.rows.length === 0) {
+      // No account found - return helpful response for new user flow
+      return res.json({
+        success: true,
+        found: false,
+        message: 'No existing account found with this email'
+      });
+    }
+
+    const user = userResult.rows[0];
+
+    // Check account status
+    if (user.account_status === 'suspended' || user.account_status === 'deleted') {
+      return res.json({
+        success: true,
+        found: false,
+        message: 'No active account found with this email'
+      });
+    }
+
+    // Get conference history
+    const historyResult = await pool.query(
+      `SELECT
+        ce.year,
+        ce.name as conference_name,
+        ce.location,
+        mch.attendance_type,
+        mch.roles,
+        mch.presentations,
+        mch.sponsor_level,
+        mch.booth_number
+       FROM member_conference_history mch
+       JOIN conference_editions ce ON mch.conference_id = ce.id
+       WHERE mch.attendee_id = $1
+       ORDER BY ce.year DESC`,
+      [user.id]
+    );
+
+    // Get roles for this user
+    const rolesResult = await pool.query(
+      `SELECT r.display_name, r.category
+       FROM user_roles ur
+       JOIN roles r ON ur.role_id = r.id
+       WHERE ur.user_id = $1
+         AND ur.is_active = TRUE
+         AND (ur.active_from IS NULL OR ur.active_from <= NOW())
+         AND (ur.active_until IS NULL OR ur.active_until >= NOW())
+       ORDER BY r.permission_level DESC
+       LIMIT 5`,
+      [user.id]
+    );
+
+    // Build conference participation summary
+    const conferenceHistory = historyResult.rows.map(conf => {
+      const participation = [];
+
+      if (conf.roles && conf.roles.length > 0) {
+        conf.roles.forEach(role => {
+          if (role === 'presenter') participation.push('Presenter');
+          else if (role === 'exhibitor') participation.push('Exhibitor');
+          else if (role === 'sponsor') participation.push('Sponsor');
+          else if (role === 'volunteer') participation.push('Volunteer');
+          else if (role === 'organizer') participation.push('Organizer');
+        });
+      }
+
+      if (conf.booth_number) {
+        participation.push(`Booth #${conf.booth_number}`);
+      }
+
+      if (conf.sponsor_level) {
+        participation.push(`${conf.sponsor_level} Sponsor`);
+      }
+
+      // Count presentations
+      const presentationCount = conf.presentations ? conf.presentations.length : 0;
+      if (presentationCount > 0) {
+        participation.push(`${presentationCount} presentation${presentationCount > 1 ? 's' : ''}`);
+      }
+
+      return {
+        year: conf.year,
+        name: conf.conference_name,
+        location: conf.location,
+        attendanceType: conf.attendance_type,
+        participation: participation.length > 0 ? participation : ['Attendee']
+      };
+    });
+
+    // Return preview data (non-sensitive information only)
+    res.json({
+      success: true,
+      found: true,
+      preview: {
+        // Basic identity (partially masked for privacy)
+        firstName: user.first_name,
+        lastInitial: user.last_name ? user.last_name.charAt(0) + '.' : '',
+        fullName: `${user.first_name} ${user.last_name ? user.last_name.charAt(0) + '.' : ''}`,
+
+        // Professional info (public-safe)
+        organization: user.organization_name,
+        position: user.position,
+        location: [user.city, user.country].filter(Boolean).join(', '),
+
+        // Profile photo (if exists)
+        hasProfilePhoto: !!user.profile_photo_url,
+
+        // Conference history
+        conferenceHistory: conferenceHistory,
+
+        // Roles (display names only)
+        roles: rolesResult.rows.map(r => r.display_name),
+
+        // Account info
+        memberSince: user.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('Error previewing profile:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to look up profile'
+    });
+  }
+}
+
 // Session configuration
 const SESSION_COOKIE_NAME = 'isrs_session';
 const SESSION_EXPIRY_HOURS = 24; // Reduced from 30 days to 24 hours (security improvement)
@@ -944,6 +1109,7 @@ async function updateProfile(req, res) {
 }
 
 module.exports = {
+  previewProfile,
   requestLogin,
   verifyMagicLink,
   verifyMagicLinkRedirect,

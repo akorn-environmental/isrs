@@ -1655,10 +1655,24 @@ const translations = {
     welcomeEmailSent: 'Email Sent!',
     welcomeCheckEmail: '✅ Check your email! We\'ve sent you a magic link to log in.',
     welcomeNoAccount: 'We don\'t have an account with that email yet. Would you like to become a member?',
-    welcomeJoinNow: 'Join Now',
+    welcomeJoinNow: 'Join ISRS (Free)',
     welcomeSignupComingSoon: 'Membership signup coming soon! For now, please contact info@shellfish-society.org',
     welcomeNetworkError: 'Network error. Please check your connection and try again.',
     welcomeSomethingWrong: 'Something went wrong. Please try again.',
+    // Welcome Page - Profile Preview (Step 2)
+    welcomeWelcomeBack: 'Welcome Back!',
+    welcomeFoundProfile: 'We found your profile in our system. Please verify this is you:',
+    welcomeLocation: 'Location',
+    welcomeConferenceHistory: 'Conference History',
+    welcomeCurrentRoles: 'Current Roles',
+    welcomeSendMagicLink: 'Yes, Send Me a Magic Link',
+    welcomeNotMe: 'This Isn\'t Me',
+    welcomeSending: 'Sending...',
+    // Welcome Page - New User (Step 2 Alt)
+    welcomeNewMember: 'Welcome, New Member!',
+    welcomeNoExistingAccount: 'We don\'t have an existing account with this email address. Join our community to access the member portal, conference registration, and more.',
+    welcomeTryDifferent: 'Try Different Email',
+    welcomeCreating: 'Setting up...',
 
     // Profile Login Page
     loginTitle: 'Login to Your Profile - ISRS',
@@ -3351,10 +3365,24 @@ const translations = {
     welcomeEmailSent: '¡Correo Enviado!',
     welcomeCheckEmail: '✅ ¡Revise su correo! Le hemos enviado un enlace mágico para iniciar sesión.',
     welcomeNoAccount: 'No tenemos una cuenta con ese correo. ¿Le gustaría convertirse en miembro?',
-    welcomeJoinNow: 'Únase Ahora',
+    welcomeJoinNow: 'Únase a ISRS (Gratis)',
     welcomeSignupComingSoon: '¡Registro de membresía próximamente! Por ahora, contacte a info@shellfish-society.org',
     welcomeNetworkError: 'Error de red. Por favor verifique su conexión e intente de nuevo.',
     welcomeSomethingWrong: 'Algo salió mal. Por favor intente de nuevo.',
+    // Página de Bienvenida - Vista Previa de Perfil (Paso 2)
+    welcomeWelcomeBack: '¡Bienvenido de Nuevo!',
+    welcomeFoundProfile: 'Encontramos su perfil en nuestro sistema. Por favor verifique que sea usted:',
+    welcomeLocation: 'Ubicación',
+    welcomeConferenceHistory: 'Historial de Conferencias',
+    welcomeCurrentRoles: 'Roles Actuales',
+    welcomeSendMagicLink: 'Sí, Envíenme un Enlace Mágico',
+    welcomeNotMe: 'Este No Soy Yo',
+    welcomeSending: 'Enviando...',
+    // Página de Bienvenida - Nuevo Usuario (Paso 2 Alt)
+    welcomeNewMember: '¡Bienvenido, Nuevo Miembro!',
+    welcomeNoExistingAccount: 'No tenemos una cuenta existente con este correo electrónico. Únase a nuestra comunidad para acceder al portal de miembros, registro de conferencias y más.',
+    welcomeTryDifferent: 'Probar Otro Correo',
+    welcomeCreating: 'Configurando...',
 
     // Página de Inicio de Sesión de Perfil
     loginTitle: 'Iniciar Sesión en Su Perfil - ISRS',
@@ -5047,10 +5075,24 @@ const translations = {
     welcomeEmailSent: 'E-mail Envoyé!',
     welcomeCheckEmail: '✅ Vérifiez votre e-mail! Nous vous avons envoyé un lien magique pour vous connecter.',
     welcomeNoAccount: 'Nous n\'avons pas de compte avec cet e-mail. Souhaitez-vous devenir membre?',
-    welcomeJoinNow: 'Rejoignez-nous',
+    welcomeJoinNow: 'Rejoindre ISRS (Gratuit)',
     welcomeSignupComingSoon: 'Inscription bientôt disponible! Pour l\'instant, contactez info@shellfish-society.org',
     welcomeNetworkError: 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
     welcomeSomethingWrong: 'Quelque chose s\'est mal passé. Veuillez réessayer.',
+    // Page de Bienvenue - Aperçu du Profil (Étape 2)
+    welcomeWelcomeBack: 'Bienvenue à Nouveau!',
+    welcomeFoundProfile: 'Nous avons trouvé votre profil dans notre système. Veuillez vérifier qu\'il s\'agit bien de vous:',
+    welcomeLocation: 'Localisation',
+    welcomeConferenceHistory: 'Historique des Conférences',
+    welcomeCurrentRoles: 'Rôles Actuels',
+    welcomeSendMagicLink: 'Oui, Envoyez-moi un Lien Magique',
+    welcomeNotMe: 'Ce N\'est Pas Moi',
+    welcomeSending: 'Envoi...',
+    // Page de Bienvenue - Nouvel Utilisateur (Étape 2 Alt)
+    welcomeNewMember: 'Bienvenue, Nouveau Membre!',
+    welcomeNoExistingAccount: 'Nous n\'avons pas de compte existant avec cette adresse e-mail. Rejoignez notre communauté pour accéder au portail membres, à l\'inscription aux conférences et plus encore.',
+    welcomeTryDifferent: 'Essayer un Autre E-mail',
+    welcomeCreating: 'Configuration...',
 
     // Page de Connexion Profil
     loginTitle: 'Connexion à Votre Profil - ISRS',

@@ -3,6 +3,7 @@
  * Secure magic link authentication with RBAC and HTTP-only cookies
  *
  * Routes:
+ * - POST /api/auth/preview-profile - Preview profile by email (pre-auth)
  * - POST /api/auth/request-login - Request magic link email
  * - POST /api/auth/verify-magic-link - Verify token and create session
  * - GET  /api/auth/session - Get current session info
@@ -12,6 +13,7 @@
 const express = require('express');
 const router = express.Router();
 const {
+  previewProfile,
   requestLogin,
   verifyMagicLink,
   exchangeToken,
@@ -19,6 +21,9 @@ const {
   logout,
   updateProfile
 } = require('../controllers/unifiedAuthController');
+
+// Profile Preview (pre-authentication)
+router.post('/preview-profile', previewProfile);
 
 // Magic Link Authentication
 router.post('/request-login', requestLogin);

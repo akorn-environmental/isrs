@@ -233,6 +233,176 @@
       opacity: 0.8;
     }
 
+    /* Profile Preview Section */
+    .profile-preview {
+      display: none;
+      text-align: left;
+      margin-top: 1.5rem;
+    }
+
+    .profile-preview.visible {
+      display: block;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .preview-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2E5A8A 0%, #5BC0BE 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .preview-identity h4 {
+      margin: 0 0 0.25rem;
+      font-size: 1.25rem;
+      color: var(--primary-blue);
+    }
+
+    .preview-identity p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .preview-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .preview-section-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .conference-history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .conference-history-item {
+      padding: 0.75rem;
+      background: rgba(91, 192, 190, 0.1);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      border-left: 3px solid var(--secondary-teal);
+    }
+
+    .conference-history-item strong {
+      color: var(--primary-blue);
+    }
+
+    .conference-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: var(--secondary-teal);
+      color: white;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .role-badge.presenter {
+      background: #e74c3c;
+    }
+
+    .role-badge.exhibitor {
+      background: #9b59b6;
+    }
+
+    .role-badge.sponsor {
+      background: #f39c12;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .preview-actions button {
+      flex: 1;
+      min-width: 140px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'PT Serif', Georgia, serif;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary-action {
+      background: linear-gradient(135deg, #2E5A8A 0%, #5BC0BE 100%);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary-action:hover:not(:disabled) {
+      background: linear-gradient(135deg, #5BC0BE 0%, #2E5A8A 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(30, 90, 142, 0.3);
+    }
+
+    .btn-secondary-action {
+      background: transparent;
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+    }
+
+    .btn-secondary-action:hover:not(:disabled) {
+      background: rgba(30, 90, 142, 0.1);
+    }
+
+    .preview-actions button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .new-user-message {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(91, 192, 190, 0.1);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .new-user-message h4 {
+      margin: 0 0 0.5rem;
+      color: var(--primary-blue);
+    }
+
+    .new-user-message p {
+      margin: 0 0 1rem;
+      color: var(--text-light);
+    }
+
     @media (max-width: 768px) {
       .welcome-title {
         font-size: 2rem;
@@ -256,6 +426,14 @@
 
       .welcome-form {
         padding: 1.5rem;
+      }
+
+      .preview-actions {
+        flex-direction: column;
+      }
+
+      .preview-actions button {
+        width: 100%;
       }
     }
 
@@ -287,6 +465,43 @@
     .dark-mode .benefit-item {
       color: #e0e0e0;
     }
+
+    .dark-mode .preview-identity h4 {
+      color: #5BC0BE;
+    }
+
+    .dark-mode .preview-identity p {
+      color: #b0b0b0;
+    }
+
+    .dark-mode .conference-history-item {
+      background: rgba(91, 192, 190, 0.15);
+    }
+
+    .dark-mode .conference-history-item strong {
+      color: #5BC0BE;
+    }
+
+    .dark-mode .btn-secondary-action {
+      color: #5BC0BE;
+      border-color: #5BC0BE;
+    }
+
+    .dark-mode .btn-secondary-action:hover:not(:disabled) {
+      background: rgba(91, 192, 190, 0.1);
+    }
+
+    .dark-mode .new-user-message {
+      background: rgba(91, 192, 190, 0.15);
+    }
+
+    .dark-mode .new-user-message h4 {
+      color: #5BC0BE;
+    }
+
+    .dark-mode .new-user-message p {
+      color: #b0b0b0;
+    }
   </style>
 </head>
 <body>
@@ -305,31 +520,93 @@
       </div>
 
       <div class="welcome-form">
-        <h3 data-i18n="welcomeGetStarted">Get Started</h3>
-        <p data-i18n="welcomeEnterEmail">Enter your email to check your membership status or join our community.</p>
+        <!-- Step 1: Email Entry -->
+        <div id="step-email">
+          <h3 data-i18n="welcomeGetStarted">Get Started</h3>
+          <p data-i18n="welcomeEnterEmail">Enter your email to check your membership status or join our community.</p>
 
-        <div id="form-message" class="form-message"></div>
+          <div id="form-message" class="form-message"></div>
 
-        <form id="email-check-form">
-          <div class="email-input-group">
-            <input
-              type="email"
-              id="email-input"
-              name="email"
-              data-i18n-placeholder="welcomeEmailPlaceholder"
-              placeholder="your@email.com"
-              required
-              autocomplete="email"
-            >
-            <button type="submit" id="submit-btn" data-i18n="welcomeContinue">Continue</button>
+          <form id="email-check-form">
+            <div class="email-input-group">
+              <input
+                type="email"
+                id="email-input"
+                name="email"
+                data-i18n-placeholder="welcomeEmailPlaceholder"
+                placeholder="your@email.com"
+                required
+                autocomplete="email"
+              >
+              <button type="submit" id="submit-btn" data-i18n="welcomeContinue">Continue</button>
+            </div>
+          </form>
+
+          <div class="welcome-benefits">
+            <div class="benefit-item" data-i18n="welcomeBenefit1">Free membership</div>
+            <div class="benefit-item" data-i18n="welcomeBenefit2">Member directory access</div>
+            <div class="benefit-item" data-i18n="welcomeBenefit3">Conference registration</div>
+            <div class="benefit-item" data-i18n="welcomeBenefit4">Global network</div>
           </div>
-        </form>
+        </div>
 
-        <div class="welcome-benefits">
-          <div class="benefit-item" data-i18n="welcomeBenefit1">Free membership</div>
-          <div class="benefit-item" data-i18n="welcomeBenefit2">Member directory access</div>
-          <div class="benefit-item" data-i18n="welcomeBenefit3">Conference registration</div>
-          <div class="benefit-item" data-i18n="welcomeBenefit4">Global network</div>
+        <!-- Step 2: Profile Preview (for returning users) -->
+        <div id="step-preview" class="profile-preview">
+          <h3 data-i18n="welcomeWelcomeBack">Welcome Back!</h3>
+          <p data-i18n="welcomeFoundProfile">We found your profile in our system. Please verify this is you:</p>
+
+          <div class="preview-header">
+            <div class="preview-avatar" id="preview-avatar">?</div>
+            <div class="preview-identity">
+              <h4 id="preview-name">Loading...</h4>
+              <p id="preview-org">Loading...</p>
+            </div>
+          </div>
+
+          <div class="preview-section" id="preview-location-section">
+            <div class="preview-section-title" data-i18n="welcomeLocation">Location</div>
+            <p id="preview-location" style="margin: 0;"></p>
+          </div>
+
+          <div class="preview-section" id="preview-history-section">
+            <div class="preview-section-title" data-i18n="welcomeConferenceHistory">Conference History</div>
+            <ul class="conference-history-list" id="preview-history"></ul>
+          </div>
+
+          <div class="preview-section" id="preview-roles-section">
+            <div class="preview-section-title" data-i18n="welcomeCurrentRoles">Current Roles</div>
+            <div class="conference-roles" id="preview-roles"></div>
+          </div>
+
+          <div id="form-message-preview" class="form-message"></div>
+
+          <div class="preview-actions">
+            <button type="button" id="btn-send-magic-link" class="btn-primary-action" data-i18n="welcomeSendMagicLink">
+              Yes, Send Me a Magic Link
+            </button>
+            <button type="button" id="btn-not-me" class="btn-secondary-action" data-i18n="welcomeNotMe">
+              This Isn't Me
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2 Alt: New User (no profile found) -->
+        <div id="step-new-user" class="profile-preview">
+          <div class="new-user-message">
+            <h4 data-i18n="welcomeNewMember">Welcome, New Member!</h4>
+            <p data-i18n="welcomeNoExistingAccount">We don't have an existing account with this email address. Join our community to access the member portal, conference registration, and more.</p>
+          </div>
+
+          <div id="form-message-new" class="form-message"></div>
+
+          <div class="preview-actions">
+            <button type="button" id="btn-join-now" class="btn-primary-action" data-i18n="welcomeJoinNow">
+              Join ISRS (Free)
+            </button>
+            <button type="button" id="btn-try-different" class="btn-secondary-action" data-i18n="welcomeTryDifferent">
+              Try Different Email
+            </button>
+          </div>
         </div>
       </div>
 
@@ -342,81 +619,249 @@
   <script>
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:3000'
-      : ''  // Use same-origin (relative URLs) in production;
+      : '';  // Use same-origin (relative URLs) in production
 
+    // DOM Elements - Step 1
+    const stepEmail = document.getElementById('step-email');
     const form = document.getElementById('email-check-form');
     const emailInput = document.getElementById('email-input');
     const submitBtn = document.getElementById('submit-btn');
     const formMessage = document.getElementById('form-message');
 
-    function showMessage(message, type) {
-      formMessage.textContent = message;
-      formMessage.className = `form-message ${type}`;
+    // DOM Elements - Step 2 (Returning User)
+    const stepPreview = document.getElementById('step-preview');
+    const previewAvatar = document.getElementById('preview-avatar');
+    const previewName = document.getElementById('preview-name');
+    const previewOrg = document.getElementById('preview-org');
+    const previewLocation = document.getElementById('preview-location');
+    const previewLocationSection = document.getElementById('preview-location-section');
+    const previewHistory = document.getElementById('preview-history');
+    const previewHistorySection = document.getElementById('preview-history-section');
+    const previewRoles = document.getElementById('preview-roles');
+    const previewRolesSection = document.getElementById('preview-roles-section');
+    const formMessagePreview = document.getElementById('form-message-preview');
+    const btnSendMagicLink = document.getElementById('btn-send-magic-link');
+    const btnNotMe = document.getElementById('btn-not-me');
+
+    // DOM Elements - Step 2 Alt (New User)
+    const stepNewUser = document.getElementById('step-new-user');
+    const formMessageNew = document.getElementById('form-message-new');
+    const btnJoinNow = document.getElementById('btn-join-now');
+    const btnTryDifferent = document.getElementById('btn-try-different');
+
+    // State
+    let currentEmail = '';
+
+    // Helper function for translations
+    function getText(key, fallback) {
+      return typeof t === 'function' ? t(key) : fallback;
     }
 
-    function hideMessage() {
-      formMessage.className = 'form-message';
+    function showMessage(element, message, type) {
+      element.textContent = message;
+      element.className = `form-message ${type}`;
     }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      hideMessage();
+    function hideMessage(element) {
+      element.className = 'form-message';
+    }
 
-      const email = emailInput.value.trim().toLowerCase();
+    function showStep(step) {
+      stepEmail.style.display = step === 'email' ? 'block' : 'none';
+      stepPreview.classList.toggle('visible', step === 'preview');
+      stepNewUser.classList.toggle('visible', step === 'new-user');
+    }
 
-      if (!email) {
-        showMessage(typeof t === 'function' ? t('welcomeEnterEmailError') : 'Please enter your email address', 'error');
+    function getInitials(firstName, lastName) {
+      const first = firstName ? firstName.charAt(0).toUpperCase() : '';
+      const last = lastName ? lastName.charAt(0).toUpperCase() : '';
+      return first + last || '?';
+    }
+
+    function renderConferenceHistory(history) {
+      if (!history || history.length === 0) {
+        previewHistorySection.style.display = 'none';
         return;
       }
 
+      previewHistorySection.style.display = 'block';
+      previewHistory.innerHTML = history.map(conf => {
+        const rolesHtml = conf.participation.map(role => {
+          let badgeClass = 'role-badge';
+          if (role.toLowerCase().includes('presenter') || role.toLowerCase().includes('presentation')) {
+            badgeClass += ' presenter';
+          } else if (role.toLowerCase().includes('exhibitor') || role.toLowerCase().includes('booth')) {
+            badgeClass += ' exhibitor';
+          } else if (role.toLowerCase().includes('sponsor')) {
+            badgeClass += ' sponsor';
+          }
+          return `<span class="${badgeClass}">${role}</span>`;
+        }).join('');
+
+        return `
+          <li class="conference-history-item">
+            <strong>${conf.name || 'ICSR ' + conf.year}</strong>
+            ${conf.location ? ` - ${conf.location}` : ''}
+            <div class="conference-roles">${rolesHtml}</div>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function renderRoles(roles) {
+      if (!roles || roles.length === 0) {
+        previewRolesSection.style.display = 'none';
+        return;
+      }
+
+      previewRolesSection.style.display = 'block';
+      previewRoles.innerHTML = roles.map(role =>
+        `<span class="role-badge">${role}</span>`
+      ).join('');
+    }
+
+    function populatePreview(preview) {
+      // Avatar with initials
+      const initials = preview.firstName ? preview.firstName.charAt(0).toUpperCase() : '?';
+      previewAvatar.textContent = initials;
+
+      // Name and organization
+      previewName.textContent = preview.fullName || preview.firstName || 'Member';
+      previewOrg.textContent = [preview.position, preview.organization].filter(Boolean).join(' at ') || '';
+
+      // Location
+      if (preview.location) {
+        previewLocationSection.style.display = 'block';
+        previewLocation.textContent = preview.location;
+      } else {
+        previewLocationSection.style.display = 'none';
+      }
+
+      // Conference history
+      renderConferenceHistory(preview.conferenceHistory);
+
+      // Current roles
+      renderRoles(preview.roles);
+    }
+
+    // Step 1: Email submission - lookup profile
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideMessage(formMessage);
+
+      const email = emailInput.value.trim().toLowerCase();
+      if (!email) {
+        showMessage(formMessage, getText('welcomeEnterEmailError', 'Please enter your email address'), 'error');
+        return;
+      }
+
+      currentEmail = email;
       submitBtn.disabled = true;
-      submitBtn.textContent = typeof t === 'function' ? t('welcomeChecking') : 'Checking...';
+      submitBtn.textContent = getText('welcomeChecking', 'Checking...');
 
       try {
-        // Request magic link
-        const response = await fetch(`${API_BASE_URL}/api/profile/request-login`, {
+        // First, preview the profile
+        const response = await fetch(`${API_BASE_URL}/api/auth/preview-profile`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email })
         });
 
         const data = await response.json();
 
         if (response.ok && data.success) {
-          // Magic link sent successfully
-          showMessage(typeof t === 'function' ? t('welcomeCheckEmail') : '✅ Check your email! We\'ve sent you a magic link to log in.', 'success');
-          emailInput.value = '';
-          submitBtn.textContent = typeof t === 'function' ? t('welcomeEmailSent') : 'Email Sent!';
-
-          // Show development link if available
-          if (data.magicLink) {
-            console.log('Magic link:', data.magicLink);
+          if (data.found && data.preview) {
+            // Existing user - show preview
+            populatePreview(data.preview);
+            showStep('preview');
+          } else {
+            // New user - show join prompt
+            showStep('new-user');
           }
-        } else if (response.status === 404) {
-          // User not found - offer to sign up
-          showMessage(typeof t === 'function' ? t('welcomeNoAccount') : 'We don\'t have an account with that email yet. Would you like to become a member?', 'info');
-          submitBtn.textContent = typeof t === 'function' ? t('welcomeJoinNow') : 'Join Now';
-
-          // TODO: Redirect to signup flow or show signup form
-          setTimeout(() => {
-            showMessage(typeof t === 'function' ? t('welcomeSignupComingSoon') : 'Membership signup coming soon! For now, please contact info@shellfish-society.org', 'info');
-            submitBtn.textContent = typeof t === 'function' ? t('welcomeContinue') : 'Continue';
-            submitBtn.disabled = false;
-          }, 2000);
         } else {
-          showMessage(data.error || (typeof t === 'function' ? t('welcomeSomethingWrong') : 'Something went wrong. Please try again.'), 'error');
-          submitBtn.textContent = typeof t === 'function' ? t('welcomeContinue') : 'Continue';
-          submitBtn.disabled = false;
+          showMessage(formMessage, data.error || getText('welcomeSomethingWrong', 'Something went wrong. Please try again.'), 'error');
         }
       } catch (error) {
         console.error('Error:', error);
-        showMessage(typeof t === 'function' ? t('welcomeNetworkError') : 'Network error. Please check your connection and try again.', 'error');
-        submitBtn.textContent = typeof t === 'function' ? t('welcomeContinue') : 'Continue';
+        showMessage(formMessage, getText('welcomeNetworkError', 'Network error. Please check your connection and try again.'), 'error');
+      } finally {
         submitBtn.disabled = false;
+        submitBtn.textContent = getText('welcomeContinue', 'Continue');
       }
     });
+
+    // Step 2: Send magic link (returning user)
+    btnSendMagicLink.addEventListener('click', async () => {
+      hideMessage(formMessagePreview);
+      btnSendMagicLink.disabled = true;
+      btnSendMagicLink.textContent = getText('welcomeSending', 'Sending...');
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/request-login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showMessage(formMessagePreview, getText('welcomeCheckEmail', '✅ Check your email! We\'ve sent you a magic link to log in.'), 'success');
+          btnSendMagicLink.textContent = getText('welcomeEmailSent', 'Email Sent!');
+
+          // Log dev magic link if available
+          if (data.devMagicLink) {
+            console.log('DEV Magic link:', data.devMagicLink);
+          }
+        } else {
+          showMessage(formMessagePreview, data.error || getText('welcomeSomethingWrong', 'Something went wrong. Please try again.'), 'error');
+          btnSendMagicLink.disabled = false;
+          btnSendMagicLink.textContent = getText('welcomeSendMagicLink', 'Yes, Send Me a Magic Link');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showMessage(formMessagePreview, getText('welcomeNetworkError', 'Network error. Please check your connection and try again.'), 'error');
+        btnSendMagicLink.disabled = false;
+        btnSendMagicLink.textContent = getText('welcomeSendMagicLink', 'Yes, Send Me a Magic Link');
+      }
+    });
+
+    // Step 2: "Not me" button - go back to email entry
+    btnNotMe.addEventListener('click', () => {
+      currentEmail = '';
+      emailInput.value = '';
+      hideMessage(formMessagePreview);
+      btnSendMagicLink.disabled = false;
+      btnSendMagicLink.textContent = getText('welcomeSendMagicLink', 'Yes, Send Me a Magic Link');
+      showStep('email');
+    });
+
+    // Step 2 Alt: Join now (new user)
+    btnJoinNow.addEventListener('click', async () => {
+      hideMessage(formMessageNew);
+      btnJoinNow.disabled = true;
+      btnJoinNow.textContent = getText('welcomeCreating', 'Setting up...');
+
+      // For now, show message about signup coming soon
+      // TODO: Implement actual signup flow or redirect to membership form
+      showMessage(formMessageNew, getText('welcomeSignupComingSoon', 'Membership signup coming soon! For now, please contact info@shellfish-society.org'), 'info');
+
+      setTimeout(() => {
+        btnJoinNow.disabled = false;
+        btnJoinNow.textContent = getText('welcomeJoinNow', 'Join ISRS (Free)');
+      }, 3000);
+    });
+
+    // Step 2 Alt: Try different email
+    btnTryDifferent.addEventListener('click', () => {
+      currentEmail = '';
+      emailInput.value = '';
+      hideMessage(formMessageNew);
+      showStep('email');
+    });
+
+    // Initialize
+    showStep('email');
   </script>
 
   <script src="/js/components.js?v=2.1.0"></script>
