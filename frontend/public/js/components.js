@@ -5171,6 +5171,11 @@ function changeLanguage(lang) {
 
   // Translate page content
   translatePage();
+
+  // Re-apply theme to ensure dark mode is preserved after header reload
+  if (typeof applyTheme === 'function') {
+    applyTheme();
+  }
 }
 
 // Translate all elements with data-i18n attributes
