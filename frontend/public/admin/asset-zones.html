@@ -256,7 +256,7 @@
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/zones/`, {
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones/admin/all`, {
           headers: {
             'Authorization': `Bearer ${sessionToken}`
           }
@@ -386,14 +386,9 @@
       };
 
       try {
-        // Use PUT with zone database ID for updates, POST for new zones
-        const url = editingZone
-          ? `${API_BASE_URL}/api/zones/${editingZone.id}`
-          : `${API_BASE_URL}/api/zones/`;
-        const method = editingZone ? 'PUT' : 'POST';
-
-        const response = await fetch(url, {
-          method: method,
+        // Node.js backend uses POST for both create and update (upsert on zone_id)
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones`, {
+          method: 'POST',
           headers: {
             'Authorization': `Bearer ${sessionToken}`,
             'Content-Type': 'application/json'
@@ -431,8 +426,8 @@
       }
 
       try {
-        // Use the zone's database ID (not zone_id string) for deletion
-        const response = await fetch(`${API_BASE_URL}/api/zones/${zone.id}`, {
+        // Node.js backend uses zone_id (string) for deletion
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones/${zone.zone_id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${sessionToken}`
@@ -454,9 +449,9 @@
     }
 
     function managePhotos(zoneId) {
-      // TODO: Implement photo assignment UI
-      // For now, redirect to photos page
-      alert(`Photo assignment UI coming soon!\n\nFor now:\n1. Go to Photos page\n2. Select photos\n3. Assign to zone: ${zoneId}\n\nOr use the API directly.`);
+      // Redirect to photos page where users can assign photos to zones
+      // The photos page has a zone assignment modal on each photo
+      window.location.href = `/admin/photos.html?zone=${encodeURIComponent(zoneId)}`;
       window.location.href = '/admin/photos.html';
     }
 

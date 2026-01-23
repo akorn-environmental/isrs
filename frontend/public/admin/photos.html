@@ -618,9 +618,82 @@
       <div class="photo-modal-footer">
         <button class="btn btn-danger" onclick="deleteCurrentPhoto()">Delete Photo</button>
         <div style="flex: 1;"></div>
+        <button class="btn btn-secondary" id="assignToZoneBtn" onclick="openZoneAssignModal()">📍 Assign to Zone</button>
         <button class="btn btn-secondary" id="setFocalPointBtn">🎯 Set Focal Point</button>
         <button class="btn btn-secondary" id="toggleVisibilityBtn">Make Public</button>
         <button class="btn btn-primary" onclick="closePhotoModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone Assignment Modal -->
+  <div class="photo-modal-overlay" id="zoneAssignModal">
+    <div class="photo-modal" style="max-width: 700px;">
+      <div class="photo-modal-header">
+        <h2>📍 Assign Photo to Zone</h2>
+        <button class="photo-modal-close" onclick="closeZoneAssignModal()">&times;</button>
+      </div>
+      <div class="photo-modal-body" style="display: block;">
+        <!-- Photo Preview -->
+        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+          <div style="width: 150px; height: 150px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f3f4f6;">
+            <img id="zoneAssignPreview" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="flex: 1;">
+            <h3 id="zoneAssignPhotoName" style="margin: 0 0 0.5rem; font-size: 1.1rem;"></h3>
+            <p id="zoneAssignPhotoDimensions" style="margin: 0; color: var(--admin-text-muted); font-size: 0.875rem;"></p>
+            <p id="zoneAssignPhotoCurrentZones" style="margin: 0.5rem 0 0; font-size: 0.875rem;"></p>
+          </div>
+        </div>
+
+        <!-- Zone Selection -->
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--admin-text);">Select Zone</label>
+          <select id="zoneSelect" style="width: 100%; padding: 0.75rem; border: 1px solid var(--admin-border); border-radius: 6px; font-size: 0.95rem; background: var(--admin-surface); color: var(--admin-text);">
+            <option value="">Loading zones...</option>
+          </select>
+        </div>
+
+        <!-- Zone Details Preview -->
+        <div id="zoneDetails" style="display: none; padding: 1rem; background: var(--admin-gray-50, #f9fafb); border-radius: 8px; margin-bottom: 1rem;">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 120px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); margin-bottom: 0.25rem;">Page</div>
+              <div id="zoneDetailPage" style="font-weight: 600;"></div>
+            </div>
+            <div style="flex: 1; min-width: 120px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); margin-bottom: 0.25rem;">Display Mode</div>
+              <div id="zoneDetailMode" style="font-weight: 600;"></div>
+            </div>
+            <div style="flex: 1; min-width: 120px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); margin-bottom: 0.25rem;">Current Photos</div>
+              <div id="zoneDetailCount" style="font-weight: 600;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sort Order -->
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--admin-text);">Display Order</label>
+          <input type="number" id="zoneSortOrder" min="0" value="0" style="width: 100%; padding: 0.75rem; border: 1px solid var(--admin-border); border-radius: 6px; font-size: 0.95rem; background: var(--admin-surface); color: var(--admin-text);">
+          <p style="margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Lower numbers appear first. Leave at 0 to add to the end.</p>
+        </div>
+
+        <!-- Caption Override -->
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--admin-text);">Caption (optional)</label>
+          <input type="text" id="zoneCaption" placeholder="Custom caption for this zone..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--admin-border); border-radius: 6px; font-size: 0.95rem; background: var(--admin-surface); color: var(--admin-text);">
+        </div>
+
+        <!-- Alt Text Override -->
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--admin-text);">Alt Text (optional)</label>
+          <input type="text" id="zoneAltText" placeholder="Alternative text for accessibility..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--admin-border); border-radius: 6px; font-size: 0.95rem; background: var(--admin-surface); color: var(--admin-text);">
+        </div>
+      </div>
+      <div class="photo-modal-footer">
+        <button class="btn btn-secondary" onclick="closeZoneAssignModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="assignPhotoToZone()" id="assignZoneBtn">Assign to Zone</button>
       </div>
     </div>
   </div>
@@ -1130,6 +1203,176 @@
       });
 
       picker.open();
+    });
+
+    // ============ Zone Assignment Functions ============
+    let allZones = [];
+
+    // Load zones from API (Node.js backend uses /api/asset-zones)
+    async function loadZones() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones/admin/all`, {
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          allZones = data.zones || [];
+          populateZoneSelect();
+        }
+      } catch (error) {
+        console.error('Error loading zones:', error);
+      }
+    }
+
+    // Populate zone select dropdown
+    function populateZoneSelect() {
+      const select = document.getElementById('zoneSelect');
+      if (allZones.length === 0) {
+        select.innerHTML = '<option value="">No zones available - create one first</option>';
+        return;
+      }
+
+      // Escape JSON for data attribute to prevent XSS
+      const escapeHtml = (str) => str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      select.innerHTML = '<option value="">Select a zone...</option>' +
+        allZones.map(zone => `
+          <option value="${zone.zone_id}" data-zone='${escapeHtml(JSON.stringify(zone))}'>
+            ${zone.zone_name || zone.zone_id} (${zone.page_path}) - ${zone.display_mode}
+          </option>
+        `).join('');
+    }
+
+    // Open zone assignment modal
+    function openZoneAssignModal() {
+      if (!currentPhoto) {
+        alert('No photo selected');
+        return;
+      }
+
+      // Set photo preview
+      document.getElementById('zoneAssignPreview').src = currentPhoto.thumbnail_url || currentPhoto.url;
+      document.getElementById('zoneAssignPhotoName').textContent = currentPhoto.caption || currentPhoto.original_filename;
+      document.getElementById('zoneAssignPhotoDimensions').textContent = `${currentPhoto.width} × ${currentPhoto.height} • ${formatFileSize(currentPhoto.file_size_bytes)}`;
+      document.getElementById('zoneAssignPhotoCurrentZones').innerHTML = '';
+
+      // Reset form
+      document.getElementById('zoneSelect').value = '';
+      document.getElementById('zoneSortOrder').value = '0';
+      document.getElementById('zoneCaption').value = currentPhoto.caption || '';
+      document.getElementById('zoneAltText').value = currentPhoto.description || '';
+      document.getElementById('zoneDetails').style.display = 'none';
+
+      // Load zones if not already loaded
+      if (allZones.length === 0) {
+        loadZones();
+      }
+
+      document.getElementById('zoneAssignModal').classList.add('active');
+    }
+
+    // Close zone assignment modal
+    function closeZoneAssignModal() {
+      document.getElementById('zoneAssignModal').classList.remove('active');
+    }
+
+    // Handle zone selection change
+    document.getElementById('zoneSelect').addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const zoneDetails = document.getElementById('zoneDetails');
+
+      if (!this.value) {
+        zoneDetails.style.display = 'none';
+        return;
+      }
+
+      try {
+        const zone = JSON.parse(selectedOption.dataset.zone);
+        document.getElementById('zoneDetailPage').textContent = zone.page_path;
+        document.getElementById('zoneDetailMode').textContent = zone.display_mode;
+        document.getElementById('zoneDetailCount').textContent = `${zone.asset_count || 0} / ${zone.max_assets || '∞'}`;
+        zoneDetails.style.display = 'block';
+      } catch (e) {
+        zoneDetails.style.display = 'none';
+      }
+    });
+
+    // Assign photo to zone
+    async function assignPhotoToZone() {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        alert('Please log in');
+        return;
+      }
+
+      if (!currentPhoto) {
+        alert('No photo selected');
+        return;
+      }
+
+      const zoneId = document.getElementById('zoneSelect').value;
+      if (!zoneId) {
+        alert('Please select a zone');
+        return;
+      }
+
+      const assignBtn = document.getElementById('assignZoneBtn');
+      assignBtn.disabled = true;
+      assignBtn.textContent = 'Assigning...';
+
+      try {
+        // Use Node.js backend endpoint which accepts photo UUIDs
+        // The endpoint is: POST /api/asset-zones/:zoneId/photos
+        // Body: { photo_ids: [uuid1, uuid2, ...], replace: false }
+
+        const response = await fetch(`${API_BASE_URL}/api/asset-zones/${zoneId}/photos`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            photo_ids: [currentPhoto.id],  // Array of photo UUIDs
+            replace: false  // Add to existing, don't replace
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || data.message || 'Failed to assign to zone');
+        }
+
+        alert('✅ Photo assigned to zone successfully!');
+        closeZoneAssignModal();
+        closePhotoModal();
+
+        // Reload zones to update counts
+        loadZones();
+
+      } catch (error) {
+        console.error('Error assigning to zone:', error);
+        alert('Failed to assign photo to zone: ' + error.message);
+      } finally {
+        assignBtn.disabled = false;
+        assignBtn.textContent = 'Assign to Zone';
+      }
+    }
+
+    // Close zone modal on backdrop click
+    document.getElementById('zoneAssignModal').addEventListener('click', (e) => {
+      if (e.target.id === 'zoneAssignModal') closeZoneAssignModal();
+    });
+
+    // Load zones on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadZones();
     });
   </script>
   <script src="/js/focal-point-picker.js"></script>
