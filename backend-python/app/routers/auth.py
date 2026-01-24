@@ -4,6 +4,7 @@ Authentication router for magic link login.
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 import logging
@@ -632,11 +633,58 @@ def array_to_string(arr):
 
 
 @router.get("/me")
-async def get_current_user_info(current_user: AttendeeProfile = Depends(get_current_user)):
+async def get_current_user_info(
+    current_user: AttendeeProfile = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
     Get the current user's profile information.
     Requires authentication.
     """
+    # Check user's role from user_roles table
+    role = "member"  # Default role
+
+    # Admin role names that indicate admin/board access
+    admin_roles = frozenset([
+        'super_admin', 'developer', 'board_president', 'board_vice_president',
+        'board_secretary', 'board_treasurer', 'board_member', 'advisory_panel'
+    ])
+
+    try:
+        role_result = db.execute(
+            text("""
+                SELECT r.name
+                FROM user_roles ur
+                JOIN roles r ON ur.role_id = r.id
+                WHERE ur.user_id = :user_id
+                  AND ur.is_active = true
+                  AND (ur.active_until IS NULL OR ur.active_until > NOW())
+                  AND (ur.active_from IS NULL OR ur.active_from <= NOW())
+                  AND ur.revoked_at IS NULL
+                ORDER BY CASE
+                    WHEN r.name IN ('super_admin', 'developer') THEN 1
+                    WHEN r.name LIKE 'board_%' THEN 2
+                    WHEN r.name = 'advisory_panel' THEN 3
+                    ELSE 4
+                END
+                LIMIT 1
+            """),
+            {"user_id": current_user.id}
+        ).fetchone()
+
+        if role_result:
+            role_name = role_result[0]
+            if role_name in admin_roles:
+                role = "admin"
+            elif role_name == "advisory_panel":
+                role = "advisory"
+            else:
+                role = role_name
+    except Exception as e:
+        # If role lookup fails, default to member
+        import logging
+        logging.getLogger(__name__).warning(f"Failed to lookup user role: {e}")
+
     return {
         "id": str(current_user.id),
         "email": current_user.user_email,
@@ -667,6 +715,7 @@ async def get_current_user_info(current_user: AttendeeProfile = Depends(get_curr
         "profile_completion_score": current_user.profile_completion_score,
         "notifications_enabled": current_user.notifications_enabled,
         "notification_preferences": current_user.notification_preferences or {},
+        "role": role,
     }
 
 
