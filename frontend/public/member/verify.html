@@ -191,24 +191,19 @@
           return;
         }
 
+        // Log the role for debugging
+        console.log('User role from API:', profileResponse.role);
+
         if (requiresSetup || !hasCompletedBasicInfo) {
           // First-time user or incomplete profile - go to welcome/profile setup
           console.log('Redirecting to profile setup (incomplete profile)');
           window.location.href = '/member/welcome.html';
         } else {
           // User has completed basic profile (50%+ completion)
-          // Check if we should prompt for profile update
-          if (shouldPromptForProfileUpdate()) {
-            console.log('Prompting for profile update (30+ days since last prompt)');
-            markProfileUpdatePrompted();
-            // Redirect to profile page with a message to review/update
-            window.location.href = '/member/profile.html?review=true';
-          } else {
-            // Redirect to appropriate portal based on role
-            const destination = getPortalDestination(profileResponse);
-            console.log('Redirecting to portal:', destination);
-            window.location.href = destination;
-          }
+          // Redirect to appropriate portal based on role
+          const destination = getPortalDestination(profileResponse);
+          console.log('Redirecting to portal:', destination);
+          window.location.href = destination;
         }
 
       } catch (error) {
