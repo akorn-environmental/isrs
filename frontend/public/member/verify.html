@@ -104,11 +104,15 @@
     /**
      * Check if user should be prompted to update their profile
      * Returns true if 30+ days since last prompt
+     * On first login (no timestamp), sets timestamp and skips prompt
      */
     function shouldPromptForProfileUpdate() {
       const lastPrompt = localStorage.getItem(PROFILE_UPDATE_PROMPT_KEY);
       if (!lastPrompt) {
-        return true; // Never prompted before
+        // First time - set the timestamp but DON'T prompt yet
+        // User will be prompted after 30 days from now
+        markProfileUpdatePrompted();
+        return false;
       }
 
       const lastPromptDate = new Date(parseInt(lastPrompt));
