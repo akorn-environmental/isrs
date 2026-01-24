@@ -324,69 +324,109 @@ class EmailService:
     # AUTHENTICATION EMAILS
     # =========================================================================
 
-    async def send_magic_link(self, to_email: str, magic_link: str) -> bool:
+    async def send_magic_link(self, to_email: str, magic_link: str, first_name: str = None) -> bool:
         """
         Send a magic link authentication email.
 
         Args:
             to_email: Recipient email address
             magic_link: Full magic link URL
+            first_name: Optional first name for personalization
 
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Your Secure Login Link - ISRS"
-        preheader = "Click to access your ISRS member account securely"
+        subject = "Your Login Link is Ready 🐚 - ISRS"
+        preheader = "One click to access your ISRS member account - no password needed!"
+
+        # Personalized greeting
+        greeting = f"Hi {first_name}!" if first_name else "Welcome back!"
 
         content = f"""
-        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
-            Welcome Back! 👋
-        </h1>
+        <div style="text-align: center; margin-bottom: 30px;">
+            <span style="font-size: 48px;">🐚</span>
+            <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
+                {greeting}
+            </h1>
+            <p style="color: {BRAND_COLORS['text_muted']}; font-size: 15px; margin: 8px 0 0 0;">
+                Your secure login link is ready
+            </p>
+        </div>
 
-        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
-            You requested to sign in to your ISRS member account. Click the button below to log in securely — no password needed!
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
+            Click the button below to sign in to your ISRS member account.<br>
+            <span style="color: {BRAND_COLORS['text_muted']}; font-size: 14px;">No password needed — it's that easy!</span>
         </p>
 
-        {get_button_html("Sign In to My Account", magic_link)}
+        {get_button_html("Sign In to ISRS", magic_link)}
 
-        {get_info_box_html(f'''
-            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
-                <strong>💡 Quick tip:</strong> Bookmark <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS["secondary_blue"]};">shellfish-society.org</a> for easy access to member resources, conference updates, and the photo gallery.
+        <div style="background: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center;">
+            <p style="margin: 0 0 15px 0; font-size: 15px; color: {BRAND_COLORS['primary_blue']}; font-weight: 600;">
+                🌊 What's New at ISRS?
             </p>
-        ''')}
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                <tr>
+                    <td style="padding: 8px 15px;">
+                        <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['secondary_blue']}; text-decoration: none; font-size: 14px;">
+                            📅 ICSR 2026
+                        </a>
+                    </td>
+                    <td style="color: {BRAND_COLORS['border']};">|</td>
+                    <td style="padding: 8px 15px;">
+                        <a href="https://www.shellfish-society.org/gallery.html" style="color: {BRAND_COLORS['secondary_blue']}; text-decoration: none; font-size: 14px;">
+                            📸 Photo Gallery
+                        </a>
+                    </td>
+                    <td style="color: {BRAND_COLORS['border']};">|</td>
+                    <td style="padding: 8px 15px;">
+                        <a href="https://www.shellfish-society.org/member/directory.html" style="color: {BRAND_COLORS['secondary_blue']}; text-decoration: none; font-size: 14px;">
+                            👥 Directory
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-        {get_warning_box_html(f'''
-            <p style="margin: 0; font-size: 13px; color: #92400e;">
-                <strong>🔒 Security note:</strong> This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this email, you can safely ignore it.
+        <div style="background-color: #fffbeb; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
+            <p style="margin: 0; font-size: 13px; color: #92400e; text-align: center;">
+                <strong>⏱️ This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes</strong> and can only be used once.<br>
+                <span style="color: #b45309;">Didn't request this? You can safely ignore this email.</span>
             </p>
-        ''')}
+        </div>
 
-        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 25px 0 0 0; text-align: center;">
-            Link not working? Copy and paste this URL into your browser:<br>
-            <span style="color: {BRAND_COLORS['secondary_blue']}; word-break: break-all; font-size: 12px;">{magic_link}</span>
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 20px 0 0 0; text-align: center; line-height: 1.6;">
+            Button not working? Copy this link into your browser:<br>
+            <span style="color: {BRAND_COLORS['secondary_blue']}; word-break: break-all;">{magic_link}</span>
         </p>
         """
 
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Welcome Back to ISRS!
+{greeting}
 
-You requested to sign in to your ISRS member account. Click the link below to log in securely:
+Your secure login link is ready! Click below to sign in to your ISRS member account:
 
 {magic_link}
 
-Quick tip: Bookmark shellfish-society.org for easy access to member resources, conference updates, and the photo gallery.
+No password needed - it's that easy!
 
-Security note: This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this email, you can safely ignore it.
+---
+
+What's New at ISRS?
+• ICSR 2026: https://www.shellfish-society.org/icsr2026.html
+• Photo Gallery: https://www.shellfish-society.org/gallery.html
+• Member Directory: https://www.shellfish-society.org/member/directory.html
+
+---
+
+This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once.
+Didn't request this? You can safely ignore this email.
 
 ---
 International Shellfish Restoration Society
 Restoring shellfish ecosystems worldwide
-
-Website: https://www.shellfish-society.org
-Photo Gallery: https://www.shellfish-society.org/gallery.html
-ICSR 2026: https://www.shellfish-society.org/icsr2026.html
+https://www.shellfish-society.org
         """
 
         return await self.send_email(to_email, subject, html_content, text_content)

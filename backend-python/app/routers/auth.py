@@ -227,11 +227,11 @@ async def register(register_data: RegisterRequest, request: Request, db: Session
             db, email, str(new_attendee.id), client_ip, user_agent
         )
 
-        # Send verification magic link email
-        email_sent = await email_service.send_magic_link(
+        # Send welcome email with magic link for new registrations
+        email_sent = await email_service.send_welcome_email(
             email,
-            magic_link,
-            subject="Welcome to ISRS - Verify Your Email"
+            first_name,
+            magic_link
         )
 
         if not email_sent:
@@ -383,8 +383,9 @@ async def request_login(login_data: LoginRequest, request: Request, db: Session 
             db, email, str(attendee.id), client_ip, user_agent
         )
 
-        # Send magic link email
-        email_sent = await email_service.send_magic_link(email, magic_link)
+        # Send magic link email (include first name for personalization if available)
+        first_name = attendee.first_name if attendee and attendee.first_name else None
+        email_sent = await email_service.send_magic_link(email, magic_link, first_name)
 
         if not email_sent:
             logger.error(f"Failed to send magic link email to {email}")
