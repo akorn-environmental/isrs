@@ -230,7 +230,7 @@ async def register(register_data: RegisterRequest, request: Request, db: Session
         # Send welcome email with magic link for new registrations
         email_sent = await email_service.send_welcome_email(
             email,
-            first_name,
+            register_data.first_name,
             magic_link
         )
 
