@@ -17,6 +17,7 @@ from app.models.auth import UserSession
 from app.models.system import AuditLog, DataQualityMetric, UserFeedback
 from app.models.asset import Asset
 from app.models.asset_zone import AssetZone, AssetZoneAsset
+from app.models.photo import Photo
 
 __all__ = [
     "Base",
@@ -38,4 +39,5 @@ __all__ = [
     "Asset",
     "AssetZone",
     "AssetZoneAsset",
+    "Photo",
 ]

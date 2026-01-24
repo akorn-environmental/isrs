@@ -82,7 +82,7 @@ async def startup_event():
         Base, Contact, Organization, BoardVote, BoardVoteDetail,
         Conference, ConferenceRegistration, ConferenceSponsor, ConferenceAbstract,
         AttendeeProfile, FundingProspect, UserSession, AuditLog, DataQualityMetric,
-        UserFeedback, Asset, AssetZone, AssetZoneAsset
+        UserFeedback, Asset, AssetZone, AssetZoneAsset, Photo
     )
 
     # Initialize database (create tables if they don't exist)
@@ -103,7 +103,7 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback
+from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos
 
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
@@ -119,6 +119,7 @@ app.include_router(documents.router, prefix="/api/documents", tags=["Documents"]
 app.include_router(enrichment.router, prefix="/api/enrichment", tags=["Enrichment"])
 app.include_router(assets.router, prefix="/api/assets", tags=["Assets"])
 app.include_router(asset_zones.router, prefix="/api/zones", tags=["Asset Zones"])
+app.include_router(photos.router, prefix="/api/photos", tags=["Photos"])
 
 
 # Serve static files (frontend) - Must be AFTER API routes
