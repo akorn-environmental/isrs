@@ -110,6 +110,7 @@ app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 app.include_router(feedback.router, prefix="/api/feedback", tags=["Feedback"])
 app.include_router(contacts.router, prefix="/api/contacts", tags=["Contacts"])
 app.include_router(votes.router, prefix="/api/votes", tags=["Board Votes"])
+app.include_router(photos.router, prefix="/api/photos", tags=["Photos"])  # Must be before /api catch-all
 app.include_router(conferences.router, prefix="/api/conferences", tags=["Conferences"])
 app.include_router(conferences.router, prefix="/api/conference", tags=["Conference"])  # Alias for frontend compatibility
 app.include_router(conferences.router, prefix="/api", tags=["Abstracts"])  # Exposes /api/abstracts/* routes for My Reviews page
@@ -119,7 +120,6 @@ app.include_router(documents.router, prefix="/api/documents", tags=["Documents"]
 app.include_router(enrichment.router, prefix="/api/enrichment", tags=["Enrichment"])
 app.include_router(assets.router, prefix="/api/assets", tags=["Assets"])
 app.include_router(asset_zones.router, prefix="/api/zones", tags=["Asset Zones"])
-app.include_router(photos.router, prefix="/api/photos", tags=["Photos"])
 
 
 # Serve static files (frontend) - Must be AFTER API routes
