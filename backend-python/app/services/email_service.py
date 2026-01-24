@@ -1,6 +1,8 @@
 """
-Email service for sending magic link authentication emails.
+Email service for sending authentication and notification emails.
 Supports both SMTP (Gmail) and AWS SES.
+
+Branded email templates for ISRS - International Shellfish Restoration Society
 """
 import logging
 import os
@@ -14,6 +16,178 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 
+# =============================================================================
+# ISRS BRAND COLORS (from shellfish-society.org)
+# =============================================================================
+BRAND_COLORS = {
+    "primary_blue": "#2e5a8a",
+    "secondary_blue": "#4a7ab5",
+    "accent_teal": "#546d7d",
+    "dark_gray": "#2c3e50",
+    "light_gray": "#f8f9fa",
+    "success_green": "#28a745",
+    "warning_yellow": "#ffc107",
+    "info_blue": "#17a2b8",
+    "white": "#ffffff",
+    "text_dark": "#333333",
+    "text_muted": "#6c757d",
+    "border": "#e9ecef",
+}
+
+
+# =============================================================================
+# BASE EMAIL TEMPLATE
+# =============================================================================
+def get_base_template(content: str, preheader: str = "") -> str:
+    """
+    Wrap email content in the base ISRS branded template.
+
+    Args:
+        content: The main email body content (HTML)
+        preheader: Preview text shown in email clients (optional)
+
+    Returns:
+        Complete HTML email
+    """
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ISRS</title>
+        <!--[if mso]>
+        <noscript>
+            <xml>
+                <o:OfficeDocumentSettings>
+                    <o:PixelsPerInch>96</o:PixelsPerInch>
+                </o:OfficeDocumentSettings>
+            </xml>
+        </noscript>
+        <![endif]-->
+        <style>
+            /* Reset styles */
+            body, table, td, a {{ -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }}
+            table, td {{ mso-table-lspace: 0pt; mso-table-rspace: 0pt; }}
+            img {{ -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }}
+
+            /* Mobile styles */
+            @media only screen and (max-width: 600px) {{
+                .email-container {{ width: 100% !important; max-width: 100% !important; }}
+                .fluid {{ max-width: 100% !important; height: auto !important; margin-left: auto !important; margin-right: auto !important; }}
+                .stack-column {{ display: block !important; width: 100% !important; max-width: 100% !important; }}
+                .center-on-narrow {{ text-align: center !important; display: block !important; margin-left: auto !important; margin-right: auto !important; float: none !important; }}
+                .padding-mobile {{ padding-left: 20px !important; padding-right: 20px !important; }}
+                .btn-mobile {{ display: block !important; width: 100% !important; max-width: 280px !important; margin: 0 auto !important; }}
+            }}
+        </style>
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f0f4f8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+
+        <!-- Preheader text (hidden preview) -->
+        <div style="display: none; font-size: 1px; color: #f0f4f8; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+            {preheader}
+        </div>
+
+        <!-- Email wrapper -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f0f4f8;">
+            <tr>
+                <td style="padding: 30px 15px;">
+
+                    <!-- Email container -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" class="email-container" style="margin: 0 auto; max-width: 600px;">
+
+                        <!-- Header with logo -->
+                        <tr>
+                            <td style="background: linear-gradient(135deg, {BRAND_COLORS['primary_blue']} 0%, {BRAND_COLORS['secondary_blue']} 100%); padding: 30px 40px; border-radius: 12px 12px 0 0; text-align: center;">
+                                <img src="https://www.shellfish-society.org/images/isrs-logo.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 10px;">
+                                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society</p>
+                            </td>
+                        </tr>
+
+                        <!-- Main content area -->
+                        <tr>
+                            <td style="background-color: {BRAND_COLORS['white']}; padding: 40px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);" class="padding-mobile">
+                                {content}
+                            </td>
+                        </tr>
+
+                        <!-- Footer -->
+                        <tr>
+                            <td style="padding: 30px 20px; text-align: center;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                                    <tr>
+                                        <td style="padding: 0 10px;">
+                                            <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">Website</a>
+                                        </td>
+                                        <td style="color: {BRAND_COLORS['border']};">|</td>
+                                        <td style="padding: 0 10px;">
+                                            <a href="https://www.shellfish-society.org/gallery.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">Gallery</a>
+                                        </td>
+                                        <td style="color: {BRAND_COLORS['border']};">|</td>
+                                        <td style="padding: 0 10px;">
+                                            <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">ICSR 2026</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 0 0; line-height: 1.6;">
+                                    Restoring shellfish ecosystems worldwide<br>
+                                    <span style="color: {BRAND_COLORS['border']};">—</span><br>
+                                    © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    """
+
+
+def get_button_html(text: str, url: str, color: str = None) -> str:
+    """Generate a branded CTA button."""
+    bg_color = color or BRAND_COLORS['primary_blue']
+    return f"""
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 30px auto;" class="btn-mobile">
+        <tr>
+            <td style="border-radius: 8px; background: linear-gradient(135deg, {bg_color} 0%, {BRAND_COLORS['secondary_blue']} 100%);">
+                <a href="{url}" target="_blank" style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">
+                    {text}
+                </a>
+            </td>
+        </tr>
+    </table>
+    """
+
+
+def get_info_box_html(content: str, border_color: str = None, bg_color: str = None) -> str:
+    """Generate an info/highlight box."""
+    border = border_color or BRAND_COLORS['primary_blue']
+    background = bg_color or "#f8fafc"
+    return f"""
+    <div style="background-color: {background}; border-left: 4px solid {border}; padding: 20px 24px; margin: 25px 0; border-radius: 0 8px 8px 0;">
+        {content}
+    </div>
+    """
+
+
+def get_success_box_html(content: str) -> str:
+    """Generate a success/confirmation box."""
+    return get_info_box_html(content, BRAND_COLORS['success_green'], "#f0fff4")
+
+
+def get_warning_box_html(content: str) -> str:
+    """Generate a warning/alert box."""
+    return get_info_box_html(content, BRAND_COLORS['warning_yellow'], "#fffbeb")
+
+
+# =============================================================================
+# EMAIL SERVICE CLASS
+# =============================================================================
 class EmailService:
     """Service for sending emails via SMTP or AWS SES."""
 
@@ -146,6 +320,10 @@ class EmailService:
             logger.error(f"Failed to send email via SES to {to_email}: {str(e)}")
             return False
 
+    # =========================================================================
+    # AUTHENTICATION EMAILS
+    # =========================================================================
+
     async def send_magic_link(self, to_email: str, magic_link: str) -> bool:
         """
         Send a magic link authentication email.
@@ -157,88 +335,173 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"Your secure login link - ISRS"
+        subject = "Your Secure Login Link - ISRS"
+        preheader = "Click to access your ISRS member account securely"
 
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f0f7fa;">
-            <div style="background: linear-gradient(135deg, #1a5276 0%, #2e86ab 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
-                <img src="https://www.shellfish-society.org/images/isrs-logo.png" alt="ISRS Logo" style="height: 60px; margin-bottom: 15px;">
-                <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Welcome Back!</h1>
-            </div>
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Welcome Back! 👋
+        </h1>
 
-            <div style="background-color: white; padding: 35px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <p style="margin-bottom: 25px; font-size: 16px; color: #444;">
-                    You requested access to your ISRS member account. Click the button below to log in securely - no password needed!
-                </p>
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
+            You requested to sign in to your ISRS member account. Click the button below to log in securely — no password needed!
+        </p>
 
-                <div style="text-align: center; margin: 35px 0;">
-                    <a href="{magic_link}"
-                       style="background: linear-gradient(135deg, #1a5276 0%, #2e86ab 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(30, 136, 229, 0.4); transition: transform 0.2s;">
-                        Log In to My Account
-                    </a>
-                </div>
+        {get_button_html("Sign In to My Account", magic_link)}
 
-                <div style="background-color: #e8f4f8; border-left: 4px solid #2e86ab; padding: 15px 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
-                    <p style="margin: 0; font-size: 14px; color: #1a5276;">
-                        <strong>Tip:</strong> Bookmark <a href="https://www.shellfish-society.org" style="color: #2e86ab;">shellfish-society.org</a> for quick access to member resources, conference updates, and the photo gallery.
-                    </p>
-                </div>
+        {get_info_box_html(f'''
+            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
+                <strong>💡 Quick tip:</strong> Bookmark <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS["secondary_blue"]};">shellfish-society.org</a> for easy access to member resources, conference updates, and the photo gallery.
+            </p>
+        ''')}
 
-                <div style="background-color: #fff8e6; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
-                    <p style="margin: 0; font-size: 13px; color: #856404;">
-                        <strong>Security note:</strong> This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this, you can safely ignore this email.
-                    </p>
-                </div>
+        {get_warning_box_html(f'''
+            <p style="margin: 0; font-size: 13px; color: #92400e;">
+                <strong>🔒 Security note:</strong> This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this email, you can safely ignore it.
+            </p>
+        ''')}
 
-                <hr style="border: none; border-top: 1px solid #e9ecef; margin: 30px 0;">
-
-                <div style="text-align: center;">
-                    <p style="color: #1a5276; font-size: 14px; font-weight: 600; margin-bottom: 5px;">
-                        International Shellfish Restoration Society
-                    </p>
-                    <p style="color: #6c757d; font-size: 12px; margin: 0;">
-                        Restoring shellfish ecosystems worldwide
-                    </p>
-                    <div style="margin-top: 15px;">
-                        <a href="https://www.shellfish-society.org" style="color: #2e86ab; text-decoration: none; font-size: 12px; margin: 0 10px;">Website</a>
-                        <span style="color: #dee2e6;">|</span>
-                        <a href="https://www.shellfish-society.org/gallery.html" style="color: #2e86ab; text-decoration: none; font-size: 12px; margin: 0 10px;">Photo Gallery</a>
-                        <span style="color: #dee2e6;">|</span>
-                        <a href="https://www.shellfish-society.org/icsr2026.html" style="color: #2e86ab; text-decoration: none; font-size: 12px; margin: 0 10px;">ICSR2026</a>
-                    </div>
-                </div>
-            </div>
-        </body>
-        </html>
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 25px 0 0 0; text-align: center;">
+            Link not working? Copy and paste this URL into your browser:<br>
+            <span style="color: {BRAND_COLORS['secondary_blue']}; word-break: break-all; font-size: 12px;">{magic_link}</span>
+        </p>
         """
 
+        html_content = get_base_template(content, preheader)
+
         text_content = f"""
-        Welcome Back to ISRS!
+Welcome Back to ISRS!
 
-        You requested access to your ISRS member account. Click the link below to log in securely:
+You requested to sign in to your ISRS member account. Click the link below to log in securely:
 
-        {magic_link}
+{magic_link}
 
-        Tip: Bookmark shellfish-society.org for quick access to member resources, conference updates, and the photo gallery.
+Quick tip: Bookmark shellfish-society.org for easy access to member resources, conference updates, and the photo gallery.
 
-        Security note: This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this, you can safely ignore this email.
+Security note: This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this email, you can safely ignore it.
 
-        ---
-        International Shellfish Restoration Society
-        Restoring shellfish ecosystems worldwide
+---
+International Shellfish Restoration Society
+Restoring shellfish ecosystems worldwide
 
-        Website: https://www.shellfish-society.org
-        Photo Gallery: https://www.shellfish-society.org/gallery.html
-        ICSR2026: https://www.shellfish-society.org/icsr2026.html
+Website: https://www.shellfish-society.org
+Photo Gallery: https://www.shellfish-society.org/gallery.html
+ICSR 2026: https://www.shellfish-society.org/icsr2026.html
         """
 
         return await self.send_email(to_email, subject, html_content, text_content)
+
+    async def send_welcome_email(
+        self,
+        to_email: str,
+        first_name: str,
+        magic_link: str,
+    ) -> bool:
+        """
+        Send welcome email to newly registered members.
+
+        Args:
+            to_email: New member's email address
+            first_name: Member's first name
+            magic_link: Magic link to complete registration
+
+        Returns:
+            True if sent successfully, False otherwise
+        """
+        subject = "Welcome to ISRS - Complete Your Registration"
+        preheader = f"Welcome {first_name}! Complete your ISRS member profile to get started."
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Welcome to ISRS, {first_name}! 🎉
+        </h1>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+            Thank you for joining the International Shellfish Restoration Society! We're excited to have you as part of our global community working to restore shellfish ecosystems worldwide.
+        </p>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
+            Click below to complete your profile and unlock all member benefits:
+        </p>
+
+        {get_button_html("Complete My Profile", magic_link, BRAND_COLORS['success_green'])}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 35px 0 15px 0; font-weight: 600;">
+            As an ISRS Member, You Can:
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 20px; margin-right: 12px;">🌊</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Connect with shellfish restoration professionals worldwide</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 20px; margin-right: 12px;">📅</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Register for ICSR conferences and workshops</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 20px; margin-right: 12px;">📸</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Access and contribute to our restoration photo gallery</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 12px 0;">
+                    <span style="font-size: 20px; margin-right: 12px;">📖</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Browse the member directory and expand your network</span>
+                </td>
+            </tr>
+        </table>
+
+        {get_info_box_html(f'''
+            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
+                <strong>🐚 Coming up:</strong> ICSR 2026 in Bremerton, Washington! <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
+            </p>
+        ''')}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 25px 0 0 0; text-align: center;">
+            Questions? Reply to this email or visit our <a href="https://www.shellfish-society.org/about.html" style="color: {BRAND_COLORS['secondary_blue']};">About page</a> to learn more.
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Welcome to ISRS, {first_name}!
+
+Thank you for joining the International Shellfish Restoration Society! We're excited to have you as part of our global community working to restore shellfish ecosystems worldwide.
+
+Click the link below to complete your profile and unlock all member benefits:
+
+{magic_link}
+
+As an ISRS Member, You Can:
+• Connect with shellfish restoration professionals worldwide
+• Register for ICSR conferences and workshops
+• Access and contribute to our restoration photo gallery
+• Browse the member directory and expand your network
+
+Coming up: ICSR 2026 in Bremerton, Washington!
+https://www.shellfish-society.org/icsr2026.html
+
+Questions? Reply to this email or visit our website to learn more.
+
+---
+International Shellfish Restoration Society
+Restoring shellfish ecosystems worldwide
+
+Website: https://www.shellfish-society.org
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
+    # =========================================================================
+    # ABSTRACT REVIEW EMAILS
+    # =========================================================================
 
     async def send_review_assignment_email(
         self,
@@ -257,72 +520,68 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "New Abstract Review Assignment - ICSR2026"
+        subject = "New Abstract Review Assignment - ICSR 2026"
+        preheader = f"You've been assigned to review: {abstract_title[:50]}..."
 
         # Format due date
         due_date_str = due_date.strftime('%B %d, %Y') if due_date else "TBD"
 
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: #2c5282; margin-bottom: 20px;">New Review Assignment</h1>
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            New Review Assignment 📋
+        </h1>
 
-                <p style="margin-bottom: 20px;">
-                    You have been assigned to review the following abstract for ICSR2026:
-                </p>
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
+            You have been selected to review an abstract submission for ICSR 2026. Your expertise is invaluable in ensuring the quality of our conference program.
+        </p>
 
-                <div style="background-color: white; padding: 20px; border-left: 4px solid #2c5282; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>Title:</strong> {abstract_title}</p>
-                    <p style="margin: 10px 0 0 0;"><strong>Due Date:</strong> {due_date_str}</p>
-                </div>
+        {get_info_box_html(f'''
+            <p style="margin: 0 0 10px 0; font-size: 15px; color: {BRAND_COLORS["text_dark"]};"><strong>Abstract Title:</strong></p>
+            <p style="margin: 0 0 15px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 500;">{abstract_title}</p>
+            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_muted"]};"><strong>Due Date:</strong> {due_date_str}</p>
+        ''')}
 
-                <p style="margin: 20px 0;">
-                    Please log in to the member portal to review the full abstract and submit your evaluation.
-                </p>
+        {get_button_html("Review Abstract", "https://www.shellfish-society.org/member/my-reviews.html")}
 
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="https://www.shellfish-society.org/member/my-reviews.html"
-                       style="background-color: #2c5282; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                        View Assignment
-                    </a>
-                </div>
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 16px; margin: 30px 0 12px 0; font-weight: 600;">
+            Review Guidelines:
+        </h2>
+        <ul style="color: {BRAND_COLORS['text_dark']}; font-size: 14px; line-height: 1.8; padding-left: 20px; margin: 0;">
+            <li>Evaluate scientific merit and relevance to shellfish restoration</li>
+            <li>Consider clarity of presentation and methodology</li>
+            <li>Provide constructive feedback for authors</li>
+            <li>Submit your review before the due date</li>
+        </ul>
 
-                <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                    Thank you for contributing your expertise to the ICSR2026 review process.
-                </p>
-
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    ICSR2026 Program Committee
-                </p>
-            </div>
-        </body>
-        </html>
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 25px 0 0 0; text-align: center;">
+            Thank you for contributing your expertise to ICSR 2026!
+        </p>
         """
 
+        html_content = get_base_template(content, preheader)
+
         text_content = f"""
-        New Review Assignment - ICSR2026
+New Review Assignment - ICSR 2026
 
-        You have been assigned to review the following abstract:
+You have been selected to review an abstract submission for ICSR 2026.
 
-        Title: {abstract_title}
-        Due Date: {due_date_str}
+Abstract Title: {abstract_title}
+Due Date: {due_date_str}
 
-        Please log in to complete your review:
-        https://www.shellfish-society.org/member/my-reviews.html
+Please log in to complete your review:
+https://www.shellfish-society.org/member/my-reviews.html
 
-        Thank you for contributing your expertise to the ICSR2026 review process.
+Review Guidelines:
+• Evaluate scientific merit and relevance to shellfish restoration
+• Consider clarity of presentation and methodology
+• Provide constructive feedback for authors
+• Submit your review before the due date
 
-        International Shellfish Restoration Society
-        ICSR2026 Program Committee
+Thank you for contributing your expertise to ICSR 2026!
+
+---
+International Shellfish Restoration Society
+ICSR 2026 Program Committee
         """
 
         return await self.send_email(reviewer_email, subject, html_content, text_content)
@@ -342,61 +601,66 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Review Submitted Successfully - ICSR2026"
+        subject = "Review Submitted Successfully - ICSR 2026"
+        preheader = "Thank you! Your abstract review has been submitted."
 
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: #28a745; margin-bottom: 20px;">✓ Review Submitted</h1>
-
-                <p style="margin-bottom: 20px;">
-                    Thank you! Your review has been submitted successfully for:
-                </p>
-
-                <div style="background-color: white; padding: 20px; border-left: 4px solid #28a745; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>{abstract_title}</strong></p>
-                </div>
-
-                <p style="margin: 20px 0;">
-                    The organizing committee will review all feedback and make final decisions soon.
-                </p>
-
-                <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                    Your contribution helps ensure the quality and diversity of presentations at ICSR2026.
-                </p>
-
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    ICSR2026 Program Committee
-                </p>
+        content = f"""
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="display: inline-block; background-color: #d1fae5; border-radius: 50%; padding: 15px; margin-bottom: 15px;">
+                <span style="font-size: 32px;">✓</span>
             </div>
-        </body>
-        </html>
+            <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 26px; margin: 0; font-weight: 600;">
+                Review Submitted!
+            </h1>
+        </div>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
+            Thank you for completing your review. Your feedback helps ensure the quality and diversity of presentations at ICSR 2026.
+        </p>
+
+        {get_success_box_html(f'''
+            <p style="margin: 0 0 5px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">Reviewed Abstract:</p>
+            <p style="margin: 0; font-size: 15px; color: {BRAND_COLORS["text_dark"]}; font-weight: 500;">{abstract_title}</p>
+        ''')}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.7; margin: 25px 0;">
+            The organizing committee will review all feedback and communicate final decisions to authors. If you have any additional reviews assigned, you can access them from your dashboard.
+        </p>
+
+        {get_button_html("View My Reviews", "https://www.shellfish-society.org/member/my-reviews.html")}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+            Your contribution to the scientific program is greatly appreciated! 🙏
+        </p>
         """
 
+        html_content = get_base_template(content, preheader)
+
         text_content = f"""
-        Review Submitted - ICSR2026
+Review Submitted Successfully - ICSR 2026
 
-        Thank you! Your review has been submitted successfully for:
-        {abstract_title}
+Thank you for completing your review!
 
-        The organizing committee will review all feedback and make final decisions soon.
+Reviewed Abstract: {abstract_title}
 
-        Your contribution helps ensure the quality and diversity of presentations at ICSR2026.
+Your feedback helps ensure the quality and diversity of presentations at ICSR 2026.
 
-        International Shellfish Restoration Society
-        ICSR2026 Program Committee
+The organizing committee will review all feedback and communicate final decisions to authors.
+
+View your reviews: https://www.shellfish-society.org/member/my-reviews.html
+
+Your contribution to the scientific program is greatly appreciated!
+
+---
+International Shellfish Restoration Society
+ICSR 2026 Program Committee
         """
 
         return await self.send_email(reviewer_email, subject, html_content, text_content)
+
+    # =========================================================================
+    # ABSTRACT DECISION EMAILS
+    # =========================================================================
 
     async def send_acceptance_email(
         self,
@@ -417,78 +681,97 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Abstract Accepted - ICSR2026"
+        subject = "🎉 Abstract Accepted - ICSR 2026"
+        preheader = f"Congratulations! Your abstract has been accepted for {presentation_type} presentation."
 
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: #28a745; margin-bottom: 20px;">🎉 Congratulations!</h1>
+        content = f"""
+        <div style="text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 48px;">🎉</span>
+            <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
+                Congratulations!
+            </h1>
+        </div>
 
-                <p style="margin-bottom: 20px;">
-                    Your abstract has been <strong>accepted</strong> for presentation at ICSR2026:
-                </p>
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
+            Your abstract has been <strong>accepted</strong> for presentation at ICSR 2026 in Bremerton, Washington!
+        </p>
 
-                <div style="background-color: white; padding: 20px; border-left: 4px solid #28a745; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>Title:</strong> {abstract_title}</p>
-                    <p style="margin: 10px 0 0 0;"><strong>Presentation Type:</strong> {presentation_type}</p>
-                    <p style="margin: 10px 0 0 0;"><strong>Average Review Score:</strong> {average_score}/5.0</p>
-                </div>
+        {get_success_box_html(f'''
+            <p style="margin: 0 0 12px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">Accepted Abstract:</p>
+            <p style="margin: 0 0 15px 0; font-size: 16px; color: {BRAND_COLORS["text_dark"]}; font-weight: 600;">{abstract_title}</p>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Presentation Type:</span>
+                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; font-weight: 500; margin-left: 8px;">{presentation_type}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Review Score:</span>
+                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; font-weight: 500; margin-left: 8px;">{average_score}/5.0</span>
+                    </td>
+                </tr>
+            </table>
+        ''')}
 
-                <h2 style="color: #2c5282; margin-top: 30px;">Next Steps:</h2>
-                <ul style="margin: 15px 0; padding-left: 20px;">
-                    <li style="margin-bottom: 10px;">Register for the conference if you haven't already</li>
-                    <li style="margin-bottom: 10px;">Prepare your presentation materials</li>
-                    <li style="margin-bottom: 10px;">Check your assigned time slot (coming soon)</li>
-                </ul>
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 30px 0 15px 0; font-weight: 600;">
+            Next Steps:
+        </h2>
 
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="https://www.shellfish-society.org/icsr2026.html"
-                       style="background-color: #2c5282; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                        Conference Details
-                    </a>
-                </div>
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="display: inline-block; width: 24px; height: 24px; background: {BRAND_COLORS['primary_blue']}; color: white; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; margin-right: 12px;">1</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Register for the conference if you haven't already</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="display: inline-block; width: 24px; height: 24px; background: {BRAND_COLORS['primary_blue']}; color: white; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; margin-right: 12px;">2</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Prepare your {presentation_type.lower()} presentation materials</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0;">
+                    <span style="display: inline-block; width: 24px; height: 24px; background: {BRAND_COLORS['primary_blue']}; color: white; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; margin-right: 12px;">3</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 15px;">Watch for your session assignment (coming soon)</span>
+                </td>
+            </tr>
+        </table>
 
-                <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                    We look forward to your presentation at ICSR2026!
-                </p>
+        {get_button_html("Conference Details", "https://www.shellfish-society.org/icsr2026.html")}
 
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    ICSR2026 Program Committee
-                </p>
-            </div>
-        </body>
-        </html>
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+            We look forward to your presentation at ICSR 2026! 🐚
+        </p>
         """
 
+        html_content = get_base_template(content, preheader)
+
         text_content = f"""
-        Abstract Accepted - ICSR2026
+🎉 Abstract Accepted - ICSR 2026
 
-        Congratulations! Your abstract has been accepted for presentation at ICSR2026:
+Congratulations!
 
-        Title: {abstract_title}
-        Presentation Type: {presentation_type}
-        Average Review Score: {average_score}/5.0
+Your abstract has been accepted for presentation at ICSR 2026 in Bremerton, Washington!
 
-        Next Steps:
-        - Register for the conference if you haven't already
-        - Prepare your presentation materials
-        - Check your assigned time slot (coming soon)
+Abstract Title: {abstract_title}
+Presentation Type: {presentation_type}
+Review Score: {average_score}/5.0
 
-        Conference Details: https://www.shellfish-society.org/icsr2026.html
+Next Steps:
+1. Register for the conference if you haven't already
+2. Prepare your {presentation_type.lower()} presentation materials
+3. Watch for your session assignment (coming soon)
 
-        We look forward to your presentation at ICSR2026!
+Conference Details: https://www.shellfish-society.org/icsr2026.html
 
-        International Shellfish Restoration Society
-        ICSR2026 Program Committee
+We look forward to your presentation at ICSR 2026!
+
+---
+International Shellfish Restoration Society
+ICSR 2026 Program Committee
         """
 
         return await self.send_email(submitter_email, subject, html_content, text_content)
@@ -510,98 +793,84 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Abstract Decision - ICSR2026"
+        subject = "Abstract Review Decision - ICSR 2026"
+        preheader = "Thank you for your ICSR 2026 abstract submission"
 
         feedback_section = ""
         if feedback_summary:
-            feedback_section = f"""
-                <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>Reviewer Feedback:</strong></p>
-                    <p style="margin: 10px 0 0 0;">{feedback_summary}</p>
-                </div>
-            """
+            feedback_section = get_warning_box_html(f'''
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #92400e; font-weight: 600;">Reviewer Feedback:</p>
+                <p style="margin: 0; font-size: 14px; color: #78350f; line-height: 1.6;">{feedback_summary}</p>
+            ''')
 
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: #2c5282; margin-bottom: 20px;">Abstract Review Decision</h1>
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 24px; margin: 0 0 20px 0; font-weight: 600;">
+            Abstract Review Decision
+        </h1>
 
-                <p style="margin-bottom: 20px;">
-                    Thank you for submitting your abstract to ICSR2026.
-                </p>
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+            Thank you for submitting your abstract to ICSR 2026. We appreciate your interest in contributing to the conference program.
+        </p>
 
-                <div style="background-color: white; padding: 20px; border-left: 4px solid #2c5282; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>Title:</strong> {abstract_title}</p>
-                </div>
+        {get_info_box_html(f'''
+            <p style="margin: 0 0 5px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">Submitted Abstract:</p>
+            <p style="margin: 0; font-size: 15px; color: {BRAND_COLORS["text_dark"]}; font-weight: 500;">{abstract_title}</p>
+        ''')}
 
-                <p style="margin: 20px 0;">
-                    After careful review by our program committee, we are unable to accept your abstract for presentation at this time.
-                </p>
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 20px 0;">
+            After careful review by our program committee, we regret to inform you that we are unable to include your abstract in this year's program. Due to the high number of quality submissions, we faced difficult decisions.
+        </p>
 
-                {feedback_section}
+        {feedback_section}
 
-                <p style="margin: 20px 0;">
-                    We encourage you to:
-                </p>
-                <ul style="margin: 15px 0; padding-left: 20px;">
-                    <li style="margin-bottom: 10px;">Attend the conference to learn about current research in the field</li>
-                    <li style="margin-bottom: 10px;">Network with other researchers and practitioners</li>
-                    <li style="margin-bottom: 10px;">Consider submitting to future ISRS conferences</li>
-                </ul>
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 16px; margin: 25px 0 12px 0; font-weight: 600;">
+            We encourage you to:
+        </h2>
+        <ul style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.8; padding-left: 20px; margin: 0;">
+            <li>Attend ICSR 2026 to learn about current research</li>
+            <li>Network with researchers and practitioners</li>
+            <li>Consider submitting to future ISRS conferences</li>
+        </ul>
 
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="https://www.shellfish-society.org/icsr2026.html"
-                       style="background-color: #2c5282; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                        Conference Information
-                    </a>
-                </div>
+        {get_button_html("Conference Information", "https://www.shellfish-society.org/icsr2026.html")}
 
-                <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                    Thank you for your interest in ICSR2026.
-                </p>
-
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    ICSR2026 Program Committee
-                </p>
-            </div>
-        </body>
-        </html>
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+            Thank you for your dedication to shellfish restoration.
+        </p>
         """
 
+        html_content = get_base_template(content, preheader)
+
         text_content = f"""
-        Abstract Review Decision - ICSR2026
+Abstract Review Decision - ICSR 2026
 
-        Thank you for submitting your abstract to ICSR2026.
+Thank you for submitting your abstract to ICSR 2026.
 
-        Title: {abstract_title}
+Submitted Abstract: {abstract_title}
 
-        After careful review by our program committee, we are unable to accept your abstract for presentation at this time.
+After careful review by our program committee, we regret to inform you that we are unable to include your abstract in this year's program.
 
-        {f'Reviewer Feedback: {feedback_summary}' if feedback_summary else ''}
+{f'Reviewer Feedback: {feedback_summary}' if feedback_summary else ''}
 
-        We encourage you to:
-        - Attend the conference to learn about current research in the field
-        - Network with other researchers and practitioners
-        - Consider submitting to future ISRS conferences
+We encourage you to:
+• Attend ICSR 2026 to learn about current research
+• Network with researchers and practitioners
+• Consider submitting to future ISRS conferences
 
-        Conference Information: https://www.shellfish-society.org/icsr2026.html
+Conference Information: https://www.shellfish-society.org/icsr2026.html
 
-        Thank you for your interest in ICSR2026.
+Thank you for your dedication to shellfish restoration.
 
-        International Shellfish Restoration Society
-        ICSR2026 Program Committee
+---
+International Shellfish Restoration Society
+ICSR 2026 Program Committee
         """
 
         return await self.send_email(submitter_email, subject, html_content, text_content)
+
+    # =========================================================================
+    # EVENT REGISTRATION EMAILS
+    # =========================================================================
 
     async def send_event_signup_email(
         self,
@@ -626,14 +895,20 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        if status == "waitlist":
-            subject = f"Event Waitlist Confirmation - {event_name}"
+        is_waitlist = status == "waitlist"
+
+        if is_waitlist:
+            subject = f"Waitlist Confirmation - {event_name}"
+            preheader = f"You're on the waitlist for {event_name}"
+            icon = "⏳"
             title = "Added to Waitlist"
-            color = "#ffc107"
+            color = BRAND_COLORS['warning_yellow']
         else:
-            subject = f"Event Registration Confirmed - {event_name}"
+            subject = f"Registration Confirmed - {event_name}"
+            preheader = f"You're registered for {event_name}!"
+            icon = "✓"
             title = "Registration Confirmed!"
-            color = "#28a745"
+            color = BRAND_COLORS['success_green']
 
         # Format event date
         event_date_str = event_date.strftime('%B %d, %Y at %I:%M %p') if event_date else "TBD"
@@ -641,94 +916,88 @@ class EmailService:
         # Format fee
         fee_str = f"${total_fee:.2f}" if total_fee > 0 else "Free"
 
-        if status == "waitlist":
-            message_html = f"""
-                <p style="margin-bottom: 20px;">
-                    You have been <strong>added to the waitlist</strong> for:
-                </p>
-
-                <div style="background-color: white; padding: 20px; border-left: 4px solid {color}; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>{event_name}</strong></p>
-                    <p style="margin: 10px 0 0 0;"><strong>Date:</strong> {event_date_str}</p>
-                </div>
-
-                <p style="margin: 20px 0;">
-                    We will notify you if a spot becomes available.
-                </p>
-            """
-
-            message_text = f"""
-                You have been added to the waitlist for:
-                {event_name}
-                Date: {event_date_str}
-
-                We will notify you if a spot becomes available.
-            """
-        else:
-            guest_line_html = f"<p style=\"margin: 10px 0 0 0;\"><strong>Attendees:</strong> You + {guest_count} guest(s)</p>" if guest_count > 0 else ""
-            guest_line_text = f"Attendees: You + {guest_count} guest(s)" if guest_count > 0 else "Attendees: 1"
-
-            fee_line_html = f"<p style=\"margin: 10px 0 0 0;\"><strong>Total Fee:</strong> {fee_str}</p>" if total_fee > 0 else ""
-            fee_line_text = f"Total Fee: {fee_str}" if total_fee > 0 else ""
-
-            message_html = f"""
-                <p style="margin-bottom: 20px;">
-                    You are <strong>registered</strong> for:
-                </p>
-
-                <div style="background-color: white; padding: 20px; border-left: 4px solid {color}; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>{event_name}</strong></p>
-                    <p style="margin: 10px 0 0 0;"><strong>Date:</strong> {event_date_str}</p>
-                    {guest_line_html}
-                    {fee_line_html}
-                </div>
-
-                <p style="margin: 20px 0;">
-                    We look forward to seeing you there!
-                </p>
-            """
-
-            message_text = f"""
-                You are registered for:
-                {event_name}
-                Date: {event_date_str}
-                {guest_line_text}
-                {fee_line_text}
-
-                We look forward to seeing you there!
-            """
-
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: {color}; margin-bottom: 20px;">{title}</h1>
-
-                {message_html}
-
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    ICSR2026
-                </p>
-            </div>
-        </body>
-        </html>
+        # Build details table
+        details_rows = f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px; width: 100px;">Event:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 500;">{event_name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Date:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px;">{event_date_str}</td>
+            </tr>
         """
 
+        if guest_count > 0:
+            details_rows += f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Attendees:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px;">You + {guest_count} guest(s)</td>
+            </tr>
+            """
+
+        if total_fee > 0:
+            details_rows += f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Total:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 600;">{fee_str}</td>
+            </tr>
+            """
+
+        if is_waitlist:
+            status_message = """
+            <p style="color: #92400e; font-size: 15px; line-height: 1.7; margin: 20px 0;">
+                You've been added to the waitlist. We'll notify you immediately if a spot becomes available!
+            </p>
+            """
+        else:
+            status_message = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.7; margin: 20px 0;">
+                Your registration is confirmed! We look forward to seeing you there.
+            </p>
+            """
+
+        content = f"""
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="display: inline-block; background-color: {'#fef3c7' if is_waitlist else '#d1fae5'}; border-radius: 50%; width: 60px; height: 60px; line-height: 60px; margin-bottom: 15px;">
+                <span style="font-size: 28px;">{icon}</span>
+            </div>
+            <h1 style="color: {color}; font-size: 26px; margin: 0; font-weight: 600;">
+                {title}
+            </h1>
+        </div>
+
+        {get_info_box_html(f'''
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                {details_rows}
+            </table>
+        ''', color, '#fafafa')}
+
+        {status_message}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 25px 0 0 0; text-align: center;">
+            Questions about this event? Reply to this email.
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        guest_text = f"Attendees: You + {guest_count} guest(s)" if guest_count > 0 else ""
+        fee_text = f"Total: {fee_str}" if total_fee > 0 else ""
+
         text_content = f"""
-        {title} - ICSR2026
+{title} - ICSR 2026
 
-        {message_text}
+Event: {event_name}
+Date: {event_date_str}
+{guest_text}
+{fee_text}
 
-        International Shellfish Restoration Society
-        ICSR2026
+{"You've been added to the waitlist. We'll notify you if a spot becomes available!" if is_waitlist else "Your registration is confirmed! We look forward to seeing you there."}
+
+---
+International Shellfish Restoration Society
+ICSR 2026
         """
 
         return await self.send_email(user_email, subject, html_content, text_content)
@@ -754,7 +1023,8 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"Spot Available! - {event_name}"
+        subject = f"🎉 Spot Available! - {event_name}"
+        preheader = f"Great news! You've been confirmed for {event_name}"
 
         # Format event date
         event_date_str = event_date.strftime('%B %d, %Y at %I:%M %p') if event_date else "TBD"
@@ -762,63 +1032,229 @@ class EmailService:
         # Format fee
         fee_str = f"${total_fee:.2f}" if total_fee > 0 else "Free"
 
-        guest_line_html = f"<p style=\"margin: 10px 0 0 0;\"><strong>Attendees:</strong> You + {guest_count} guest(s)</p>" if guest_count > 0 else ""
-        guest_line_text = f"Attendees: You + {guest_count} guest(s)" if guest_count > 0 else "Attendees: 1"
-
-        fee_line_html = f"<p style=\"margin: 10px 0 0 0;\"><strong>Total Fee:</strong> {fee_str}</p>" if total_fee > 0 else ""
-        fee_line_text = f"Total Fee: {fee_str}" if total_fee > 0 else ""
-
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: #28a745; margin-bottom: 20px;">🎉 Spot Available!</h1>
-
-                <p style="margin-bottom: 20px;">
-                    Great news! A spot has opened up and you have been <strong>confirmed</strong> for:
-                </p>
-
-                <div style="background-color: white; padding: 20px; border-left: 4px solid #28a745; margin: 20px 0;">
-                    <p style="margin: 0;"><strong>{event_name}</strong></p>
-                    <p style="margin: 10px 0 0 0;"><strong>Date:</strong> {event_date_str}</p>
-                    {guest_line_html}
-                    {fee_line_html}
-                </div>
-
-                <p style="margin: 20px 0;">
-                    Your registration is now confirmed. We look forward to seeing you there!
-                </p>
-
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    ICSR2026
-                </p>
-            </div>
-        </body>
-        </html>
+        # Build details
+        details_rows = f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px; width: 100px;">Event:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 500;">{event_name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Date:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px;">{event_date_str}</td>
+            </tr>
         """
 
+        if guest_count > 0:
+            details_rows += f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Attendees:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px;">You + {guest_count} guest(s)</td>
+            </tr>
+            """
+
+        if total_fee > 0:
+            details_rows += f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Total:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 600;">{fee_str}</td>
+            </tr>
+            """
+
+        content = f"""
+        <div style="text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 48px;">🎉</span>
+            <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 26px; margin: 15px 0 0 0; font-weight: 600;">
+                Spot Available!
+            </h1>
+        </div>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
+            Great news! A spot has opened up and you've been <strong>moved from the waitlist to confirmed</strong>!
+        </p>
+
+        {get_success_box_html(f'''
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                {details_rows}
+            </table>
+        ''')}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.7; margin: 20px 0; text-align: center;">
+            Your registration is now confirmed. We look forward to seeing you there!
+        </p>
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 25px 0 0 0; text-align: center;">
+            Questions? Reply to this email.
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        guest_text = f"Attendees: You + {guest_count} guest(s)" if guest_count > 0 else ""
+        fee_text = f"Total: {fee_str}" if total_fee > 0 else ""
+
         text_content = f"""
-        Spot Available! - ICSR2026
+🎉 Spot Available! - {event_name}
 
-        Great news! A spot has opened up and you have been confirmed for:
+Great news! A spot has opened up and you've been moved from the waitlist to confirmed!
 
-        {event_name}
-        Date: {event_date_str}
-        {guest_line_text}
-        {fee_line_text}
+Event: {event_name}
+Date: {event_date_str}
+{guest_text}
+{fee_text}
 
-        Your registration is now confirmed. We look forward to seeing you there!
+Your registration is now confirmed. We look forward to seeing you there!
 
-        International Shellfish Restoration Society
-        ICSR2026
+---
+International Shellfish Restoration Society
+ICSR 2026
+        """
+
+        return await self.send_email(user_email, subject, html_content, text_content)
+
+    # =========================================================================
+    # CONFERENCE REGISTRATION EMAILS
+    # =========================================================================
+
+    async def send_conference_registration_email(
+        self,
+        user_email: str,
+        first_name: str,
+        conference_name: str,
+        registration_type: str,
+        registration_date,
+        total_fee,
+        confirmation_number: str = None,
+    ) -> bool:
+        """
+        Send conference registration confirmation email.
+
+        Args:
+            user_email: User's email address
+            first_name: User's first name
+            conference_name: Name of the conference
+            registration_type: Type of registration (e.g., "Full Conference", "Day Pass")
+            registration_date: Date of registration
+            total_fee: Total registration fee
+            confirmation_number: Optional confirmation number
+
+        Returns:
+            True if sent successfully, False otherwise
+        """
+        subject = f"Registration Confirmed - {conference_name}"
+        preheader = f"Welcome {first_name}! Your registration for {conference_name} is confirmed."
+
+        # Format date
+        reg_date_str = registration_date.strftime('%B %d, %Y') if registration_date else "N/A"
+
+        # Format fee
+        fee_str = f"${total_fee:.2f}" if total_fee else "See invoice"
+
+        confirmation_row = ""
+        if confirmation_number:
+            confirmation_row = f"""
+            <tr>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_muted']}; font-size: 13px;">Confirmation #:</td>
+                <td style="padding: 8px 0; color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 600;">{confirmation_number}</td>
+            </tr>
+            """
+
+        content = f"""
+        <div style="text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 48px;">🐚</span>
+            <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 15px 0 0 0; font-weight: 600;">
+                You're Registered, {first_name}!
+            </h1>
+        </div>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
+            Thank you for registering for <strong>{conference_name}</strong>! We're excited to welcome you.
+        </p>
+
+        {get_success_box_html(f'''
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                {confirmation_row}
+                <tr>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_muted"]}; font-size: 13px; width: 120px;">Conference:</td>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_dark"]}; font-size: 14px; font-weight: 500;">{conference_name}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Registration:</td>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_dark"]}; font-size: 14px;">{registration_type}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Registered:</td>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_dark"]}; font-size: 14px;">{reg_date_str}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Amount:</td>
+                    <td style="padding: 8px 0; color: {BRAND_COLORS["text_dark"]}; font-size: 14px; font-weight: 600;">{fee_str}</td>
+                </tr>
+            </table>
+        ''')}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 16px; margin: 30px 0 15px 0; font-weight: 600;">
+            What's Next?
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">📅</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Add the conference dates to your calendar</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🏨</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Book your accommodations early</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">✈️</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Arrange your travel to Bremerton, WA</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0;">
+                    <span style="font-size: 18px; margin-right: 10px;">👥</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Review the program when it's published</span>
+                </td>
+            </tr>
+        </table>
+
+        {get_button_html("View Conference Details", "https://www.shellfish-society.org/icsr2026.html")}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+            Questions? Reply to this email or visit our website.
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+You're Registered, {first_name}!
+
+Thank you for registering for {conference_name}!
+
+{f'Confirmation #: {confirmation_number}' if confirmation_number else ''}
+Conference: {conference_name}
+Registration Type: {registration_type}
+Registered On: {reg_date_str}
+Amount: {fee_str}
+
+What's Next?
+• Add the conference dates to your calendar
+• Book your accommodations early
+• Arrange your travel to Bremerton, WA
+• Review the program when it's published
+
+Conference Details: https://www.shellfish-society.org/icsr2026.html
+
+Questions? Reply to this email or visit our website.
+
+---
+International Shellfish Restoration Society
         """
 
         return await self.send_email(user_email, subject, html_content, text_content)
