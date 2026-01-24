@@ -73,22 +73,6 @@ class Photo(Base, TimestampMixin):
     status = Column(String(20), default="active", index=True, comment="Status: active, archived, deleted")
     tags = Column(ARRAY(String), nullable=True, comment="User-defined tags")
 
-    # Approval workflow
-    approval_status = Column(String(20), default="pending", index=True, comment="Approval status: pending, approved, rejected")
-    approval_notes = Column(Text, nullable=True, comment="Admin notes for rejection reason")
-    approved_by = Column(UUID(as_uuid=True), ForeignKey("attendee_profiles.id"), nullable=True, comment="Admin who approved/rejected")
-    approved_at = Column(DateTime, nullable=True, comment="When approval decision was made")
-
-    # Legal consent
-    usage_rights_agreed = Column(Boolean, default=False, comment="User agreed to usage rights")
-    liability_waiver_agreed = Column(Boolean, default=False, comment="User agreed to liability waiver")
-    consent_timestamp = Column(DateTime, nullable=True, comment="When user agreed to terms")
-    consent_ip_address = Column(String(45), nullable=True, comment="IP address when consent given")
-
-    # Video support
-    media_type = Column(String(20), default="photo", comment="Media type: photo, video")
-    duration_seconds = Column(Integer, nullable=True, comment="Video duration in seconds")
-
     # Relationships
     uploaded_by = Column(UUID(as_uuid=True), ForeignKey("attendee_profiles.id"), nullable=False, index=True)
     uploaded_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
@@ -96,7 +80,6 @@ class Photo(Base, TimestampMixin):
 
     # Relationship objects
     uploader = relationship("AttendeeProfile", foreign_keys=[uploaded_by])
-    approver = relationship("AttendeeProfile", foreign_keys=[approved_by])
     conference = relationship("Conference", foreign_keys=[conference_id])
 
     def __repr__(self):
@@ -138,14 +121,6 @@ class Photo(Base, TimestampMixin):
             "is_featured": self.is_featured,
             "status": self.status,
             "tags": self.tags,
-            "approval_status": self.approval_status,
-            "approval_notes": self.approval_notes,
-            "approved_by": str(self.approved_by) if self.approved_by else None,
-            "approved_at": self.approved_at.isoformat() if self.approved_at else None,
-            "usage_rights_agreed": self.usage_rights_agreed,
-            "liability_waiver_agreed": self.liability_waiver_agreed,
-            "media_type": self.media_type,
-            "duration_seconds": self.duration_seconds,
             "uploaded_by": str(self.uploaded_by) if self.uploaded_by else None,
             "uploaded_at": self.uploaded_at.isoformat() if self.uploaded_at else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,
