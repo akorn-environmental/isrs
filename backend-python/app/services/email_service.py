@@ -1259,6 +1259,1095 @@ International Shellfish Restoration Society
 
         return await self.send_email(user_email, subject, html_content, text_content)
 
+    # =========================================================================
+    # DONATION SOLICITATION EMAILS
+    # =========================================================================
+
+    async def send_donation_request_isrs(
+        self,
+        to_email: str,
+        first_name: str,
+        icsr2024_attended: bool = False,
+        icsr2024_role: str = None,  # "speaker", "poster", "attendee", "exhibitor"
+        previous_donor: bool = False,
+        last_donation_amount: float = None,
+        last_donation_year: int = None,
+    ) -> bool:
+        """
+        Send donation solicitation email for ISRS general fund.
+
+        Args:
+            to_email: Recipient email
+            first_name: Recipient's first name
+            icsr2024_attended: Whether they attended ICSR 2024
+            icsr2024_role: Their role at ICSR 2024 if attended
+            previous_donor: Whether they've donated before
+            last_donation_amount: Their last donation amount
+            last_donation_year: Year of last donation
+
+        Returns:
+            True if sent successfully
+        """
+        subject = "Support Shellfish Restoration Worldwide - ISRS"
+        preheader = f"{first_name}, your support helps restore shellfish ecosystems globally"
+
+        # Build personalized opening based on history
+        if previous_donor and last_donation_year:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Thank you for your generous support of ISRS{f' in {last_donation_year}' if last_donation_year else ''}!
+                Your {'$' + f'{last_donation_amount:.0f} ' if last_donation_amount else ''}contribution made a real difference
+                in our mission to restore shellfish ecosystems worldwide.
+            </p>
+            """
+        elif icsr2024_attended:
+            role_text = {
+                "speaker": "presenting your research",
+                "poster": "sharing your poster presentation",
+                "exhibitor": "exhibiting",
+                "attendee": "joining us"
+            }.get(icsr2024_role, "participating")
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                It was wonderful having you at ICSR 2024! Thank you for {role_text} and being part of our
+                global community dedicated to shellfish restoration.
+            </p>
+            """
+        else:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                As someone who cares about marine ecosystems, you understand the critical role shellfish
+                play in our coastal waters. ISRS is working to restore these vital ecosystems worldwide.
+            </p>
+            """
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Dear {first_name}, 🐚
+        </h1>
+
+        {opening}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
+            Today, I'm asking for your support to help ISRS continue its important work connecting
+            researchers, practitioners, and advocates working to restore shellfish populations around the globe.
+        </p>
+
+        {get_info_box_html(f'''
+            <p style="margin: 0 0 15px 0; font-size: 15px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
+                Your donation supports:
+            </p>
+            <ul style="margin: 0; padding-left: 20px; color: {BRAND_COLORS["text_dark"]}; font-size: 14px; line-height: 1.8;">
+                <li>International conferences bringing together restoration experts</li>
+                <li>Student travel grants and early-career researcher support</li>
+                <li>Educational resources and best practices documentation</li>
+                <li>Global network building and knowledge sharing</li>
+            </ul>
+        ''')}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 30px 0 15px 0; font-weight: 600;">
+            Giving Levels
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 25px;">
+            <tr>
+                <td style="padding: 12px 15px; background: #f8fafc; border-left: 4px solid {BRAND_COLORS['accent_teal']}; margin-bottom: 8px;">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Friend</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $25-$99</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">Recognition on our website donors page</span>
+                </td>
+            </tr>
+            <tr><td style="height: 8px;"></td></tr>
+            <tr>
+                <td style="padding: 12px 15px; background: #f0f7ff; border-left: 4px solid {BRAND_COLORS['secondary_blue']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Supporter</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $100-$249</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">Website recognition + ISRS newsletter mention</span>
+                </td>
+            </tr>
+            <tr><td style="height: 8px;"></td></tr>
+            <tr>
+                <td style="padding: 12px 15px; background: #e8f4f8; border-left: 4px solid {BRAND_COLORS['primary_blue']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Patron</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $250-$499</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">Above benefits + conference registration discount</span>
+                </td>
+            </tr>
+            <tr><td style="height: 8px;"></td></tr>
+            <tr>
+                <td style="padding: 12px 15px; background: linear-gradient(135deg, #e8f4f8 0%, #d0e8f7 100%); border-left: 4px solid {BRAND_COLORS['success_green']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Champion</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $500+</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">All benefits + VIP reception at ICSR conferences</span>
+                </td>
+            </tr>
+        </table>
+
+        {get_button_html("Make a Donation", "https://www.shellfish-society.org/donate.html", BRAND_COLORS['success_green'])}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 20px 0 0 0; text-align: center;">
+            ISRS is a 501(c)(3) nonprofit organization. Your donation is tax-deductible to the extent allowed by law.<br>
+            EIN: [EIN NUMBER]
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Dear {first_name},
+
+{'Thank you for your generous support of ISRS! Your contribution made a real difference.' if previous_donor else ''}
+{'It was wonderful having you at ICSR 2024!' if icsr2024_attended else ''}
+
+Today, I'm asking for your support to help ISRS continue its important work connecting researchers, practitioners, and advocates working to restore shellfish populations around the globe.
+
+Your donation supports:
+• International conferences bringing together restoration experts
+• Student travel grants and early-career researcher support
+• Educational resources and best practices documentation
+• Global network building and knowledge sharing
+
+Giving Levels:
+• Friend ($25-$99) - Website recognition
+• Supporter ($100-$249) - Website + newsletter mention
+• Patron ($250-$499) - Above + conference discount
+• Champion ($500+) - All benefits + VIP reception
+
+Donate: https://www.shellfish-society.org/donate.html
+
+ISRS is a 501(c)(3) nonprofit. Your donation is tax-deductible.
+
+Thank you for supporting shellfish restoration worldwide!
+
+---
+International Shellfish Restoration Society
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
+    async def send_donation_request_icsr2026(
+        self,
+        to_email: str,
+        first_name: str,
+        icsr2024_attended: bool = False,
+        icsr2024_role: str = None,
+        icsr2024_donated: bool = False,
+        icsr2024_donation_amount: float = None,
+    ) -> bool:
+        """
+        Send donation solicitation email specifically for ICSR 2026 conference support.
+
+        Args:
+            to_email: Recipient email
+            first_name: Recipient's first name
+            icsr2024_attended: Whether they attended ICSR 2024
+            icsr2024_role: Their role at ICSR 2024
+            icsr2024_donated: Whether they donated to ICSR 2024
+            icsr2024_donation_amount: Amount donated to ICSR 2024
+
+        Returns:
+            True if sent successfully
+        """
+        subject = "Help Make ICSR 2026 Unforgettable - Bremerton, WA"
+        preheader = f"{first_name}, support the 7th International Conference on Shellfish Restoration"
+
+        # Build personalized content
+        if icsr2024_donated:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Your {'$' + f'{icsr2024_donation_amount:.0f} ' if icsr2024_donation_amount else ''}donation to ICSR 2024
+                helped make it one of our most successful conferences yet. Thank you! Now we're gearing up for
+                ICSR 2026 in beautiful Bremerton, Washington, and we hope you'll consider supporting us again.
+            </p>
+            """
+        elif icsr2024_attended:
+            role_memories = {
+                "speaker": "Your presentation was a highlight of the conference",
+                "poster": "Your poster contributed valuable research to our community",
+                "exhibitor": "Your exhibit helped connect attendees with important resources",
+                "attendee": "We hope you found the sessions valuable and the connections meaningful"
+            }
+            memory = role_memories.get(icsr2024_role, "We hope you had a great experience")
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                {memory}! As we prepare for ICSR 2026, we're reaching out to our community
+                members to help make this conference even better.
+            </p>
+            """
+        else:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                ICSR 2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
+                This conference brings together researchers, restoration practitioners, and advocates from around
+                the world to share knowledge and advance shellfish restoration.
+            </p>
+            """
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Support ICSR 2026! 🌊
+        </h1>
+
+        {opening}
+
+        {get_info_box_html(f'''
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Conference:</span>
+                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; font-weight: 500; margin-left: 8px;">7th International Conference on Shellfish Restoration</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Location:</span>
+                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; margin-left: 8px;">Bremerton, Washington, USA</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Date:</span>
+                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; margin-left: 8px;">2026</span>
+                    </td>
+                </tr>
+            </table>
+        ''')}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 25px 0;">
+            Your donation directly supports:
+        </p>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🎓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Student Travel Grants</strong> — Help the next generation attend</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🎤</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Keynote Speakers</strong> — Bring world-class experts to share insights</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🚐</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Field Trips</strong> — Tours to local restoration sites</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0;">
+                    <span style="font-size: 18px; margin-right: 10px;">🤝</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Networking Events</strong> — Foster collaboration and partnerships</span>
+                </td>
+            </tr>
+        </table>
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 30px 0 15px 0; font-weight: 600;">
+            Conference Support Levels
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 25px;">
+            <tr>
+                <td style="padding: 12px 15px; background: #f8fafc; border-left: 4px solid {BRAND_COLORS['accent_teal']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Friend</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $50-$149</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">Name in conference program</span>
+                </td>
+            </tr>
+            <tr><td style="height: 8px;"></td></tr>
+            <tr>
+                <td style="padding: 12px 15px; background: #f0f7ff; border-left: 4px solid {BRAND_COLORS['secondary_blue']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Supporter</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $150-$299</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">Program recognition + conference swag bag</span>
+                </td>
+            </tr>
+            <tr><td style="height: 8px;"></td></tr>
+            <tr>
+                <td style="padding: 12px 15px; background: #e8f4f8; border-left: 4px solid {BRAND_COLORS['primary_blue']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Patron</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $300-$499</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">Above + reserved seating at keynotes</span>
+                </td>
+            </tr>
+            <tr><td style="height: 8px;"></td></tr>
+            <tr>
+                <td style="padding: 12px 15px; background: linear-gradient(135deg, #e8f4f8 0%, #d0e8f7 100%); border-left: 4px solid {BRAND_COLORS['success_green']};">
+                    <strong style="color: {BRAND_COLORS['primary_blue']};">Champion</strong> <span style="color: {BRAND_COLORS['text_muted']};">— $500+</span><br>
+                    <span style="font-size: 13px; color: {BRAND_COLORS['text_dark']};">All benefits + VIP reception with speakers</span>
+                </td>
+            </tr>
+        </table>
+
+        {get_button_html("Support ICSR 2026", "https://www.shellfish-society.org/icsr2026.html#donate", BRAND_COLORS['success_green'])}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 20px 0 0 0; text-align: center;">
+            All donations are tax-deductible. ISRS EIN: [EIN NUMBER]
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Support ICSR 2026!
+
+{'Thank you for your donation to ICSR 2024!' if icsr2024_donated else ''}
+{'We hope you enjoyed ICSR 2024!' if icsr2024_attended else ''}
+
+ICSR 2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
+
+Your donation directly supports:
+• Student Travel Grants
+• Keynote Speakers
+• Field Trips to restoration sites
+• Networking Events
+
+Conference Support Levels:
+• Friend ($50-$149) - Name in program
+• Supporter ($150-$299) - Program + swag bag
+• Patron ($300-$499) - Above + reserved seating
+• Champion ($500+) - All benefits + VIP reception
+
+Support ICSR 2026: https://www.shellfish-society.org/icsr2026.html#donate
+
+All donations are tax-deductible.
+
+---
+International Shellfish Restoration Society
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
+    # =========================================================================
+    # SPEAKER/PRESENTER INVITATION EMAILS
+    # =========================================================================
+
+    async def send_speaker_invitation(
+        self,
+        to_email: str,
+        first_name: str,
+        last_name: str,
+        icsr2024_speaker: bool = False,
+        icsr2024_talk_title: str = None,
+        suggested_topic: str = None,
+        session_type: str = "oral",  # "oral", "keynote", "panel"
+        abstract_deadline: str = None,
+        travel_support_available: bool = False,
+    ) -> bool:
+        """
+        Send invitation to speak at ICSR 2026.
+
+        Args:
+            to_email: Recipient email
+            first_name: Speaker's first name
+            last_name: Speaker's last name
+            icsr2024_speaker: Whether they spoke at ICSR 2024
+            icsr2024_talk_title: Title of their ICSR 2024 talk
+            suggested_topic: Suggested topic for their talk
+            session_type: Type of session (oral, keynote, panel)
+            abstract_deadline: Abstract submission deadline
+            travel_support_available: Whether travel support is available
+
+        Returns:
+            True if sent successfully
+        """
+        session_labels = {
+            "oral": "oral presentation",
+            "keynote": "keynote address",
+            "panel": "panel discussion"
+        }
+        session_label = session_labels.get(session_type, "presentation")
+
+        subject = f"Invitation to Speak at ICSR 2026 - {first_name}"
+        preheader = f"We'd love to have you present at the 7th International Conference on Shellfish Restoration"
+
+        # Build personalized opening
+        if icsr2024_speaker and icsr2024_talk_title:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Your presentation at ICSR 2024 — <em>"{icsr2024_talk_title}"</em> — was a highlight of the conference
+                and generated excellent discussion among attendees. We would be honored to have you return as a
+                speaker at ICSR 2026!
+            </p>
+            """
+        elif icsr2024_speaker:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Thank you for your excellent contribution to ICSR 2024! Your presentation was well-received,
+                and we would be honored to have you return as a speaker at ICSR 2026.
+            </p>
+            """
+        else:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Your work in shellfish restoration has made a significant impact on our field. We would be
+                honored to have you share your expertise as a speaker at ICSR 2026.
+            </p>
+            """
+
+        topic_section = ""
+        if suggested_topic:
+            topic_section = f"""
+            {get_info_box_html(f'''
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">Suggested Topic:</p>
+                <p style="margin: 0; font-size: 15px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 500;">{suggested_topic}</p>
+                <p style="margin: 10px 0 0 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">
+                    (Of course, we welcome your own topic ideas as well!)
+                </p>
+            ''')}
+            """
+
+        travel_section = ""
+        if travel_support_available:
+            travel_section = f"""
+            {get_success_box_html(f'''
+                <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
+                    <strong>✈️ Travel Support Available:</strong> Limited travel grants are available for speakers.
+                    Let us know if you need assistance with travel or accommodation.
+                </p>
+            ''')}
+            """
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Dear Dr. {last_name}, 🎤
+        </h1>
+
+        {opening}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
+            We are pleased to invite you to deliver a <strong>{session_label}</strong> at the
+            7th International Conference on Shellfish Restoration (ICSR 2026) in Bremerton, Washington.
+        </p>
+
+        {topic_section}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Conference Details
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 120px;">Event:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">ICSR 2026</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 120px;">Location:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Bremerton, Washington, USA</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 120px;">Session Type:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px; text-transform: capitalize;">{session_label}</span>
+                </td>
+            </tr>
+            {f'''<tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 120px;">Abstract Due:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 500;">{abstract_deadline}</span>
+                </td>
+            </tr>''' if abstract_deadline else ''}
+        </table>
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Speaker Benefits
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Complimentary conference registration</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Speaker reception and networking events</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Presentation featured in conference proceedings</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Discounted hotel rates at conference venues</span>
+                </td>
+            </tr>
+        </table>
+
+        {travel_section}
+
+        {get_button_html("Accept Invitation", "https://www.shellfish-society.org/icsr2026.html#speakers")}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.7; margin: 25px 0;">
+            Please reply to this email to confirm your interest or if you have any questions.
+            We would be happy to discuss session topics, timing, or any other details.
+        </p>
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0;">
+            We hope to welcome you to Bremerton!
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Dear Dr. {last_name},
+
+{'Your presentation at ICSR 2024 was a highlight of the conference!' if icsr2024_speaker else 'Your work in shellfish restoration has made a significant impact.'}
+
+We are pleased to invite you to deliver a {session_label} at ICSR 2026 in Bremerton, Washington.
+
+{f'Suggested Topic: {suggested_topic}' if suggested_topic else ''}
+
+Conference Details:
+• Event: ICSR 2026
+• Location: Bremerton, Washington, USA
+• Session Type: {session_label.title()}
+{f'• Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
+
+Speaker Benefits:
+✓ Complimentary conference registration
+✓ Speaker reception and networking events
+✓ Presentation in conference proceedings
+✓ Discounted hotel rates
+
+{'Travel Support: Limited travel grants are available for speakers.' if travel_support_available else ''}
+
+Please reply to this email to confirm your interest or discuss details.
+
+Learn more: https://www.shellfish-society.org/icsr2026.html#speakers
+
+We hope to welcome you to Bremerton!
+
+---
+International Shellfish Restoration Society
+ICSR 2026 Program Committee
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
+    async def send_poster_presenter_invitation(
+        self,
+        to_email: str,
+        first_name: str,
+        last_name: str,
+        icsr2024_poster: bool = False,
+        icsr2024_poster_title: str = None,
+        abstract_deadline: str = None,
+        student_rate_available: bool = True,
+    ) -> bool:
+        """
+        Send invitation to present a poster at ICSR 2026.
+
+        Args:
+            to_email: Recipient email
+            first_name: Presenter's first name
+            last_name: Presenter's last name
+            icsr2024_poster: Whether they presented a poster at ICSR 2024
+            icsr2024_poster_title: Title of their ICSR 2024 poster
+            abstract_deadline: Abstract submission deadline
+            student_rate_available: Whether student rates apply
+
+        Returns:
+            True if sent successfully
+        """
+        subject = f"Present Your Research at ICSR 2026 - Poster Session"
+        preheader = f"{first_name}, share your shellfish restoration research at ICSR 2026"
+
+        if icsr2024_poster and icsr2024_poster_title:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Your poster at ICSR 2024 — <em>"{icsr2024_poster_title}"</em> — sparked great conversations
+                and showcased important work in our field. We'd love to see you share your latest research
+                at ICSR 2026!
+            </p>
+            """
+        elif icsr2024_poster:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Thank you for presenting your research at ICSR 2024! Your poster was a valuable addition
+                to the conference. We hope you'll join us again at ICSR 2026 with your latest findings.
+            </p>
+            """
+        else:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                We invite you to present your shellfish restoration research at ICSR 2026! Our poster sessions
+                are an excellent opportunity to share your work, get feedback, and connect with researchers
+                from around the world.
+            </p>
+            """
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Call for Posters 📊
+        </h1>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 10px 0;">
+            Dear {first_name},
+        </p>
+
+        {opening}
+
+        {get_info_box_html(f'''
+            <p style="margin: 0 0 10px 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
+                <strong>ICSR 2026 Poster Session</strong>
+            </p>
+            <p style="margin: 0 0 5px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">
+                📍 Bremerton, Washington, USA
+            </p>
+            {f'<p style="margin: 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};"><strong>Abstract Deadline:</strong> {abstract_deadline}</p>' if abstract_deadline else ''}
+        ''')}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Why Present a Poster?
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">💬</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Direct feedback</strong> from experts in your field</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🤝</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Network</strong> with potential collaborators</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">📝</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Publication</strong> in conference proceedings</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0;">
+                    <span style="font-size: 18px; margin-right: 10px;">🏆</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Awards</strong> for best student posters</span>
+                </td>
+            </tr>
+        </table>
+
+        {get_success_box_html(f'''
+            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
+                <strong>🎓 Student Presenters:</strong> Reduced registration rates available!
+                Student travel grants may also be available.
+            </p>
+        ''') if student_rate_available else ''}
+
+        {get_button_html("Submit Your Abstract", "https://www.shellfish-society.org/icsr2026.html#abstracts")}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+            Questions about poster presentations? Reply to this email.
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Call for Posters - ICSR 2026
+
+Dear {first_name},
+
+{'Your poster at ICSR 2024 sparked great conversations!' if icsr2024_poster else 'We invite you to present your research at ICSR 2026!'}
+
+ICSR 2026 Poster Session
+📍 Bremerton, Washington, USA
+{f'Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
+
+Why Present a Poster?
+• Direct feedback from experts in your field
+• Network with potential collaborators
+• Publication in conference proceedings
+• Awards for best student posters
+
+{'Student Presenters: Reduced registration rates and travel grants available!' if student_rate_available else ''}
+
+Submit Your Abstract: https://www.shellfish-society.org/icsr2026.html#abstracts
+
+Questions? Reply to this email.
+
+---
+International Shellfish Restoration Society
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
+    async def send_student_invitation(
+        self,
+        to_email: str,
+        first_name: str,
+        icsr2024_attended: bool = False,
+        icsr2024_role: str = None,
+        university: str = None,
+        travel_grant_available: bool = True,
+        abstract_deadline: str = None,
+    ) -> bool:
+        """
+        Send invitation to students to attend ICSR 2026.
+
+        Args:
+            to_email: Recipient email
+            first_name: Student's first name
+            icsr2024_attended: Whether they attended ICSR 2024
+            icsr2024_role: Their role at ICSR 2024
+            university: Student's university
+            travel_grant_available: Whether travel grants are available
+            abstract_deadline: Abstract submission deadline
+
+        Returns:
+            True if sent successfully
+        """
+        subject = "ICSR 2026 Student Invitation - Shape the Future of Shellfish Restoration"
+        preheader = f"{first_name}, join the next generation of shellfish restoration leaders"
+
+        if icsr2024_attended:
+            role_text = {
+                "poster": "presenting your poster",
+                "attendee": "joining us",
+                "volunteer": "volunteering"
+            }.get(icsr2024_role, "participating")
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                It was great having you at ICSR 2024! Thank you for {role_text} — your energy and fresh
+                perspectives are exactly what our community needs. We hope you'll join us again at ICSR 2026!
+            </p>
+            """
+        else:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                As a student{f' at {university}' if university else ''} interested in marine science and conservation,
+                you have the opportunity to help shape the future of shellfish restoration. ICSR 2026 is the
+                perfect place to learn from leading experts and launch your career in this vital field.
+            </p>
+            """
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Students Welcome! 🎓
+        </h1>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 10px 0;">
+            Dear {first_name},
+        </p>
+
+        {opening}
+
+        {get_info_box_html(f'''
+            <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
+                🐚 ICSR 2026 — Bremerton, Washington
+            </p>
+            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
+                The 7th International Conference on Shellfish Restoration brings together researchers,
+                practitioners, and students from around the world.
+            </p>
+        ''')}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Why Attend as a Student?
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🔬</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Learn</strong> cutting-edge restoration techniques</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">🤝</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Network</strong> with future employers and mentors</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="font-size: 18px; margin-right: 10px;">📊</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Present</strong> your research (posters welcome!)</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0;">
+                    <span style="font-size: 18px; margin-right: 10px;">🌍</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;"><strong>Connect</strong> with a global community</span>
+                </td>
+            </tr>
+        </table>
+
+        {get_success_box_html(f'''
+            <p style="margin: 0 0 10px 0; font-size: 15px; color: {BRAND_COLORS["text_dark"]}; font-weight: 600;">
+                💰 Student Benefits:
+            </p>
+            <ul style="margin: 0; padding-left: 20px; color: {BRAND_COLORS["text_dark"]}; font-size: 14px; line-height: 1.8;">
+                <li><strong>Reduced registration fee</strong> for students</li>
+                {'<li><strong>Travel grants</strong> available (apply early!)</li>' if travel_grant_available else ''}
+                <li><strong>Best poster awards</strong> with cash prizes</li>
+                <li><strong>Student mixer</strong> networking event</li>
+            </ul>
+        ''')}
+
+        {f'''
+        {get_warning_box_html(f"""
+            <p style="margin: 0; font-size: 14px; color: #92400e;">
+                <strong>📅 Important Deadline:</strong> Abstract submissions due {abstract_deadline}.
+                Don't miss your chance to present!
+            </p>
+        """)}
+        ''' if abstract_deadline else ''}
+
+        {get_button_html("Register as Student", "https://www.shellfish-society.org/icsr2026.html#register")}
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+            Questions? Reply to this email or contact us at info@shellfish-society.org
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Students Welcome - ICSR 2026!
+
+Dear {first_name},
+
+{'Great to have you at ICSR 2024!' if icsr2024_attended else f'As a student{f" at {university}" if university else ""}, you have the opportunity to shape the future of shellfish restoration.'}
+
+ICSR 2026 — Bremerton, Washington
+The 7th International Conference on Shellfish Restoration
+
+Why Attend as a Student?
+• Learn cutting-edge restoration techniques
+• Network with future employers and mentors
+• Present your research (posters welcome!)
+• Connect with a global community
+
+Student Benefits:
+• Reduced registration fee
+{'• Travel grants available (apply early!)' if travel_grant_available else ''}
+• Best poster awards with cash prizes
+• Student mixer networking event
+
+{f'Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
+
+Register: https://www.shellfish-society.org/icsr2026.html#register
+
+Questions? Reply to this email.
+
+---
+International Shellfish Restoration Society
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
+    async def send_exhibitor_invitation(
+        self,
+        to_email: str,
+        contact_name: str,
+        company_name: str,
+        icsr2024_exhibitor: bool = False,
+        booth_price: float = None,
+        early_bird_deadline: str = None,
+        expected_attendance: int = None,
+    ) -> bool:
+        """
+        Send exhibitor booth invitation for ICSR 2026.
+
+        Args:
+            to_email: Recipient email
+            contact_name: Contact person's name
+            company_name: Company/organization name
+            icsr2024_exhibitor: Whether they exhibited at ICSR 2024
+            booth_price: Booth price
+            early_bird_deadline: Early bird pricing deadline
+            expected_attendance: Expected conference attendance
+
+        Returns:
+            True if sent successfully
+        """
+        subject = f"Exhibit at ICSR 2026 - {company_name}"
+        preheader = f"Reach {expected_attendance or 300}+ shellfish restoration professionals"
+
+        if icsr2024_exhibitor:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                Thank you for exhibiting at ICSR 2024! Your booth was a valuable resource for our attendees,
+                and we received positive feedback about {company_name}'s presence. We'd love to have you
+                back at ICSR 2026 in Bremerton, Washington.
+            </p>
+            """
+        else:
+            opening = f"""
+            <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
+                ICSR 2026 offers an excellent opportunity for {company_name} to connect with
+                {expected_attendance or 300}+ researchers, practitioners, and decision-makers working in
+                shellfish restoration worldwide.
+            </p>
+            """
+
+        price_section = ""
+        if booth_price:
+            price_section = f"""
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 140px;">Booth Fee:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px; font-weight: 600;">${booth_price:,.0f}</span>
+                </td>
+            </tr>
+            """
+
+        content = f"""
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
+            Exhibit at ICSR 2026 🏢
+        </h1>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 10px 0;">
+            Dear {contact_name},
+        </p>
+
+        {opening}
+
+        {get_info_box_html(f'''
+            <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
+                📍 ICSR 2026 — Bremerton, Washington
+            </p>
+            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
+                7th International Conference on Shellfish Restoration
+            </p>
+        ''')}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Exhibitor Package Includes:
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">6' draped table with chairs</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Company signage</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Two exhibitor registrations (full conference access)</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Listing in conference program and website</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Access to attendee list (with permission)</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['success_green']}; margin-right: 8px;">✓</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Wifi and electrical access</span>
+                </td>
+            </tr>
+        </table>
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Details
+        </h2>
+
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 140px;">Expected Attendance:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">{expected_attendance or '300'}+ professionals</span>
+                </td>
+            </tr>
+            {price_section}
+            <tr>
+                <td style="padding: 8px 0;">
+                    <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 140px;">Exhibit Days:</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Full conference duration</span>
+                </td>
+            </tr>
+        </table>
+
+        {f'''
+        {get_warning_box_html(f"""
+            <p style="margin: 0; font-size: 14px; color: #92400e;">
+                <strong>⏰ Early Bird Pricing:</strong> Reserve your booth by {early_bird_deadline} for priority placement!
+            </p>
+        """)}
+        ''' if early_bird_deadline else ''}
+
+        <h2 style="color: {BRAND_COLORS['primary_blue']}; font-size: 18px; margin: 25px 0 15px 0; font-weight: 600;">
+            Who Attends ICSR?
+        </h2>
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 14px; line-height: 1.7; margin: 0 0 20px 0;">
+            Researchers • Restoration practitioners • Government agencies • NGOs •
+            Equipment manufacturers • Hatchery operators • Consulting firms • Students
+        </p>
+
+        {get_button_html("Reserve Your Booth", "https://www.shellfish-society.org/icsr2026.html#exhibit")}
+
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.7; margin: 25px 0;">
+            Reply to this email to reserve your booth or discuss your needs.
+            {'As a returning exhibitor, you have priority booth placement!' if icsr2024_exhibitor else 'Booths are assigned on a first-come, first-served basis.'}
+        </p>
+        """
+
+        html_content = get_base_template(content, preheader)
+
+        text_content = f"""
+Exhibit at ICSR 2026
+
+Dear {contact_name},
+
+{'Thank you for exhibiting at ICSR 2024! We would love to have {company_name} back.' if icsr2024_exhibitor else f'ICSR 2026 offers an excellent opportunity for {company_name} to connect with {expected_attendance or 300}+ professionals.'}
+
+ICSR 2026 — Bremerton, Washington
+7th International Conference on Shellfish Restoration
+
+Exhibitor Package Includes:
+✓ 6' draped table with chairs
+✓ Company signage
+✓ Two exhibitor registrations
+✓ Listing in program and website
+✓ Access to attendee list
+✓ Wifi and electrical access
+
+Details:
+• Expected Attendance: {expected_attendance or 300}+ professionals
+{f'• Booth Fee: ${booth_price:,.0f}' if booth_price else ''}
+• Exhibit Days: Full conference
+
+{f'Early Bird Deadline: {early_bird_deadline}' if early_bird_deadline else ''}
+
+Who Attends: Researchers, restoration practitioners, government agencies, NGOs, equipment manufacturers, hatchery operators, consulting firms, students
+
+Reserve Your Booth: https://www.shellfish-society.org/icsr2026.html#exhibit
+
+Reply to this email to reserve or discuss your needs.
+
+---
+International Shellfish Restoration Society
+        """
+
+        return await self.send_email(to_email, subject, html_content, text_content)
+
 
 # Global email service instance
 email_service = EmailService()
