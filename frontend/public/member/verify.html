@@ -96,6 +96,50 @@
     const errorState = document.getElementById('errorState');
     const errorMessage = document.getElementById('errorMessage');
 
+    // Constants for smart redirect logic
+    const PROFILE_UPDATE_PROMPT_KEY = 'isrs_last_profile_update_prompt';
+    const PROFILE_UPDATE_INTERVAL_DAYS = 30;
+    const MINIMUM_COMPLETION_SCORE = 50;
+
+    /**
+     * Check if user should be prompted to update their profile
+     * Returns true if 30+ days since last prompt
+     */
+    function shouldPromptForProfileUpdate() {
+      const lastPrompt = localStorage.getItem(PROFILE_UPDATE_PROMPT_KEY);
+      if (!lastPrompt) {
+        return true; // Never prompted before
+      }
+
+      const lastPromptDate = new Date(parseInt(lastPrompt));
+      const now = new Date();
+      const daysSincePrompt = (now - lastPromptDate) / (1000 * 60 * 60 * 24);
+
+      return daysSincePrompt >= PROFILE_UPDATE_INTERVAL_DAYS;
+    }
+
+    /**
+     * Mark that we prompted the user to update their profile
+     */
+    function markProfileUpdatePrompted() {
+      localStorage.setItem(PROFILE_UPDATE_PROMPT_KEY, Date.now().toString());
+    }
+
+    /**
+     * Determine the correct portal destination based on user role
+     */
+    function getPortalDestination(profile) {
+      const role = profile.role || 'member';
+
+      // Admin and board members go to admin portal
+      if (role === 'admin' || role === 'board_member') {
+        return '/admin/index.html';
+      }
+
+      // All others go to member portal
+      return '/member/index.html';
+    }
+
     async function verifyLogin() {
       // Get token from URL
       const urlParams = new URLSearchParams(window.location.search);
@@ -117,7 +161,7 @@
 
         console.log('Magic link verified successfully');
 
-        // Step 2: Get profile to check if first-time setup is needed
+        // Step 2: Get profile to check completion and role
         console.log('Fetching user profile...');
         const profileResponse = await MemberAuth.getProfile();
 
@@ -125,20 +169,42 @@
           throw new Error('Failed to load profile');
         }
 
-        // Step 3: Redirect based on setup status
-        // Note: Backend returns profile data directly, not wrapped in {success, data}
+        // Step 3: Smart redirect logic
         const requiresSetup = profileResponse.requiresFirstTimeSetup;
+        const completionScore = profileResponse.profile_completion_score || 0;
+        const hasCompletedBasicInfo = completionScore >= MINIMUM_COMPLETION_SCORE;
 
-        console.log('Setup required:', requiresSetup);
+        console.log('Profile completion score:', completionScore);
+        console.log('Has completed basic info:', hasCompletedBasicInfo);
+        console.log('Setup required flag:', requiresSetup);
 
-        if (requiresSetup) {
-          // First-time user or incomplete profile - go to welcome page
+        // Check if there was a specific redirect URL requested
+        const explicitRedirect = urlParams.get('redirect');
+        if (explicitRedirect) {
+          // User was trying to access a specific page, honor that request
+          console.log('Redirecting to explicitly requested URL:', explicitRedirect);
+          window.location.href = explicitRedirect;
+          return;
+        }
+
+        if (requiresSetup || !hasCompletedBasicInfo) {
+          // First-time user or incomplete profile - go to welcome/profile setup
+          console.log('Redirecting to profile setup (incomplete profile)');
           window.location.href = '/member/welcome.html';
         } else {
-          // Returning user with complete profile - go to profile page
-          // Check if there was a redirect URL specified
-          const redirectUrl = urlParams.get('redirect') || '/member/profile.html';
-          window.location.href = redirectUrl;
+          // User has completed basic profile (50%+ completion)
+          // Check if we should prompt for profile update
+          if (shouldPromptForProfileUpdate()) {
+            console.log('Prompting for profile update (30+ days since last prompt)');
+            markProfileUpdatePrompted();
+            // Redirect to profile page with a message to review/update
+            window.location.href = '/member/profile.html?review=true';
+          } else {
+            // Redirect to appropriate portal based on role
+            const destination = getPortalDestination(profileResponse);
+            console.log('Redirecting to portal:', destination);
+            window.location.href = destination;
+          }
         }
 
       } catch (error) {

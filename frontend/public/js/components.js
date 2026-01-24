@@ -5376,7 +5376,7 @@ function loadHeader() {
           </a>
         </div>
         <div class="control-divider"></div>
-        <a href="/login.html" class="control-btn user-profile-btn" id="user-profile-btn" aria-label="Login / Member Portal" title="Login / Member Portal">
+        <a href="/login.html" class="control-btn user-profile-btn" id="user-profile-btn" aria-label="Login / Member Portal" title="Login / Member Portal" target="_blank" rel="noopener noreferrer">
           <span aria-hidden="true">🦪</span>
         </a>
       </div>
@@ -5781,19 +5781,25 @@ function updateUserProfileButton() {
       } else {
         // Advisory and other members go to member portal
         profileBtn.href = '/member/profile.html';
-        profileBtn.setAttribute('aria-label', 'My Profile');
-        profileBtn.setAttribute('title', 'My Profile');
+        profileBtn.setAttribute('target', '_blank');
+        profileBtn.setAttribute('rel', 'noopener noreferrer');
+        profileBtn.setAttribute('aria-label', 'My Profile (opens in new window)');
+        profileBtn.setAttribute('title', 'My Profile (opens in new window)');
       }
     } else {
       // User is not logged in - go to login page
       profileBtn.href = '/login.html';
-      profileBtn.setAttribute('aria-label', 'Login');
-      profileBtn.setAttribute('title', 'Login');
+      profileBtn.setAttribute('target', '_blank');
+      profileBtn.setAttribute('rel', 'noopener noreferrer');
+      profileBtn.setAttribute('aria-label', 'Login (opens in new window)');
+      profileBtn.setAttribute('title', 'Login (opens in new window)');
     }
   } catch (error) {
     console.error('Error updating profile button:', error);
     // Default to login page on error
     profileBtn.href = '/login.html';
+    profileBtn.setAttribute('target', '_blank');
+    profileBtn.setAttribute('rel', 'noopener noreferrer');
   }
 }
 

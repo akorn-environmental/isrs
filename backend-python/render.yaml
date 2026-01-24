@@ -38,5 +38,14 @@ services:
         value: INFO
       - key: DEBUG
         value: false
+      # AWS S3 Configuration (for photo/asset uploads)
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: us-east-1
+      - key: AWS_BUCKET_NAME
+        value: isrs-assets
     healthCheckPath: /health
     autoDeploy: true

@@ -1130,7 +1130,80 @@
     });
 
     // Load profile on page load
-    document.addEventListener('DOMContentLoaded', loadProfile);
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadProfile();
+
+      // Check if user was redirected for profile review
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('review') === 'true') {
+        showProfileReviewBanner();
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+
+    // Show a banner prompting user to review their profile
+    function showProfileReviewBanner() {
+      const banner = document.createElement('div');
+      banner.id = 'profileReviewBanner';
+      banner.style.cssText = `
+        background: linear-gradient(135deg, #e8f4fd 0%, #d0e8f7 100%);
+        border: 1px solid var(--primary-blue);
+        border-radius: 8px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      `;
+
+      banner.innerHTML = `
+        <div style="flex: 1; min-width: 250px;">
+          <strong style="color: var(--primary-blue); font-size: 1.1rem;">👋 Time to review your profile!</strong>
+          <p style="margin: 0.5rem 0 0; color: var(--text-color); font-size: 0.95rem;">
+            It's been a while since your last update. Please take a moment to ensure your information is current.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button onclick="enableEditMode(); closeBanner();" class="btn btn-primary" style="white-space: nowrap;">
+            Update Profile
+          </button>
+          <button onclick="skipReviewAndRedirect();" class="btn btn-secondary" style="white-space: nowrap;">
+            Skip for Now
+          </button>
+        </div>
+      `;
+
+      // Insert banner at the top of the container
+      const container = document.querySelector('.container');
+      container.insertBefore(banner, container.firstChild);
+    }
+
+    // Close the review banner
+    function closeBanner() {
+      const banner = document.getElementById('profileReviewBanner');
+      if (banner) banner.remove();
+    }
+
+    // Skip review and redirect to the appropriate portal
+    async function skipReviewAndRedirect() {
+      closeBanner();
+
+      // Determine correct portal based on role
+      const profile = profileData?.profile;
+      if (profile) {
+        const role = profile.role || 'member';
+        if (role === 'admin' || role === 'board_member') {
+          window.location.href = '/admin/index.html';
+        } else {
+          window.location.href = '/member/index.html';
+        }
+      } else {
+        window.location.href = '/member/index.html';
+      }
+    }
 
     // Restart member portal tour
     function restartMemberTour() {

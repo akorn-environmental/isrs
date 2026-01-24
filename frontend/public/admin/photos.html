@@ -212,6 +212,90 @@
       background: #8b5cf6;
     }
 
+    .photo-badge.pending {
+      background: #f59e0b;
+    }
+
+    .photo-badge.approved {
+      background: #10b981;
+    }
+
+    .photo-badge.rejected {
+      background: #ef4444;
+    }
+
+    .admin-tab .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      margin-left: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #f59e0b;
+      color: white;
+      border-radius: 10px;
+    }
+
+    .approval-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--admin-border, #e5e7eb);
+    }
+
+    .btn-approve {
+      background: #10b981;
+      color: white;
+      border: none;
+    }
+
+    .btn-approve:hover {
+      background: #059669;
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+      border: none;
+    }
+
+    .btn-reject:hover {
+      background: #dc2626;
+    }
+
+    .license-info {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+    }
+
+    .license-info h4 {
+      margin: 0 0 0.5rem;
+      color: #10b981;
+      font-size: 0.875rem;
+    }
+
+    .rejection-form {
+      margin-top: 1rem;
+    }
+
+    .rejection-form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--admin-border, #d1d5db);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      resize: vertical;
+      min-height: 80px;
+    }
+
     .photo-card-actions {
       position: absolute;
       top: 0.5rem;
@@ -529,7 +613,11 @@
           <div class="photo-stats" id="photoStats">
             <div class="photo-stat">
               <div class="number" id="totalPhotos">-</div>
-              <div class="label">Total Photos</div>
+              <div class="label">Total</div>
+            </div>
+            <div class="photo-stat">
+              <div class="number" id="pendingPhotos" style="color: #f59e0b;">-</div>
+              <div class="label">Pending</div>
             </div>
             <div class="photo-stat">
               <div class="number" id="publicPhotos">-</div>
@@ -545,6 +633,7 @@
         <!-- Tabs -->
         <div class="admin-tabs">
           <button class="admin-tab active" data-tab="gallery">Gallery</button>
+          <button class="admin-tab" data-tab="pending">Pending Approval <span class="badge" id="pendingBadge" style="display: none;">0</span></button>
           <button class="admin-tab" data-tab="upload">Upload Photos</button>
         </div>
 
@@ -572,6 +661,19 @@
             <div class="photos-loading">
               <div class="spinner"></div>
               <p>Loading photos...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Approval Tab -->
+        <div class="tab-panel" id="pending-panel">
+          <div class="admin-alert admin-alert-warning" style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 8px; background: #fef3c7; border: 1px solid #f59e0b;">
+            <strong>Review Required:</strong> These photos were submitted by users and require admin approval before appearing in the public gallery.
+          </div>
+          <div id="pendingContainer">
+            <div class="photos-loading">
+              <div class="spinner"></div>
+              <p>Loading pending photos...</p>
             </div>
           </div>
         </div>
@@ -712,6 +814,7 @@
       initTabs();
       initUploader();
       loadPhotos();
+      loadPendingPhotos();  // Load pending count for badge
       initFilters();
     });
 
@@ -728,6 +831,11 @@
           // Update panels
           document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
           document.getElementById(`${tabName}-panel`).classList.add('active');
+
+          // Load pending photos when switching to that tab
+          if (tabName === 'pending') {
+            loadPendingPhotos();
+          }
         });
       });
     }
@@ -867,11 +975,287 @@
       }
     }
 
+    // Pending photos array
+    let pendingPhotos = [];
+
     // Update statistics
     function updateStats() {
       document.getElementById('totalPhotos').textContent = allPhotos.length;
       document.getElementById('publicPhotos').textContent = allPhotos.filter(p => p.is_public).length;
       document.getElementById('aiAnalyzed').textContent = allPhotos.filter(p => p.ai_analysis).length;
+
+      // Update pending count
+      const pendingCount = pendingPhotos.length;
+      document.getElementById('pendingPhotos').textContent = pendingCount;
+
+      // Update badge
+      const badge = document.getElementById('pendingBadge');
+      if (pendingCount > 0) {
+        badge.textContent = pendingCount;
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // Load pending photos
+    async function loadPendingPhotos() {
+      const container = document.getElementById('pendingContainer');
+      const sessionToken = localStorage.getItem('isrs_session_token');
+
+      if (!sessionToken) {
+        container.innerHTML = '<p>Please log in to view pending photos.</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/photos/pending`, {
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.data) {
+          pendingPhotos = data.data;
+          updateStats();
+          renderPendingPhotos();
+        } else {
+          pendingPhotos = [];
+          updateStats();
+          container.innerHTML = `
+            <div class="photos-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <h3>All Caught Up!</h3>
+              <p>No photos are pending approval</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading pending photos:', error);
+        pendingPhotos = [];
+        updateStats();
+      }
+    }
+
+    // Render pending photos grid
+    function renderPendingPhotos() {
+      const container = document.getElementById('pendingContainer');
+
+      if (pendingPhotos.length === 0) {
+        container.innerHTML = `
+          <div class="photos-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h3>All Caught Up!</h3>
+            <p>No photos are pending approval</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="photo-grid">
+          ${pendingPhotos.map(photo => `
+            <div class="photo-card" onclick="openPendingPhotoModal(${photo.id})">
+              <div class="photo-card-image">
+                <img src="${photo.thumbnail_url || photo.url}" alt="${photo.caption || photo.original_filename}">
+                <div class="photo-card-badges">
+                  <span class="photo-badge pending">Pending</span>
+                  ${photo.ai_analysis ? '<span class="photo-badge ai">AI</span>' : ''}
+                </div>
+              </div>
+              <div class="photo-card-info">
+                <div class="photo-card-title">${photo.caption || photo.original_filename}</div>
+                <div class="photo-card-meta">
+                  <span>${photo.photographer_name || 'Unknown'}</span>
+                  <span>${formatDate(photo.uploaded_at)}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Open pending photo modal with approval options
+    function openPendingPhotoModal(photoId) {
+      const photo = pendingPhotos.find(p => p.id === photoId);
+      if (!photo) return;
+
+      currentPhoto = photo;
+
+      document.getElementById('modalTitle').textContent = 'Review Submission: ' + (photo.caption || photo.original_filename);
+      document.getElementById('modalImage').src = photo.url;
+      document.getElementById('modalImage').alt = photo.caption || '';
+
+      const details = document.getElementById('modalDetails');
+      const aiAnalysis = photo.ai_analysis;
+
+      details.innerHTML = `
+        <h3>Caption</h3>
+        <p>${photo.caption || 'No caption'}</p>
+
+        <h3>Description</h3>
+        <p>${photo.description || 'No description'}</p>
+
+        <h3>Submitted By</h3>
+        <p>
+          <strong>Photographer:</strong> ${photo.photographer_name || 'Not specified'}<br>
+          <strong>Copyright:</strong> ${photo.copyright_holder || photo.photographer_name || 'Not specified'}<br>
+          <strong>License:</strong> ${photo.license_type || 'All Rights Reserved'}<br>
+          <strong>Submitted:</strong> ${formatDate(photo.uploaded_at)}
+        </p>
+
+        ${photo.usage_rights_agreed || photo.liability_waiver_agreed ? `
+          <div class="license-info">
+            <h4>Legal Consent</h4>
+            <p>
+              ${photo.usage_rights_agreed ? '✅ Usage rights agreed' : '❌ Usage rights NOT agreed'}<br>
+              ${photo.liability_waiver_agreed ? '✅ Liability waiver agreed' : '❌ Liability waiver NOT agreed'}
+            </p>
+          </div>
+        ` : ''}
+
+        ${aiAnalysis ? `
+          <div class="photo-modal-ai">
+            <h4>🤖 AI Analysis</h4>
+            ${aiAnalysis.description ? `<p><strong>Description:</strong> ${aiAnalysis.description}</p>` : ''}
+            ${aiAnalysis.species && aiAnalysis.species.length > 0 ? `<p><strong>Species:</strong> ${aiAnalysis.species.join(', ')}</p>` : ''}
+          </div>
+        ` : ''}
+
+        <div class="approval-actions">
+          <button class="btn btn-approve" onclick="approvePhoto(${photo.id})">
+            ✅ Approve & Make Public
+          </button>
+          <button class="btn btn-secondary" onclick="approvePhoto(${photo.id}, false)">
+            ✅ Approve (Keep Private)
+          </button>
+          <button class="btn btn-reject" onclick="showRejectionForm(${photo.id})">
+            ❌ Reject
+          </button>
+        </div>
+
+        <div id="rejectionForm-${photo.id}" class="rejection-form" style="display: none;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Reason for rejection:</label>
+          <textarea id="rejectionNotes-${photo.id}" placeholder="Please provide a reason for rejection..."></textarea>
+          <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+            <button class="btn btn-danger" onclick="rejectPhoto(${photo.id})">Confirm Rejection</button>
+            <button class="btn btn-secondary" onclick="hideRejectionForm(${photo.id})">Cancel</button>
+          </div>
+        </div>
+      `;
+
+      // Hide standard footer buttons and show custom ones
+      document.getElementById('toggleVisibilityBtn').style.display = 'none';
+      document.getElementById('assignToZoneBtn').style.display = 'none';
+      document.getElementById('setFocalPointBtn').style.display = 'none';
+
+      document.getElementById('photoModal').classList.add('active');
+    }
+
+    // Show rejection form
+    function showRejectionForm(photoId) {
+      document.getElementById(`rejectionForm-${photoId}`).style.display = 'block';
+    }
+
+    // Hide rejection form
+    function hideRejectionForm(photoId) {
+      document.getElementById(`rejectionForm-${photoId}`).style.display = 'none';
+    }
+
+    // Approve photo
+    async function approvePhoto(photoId, makePublic = true) {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        alert('Please log in');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}/approve`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ make_public: makePublic })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('✅ Photo approved successfully!');
+          closePhotoModal();
+          // Remove from pending list
+          pendingPhotos = pendingPhotos.filter(p => p.id !== photoId);
+          updateStats();
+          renderPendingPhotos();
+          // Reload main gallery
+          loadPhotos();
+        } else {
+          throw new Error(data.detail || 'Failed to approve photo');
+        }
+      } catch (error) {
+        console.error('Error approving photo:', error);
+        alert('Failed to approve photo: ' + error.message);
+      }
+    }
+
+    // Reject photo
+    async function rejectPhoto(photoId) {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        alert('Please log in');
+        return;
+      }
+
+      const notes = document.getElementById(`rejectionNotes-${photoId}`).value.trim();
+      if (!notes) {
+        alert('Please provide a reason for rejection');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}/reject`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ notes })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('Photo rejected');
+          closePhotoModal();
+          // Remove from pending list
+          pendingPhotos = pendingPhotos.filter(p => p.id !== photoId);
+          updateStats();
+          renderPendingPhotos();
+        } else {
+          throw new Error(data.detail || 'Failed to reject photo');
+        }
+      } catch (error) {
+        console.error('Error rejecting photo:', error);
+        alert('Failed to reject photo: ' + error.message);
+      }
+    }
+
+    // Format date helper
+    function formatDate(dateStr) {
+      if (!dateStr) return 'Unknown';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
     // Render photo grid
@@ -993,6 +1377,11 @@
       document.getElementById('modalTitle').textContent = photo.caption || photo.original_filename;
       document.getElementById('modalImage').src = photo.url;
       document.getElementById('modalImage').alt = photo.caption || '';
+
+      // Show standard footer buttons for regular gallery photos
+      document.getElementById('toggleVisibilityBtn').style.display = '';
+      document.getElementById('assignToZoneBtn').style.display = '';
+      document.getElementById('setFocalPointBtn').style.display = '';
 
       const toggleBtn = document.getElementById('toggleVisibilityBtn');
       toggleBtn.textContent = photo.is_public ? 'Make Private' : 'Make Public';

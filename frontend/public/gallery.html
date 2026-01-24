@@ -13,6 +13,8 @@
   <script src="/js/theme.js"></script>
   <script src="/js/analytics.js"></script>
   <script src="/js/photo-uploader.js"></script>
+  <script src="/js/components/LicenseAgreement.js"></script>
+  <script src="/js/components/MediaUploader.js"></script>
   <style>
     .gallery-header {
       text-align: center;
@@ -773,11 +775,19 @@
 
   <!-- Main Content -->
   <div class="container">
-    <!-- Upload Section (hidden by default) -->
+    <!-- Upload Section (hidden by default, requires login) -->
     <div class="upload-section" id="uploadSection">
-      <h3 data-i18n="galleryUploadHeading">Share Your Photos</h3>
-      <p style="margin-bottom: 1.5rem; color: var(--text-light);" data-i18n="galleryUploadDescription">Upload photos from your restoration projects, field work, or events. Our AI will help analyze and tag your images.</p>
-      <div id="photo-uploader"></div>
+      <h3 data-i18n="galleryUploadHeading">Share Your Photos & Videos</h3>
+      <p style="margin-bottom: 1.5rem; color: var(--text-light);" data-i18n="galleryUploadDescription">
+        Upload photos and short videos (&lt;2 min) from your restoration projects, field work, or events.
+        Your submissions will be reviewed by an admin before appearing in the public gallery.
+      </p>
+      <div id="media-uploader-container"></div>
+      <!-- Login prompt shown when user is not logged in -->
+      <div id="upload-login-prompt" style="display: none; text-align: center; padding: 2rem;">
+        <p style="margin-bottom: 1rem;">Please log in to upload photos and videos.</p>
+        <a href="/login.html" class="btn btn-primary">Log In</a>
+      </div>
     </div>
 
     <!-- Sidebar + Grid Layout -->
@@ -2062,28 +2072,45 @@
       const uploadSection = document.getElementById('uploadSection');
       uploadSection.classList.toggle('active');
 
+      // Check if user is logged in
+      const token = localStorage.getItem('isrs_session_token');
+      const uploaderContainer = document.getElementById('media-uploader-container');
+      const loginPrompt = document.getElementById('upload-login-prompt');
+
+      if (!token) {
+        // Not logged in - show login prompt
+        uploaderContainer.style.display = 'none';
+        loginPrompt.style.display = 'block';
+        return;
+      }
+
+      // Logged in - show uploader
+      uploaderContainer.style.display = 'block';
+      loginPrompt.style.display = 'none';
+
       // Initialize uploader if not already done
-      if (!window.photoUploaderInitialized) {
-        window.photoUploaderInitialized = true;
-        const uploader = new PhotoUploader('photo-uploader', {
-          maxFiles: 10,
-          maxFileSize: 25,
-          onUploadStart: (count) => {
-            console.log(`Starting upload of ${count} files...`);
+      if (!window.mediaUploaderInitialized) {
+        window.mediaUploaderInitialized = true;
+
+        const uploader = new MediaUploader('media-uploader-container', {
+          apiEndpoint: `${API_BASE_URL}/api/photos/upload`,
+          showLicenseForm: true,
+          adminMode: false,
+          onUploadStart: () => {
+            console.log('Starting upload...');
           },
-          onUploadProgress: (uploaded, total) => {
-            console.log(`Progress: ${uploaded}/${total}`);
+          onUploadProgress: (percent) => {
+            console.log(`Progress: ${percent}%`);
           },
-          onUploadComplete: (photos) => {
-            console.log('Upload complete!', photos);
-            alert(`Successfully uploaded ${photos.length} photo(s)! Refreshing gallery...`);
-            // Refresh the gallery
-            loadGallery();
-            // Close upload section
-            uploadSection.classList.remove('active');
+          onUploadComplete: (response) => {
+            console.log('Upload complete!', response);
+            // Refresh the gallery after a short delay
+            setTimeout(() => {
+              loadGallery();
+            }, 2000);
           },
-          onUploadError: (filename, error) => {
-            console.error(`Error uploading ${filename}:`, error);
+          onUploadError: (error) => {
+            console.error('Upload error:', error);
           }
         });
       }

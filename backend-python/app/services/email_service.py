@@ -157,7 +157,7 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"Your login link for {settings.APP_NAME}"
+        subject = f"Your secure login link - ISRS"
 
         html_content = f"""
         <!DOCTYPE html>
@@ -166,51 +166,76 @@ class EmailService:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
-                <h1 style="color: #2c5282; margin-bottom: 20px;">Login to ISRS</h1>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f0f7fa;">
+            <div style="background: linear-gradient(135deg, #1a5276 0%, #2e86ab 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+                <img src="https://www.shellfish-society.org/images/isrs-logo.png" alt="ISRS Logo" style="height: 60px; margin-bottom: 15px;">
+                <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Welcome Back!</h1>
+            </div>
 
-                <p style="margin-bottom: 20px;">
-                    Click the button below to log in to your ISRS account. This link will expire in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes.
+            <div style="background-color: white; padding: 35px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <p style="margin-bottom: 25px; font-size: 16px; color: #444;">
+                    You requested access to your ISRS member account. Click the button below to log in securely - no password needed!
                 </p>
 
-                <div style="text-align: center; margin: 30px 0;">
+                <div style="text-align: center; margin: 35px 0;">
                     <a href="{magic_link}"
-                       style="background-color: #2c5282; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                        Log In to ISRS
+                       style="background: linear-gradient(135deg, #1a5276 0%, #2e86ab 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(30, 136, 229, 0.4); transition: transform 0.2s;">
+                        Log In to My Account
                     </a>
                 </div>
 
-                <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                    If you didn't request this login link, you can safely ignore this email.
-                </p>
+                <div style="background-color: #e8f4f8; border-left: 4px solid #2e86ab; padding: 15px 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
+                    <p style="margin: 0; font-size: 14px; color: #1a5276;">
+                        <strong>Tip:</strong> Bookmark <a href="https://www.shellfish-society.org" style="color: #2e86ab;">shellfish-society.org</a> for quick access to member resources, conference updates, and the photo gallery.
+                    </p>
+                </div>
 
-                <p style="color: #666; font-size: 14px; margin-top: 20px;">
-                    <strong>Note:</strong> This link can only be used once and will expire in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes.
-                </p>
+                <div style="background-color: #fff8e6; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
+                    <p style="margin: 0; font-size: 13px; color: #856404;">
+                        <strong>Security note:</strong> This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this, you can safely ignore this email.
+                    </p>
+                </div>
 
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+                <hr style="border: none; border-top: 1px solid #e9ecef; margin: 30px 0;">
 
-                <p style="color: #999; font-size: 12px; text-align: center;">
-                    International Shellfish Restoration Society<br>
-                    This is an automated email, please do not reply.
-                </p>
+                <div style="text-align: center;">
+                    <p style="color: #1a5276; font-size: 14px; font-weight: 600; margin-bottom: 5px;">
+                        International Shellfish Restoration Society
+                    </p>
+                    <p style="color: #6c757d; font-size: 12px; margin: 0;">
+                        Restoring shellfish ecosystems worldwide
+                    </p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.shellfish-society.org" style="color: #2e86ab; text-decoration: none; font-size: 12px; margin: 0 10px;">Website</a>
+                        <span style="color: #dee2e6;">|</span>
+                        <a href="https://www.shellfish-society.org/gallery.html" style="color: #2e86ab; text-decoration: none; font-size: 12px; margin: 0 10px;">Photo Gallery</a>
+                        <span style="color: #dee2e6;">|</span>
+                        <a href="https://www.shellfish-society.org/icsr2026.html" style="color: #2e86ab; text-decoration: none; font-size: 12px; margin: 0 10px;">ICSR2026</a>
+                    </div>
+                </div>
             </div>
         </body>
         </html>
         """
 
         text_content = f"""
-        Login to ISRS
+        Welcome Back to ISRS!
 
-        Click the link below to log in to your ISRS account:
+        You requested access to your ISRS member account. Click the link below to log in securely:
+
         {magic_link}
 
-        This link will expire in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes.
+        Tip: Bookmark shellfish-society.org for quick access to member resources, conference updates, and the photo gallery.
 
-        If you didn't request this login link, you can safely ignore this email.
+        Security note: This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes and can only be used once. If you didn't request this, you can safely ignore this email.
 
+        ---
         International Shellfish Restoration Society
+        Restoring shellfish ecosystems worldwide
+
+        Website: https://www.shellfish-society.org
+        Photo Gallery: https://www.shellfish-society.org/gallery.html
+        ICSR2026: https://www.shellfish-society.org/icsr2026.html
         """
 
         return await self.send_email(to_email, subject, html_content, text_content)

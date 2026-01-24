@@ -38,13 +38,24 @@ BUCKET_NAME = os.getenv('AWS_BUCKET_NAME', 'isrs-assets')
 MAX_FILE_SIZE = 25 * 1024 * 1024  # 25MB
 THUMBNAIL_SIZE = (400, 300)
 
-ALLOWED_MIME_TYPES = [
+ALLOWED_IMAGE_TYPES = [
     'image/jpeg',
     'image/jpg',
     'image/png',
     'image/gif',
     'image/webp',
 ]
+
+ALLOWED_VIDEO_TYPES = [
+    'video/mp4',
+    'video/quicktime',  # .mov
+    'video/webm',
+]
+
+ALLOWED_MIME_TYPES = ALLOWED_IMAGE_TYPES + ALLOWED_VIDEO_TYPES
+
+MAX_VIDEO_DURATION = 120  # 2 minutes in seconds
+MAX_VIDEO_SIZE = 100 * 1024 * 1024  # 100MB for videos
 
 
 class UrlUploadRequest(BaseModel):
@@ -272,6 +283,18 @@ async def upload_photo_to_s3(
         description=metadata.get('description') if metadata else None,
         is_public=metadata.get('is_public', False) if metadata else False,
         tags=metadata.get('tags') if metadata else None,
+        # License/attribution fields
+        photographer_name=metadata.get('photographer_name') if metadata else None,
+        photographer_email=metadata.get('photographer_email') if metadata else None,
+        copyright_holder=metadata.get('copyright_holder') if metadata else None,
+        license_type=metadata.get('license_type', 'All Rights Reserved') if metadata else 'All Rights Reserved',
+        # Consent/approval fields
+        usage_rights_agreed=metadata.get('usage_rights_agreed', False) if metadata else False,
+        liability_waiver_agreed=metadata.get('liability_waiver_agreed', False) if metadata else False,
+        consent_timestamp=metadata.get('consent_timestamp') if metadata else None,
+        approval_status=metadata.get('approval_status', 'pending') if metadata else 'pending',
+        # Media type
+        media_type=metadata.get('media_type', 'photo') if metadata else 'photo',
     )
 
     db.add(photo)
@@ -288,13 +311,57 @@ async def upload_photo(
     description: Optional[str] = Form(None),
     is_public: bool = Form(False),
     tags: Optional[str] = Form(None),
+    # License/consent fields
+    photographer_name: Optional[str] = Form(None),
+    photographer_email: Optional[str] = Form(None),
+    copyright_holder: Optional[str] = Form(None),
+    license_type: str = Form("All Rights Reserved"),
+    usage_rights_agreed: bool = Form(False),
+    liability_waiver_agreed: bool = Form(False),
+    # Admin bypass (skip consent requirements for admin uploads)
+    admin_upload: bool = Form(False),
+    request: "Request" = None,
     db: Session = Depends(get_db),
     current_user: AttendeeProfile = Depends(get_current_user),
 ):
-    """Upload a single photo file."""
+    """
+    Upload a single photo or video file.
+
+    For user uploads:
+    - Requires usage_rights_agreed and liability_waiver_agreed to be True
+    - Sets approval_status to 'pending'
+    - Requires photographer_name
+
+    For admin uploads (admin_upload=True):
+    - Auto-approved
+    - Consent fields optional
+    """
+    from fastapi import Request
+
     try:
         if not file.filename:
             raise HTTPException(status_code=400, detail="No filename provided")
+
+        # Check if user is admin
+        is_admin = current_user.role in ['admin', 'superadmin'] if hasattr(current_user, 'role') else False
+
+        # Validate consent for non-admin uploads
+        if not is_admin and not admin_upload:
+            if not usage_rights_agreed:
+                raise HTTPException(
+                    status_code=400,
+                    detail="You must agree to the usage rights to upload content"
+                )
+            if not liability_waiver_agreed:
+                raise HTTPException(
+                    status_code=400,
+                    detail="You must agree to the liability waiver to upload content"
+                )
+            if not photographer_name:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Photographer name is required"
+                )
 
         # Read file content
         content = await file.read()
@@ -304,17 +371,42 @@ async def upload_photo(
         if mime_type not in ALLOWED_MIME_TYPES:
             raise HTTPException(
                 status_code=400,
-                detail=f"File type {mime_type} not allowed. Allowed: {', '.join(ALLOWED_MIME_TYPES)}"
+                detail=f"File type {mime_type} not allowed. Allowed types: images (jpeg, png, gif, webp) and videos (mp4, mov, webm)"
+            )
+
+        # Determine media type
+        is_video = mime_type in ALLOWED_VIDEO_TYPES
+        media_type = "video" if is_video else "photo"
+
+        # Check file size based on type
+        max_size = MAX_VIDEO_SIZE if is_video else MAX_FILE_SIZE
+        if len(content) > max_size:
+            raise HTTPException(
+                status_code=400,
+                detail=f"File too large. Maximum size is {max_size / 1024 / 1024:.0f}MB for {media_type}s"
             )
 
         # Parse tags
         tags_list = [t.strip() for t in tags.split(',')] if tags else None
 
+        # Determine approval status
+        # Admins get auto-approved, regular users go to pending
+        approval_status = 'approved' if (is_admin or admin_upload) else 'pending'
+
         metadata = {
             'caption': caption,
             'description': description,
-            'is_public': is_public,
+            'is_public': is_public if approval_status == 'approved' else False,  # Can't be public until approved
             'tags': tags_list,
+            'photographer_name': photographer_name,
+            'photographer_email': photographer_email,
+            'copyright_holder': copyright_holder or photographer_name,
+            'license_type': license_type,
+            'usage_rights_agreed': usage_rights_agreed,
+            'liability_waiver_agreed': liability_waiver_agreed,
+            'consent_timestamp': datetime.utcnow() if usage_rights_agreed else None,
+            'approval_status': approval_status,
+            'media_type': media_type,
         }
 
         photo = await upload_photo_to_s3(
@@ -326,10 +418,15 @@ async def upload_photo(
             metadata=metadata
         )
 
+        message = "Photo uploaded successfully"
+        if approval_status == 'pending':
+            message = "Photo uploaded successfully and is pending admin review"
+
         return {
             "success": True,
             "data": photo.to_dict(),
-            "message": "Photo uploaded successfully"
+            "message": message,
+            "approval_status": approval_status
         }
 
     except HTTPException:
@@ -454,10 +551,11 @@ async def get_gallery_photos(
     tags: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    """Get public photos for gallery (no auth required)."""
+    """Get public photos for gallery (no auth required). Only shows approved photos."""
     query = db.query(Photo).filter(
         Photo.is_public == True,
-        Photo.status == 'active'
+        Photo.status == 'active',
+        Photo.approval_status == 'approved'  # Only show approved photos in public gallery
     )
 
     if featured:
@@ -620,4 +718,159 @@ async def delete_photo(
     return {
         "success": True,
         "message": "Photo deleted successfully"
+    }
+
+
+# ============================================
+# Admin Approval Endpoints
+# ============================================
+
+def require_admin(current_user: AttendeeProfile):
+    """Check if user has admin privileges."""
+    is_admin = current_user.role in ['admin', 'superadmin'] if hasattr(current_user, 'role') else False
+    if not is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return current_user
+
+
+@router.get("/pending")
+@router.get("/pending/")
+async def get_pending_photos(
+    limit: int = 50,
+    offset: int = 0,
+    db: Session = Depends(get_db),
+    current_user: AttendeeProfile = Depends(get_current_user),
+):
+    """Get photos pending admin approval (admin only)."""
+    require_admin(current_user)
+
+    query = db.query(Photo).filter(
+        Photo.approval_status == 'pending',
+        Photo.status == 'active'
+    )
+
+    total = query.count()
+    photos = query.order_by(Photo.uploaded_at).offset(offset).limit(limit).all()
+
+    return {
+        "success": True,
+        "data": [p.to_dict() for p in photos],
+        "total": total,
+        "count": len(photos)
+    }
+
+
+class ApprovalRequest(BaseModel):
+    """Request body for approval action."""
+    notes: Optional[str] = None
+    make_public: bool = True
+
+
+@router.post("/{photo_id}/approve")
+async def approve_photo(
+    photo_id: int,
+    request: ApprovalRequest = Body(default=ApprovalRequest()),
+    db: Session = Depends(get_db),
+    current_user: AttendeeProfile = Depends(get_current_user),
+):
+    """Approve a pending photo (admin only)."""
+    require_admin(current_user)
+
+    photo = db.query(Photo).filter(Photo.id == photo_id).first()
+    if not photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+
+    if photo.approval_status == 'approved':
+        return {
+            "success": True,
+            "message": "Photo is already approved",
+            "data": photo.to_dict()
+        }
+
+    photo.approval_status = 'approved'
+    photo.approved_by = current_user.id
+    photo.approved_at = datetime.utcnow()
+    photo.approval_notes = request.notes
+    if request.make_public:
+        photo.is_public = True
+
+    db.commit()
+    db.refresh(photo)
+
+    return {
+        "success": True,
+        "message": "Photo approved successfully",
+        "data": photo.to_dict()
+    }
+
+
+class RejectionRequest(BaseModel):
+    """Request body for rejection action."""
+    notes: str  # Required for rejection
+
+
+@router.post("/{photo_id}/reject")
+async def reject_photo(
+    photo_id: int,
+    request: RejectionRequest,
+    db: Session = Depends(get_db),
+    current_user: AttendeeProfile = Depends(get_current_user),
+):
+    """Reject a pending photo (admin only). Requires a reason."""
+    require_admin(current_user)
+
+    photo = db.query(Photo).filter(Photo.id == photo_id).first()
+    if not photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+
+    if photo.approval_status == 'rejected':
+        return {
+            "success": True,
+            "message": "Photo is already rejected",
+            "data": photo.to_dict()
+        }
+
+    photo.approval_status = 'rejected'
+    photo.approved_by = current_user.id
+    photo.approved_at = datetime.utcnow()
+    photo.approval_notes = request.notes
+    photo.is_public = False  # Ensure rejected photos aren't public
+
+    db.commit()
+    db.refresh(photo)
+
+    return {
+        "success": True,
+        "message": "Photo rejected",
+        "data": photo.to_dict()
+    }
+
+
+@router.get("/stats/approval")
+async def get_approval_stats(
+    db: Session = Depends(get_db),
+    current_user: AttendeeProfile = Depends(get_current_user),
+):
+    """Get photo approval statistics (admin only)."""
+    require_admin(current_user)
+
+    from sqlalchemy import func
+
+    stats = db.query(
+        Photo.approval_status,
+        func.count(Photo.id).label('count')
+    ).filter(
+        Photo.status == 'active'
+    ).group_by(Photo.approval_status).all()
+
+    result = {s.approval_status: s.count for s in stats}
+
+    return {
+        "success": True,
+        "data": {
+            "pending": result.get('pending', 0),
+            "approved": result.get('approved', 0),
+            "rejected": result.get('rejected', 0),
+            "total": sum(result.values())
+        }
     }

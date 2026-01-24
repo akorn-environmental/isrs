@@ -10,26 +10,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
 
   <script src="/js/theme.js"></script>
   <script src="/js/analytics.js"></script>
   <script src="/js/member-auth.js"></script>
 
   <style>
+    .directory-container {
+      max-width: 1400px;
+      margin: 2rem auto 4rem;
+      padding: 0 2rem;
+    }
+
     .filters-section {
-      background: #f8f9fa;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
+      background: var(--admin-surface, #fff);
+      border: 1px solid var(--admin-border, #e5e7eb);
+      border-radius: var(--admin-radius-md, 6px);
       padding: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
     }
 
     .filter-group {
-      margin-bottom: 1rem;
-    }
-
-    .filter-group:last-child {
-      margin-bottom: 0;
+      flex: 1;
+      min-width: 200px;
     }
 
     .filter-group label {
@@ -37,94 +48,129 @@
       font-weight: 600;
       margin-bottom: 0.5rem;
       color: var(--text-color);
+      font-size: 0.9rem;
     }
 
     .filter-group input,
     .filter-group select {
       width: 100%;
-      padding: 0.75rem;
-      border: 2px solid var(--border-color);
-      border-radius: 4px;
-      font-size: 1rem;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--admin-border, #e5e7eb);
+      border-radius: var(--admin-radius-sm, 4px);
+      font-size: 0.95rem;
+      background: var(--admin-surface, #fff);
     }
 
-    .member-card {
-      background: white;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    .filter-group input:focus,
+    .filter-group select:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(26, 82, 118, 0.1);
     }
 
-    .member-card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
+    /* Table styling consistent with admin tables */
+    .directory-table-wrapper {
+      background: var(--admin-surface, #fff);
+      border: 1px solid var(--admin-border, #e5e7eb);
+      border-radius: var(--admin-radius-md, 6px);
+      overflow: hidden;
     }
 
-    .member-header {
+    .directory-table-scroll {
+      overflow-x: auto;
+    }
+
+    .directory-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .directory-table thead {
+      background: var(--admin-gray-50, #f9fafb);
+      border-bottom: 2px solid var(--admin-border, #e5e7eb);
+    }
+
+    .directory-table th {
+      text-align: left;
+      padding: 0.875rem 1rem;
+      font-weight: 600;
+      color: var(--admin-text-secondary, #6b7280);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .directory-table th:hover {
+      background: var(--admin-gray-100, #f3f4f6);
+    }
+
+    .directory-table th.sorted-asc::after {
+      content: ' \u25B2';
+      font-size: 0.7rem;
+    }
+
+    .directory-table th.sorted-desc::after {
+      content: ' \u25BC';
+      font-size: 0.7rem;
+    }
+
+    .directory-table tbody tr {
+      border-bottom: 1px solid var(--admin-border, #e5e7eb);
+      transition: background 0.15s;
+    }
+
+    .directory-table tbody tr:hover {
+      background: var(--admin-gray-50, #f9fafb);
+    }
+
+    .directory-table td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      color: var(--admin-text, #111827);
+    }
+
+    /* Name column with avatar */
+    .member-name-cell {
       display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1rem;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 200px;
     }
 
-    .member-photo {
-      width: 80px;
-      height: 80px;
+    .member-avatar {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 2rem;
+      font-size: 0.85rem;
       font-weight: 600;
       flex-shrink: 0;
     }
 
-    .member-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .member-name {
-      font-size: 1.3rem;
-      font-weight: 600;
+    .member-name-text {
+      font-weight: 500;
       color: var(--primary-blue);
-      margin: 0 0 0.25rem 0;
     }
 
-    .member-title {
-      color: var(--text-light);
-      margin: 0 0 0.5rem 0;
-      font-size: 0.95rem;
-    }
-
-    .member-location {
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-
-    .member-bio {
-      color: var(--text-color);
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-
-    .member-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
+    /* Tags/badges */
     .tag {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
-      background: #e9ecef;
-      color: var(--text-color);
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--admin-gray-100, #f3f4f6);
+      color: var(--admin-text-secondary, #6b7280);
+      border-radius: 3px;
+      font-size: 0.75rem;
+      margin: 0.1rem;
+      white-space: nowrap;
     }
 
     .tag.conference {
@@ -132,6 +178,44 @@
       color: white;
     }
 
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      max-width: 250px;
+    }
+
+    /* Email link */
+    .email-link {
+      color: var(--primary-blue);
+      text-decoration: none;
+    }
+
+    .email-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Bio truncation */
+    .bio-cell {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--admin-gray-50, #f9fafb);
+      border-top: 1px solid var(--admin-border, #e5e7eb);
+      font-size: 0.875rem;
+      color: var(--admin-text-secondary, #6b7280);
+    }
+
+    /* Empty state */
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
@@ -143,15 +227,57 @@
       margin-bottom: 1rem;
     }
 
+    /* Loading state */
+    .loading-state {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .spinner {
+      margin: 0 auto 1rem;
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--admin-border, #e5e7eb);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* CTA Section */
+    .cta-section {
+      margin-top: 2rem;
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+      border-radius: var(--admin-radius-md, 6px);
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .member-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+      .directory-container {
+        padding: 0 1rem;
       }
 
-      .member-photo {
-        margin-bottom: 0.5rem;
+      .filter-row {
+        flex-direction: column;
+      }
+
+      .filter-group {
+        min-width: 100%;
+      }
+
+      .directory-table {
+        font-size: 0.85rem;
+      }
+
+      .member-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
       }
     }
   </style>
@@ -165,7 +291,7 @@
   </script>
 
   <main id="main-content">
-    <div class="container" style="max-width: 1000px; margin: 2rem auto 4rem; padding: 0 2rem;">
+    <div class="directory-container">
 
       <!-- Page Header -->
       <div style="text-align: center; margin-bottom: 2rem;">
@@ -173,29 +299,21 @@
         <p id="pageSubtitle" style="font-size: 1.1rem; color: var(--text-light); max-width: 700px; margin: 0 auto 1rem;">
           Connect with researchers, practitioners, and stakeholders working in shellfish restoration worldwide
         </p>
-        <div id="resultsCount" style="font-weight: 600; color: var(--primary-blue);"></div>
       </div>
 
       <!-- Search and Filters -->
       <div class="filters-section">
-        <div class="filter-group">
-          <label for="searchInput">
-            <span style="display: flex; align-items: center; gap: 0.5rem;">
-              <span id="searchLabel">Search</span>
-              <span id="searchHint" style="font-weight: normal; font-size: 0.9rem; color: var(--text-light);">
-                (name, organization, bio, research areas)
-              </span>
-            </span>
-          </label>
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search members..."
-            onkeyup="handleSearchDebounced()"
-          >
-        </div>
+        <div class="filter-row">
+          <div class="filter-group" style="flex: 2;">
+            <label for="searchInput" id="searchLabel">Search</label>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by name, organization, research areas..."
+              onkeyup="handleSearchDebounced()"
+            >
+          </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
           <div class="filter-group">
             <label id="countryLabel" for="countryFilter">Country</label>
             <select id="countryFilter" onchange="applyFilters()">
@@ -213,24 +331,40 @@
               <option value="2011">ICSR 2011</option>
             </select>
           </div>
-        </div>
 
-        <div style="margin-top: 1rem; text-align: right;">
-          <button id="clearFiltersBtn" class="btn btn-secondary" onclick="clearFilters()" style="padding: 0.5rem 1.5rem;">
-            Clear Filters
-          </button>
+          <div class="filter-group" style="flex: 0;">
+            <label>&nbsp;</label>
+            <button id="clearFiltersBtn" class="btn btn-secondary" onclick="clearFilters()" style="padding: 0.6rem 1.25rem; white-space: nowrap;">
+              Clear Filters
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Loading State -->
-      <div id="loadingState" style="text-align: center; padding: 3rem;">
-        <div class="spinner" style="margin: 0 auto 1rem; width: 50px; height: 50px; border: 4px solid var(--border-color); border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      <div id="loadingState" class="loading-state">
+        <div class="spinner"></div>
         <p id="loadingText" style="color: var(--text-light);">Loading members...</p>
       </div>
 
-      <!-- Members Grid -->
-      <div id="membersGrid" style="display: none;">
-        <!-- Members will be populated here -->
+      <!-- Directory Table -->
+      <div id="directoryContent" class="directory-table-wrapper" style="display: none;">
+        <div class="directory-table-scroll">
+          <table class="directory-table">
+            <thead id="tableHeader">
+              <!-- Dynamic headers -->
+            </thead>
+            <tbody id="tableBody">
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+          <span id="resultsCount">0 members</span>
+          <span id="visibleColumnsInfo"></span>
+        </div>
       </div>
 
       <!-- Empty State -->
@@ -241,7 +375,7 @@
       </div>
 
       <!-- Call to Action (if not logged in) -->
-      <div id="ctaSection" style="margin-top: 3rem; text-align: center; padding: 2rem; background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 4px;">
+      <div id="ctaSection" class="cta-section">
         <h2 id="ctaHeading" style="color: var(--primary-blue); margin-bottom: 1rem;">Join the ISRS Community</h2>
         <p id="ctaText" style="color: var(--text-color); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
           Connect with colleagues, share your research, and stay updated on shellfish restoration initiatives worldwide.
@@ -256,12 +390,6 @@
 
   <script src="/js/components.js?v=2.1.0"></script>
 
-  <style>
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
-
   <script>
     // Load footer
     loadFooter();
@@ -271,7 +399,6 @@
       document.getElementById('pageHeading').textContent = t('memberDirectory');
       document.getElementById('pageSubtitle').textContent = t('directorySubtitle');
       document.getElementById('searchLabel').textContent = t('searchLabel');
-      document.getElementById('searchHint').textContent = t('searchHint');
       document.getElementById('searchInput').placeholder = t('searchPlaceholder');
       document.getElementById('countryLabel').textContent = t('countryFilterLabel');
       document.getElementById('conferenceLabel').textContent = t('conferenceYearLabel');
@@ -306,6 +433,47 @@
     let allMembers = [];
     let filteredMembers = [];
     let searchTimeout = null;
+    let sortColumn = 'full_name';
+    let sortDirection = 'asc';
+
+    // Define all possible columns with their display names and data keys
+    const allColumns = [
+      { key: 'full_name', label: 'Name', alwaysVisible: true },
+      { key: 'organization', label: 'Organization', visibilityField: 'organization' },
+      { key: 'position', label: 'Position', visibilityField: 'position' },
+      { key: 'country', label: 'Country', visibilityField: 'country' },
+      { key: 'city', label: 'City', visibilityField: 'city' },
+      { key: 'contact_email', label: 'Email', visibilityField: 'contact_email' },
+      { key: 'bio', label: 'Bio', visibilityField: 'bio' },
+      { key: 'research_areas', label: 'Research Areas', visibilityField: 'research_areas' },
+      { key: 'conference_history', label: 'Conferences', visibilityField: 'conference_history' }
+    ];
+
+    // Determine which columns have data visible from any member
+    function getVisibleColumns() {
+      const visibleColumns = [];
+
+      for (const col of allColumns) {
+        if (col.alwaysVisible) {
+          visibleColumns.push(col);
+          continue;
+        }
+
+        // Check if any member has this field visible
+        const anyMemberHasField = filteredMembers.some(member => {
+          const visibleFields = member.directory_visible_fields || {};
+          const hasVisibility = visibleFields[col.visibilityField] === true;
+          const hasValue = member[col.key] !== null && member[col.key] !== undefined && member[col.key] !== '';
+          return hasVisibility && hasValue;
+        });
+
+        if (anyMemberHasField) {
+          visibleColumns.push(col);
+        }
+      }
+
+      return visibleColumns;
+    }
 
     // Load directory on page load
     async function loadDirectory() {
@@ -337,9 +505,9 @@
         // Display members
         displayMembers();
 
-        // Hide loading, show grid
+        // Hide loading, show content
         document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('membersGrid').style.display = 'block';
+        document.getElementById('directoryContent').style.display = 'block';
 
       } catch (error) {
         console.error('Error loading directory:', error);
@@ -362,82 +530,142 @@
       });
     }
 
-    // Display members
+    // Display members in table
     function displayMembers() {
-      const grid = document.getElementById('membersGrid');
+      const tableHeader = document.getElementById('tableHeader');
+      const tableBody = document.getElementById('tableBody');
       const emptyState = document.getElementById('emptyState');
+      const directoryContent = document.getElementById('directoryContent');
       const resultsCount = document.getElementById('resultsCount');
+      const visibleColumnsInfo = document.getElementById('visibleColumnsInfo');
 
       if (filteredMembers.length === 0) {
-        grid.style.display = 'none';
+        directoryContent.style.display = 'none';
         emptyState.style.display = 'block';
         resultsCount.textContent = t('noMembersFound');
         return;
       }
 
       emptyState.style.display = 'none';
-      grid.style.display = 'block';
+      directoryContent.style.display = 'block';
 
-      // Update count with translation
+      // Get columns that have visible data
+      const visibleColumns = getVisibleColumns();
+
+      // Update stats
       const count = filteredMembers.length;
-      resultsCount.textContent = t('resultsCount').replace('%COUNT%', count);
+      resultsCount.textContent = `${count} member${count !== 1 ? 's' : ''}`;
+      visibleColumnsInfo.textContent = `${visibleColumns.length} columns`;
 
-      // Generate member cards
-      grid.innerHTML = filteredMembers.map(member => {
-        const initials = getInitials(member.full_name);
-        const position = member.position || '';
-        const organization = member.organization || '';
-        const title = [position, organization].filter(x => x).join(' at ') || 'ISRS Member';
-        const location = [member.city, member.country].filter(x => x).join(', ') || '';
+      // Build table header
+      tableHeader.innerHTML = `
+        <tr>
+          ${visibleColumns.map(col => `
+            <th
+              data-column="${col.key}"
+              onclick="handleSort('${col.key}')"
+              class="${sortColumn === col.key ? (sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc') : ''}"
+            >
+              ${col.label}
+            </th>
+          `).join('')}
+        </tr>
+      `;
 
-        // Parse research areas
-        const researchAreas = member.research_areas || [];
-        const areas = Array.isArray(researchAreas) ? researchAreas : [];
+      // Sort members
+      const sortedMembers = [...filteredMembers].sort((a, b) => {
+        let aVal = a[sortColumn] || '';
+        let bVal = b[sortColumn] || '';
 
-        // Parse conference history
-        const conferenceHistory = member.conference_history || [];
-        const conferences = Array.isArray(conferenceHistory) ? conferenceHistory : [];
+        // Handle arrays
+        if (Array.isArray(aVal)) aVal = aVal.join(', ');
+        if (Array.isArray(bVal)) bVal = bVal.join(', ');
+
+        // String comparison
+        aVal = String(aVal).toLowerCase();
+        bVal = String(bVal).toLowerCase();
+
+        if (sortDirection === 'asc') {
+          return aVal.localeCompare(bVal);
+        } else {
+          return bVal.localeCompare(aVal);
+        }
+      });
+
+      // Build table body
+      tableBody.innerHTML = sortedMembers.map(member => {
+        const visibleFields = member.directory_visible_fields || {};
 
         return `
-          <div class="member-card">
-            <div class="member-header">
-              <div class="member-photo" title="${member.full_name}">
-                ${initials}
-              </div>
-              <div class="member-info">
-                <h2 class="member-name">${escapeHtml(member.full_name)}</h2>
-                <p class="member-title">${escapeHtml(title)}</p>
-                ${location ? `<p class="member-location">📍 ${escapeHtml(location)}</p>` : ''}
-              </div>
-            </div>
+          <tr>
+            ${visibleColumns.map(col => {
+              // Check if this field is visible for this member
+              if (!col.alwaysVisible && !visibleFields[col.visibilityField]) {
+                return `<td style="color: var(--admin-text-muted, #9ca3af);">—</td>`;
+              }
 
-            ${member.bio ? `
-              <div class="member-bio">
-                ${escapeHtml(truncate(member.bio, 200))}
-              </div>
-            ` : ''}
-
-            ${areas.length > 0 || conferences.length > 0 ? `
-              <div class="member-tags">
-                ${areas.slice(0, 5).map(area =>
-                  `<span class="tag">${escapeHtml(area)}</span>`
-                ).join('')}
-                ${conferences.slice(0, 3).map(conf =>
-                  `<span class="tag conference">ICSR ${conf.year}</span>`
-                ).join('')}
-              </div>
-            ` : ''}
-
-            ${member.email ? `
-              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                <a href="mailto:${escapeHtml(member.email)}" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">
-                  📧 Contact
-                </a>
-              </div>
-            ` : ''}
-          </div>
+              return `<td>${renderCell(member, col.key)}</td>`;
+            }).join('')}
+          </tr>
         `;
       }).join('');
+    }
+
+    // Render a single cell based on column type
+    function renderCell(member, key) {
+      const value = member[key];
+
+      switch (key) {
+        case 'full_name':
+          const initials = getInitials(member.full_name);
+          return `
+            <div class="member-name-cell">
+              <div class="member-avatar" title="${escapeHtml(member.full_name)}">${initials}</div>
+              <span class="member-name-text">${escapeHtml(member.full_name)}</span>
+            </div>
+          `;
+
+        case 'contact_email':
+          if (!value) return '—';
+          return `<a href="mailto:${escapeHtml(value)}" class="email-link">${escapeHtml(value)}</a>`;
+
+        case 'bio':
+          if (!value) return '—';
+          return `<div class="bio-cell" title="${escapeHtml(value)}">${escapeHtml(truncate(value, 100))}</div>`;
+
+        case 'research_areas':
+          if (!value || !Array.isArray(value) || value.length === 0) return '—';
+          return `
+            <div class="tags-container">
+              ${value.slice(0, 3).map(area => `<span class="tag">${escapeHtml(area)}</span>`).join('')}
+              ${value.length > 3 ? `<span class="tag" style="background: var(--admin-gray-200);">+${value.length - 3}</span>` : ''}
+            </div>
+          `;
+
+        case 'conference_history':
+          if (!value || !Array.isArray(value) || value.length === 0) return '—';
+          return `
+            <div class="tags-container">
+              ${value.slice(0, 3).map(conf => `<span class="tag conference">ICSR ${conf.year}</span>`).join('')}
+              ${value.length > 3 ? `<span class="tag">+${value.length - 3}</span>` : ''}
+            </div>
+          `;
+
+        default:
+          if (!value) return '—';
+          return escapeHtml(String(value));
+      }
+    }
+
+    // Handle column sort
+    function handleSort(column) {
+      if (sortColumn === column) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortColumn = column;
+        sortDirection = 'asc';
+      }
+      displayMembers();
     }
 
     // Apply filters
@@ -453,6 +681,7 @@
             member.full_name,
             member.organization,
             member.bio,
+            member.position,
             ...(Array.isArray(member.research_areas) ? member.research_areas : [])
           ].join(' ').toLowerCase();
 
