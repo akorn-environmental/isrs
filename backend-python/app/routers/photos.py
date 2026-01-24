@@ -423,6 +423,7 @@ async def upload_from_urls(
     }
 
 
+@router.get("")
 @router.get("/")
 async def get_all_photos(
     limit: int = 100,
