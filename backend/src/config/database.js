@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL?.includes('render.com')
-    ? { rejectUnauthorized: false }
+    ? { rejectUnauthorized: true }
     : false
 });
 
@@ -26,10 +26,13 @@ async function query(text, params) {
   try {
     const res = await pool.query(text, params);
     const duration = Date.now() - start;
-    console.log('Executed query', { text, duration, rows: res.rowCount });
+    // Only log queries in development (not in production to avoid sensitive data exposure)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Executed query', { text: text.substring(0, 100), duration, rows: res.rowCount });
+    }
     return res;
   } catch (error) {
-    console.error('Query error:', error);
+    console.error('Query error:', error.message);
     throw error;
   }
 }

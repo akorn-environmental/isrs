@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     # Security
     SECRET_KEY: str = Field(..., env="SECRET_KEY")
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 1 week
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours (safer default)
     SESSION_INACTIVITY_TIMEOUT_MINUTES: int = 60  # 1 hour inactivity timeout
 
     # CORS (stored as comma-separated string, accessed as list via property)
