@@ -45,6 +45,9 @@ const PORT = process.env.PORT || 3001;  // ISRS backend port - DO NOT CHANGE (AK
 app.set('trust proxy', 1);
 
 // Security middleware with Content Security Policy
+// NOTE: 'unsafe-inline' is required for scripts/styles because the frontend uses inline
+// scripts in HTML files. TODO: Refactor frontend to use external JS files and nonces
+// to enable stricter CSP without unsafe-inline.
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
