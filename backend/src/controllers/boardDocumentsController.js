@@ -3,6 +3,20 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs').promises;
 
+// Helper for development-only logging
+const devLog = (...args) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(...args);
+  }
+};
+
+// Mask email for safe logging
+const maskEmail = (email) => {
+  if (!email) return '[no email]';
+  const [local, domain] = email.split('@');
+  return `${local.substring(0, 2)}***@${domain}`;
+};
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
@@ -287,7 +301,7 @@ async function uploadDocument(req, res) {
       // Log upload
       await logDocumentAccess(result.rows[0].id, req.user.id, req.user.email, 'upload', req);
 
-      console.log(`✅ Document uploaded: ${title} by ${req.user.email}`);
+      devLog(`✅ Document uploaded: ${title} by ${maskEmail(req.user.email)}`);
 
       res.json({
         success: true,

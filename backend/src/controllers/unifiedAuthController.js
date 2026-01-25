@@ -14,6 +14,20 @@ const { pool } = require('../config/database');
 const crypto = require('crypto');
 const { sendMagicLink } = require('../services/emailService');
 
+// Helper for development-only logging (prevents sensitive data in production logs)
+const devLog = (...args) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(...args);
+  }
+};
+
+// Mask email for safe logging (show first 2 chars + domain)
+const maskEmail = (email) => {
+  if (!email) return '[no email]';
+  const [local, domain] = email.split('@');
+  return `${local.substring(0, 2)}***@${domain}`;
+};
+
 /**
  * Preview profile by email (pre-authentication)
  * POST /api/auth/preview-profile
@@ -269,9 +283,9 @@ async function requestLogin(req, res) {
     const backendUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
     const magicLink = `${backendUrl}/auth/verify?token=${magicToken}`;
 
-    console.log(`🔐 Magic link generated for ${normalizedEmail} (${primaryRole})`);
-    console.log(`   Link: ${magicLink}`);
-    console.log(`   Expires: ${tokenExpiresAt.toISOString()}`);
+    devLog(`🔐 Magic link generated for ${normalizedEmail} (${primaryRole})`);
+    devLog(`   Link: ${magicLink}`);
+    devLog(`   Expires: ${tokenExpiresAt.toISOString()}`);
 
     // Send magic link email
     try {
@@ -280,7 +294,7 @@ async function requestLogin(req, res) {
         user.first_name || 'Member',
         magicLink
       );
-      console.log(`✅ Magic link email sent to ${normalizedEmail}`);
+      devLog(`✅ Magic link email sent to ${maskEmail(normalizedEmail)}`);
     } catch (emailError) {
       console.error('❌ Failed to send magic link email:', emailError);
       // Don't block the response - email issues shouldn't prevent login attempts
@@ -467,7 +481,7 @@ async function verifyMagicLink(req, res) {
       ]
     );
 
-    console.log(`✅ Login successful for ${session.email}`);
+    devLog(`✅ Login successful for ${maskEmail(session.email)}`);
     console.log(`   Primary role: ${primaryRole.display_name} (level ${primaryRole.permission_level})`);
     console.log(`   Total roles: ${roles.length}`);
     console.log(`   Total permissions: ${permissions.length}`);
@@ -550,11 +564,11 @@ async function getSession(req, res) {
     console.log('🔍 getSession called');
     console.log('   Authorization header:', req.headers.authorization ? 'present' : 'none');
     console.log('   Cookie:', req.cookies?.[SESSION_COOKIE_NAME] ? 'present' : 'none');
-    console.log('   Query param:', req.query.sessionToken ? 'present' : 'none');
-    console.log('   Using token:', sessionToken ? sessionToken.substring(0, 20) + '...' : 'NONE');
+    devLog('   Query param:', req.query.sessionToken ? 'present' : 'none');
+    devLog('   Using token:', sessionToken ? '[REDACTED]' : 'NONE');
 
     if (!sessionToken) {
-      console.log('❌ No session token provided');
+      devLog('❌ No session token provided');
       return res.status(401).json({
         success: false,
         error: 'No active session',
@@ -598,7 +612,7 @@ async function getSession(req, res) {
     }
 
     const session = sessionResult.rows[0];
-    console.log('✅ Session found for:', session.email);
+    devLog('✅ Session found for:', maskEmail(session.email));
 
     // Update last activity
     await pool.query(
@@ -882,7 +896,7 @@ async function verifyMagicLinkRedirect(req, res) {
       ]
     );
 
-    console.log(`✅ Login successful for ${session.email}`);
+    devLog(`✅ Login successful for ${maskEmail(session.email)}`);
     console.log(`   Primary role: ${primaryRole.display_name} (level ${primaryRole.permission_level})`);
     console.log(`   Redirecting to: /${dashboardPath}`);
 
@@ -923,11 +937,11 @@ async function exchangeToken(req, res) {
   try {
     const { token } = req.body;
 
-    console.log('🔄 exchangeToken called');
-    console.log('   Token received:', token ? token.substring(0, 20) + '...' : 'NONE');
+    devLog('🔄 exchangeToken called');
+    devLog('   Token received:', token ? '[REDACTED]' : 'NONE');
 
     if (!token) {
-      console.log('❌ No exchange token provided');
+      devLog('❌ No exchange token provided');
       return res.status(400).json({
         success: false,
         error: 'Exchange token is required'
@@ -935,7 +949,7 @@ async function exchangeToken(req, res) {
     }
 
     // Find and validate exchange token
-    console.log('📤 Querying database for exchange token...');
+    devLog('📤 Querying database for exchange token...');
     const result = await pool.query(
       `SELECT
         us.id as session_id,
@@ -958,7 +972,7 @@ async function exchangeToken(req, res) {
     console.log('📥 Database returned', result.rows.length, 'rows');
 
     if (result.rows.length === 0) {
-      console.log('❌ Exchange token not found or expired');
+      devLog('❌ Exchange token not found or expired');
       return res.status(400).json({
         success: false,
         error: 'Invalid or expired exchange token'
@@ -966,8 +980,8 @@ async function exchangeToken(req, res) {
     }
 
     const session = result.rows[0];
-    console.log('✅ Exchange token valid for:', session.email);
-    console.log('   Session token:', session.session_token ? session.session_token.substring(0, 20) + '...' : 'NONE');
+    devLog('✅ Exchange token valid for:', maskEmail(session.email));
+    devLog('   Session token:', session.session_token ? '[REDACTED]' : 'NONE');
 
     // Clear the exchange token (one-time use)
     await pool.query(
@@ -978,7 +992,7 @@ async function exchangeToken(req, res) {
       [session.session_id]
     );
 
-    console.log('🧹 Exchange token cleared (one-time use)');
+    devLog('🧹 Exchange token cleared (one-time use)');
 
     // Set HTTP-only secure cookie
     res.cookie(SESSION_COOKIE_NAME, session.session_token, {
@@ -989,8 +1003,8 @@ async function exchangeToken(req, res) {
       path: '/'
     });
 
-    console.log(`✅ Session cookie set for ${session.email}`);
-    console.log(`✅ Returning sessionToken in response body for cross-origin`);
+    devLog(`✅ Session cookie set for ${maskEmail(session.email)}`);
+    devLog(`✅ Returning sessionToken in response body for cross-origin`);
 
     // Return session data with sessionToken for cross-origin compatibility
     res.json({
@@ -1039,7 +1053,7 @@ async function updateProfile(req, res) {
       });
     }
 
-    console.log('🔧 Updating profile for session token:', sessionToken.substring(0, 20) + '...');
+    devLog('🔧 Updating profile for session token:', '[REDACTED]');
 
     // Get session to find user
     const sessionResult = await pool.query(
@@ -1060,7 +1074,7 @@ async function updateProfile(req, res) {
     const userId = session.attendee_id;
     const userEmail = session.email;
 
-    console.log('✅ Found user:', userEmail, 'ID:', userId);
+    devLog('✅ Found user:', maskEmail(userEmail), 'ID:', userId);
 
     // Update user profile in attendee_profiles table
     const updateResult = await pool.query(
@@ -1085,7 +1099,7 @@ async function updateProfile(req, res) {
 
     const updatedUser = updateResult.rows[0];
 
-    console.log('✅ Profile updated successfully for:', userEmail);
+    devLog('✅ Profile updated successfully for:', maskEmail(userEmail));
 
     res.json({
       success: true,

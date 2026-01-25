@@ -8,6 +8,20 @@ const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const { sendMagicLink } = require('../services/emailService');
 
+// Helper for development-only logging
+const devLog = (...args) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(...args);
+  }
+};
+
+// Mask email for safe logging
+const maskEmail = (email) => {
+  if (!email) return '[no email]';
+  const [local, domain] = email.split('@');
+  return `${local.substring(0, 2)}***@${domain}`;
+};
+
 /**
  * Send magic link to user email
  * POST /api/profile/request-login
@@ -62,12 +76,12 @@ async function requestMagicLink(req, res) {
     const siteHost = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
     const magicLink = `${siteHost}/member/verify.html?token=${magicToken}`;
 
-    console.log(`🔐 Magic link generated for ${normalizedEmail}:`, magicLink);
+    devLog(`🔐 Magic link generated for ${maskEmail(normalizedEmail)}`);
 
     // Send the magic link email
     try {
       await sendMagicLink(normalizedEmail, user.first_name, magicLink);
-      console.log(`✅ Magic link email sent to ${normalizedEmail}`);
+      devLog(`✅ Magic link email sent to ${maskEmail(normalizedEmail)}`);
     } catch (emailError) {
       console.error('Failed to send magic link email:', emailError);
       // Continue anyway - email failure shouldn't block the response
