@@ -15,7 +15,7 @@ asyncpg==0.29.0
 # No fix available. Not exploitable here: we use HS256 (HMAC), not ECDSA algorithms.
 python-jose[cryptography]==3.4.0  # Updated from 3.3.0 - Fixes CRITICAL algorithm confusion CVE
 passlib[bcrypt]==1.7.4
-python-multipart==0.0.18  # Updated from 0.0.6 - Fixes HIGH DoS and ReDoS vulnerabilities
+python-multipart==0.0.22  # Updated from 0.0.6 - Fixes HIGH DoS and ReDoS vulnerabilities
 itsdangerous==2.1.2
 slowapi==0.1.9
 
