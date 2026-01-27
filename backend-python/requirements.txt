@@ -28,7 +28,7 @@ phonenumbers==8.13.27
 
 # Document Processing
 # PyPDF2==3.0.1  # REMOVED - Vulnerable to infinite loop, no patch available
-pypdf==6.6.0  # Updated from 4.3.1 - Fixes 6 vulnerabilities (4 MEDIUM, 2 LOW)
+pypdf==6.6.2  # Updated from 4.3.1 - Fixes 6 vulnerabilities (4 MEDIUM, 2 LOW)
 pdfplumber>=0.11.4  # Updated from 0.10.4 - Pulls pdfminer.six>=20251230 (CVE-2025-64512, GHSA-f83h-ghpp-7wcc)
 python-docx==1.1.0
 openpyxl==3.1.2
