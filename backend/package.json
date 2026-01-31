@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
-    "@aws-sdk/client-ses": "^3.925.0",
+    "@aws-sdk/client-ses": "^3.974.0",
     "@sendgrid/mail": "^8.1.6",
     "axios": "^1.6.5",
     "cookie-parser": "^1.4.7",
@@ -46,5 +46,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "overrides": {
+    "fast-xml-parser": ">=5.3.4"
   }
 }
