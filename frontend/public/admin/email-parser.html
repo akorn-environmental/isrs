@@ -164,6 +164,50 @@
       <p class="admin-text-muted">Automatically extract contacts, action items, and fundraising signals from emails</p>
     </div>
 
+    <!-- Gmail Integration Status -->
+    <div class="admin-card" style="margin-bottom: var(--admin-space-lg);" id="gmailStatus">
+      <div class="admin-card-header">
+        <h2 style="margin: 0;">Gmail Integration</h2>
+      </div>
+      <div class="admin-card-body">
+        <div id="gmailConnected" style="display: none;">
+          <div style="display: flex; align-items: center; gap: var(--admin-space-md); margin-bottom: var(--admin-space-md);">
+            <span style="color: var(--admin-success-text); font-size: 1.5rem;">✓</span>
+            <div style="flex: 1;">
+              <strong>Connected to Gmail</strong>
+              <div style="font-size: var(--admin-text-sm); color: var(--admin-gray-600);" id="gmailAccount"></div>
+            </div>
+          </div>
+          <div style="display: flex; gap: var(--admin-space-sm); flex-wrap: wrap;">
+            <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="checkPollerStatus()">
+              <span style="margin-right: 0.25rem;">ℹ</span> Check Status
+            </button>
+            <button class="admin-btn admin-btn-success admin-btn-sm" onclick="startPoller()" id="startPollerBtn">
+              <span style="margin-right: 0.25rem;">▶</span> Start Auto-Polling
+            </button>
+            <button class="admin-btn admin-btn-warning admin-btn-sm" onclick="pausePoller()" id="pausePollerBtn" style="display: none;">
+              <span style="margin-right: 0.25rem;">⏸</span> Pause
+            </button>
+            <button class="admin-btn admin-btn-danger admin-btn-sm" onclick="stopPoller()" id="stopPollerBtn" style="display: none;">
+              <span style="margin-right: 0.25rem;">⏹</span> Stop
+            </button>
+            <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="triggerManualPoll()">
+              <span style="margin-right: 0.25rem;">⚡</span> Poll Now
+            </button>
+          </div>
+          <div id="pollerStatus" style="margin-top: var(--admin-space-md); padding: var(--admin-space-sm); background: var(--admin-gray-50); border-radius: var(--admin-radius-sm); font-size: var(--admin-text-sm); display: none;"></div>
+        </div>
+        <div id="gmailDisconnected">
+          <p style="margin: 0 0 var(--admin-space-md) 0; color: var(--admin-gray-600);">
+            Connect your Gmail account to automatically import and parse emails with the "ISRS-Leads" label.
+          </p>
+          <button class="admin-btn admin-btn-primary" onclick="connectGmail()">
+            <span style="margin-right: 0.25rem;">📧</span> Connect Gmail Account
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="two-column">
       <!-- Left: Parse New Email -->
       <div>
@@ -216,12 +260,52 @@
               <span style="margin-right: 0.25rem;">↻</span> Refresh
             </button>
           </div>
+          <!-- Filters -->
+          <div style="padding: var(--admin-space-md); border-bottom: 1px solid var(--admin-gray-200); background: var(--admin-gray-50);">
+            <div style="display: flex; gap: var(--admin-space-sm); flex-wrap: wrap;">
+              <select id="filterSource" class="admin-input" style="flex: 1; min-width: 150px;" onchange="loadParsedEmails()">
+                <option value="">All Sources</option>
+                <option value="gmail">Gmail</option>
+                <option value="manual">Manual</option>
+              </select>
+              <select id="filterStatus" class="admin-input" style="flex: 1; min-width: 150px;" onchange="loadParsedEmails()">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <input type="text" id="filterSearch" class="admin-input" placeholder="Search..." style="flex: 2; min-width: 200px;" onkeyup="debounceSearch()">
+            </div>
+          </div>
           <div class="admin-card-body" style="padding: 0;">
             <div id="loading" class="empty-state">
               <div class="loading-spinner"></div>
               <p>Loading parsed emails...</p>
             </div>
             <div id="parsedEmailsList" class="parsed-emails-list" style="display: none; padding: var(--admin-space-lg);"></div>
+          </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="admin-card" style="margin-top: var(--admin-space-lg);" id="analyticsCard" style="display: none;">
+          <div class="admin-card-header">
+            <h2 style="margin: 0;">Analytics</h2>
+          </div>
+          <div class="admin-card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--admin-space-md);">
+              <div style="text-align: center; padding: var(--admin-space-md); background: var(--admin-gray-50); border-radius: var(--admin-radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--admin-primary);" id="totalEmails">0</div>
+                <div style="font-size: var(--admin-text-sm); color: var(--admin-gray-600); margin-top: var(--admin-space-xs);">Total Emails</div>
+              </div>
+              <div style="text-align: center; padding: var(--admin-space-md); background: var(--admin-gray-50); border-radius: var(--admin-radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--admin-success-text);" id="totalContacts">0</div>
+                <div style="font-size: var(--admin-text-sm); color: var(--admin-gray-600); margin-top: var(--admin-space-xs);">Contacts Extracted</div>
+              </div>
+              <div style="text-align: center; padding: var(--admin-space-md); background: var(--admin-gray-50); border-radius: var(--admin-radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--admin-warning-text);" id="avgConfidence">0%</div>
+                <div style="font-size: var(--admin-text-sm); color: var(--admin-gray-600); margin-top: var(--admin-space-xs);">Avg Confidence</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -242,8 +326,179 @@
       }
 
       loadAdminLayout('email-parser');
+      checkGmailConnection();
       loadParsedEmails();
     });
+
+    // Gmail Integration Functions
+    async function checkGmailConnection() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/gmail-oauth/status`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.connected) {
+            document.getElementById('gmailConnected').style.display = 'block';
+            document.getElementById('gmailDisconnected').style.display = 'none';
+            document.getElementById('gmailAccount').textContent = data.email || 'Connected';
+            checkPollerStatus();
+          } else {
+            document.getElementById('gmailConnected').style.display = 'none';
+            document.getElementById('gmailDisconnected').style.display = 'block';
+          }
+        }
+      } catch (error) {
+        console.error('Error checking Gmail connection:', error);
+      }
+    }
+
+    async function connectGmail() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/gmail-oauth/authorize`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.authorizeUrl) {
+            window.location.href = data.authorizeUrl;
+          }
+        } else {
+          alert('Failed to initiate Gmail connection');
+        }
+      } catch (error) {
+        console.error('Error connecting Gmail:', error);
+        alert('Error connecting to Gmail');
+      }
+    }
+
+    async function checkPollerStatus() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/gmail-poller/status`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          updatePollerUI(data);
+        }
+      } catch (error) {
+        console.error('Error checking poller status:', error);
+      }
+    }
+
+    function updatePollerUI(status) {
+      const statusEl = document.getElementById('pollerStatus');
+      const startBtn = document.getElementById('startPollerBtn');
+      const pauseBtn = document.getElementById('pausePollerBtn');
+      const stopBtn = document.getElementById('stopPollerBtn');
+
+      if (status.isRunning) {
+        startBtn.style.display = 'none';
+        pauseBtn.style.display = 'inline-block';
+        stopBtn.style.display = 'inline-block';
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = `
+          <strong>Status:</strong> ${status.isPaused ? 'Paused' : 'Running'}<br>
+          <strong>Last Poll:</strong> ${status.lastPoll ? new Date(status.lastPoll).toLocaleString() : 'Never'}<br>
+          <strong>Emails Processed:</strong> ${status.emailsProcessed || 0}
+        `;
+      } else {
+        startBtn.style.display = 'inline-block';
+        pauseBtn.style.display = 'none';
+        stopBtn.style.display = 'none';
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = '<strong>Status:</strong> Not Running';
+      }
+    }
+
+    async function startPoller() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/gmail-poller/start`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message || 'Gmail poller started');
+          checkPollerStatus();
+        } else {
+          alert('Failed to start poller');
+        }
+      } catch (error) {
+        console.error('Error starting poller:', error);
+        alert('Error starting poller');
+      }
+    }
+
+    async function pausePoller() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/gmail-poller/pause`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          checkPollerStatus();
+        }
+      } catch (error) {
+        console.error('Error pausing poller:', error);
+      }
+    }
+
+    async function stopPoller() {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/gmail-poller/stop`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          checkPollerStatus();
+        }
+      } catch (error) {
+        console.error('Error stopping poller:', error);
+      }
+    }
+
+    async function triggerManualPoll() {
+      const btn = event.target.closest('button');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span style="margin-right: 0.25rem;">⏳</span> Polling...';
+
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/gmail-poller/trigger`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message || 'Poll completed');
+          loadParsedEmails();
+          checkPollerStatus();
+        } else {
+          alert('Failed to trigger poll');
+        }
+      } catch (error) {
+        console.error('Error triggering poll:', error);
+        alert('Error triggering poll');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
 
     async function parseEmail(event) {
       event.preventDefault();
@@ -401,6 +656,86 @@
       return `<span class="confidence-badge confidence-${level}">${confidence}%</span>`;
     }
 
+    // Debounce search input
+    let searchTimeout;
+    function debounceSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        loadParsedEmails();
+      }, 500);
+    }
+
+    // Filter emails based on UI selections
+    function filterEmails(emails) {
+      const sourceFilter = document.getElementById('filterSource')?.value || '';
+      const statusFilter = document.getElementById('filterStatus')?.value || '';
+      const searchFilter = document.getElementById('filterSearch')?.value.toLowerCase() || '';
+
+      return emails.filter(email => {
+        // Source filter
+        if (sourceFilter && email.source !== sourceFilter) {
+          return false;
+        }
+
+        // Status filter
+        if (statusFilter && email.review_status !== statusFilter) {
+          return false;
+        }
+
+        // Search filter (search in subject, from_name, from_email)
+        if (searchFilter) {
+          const searchableText = [
+            email.subject || '',
+            email.from_name || '',
+            email.from_email || '',
+            email.parsed_data?.summary || ''
+          ].join(' ').toLowerCase();
+
+          if (!searchableText.includes(searchFilter)) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    }
+
+    // Calculate analytics from emails
+    function calculateAnalytics(emails) {
+      const totalEmails = emails.length;
+      const totalContacts = emails.reduce((sum, email) => {
+        return sum + (email.parsed_data?.contacts?.length || 0);
+      }, 0);
+
+      const confidenceScores = emails
+        .map(e => e.overall_confidence)
+        .filter(c => c !== null && c !== undefined);
+
+      const avgConfidence = confidenceScores.length > 0
+        ? Math.round(confidenceScores.reduce((a, b) => a + b, 0) / confidenceScores.length)
+        : 0;
+
+      return { totalEmails, totalContacts, avgConfidence };
+    }
+
+    // Update analytics display
+    function updateAnalytics(emails) {
+      const analytics = calculateAnalytics(emails);
+
+      const totalEmailsEl = document.getElementById('totalEmails');
+      const totalContactsEl = document.getElementById('totalContacts');
+      const avgConfidenceEl = document.getElementById('avgConfidence');
+
+      if (totalEmailsEl) totalEmailsEl.textContent = analytics.totalEmails;
+      if (totalContactsEl) totalContactsEl.textContent = analytics.totalContacts;
+      if (avgConfidenceEl) avgConfidenceEl.textContent = `${analytics.avgConfidence}%`;
+
+      const analyticsCard = document.getElementById('analyticsCard');
+      if (analyticsCard && analytics.totalEmails > 0) {
+        analyticsCard.style.display = 'block';
+      }
+    }
+
     async function loadParsedEmails() {
       const loadingEl = document.getElementById('loading');
       const listEl = document.getElementById('parsedEmailsList');
@@ -425,7 +760,10 @@
         const data = await response.json();
 
         if (data.success) {
-          displayParsedEmails(data.emails || []);
+          const allEmails = data.emails || [];
+          const filteredEmails = filterEmails(allEmails);
+          updateAnalytics(allEmails);
+          displayParsedEmails(filteredEmails);
         } else {
           displayParsedEmails([]);
         }
@@ -467,9 +805,189 @@
       `).join('');
     }
 
-    function viewEmail(id) {
-      // TODO: Implement full email details view
-      alert(`Email details view coming soon!\n\nEmail ID: ${id}`);
+    async function viewEmail(id) {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load email details');
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          showEmailModal(data.email);
+        } else {
+          alert('Failed to load email details');
+        }
+      } catch (error) {
+        console.error('Error loading email:', error);
+        alert('Error loading email details');
+      }
+    }
+
+    function showEmailModal(email) {
+      const parsed = email.parsed_data || {};
+
+      let modalHtml = `
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="closeEmailModal(event)">
+          <div style="background: white; border-radius: 8px; max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+            <div style="padding: 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: between; align-items: center;">
+              <div style="flex: 1;">
+                <h2 style="margin: 0 0 8px 0; font-size: 20px;">${escapeHtml(email.subject || '(No Subject)')}</h2>
+                <div style="font-size: 14px; color: #666;">
+                  <strong>From:</strong> ${escapeHtml(email.from_name || '')} &lt;${escapeHtml(email.from_email || '')}&gt;<br>
+                  <strong>Date:</strong> ${email.email_date ? new Date(email.email_date).toLocaleString() : 'Unknown'}<br>
+                  <strong>Source:</strong> ${email.source || 'manual'} |
+                  <strong>Status:</strong> <span class="review-status status-${email.review_status || 'pending'}">${email.review_status || 'pending'}</span>
+                </div>
+              </div>
+              <button onclick="closeEmailModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 8px; color: #666;">&times;</button>
+            </div>
+
+            <div style="padding: 24px;">
+              ${parsed.summary ? `
+                <div style="margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #2c5f2d;">
+                  <h3 style="margin: 0 0 8px 0; font-size: 16px;">Summary</h3>
+                  <p style="margin: 0; line-height: 1.6;">${escapeHtml(parsed.summary)}</p>
+                </div>
+              ` : ''}
+
+              ${parsed.contacts && parsed.contacts.length > 0 ? `
+                <div style="margin-bottom: 24px;">
+                  <h3 style="margin: 0 0 12px 0; font-size: 16px;">Contacts Extracted (${parsed.contacts.length})</h3>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">
+                    ${parsed.contacts.map(c => `
+                      <div style="padding: 12px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e0e0e0;">
+                        <div style="font-weight: 600; margin-bottom: 6px;">${escapeHtml(c.name)} ${getConfidenceBadge(c.confidence)}</div>
+                        <div style="font-size: 13px; color: #666;">
+                          ${c.email ? `<div>✉ ${escapeHtml(c.email)}</div>` : ''}
+                          ${c.organization ? `<div>🏢 ${escapeHtml(c.organization)}</div>` : ''}
+                          ${c.title ? `<div>💼 ${escapeHtml(c.title)}</div>` : ''}
+                          ${c.phone ? `<div>📞 ${escapeHtml(c.phone)}</div>` : ''}
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${parsed.action_items && parsed.action_items.length > 0 ? `
+                <div style="margin-bottom: 24px;">
+                  <h3 style="margin: 0 0 12px 0; font-size: 16px;">Action Items (${parsed.action_items.length})</h3>
+                  ${parsed.action_items.map(a => `
+                    <div style="padding: 12px; background: #e8f4fd; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #0066cc;">
+                      <div style="font-weight: 600;">${escapeHtml(a.item)}</div>
+                      <div style="font-size: 13px; color: #666; margin-top: 4px;">
+                        ${a.owner ? `Owner: ${escapeHtml(a.owner)} | ` : ''}
+                        ${a.deadline ? `Deadline: ${escapeHtml(a.deadline)} | ` : ''}
+                        Priority: ${a.priority || 'normal'} ${getConfidenceBadge(a.confidence)}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+              ${parsed.fundraising && parsed.fundraising.signals && parsed.fundraising.signals.length > 0 ? `
+                <div style="margin-bottom: 24px;">
+                  <h3 style="margin: 0 0 12px 0; font-size: 16px;">🎯 Fundraising Signals</h3>
+                  <ul style="margin: 0; padding-left: 20px;">
+                    ${parsed.fundraising.signals.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+
+              ${parsed.flags && parsed.flags.length > 0 ? `
+                <div style="margin-bottom: 24px;">
+                  <h3 style="margin: 0 0 12px 0; font-size: 16px;">⚠️ Flags</h3>
+                  ${parsed.flags.map(f => `
+                    <div style="padding: 8px 12px; background: #fff3cd; border-radius: 4px; margin-bottom: 6px; border-left: 3px solid #ffc107; font-size: 14px;">
+                      ${escapeHtml(f)}
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+              ${parsed.recommended_next_steps && parsed.recommended_next_steps.length > 0 ? `
+                <div style="margin-bottom: 24px;">
+                  <h3 style="margin: 0 0 12px 0; font-size: 16px;">📋 Recommended Next Steps</h3>
+                  <ol style="margin: 0; padding-left: 20px;">
+                    ${parsed.recommended_next_steps.map(s => `<li style="margin-bottom: 6px;">${escapeHtml(s)}</li>`).join('')}
+                  </ol>
+                </div>
+              ` : ''}
+
+              <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e0e0e0; display: flex; gap: 12px;">
+                <button onclick="approveEmail('${email.id}')" class="admin-btn admin-btn-success admin-btn-sm">
+                  ✓ Approve
+                </button>
+                <button onclick="rejectEmail('${email.id}')" class="admin-btn admin-btn-danger admin-btn-sm">
+                  ✗ Reject
+                </button>
+                <button onclick="closeEmailModal()" class="admin-btn admin-btn-secondary admin-btn-sm" style="margin-left: auto;">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const modalDiv = document.createElement('div');
+      modalDiv.id = 'emailModal';
+      modalDiv.innerHTML = modalHtml;
+      document.body.appendChild(modalDiv);
+    }
+
+    function closeEmailModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      const modal = document.getElementById('emailModal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+
+    async function approveEmail(id) {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/${id}/approve`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          closeEmailModal();
+          loadParsedEmails();
+        } else {
+          alert('Failed to approve email');
+        }
+      } catch (error) {
+        console.error('Error approving email:', error);
+        alert('Error approving email');
+      }
+    }
+
+    async function rejectEmail(id) {
+      try {
+        const token = localStorage.getItem('isrs_session_token');
+        const response = await fetch(`${API_BASE}/api/email-parsing/${id}/reject`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          closeEmailModal();
+          loadParsedEmails();
+        } else {
+          alert('Failed to reject email');
+        }
+      } catch (error) {
+        console.error('Error rejecting email:', error);
+        alert('Error rejecting email');
+      }
     }
 
     function escapeHtml(text) {

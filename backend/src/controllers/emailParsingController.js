@@ -45,3 +45,43 @@ exports.getAnalytics = asyncHandler(async (req, res) => {
   const analytics = await emailParsingService.getAnalytics({ period, status });
   res.json({ success: true, analytics });
 });
+
+exports.getEmailById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { query } = require('../config/database');
+
+  const result = await query(
+    'SELECT * FROM parsed_emails WHERE id = $1',
+    [id]
+  );
+
+  if (result.rows.length === 0) {
+    return res.status(404).json({ success: false, error: 'Email not found' });
+  }
+
+  res.json({ success: true, email: result.rows[0] });
+});
+
+exports.approveEmail = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { query } = require('../config/database');
+
+  await query(
+    'UPDATE parsed_emails SET review_status = $1, reviewed_by = $2, reviewed_at = NOW() WHERE id = $3',
+    ['approved', req.user?.email || 'system', id]
+  );
+
+  res.json({ success: true });
+});
+
+exports.rejectEmail = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { query } = require('../config/database');
+
+  await query(
+    'UPDATE parsed_emails SET review_status = $1, reviewed_by = $2, reviewed_at = NOW() WHERE id = $3',
+    ['rejected', req.user?.email || 'system', id]
+  );
+
+  res.json({ success: true });
+});

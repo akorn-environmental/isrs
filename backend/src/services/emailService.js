@@ -1,5 +1,8 @@
-const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+const { SESClient, SendRawEmailCommand, SendEmailCommand } = require('@aws-sdk/client-ses');
 const { query } = require('../config/database');
+const { getEmailLogos } = require('../utils/emailAssets');
+const fs = require('fs');
+const path = require('path');
 
 // Initialize AWS SES client
 const sesClient = new SESClient({
@@ -64,44 +67,150 @@ async function sendCampaignEmails(campaign, recipients) {
   return results;
 }
 
-async function sendEmail({ to, subject, body, campaignId, recipientId }) {
+async function sendEmail({ to, subject, body, campaignId, recipientId, cc }) {
   const fromEmail = process.env.SES_FROM_EMAIL || 'noreply@isrs.org';
   const fromName = process.env.SES_FROM_NAME || 'ISRS';
-  
+
   if (process.env.NODE_ENV !== 'production' || !process.env.AWS_ACCESS_KEY_ID) {
     console.log(`[MOCK EMAIL] To: ${to}, Subject: ${subject}`);
     console.log(`[MOCK EMAIL] Body preview: ${body.substring(0, 100)}...`);
     return { MessageId: 'mock-' + Date.now() };
   }
-  
+
+  // Build MIME email with inline attachments
+  const boundary = `----=_Part_${Date.now()}_${Math.random().toString(36)}`;
+  const htmlBody = wrapEmailTemplate(body);
+  const textBody = stripHtml(body);
+
+  // Load logo images - use absolute paths from project root
+  const projectRoot = path.join(__dirname, '../../..');
+  const isrsLogoPath = path.join(projectRoot, 'frontend/public/images/logos/LOGO - ISRS - wide - green.png');
+  const icsr2026LogoPath = path.join(projectRoot, 'frontend/public/images/logos/LOGO - ICSR2026.png');
+
+  let isrsLogoData = '';
+  let icsr2026LogoData = '';
+
+  try {
+    isrsLogoData = fs.readFileSync(isrsLogoPath).toString('base64');
+  } catch (err) {
+    console.warn('Could not load ISRS logo:', err.message);
+  }
+
+  try {
+    icsr2026LogoData = fs.readFileSync(icsr2026LogoPath).toString('base64');
+  } catch (err) {
+    console.warn('Could not load ICSR2026 logo:', err.message);
+  }
+
+  const ccHeader = cc ? `Cc: ${Array.isArray(cc) ? cc.join(', ') : cc}\r\n` : '';
+
+  const rawMessage = `From: ${fromName} <${fromEmail}>
+To: ${to}
+${ccHeader}Subject: ${subject}
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="${boundary}"
+
+--${boundary}
+Content-Type: multipart/alternative; boundary="${boundary}_alt"
+
+--${boundary}_alt
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+${textBody}
+
+--${boundary}_alt
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+${htmlBody}
+
+--${boundary}_alt--
+
+--${boundary}
+Content-Type: image/png; name="isrs-logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <isrsLogo>
+Content-Disposition: inline; filename="isrs-logo.png"
+
+${isrsLogoData.match(/.{1,76}/g).join('\r\n')}
+
+--${boundary}
+Content-Type: image/png; name="icsr2026-logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icsr2026Logo>
+Content-Disposition: inline; filename="icsr2026-logo.png"
+
+${icsr2026LogoData.match(/.{1,76}/g).join('\r\n')}
+
+--${boundary}--`;
+
   const params = {
-    Source: `${fromName} <${fromEmail}>`,
-    Destination: { ToAddresses: [to] },
-    Message: {
-      Subject: { Data: subject, Charset: 'UTF-8' },
-      Body: {
-        Html: { Data: wrapEmailTemplate(body), Charset: 'UTF-8' },
-        Text: { Data: stripHtml(body), Charset: 'UTF-8' }
-      }
+    RawMessage: {
+      Data: Buffer.from(rawMessage)
     },
-    ConfigurationSetName: process.env.SES_CONFIGURATION_SET
+    ...(process.env.SES_CONFIGURATION_SET && {
+      ConfigurationSetName: process.env.SES_CONFIGURATION_SET
+    })
   };
-  
-  const command = new SendEmailCommand(params);
+
+  const command = new SendRawEmailCommand(params);
   const result = await sesClient.send(command);
-  
+
   if (campaignId) {
     await query(`
       INSERT INTO email_logs (campaign_id, recipient_id, recipient_email, message_id, sent_at)
       VALUES ($1, $2, $3, $4, NOW())
     `, [campaignId, recipientId, to, result.MessageId]);
   }
-  
+
   return result;
 }
 
 function personalizeContent(content, recipient) {
   let personalized = content;
+
+  // Load logos for email
+  const logos = getEmailLogos();
+
+  // Handle presentation titles array
+  const presentationTitles = recipient.icsr2024_presentation_titles || [];
+  const presentationTitlesText = Array.isArray(presentationTitles) && presentationTitles.length > 0
+    ? presentationTitles.join(', ')
+    : '';
+  const presentationCount = Array.isArray(presentationTitles) ? presentationTitles.length : 0;
+
+  // Remove conditional sections based on recipient data
+  // Remove ICSR2024 attendee section if they didn't attend
+  if (!recipient.icsr2024_attended) {
+    personalized = personalized.replace(/<div class="icsr2024-attendee-section">[\s\S]*?<\/div>\s*(?=<div class="icsr2024-non-attendee-section">|<h2|$)/i, '');
+  }
+
+  // Remove non-attendee section if they DID attend
+  if (recipient.icsr2024_attended) {
+    personalized = personalized.replace(/<div class="icsr2024-non-attendee-section">[\s\S]*?<\/div>\s*(?=<!-- Main Announcement|<h2|$)/i, '');
+  }
+
+  // Remove presenter recognition if they didn't present or have no presentations
+  if (!recipient.icsr2024_presented || presentationCount === 0) {
+    personalized = personalized.replace(/<p style="background: #f0f8ff.*?<\/p>\s*(?=<\/div>)/is, '');
+  }
+
+  // Remove already-registered section if not registered
+  if (!recipient.icsr2026_registered) {
+    personalized = personalized.replace(/<!-- CONDITIONAL: Already registered -->[\s\S]*?<div class="already-registered-section[^"]*">[\s\S]*?<\/div>\s*\n*/i, '');
+  }
+
+  // Remove not-registered section if already registered
+  if (recipient.icsr2026_registered) {
+    personalized = personalized.replace(/<!-- CONDITIONAL: Not yet registered -->[\s\S]*?<div class="not-registered-section">[\s\S]*?<\/div>\s*\n*/i, '');
+  }
+
+  // Remove sponsor section if not a sponsor or funder
+  if (!recipient.is_sponsor && !recipient.is_funder) {
+    personalized = personalized.replace(/<div class="sponsor-funder-section"[\s\S]*?<\/div>\s*(?=<!-- About ISRS|<h2|$)/i, '');
+  }
+
   const variables = {
     '{{firstName}}': recipient.first_name || '',
     '{{lastName}}': recipient.last_name || '',
@@ -109,10 +218,21 @@ function personalizeContent(content, recipient) {
     '{{email}}': recipient.email || '',
     '{{organization}}': recipient.organization || '',
     '{{title}}': recipient.title || '',
-    '{{country}}': recipient.country || ''
+    '{{country}}': recipient.country || '',
+    '{{icsr2024Attended}}': recipient.icsr2024_attended ? 'Yes' : 'No',
+    '{{icsr2024Presented}}': recipient.icsr2024_presented ? 'Yes' : 'No',
+    '{{icsr2024PresentationTitles}}': presentationTitlesText,
+    '{{icsr2024PresentationCount}}': presentationCount.toString(),
+    '{{icsr2026Registered}}': recipient.icsr2026_registered ? 'Yes' : 'No',
+    '{{icsr2026RegistrationType}}': recipient.icsr2026_registration_type || '',
+    '{{isFunder}}': recipient.is_funder ? 'Yes' : 'No',
+    '{{isSponsor}}': recipient.is_sponsor ? 'Yes' : 'No',
+    '{{sponsorLevel}}': recipient.sponsor_level || '',
+    '{{conferenceRole}}': recipient.conference_role || '',
+    '{{icsr2026LogoSrc}}': 'cid:icsr2026Logo'
   };
   Object.entries(variables).forEach(([key, value]) => {
-    personalized = personalized.replace(new RegExp(key, 'g'), value);
+    personalized = personalized.replace(new RegExp(key.replace(/[{}]/g, '\\$&'), 'g'), value);
   });
   return personalized;
 }
@@ -124,72 +244,293 @@ function wrapEmailTemplate(body) {
   <meta charset='UTF-8'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Base styles */
     body {
-      font-family: 'PT Serif', Georgia, serif;
-      line-height: 1.6;
-      color: #333;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      color: #333333;
+      background-color: #f5f5f5;
+    }
+
+    /* Container */
+    .container {
       max-width: 600px;
       margin: 0 auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-    }
-    .container {
       background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
     }
+
+    /* Header with logo */
     .header {
       text-align: center;
-      padding: 30px 20px;
-      background: linear-gradient(135deg, #2e5a8a 0%, #4a7ab5 100%);
+      padding: 30px 20px 15px;
+      background-color: #ffffff;
     }
+
     .header img {
       max-width: 200px;
       height: auto;
     }
+
     .header h1 {
-      color: #ffffff;
-      font-family: 'Marcellus', Georgia, serif;
-      font-size: 24px;
-      margin: 15px 0 0 0;
-      font-weight: 400;
+      margin: 15px 0 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c5f2d;
+      letter-spacing: 0.5px;
     }
+
+    /* Content area */
     .content {
-      padding: 30px 25px;
+      padding: 15px 30px;
       background-color: #ffffff;
     }
-    .footer {
-      text-align: center;
-      padding: 20px;
-      background-color: #f8f9fa;
-      border-top: 1px solid #e0e0e0;
-      font-size: 12px;
-      color: #666;
+
+    .content p {
+      margin: 0 0 12px;
+      font-size: 15px;
+      line-height: 1.5;
     }
-    a {
-      color: #2e5a8a;
+
+    .content h2 {
+      margin: 25px 0 12px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c5f2d;
+    }
+
+    .content h3 {
+      margin: 20px 0 10px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #333333;
+    }
+
+    .content ul {
+      margin: 8px 0 15px;
+      padding-left: 20px;
+    }
+
+    .content li {
+      margin-bottom: 6px;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .content strong {
+      font-weight: 600;
+      color: #2c5f2d;
+    }
+
+    /* Announcement box - minimal styling */
+    .announcement {
+      margin: 20px 0;
+      padding: 25px;
+      background-color: #f8fdf8;
+      border: 2px solid #2c5f2d;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .announcement img {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 15px;
+    }
+
+    .announcement h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c5f2d;
+    }
+
+    .announcement p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    /* Buttons */
+    .button {
+      display: inline-block;
+      margin: 10px 5px;
+      padding: 12px 24px;
+      background-color: #2c5f2d;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .button:hover {
+      background-color: #234d24;
       text-decoration: none;
     }
-    a:hover {
-      color: #4a7ab5;
+
+    /* Info box */
+    .info-box {
+      margin: 20px 0;
+      padding: 20px;
+      background-color: #f8fdf8;
+      border-left: 4px solid #2c5f2d;
+      border-radius: 4px;
+    }
+
+    .info-box p {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 25px 30px;
+      background-color: #f8f9fa;
+      text-align: center;
+      border-top: 2px solid #e0e0e0;
+      margin-top: 30px;
+    }
+
+    .footer-box {
+      background-color: #ffffff;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .footer-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c5f2d;
+      margin: 0 0 12px 0;
+    }
+
+    .footer-links {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .footer-links a {
+      color: #2c5f2d;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
       text-decoration: underline;
+    }
+
+    .footer-divider {
+      border: 0;
+      border-top: 1px solid #e0e0e0;
+      margin: 15px 0;
+    }
+
+    .footer-small {
+      font-size: 12px;
+      color: #666666;
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+
+    .footer-copyright {
+      font-size: 11px;
+      color: #999999;
+      margin-top: 15px;
+    }
+
+    /* Links */
+    a {
+      color: #2c5f2d;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile responsive */
+    @media only screen and (max-width: 600px) {
+      .header {
+        padding: 30px 15px 15px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .content {
+        padding: 15px 20px;
+      }
+
+      .content h2 {
+        font-size: 18px;
+      }
+
+      .content h3 {
+        font-size: 16px;
+      }
+
+      .content p,
+      .content li {
+        font-size: 14px;
+      }
+
+      .announcement {
+        padding: 20px 15px;
+        margin: 20px 0;
+      }
+
+      .announcement h3 {
+        font-size: 16px;
+      }
+
+      .announcement p {
+        font-size: 14px;
+      }
+
+      .button {
+        display: block;
+        margin: 10px 0;
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+
+      .footer {
+        padding: 20px 15px;
+      }
     }
   </style>
 </head>
 <body>
   <div class='container'>
     <div class='header'>
-      <img src='https://isrs-frontend.onrender.com/images/logo-wide-white.png' alt='ISRS Logo'>
+      <img src='cid:isrsLogo' alt='ISRS Logo'>
       <h1>International Shellfish Restoration Society</h1>
     </div>
     <div class='content'>${body}</div>
     <div class='footer'>
-      <p><strong>International Shellfish Restoration Society</strong></p>
-      <p><a href='https://shellfish-society.org'>Visit Our Website</a> | <a href='mailto:info@shellfish-society.org'>Contact Us</a></p>
-      <p style='font-size: 11px; color: #999; margin-top: 15px;'>
-        © ${new Date().getFullYear()} International Shellfish Restoration Society. All rights reserved.
-      </p>
+      <div class='footer-box'>
+        <p class='footer-title'>International Shellfish Restoration Society</p>
+        <p class='footer-links'>
+          <a href='https://www.shellfish-society.org'>www.shellfish-society.org</a> |
+          <a href='mailto:info@shellfish-society.org'>info@shellfish-society.org</a>
+        </p>
+        <hr class='footer-divider'>
+        <p class='footer-small'>
+          EIN: 88-3755389<br>
+          You're receiving this email because you're a contact in the ISRS database.<br>
+          <a href='{{unsubscribeLink}}'>Unsubscribe from future communications</a>
+        </p>
+        <p class='footer-copyright'>
+          © ${new Date().getFullYear()} International Shellfish Restoration Society. All rights reserved.
+        </p>
+      </div>
     </div>
   </div>
 </body>

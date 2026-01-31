@@ -206,32 +206,58 @@ exports.sendCampaign = asyncHandler(async (req, res) => {
   let recipientsQuery;
   switch (campaign.target_audience) {
     case 'all_contacts':
-      recipientsQuery = 'SELECT id, email, first_name, last_name, organization, title, country FROM contacts WHERE email IS NOT NULL';
+      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country,
+                         icsr2024_attended, icsr2024_presented, icsr2024_presentation_titless,
+                         icsr2026_registered, icsr2026_registration_type,
+                         is_funder, is_sponsor, sponsor_level, conference_role
+                         FROM contacts WHERE email IS NOT NULL`;
       break;
     case 'board_members':
-      recipientsQuery = `SELECT DISTINCT c.id, c.email, c.first_name, c.last_name, c.organization, c.title, c.country
+      recipientsQuery = `SELECT DISTINCT c.id, c.email, c.first_name, c.last_name, c.organization, c.title, c.country,
+                         c.icsr2024_attended, c.icsr2024_presented, c.icsr2024_presentation_titles,
+                         c.icsr2026_registered, c.icsr2026_registration_type,
+                         c.is_funder, c.is_sponsor, c.sponsor_level, c.conference_role
                         FROM contacts c
                         JOIN admin_users au ON c.email = au.email
                         WHERE c.email IS NOT NULL`;
       break;
     case 'funding_prospects':
-      recipientsQuery = `SELECT id, contact_email as email, organization_name as organization, contact_name as first_name, '' as last_name, '' as title, '' as country
+      recipientsQuery = `SELECT id, contact_email as email, organization_name as organization, contact_name as first_name, '' as last_name, '' as title, '' as country,
+                         false as icsr2024_attended, false as icsr2024_presented, null as icsr2024_presentation_titles,
+                         false as icsr2026_registered, null as icsr2026_registration_type,
+                         false as is_funder, false as is_sponsor, null as sponsor_level, null as conference_role
                         FROM funding_prospects
                         WHERE contact_email IS NOT NULL`;
       break;
     case 'conference_attendees':
-      recipientsQuery = 'SELECT id, email, first_name, last_name, organization, title, country FROM contacts WHERE email IS NOT NULL';
+      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country,
+                         icsr2024_attended, icsr2024_presented, icsr2024_presentation_titles,
+                         icsr2026_registered, icsr2026_registration_type,
+                         is_funder, is_sponsor, sponsor_level, conference_role
+                         FROM contacts WHERE email IS NOT NULL`;
       break;
     case 'international_contacts':
-      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country FROM contacts
+      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country,
+                         icsr2024_attended, icsr2024_presented, icsr2024_presentation_titles,
+                         icsr2026_registered, icsr2026_registration_type,
+                         is_funder, is_sponsor, sponsor_level, conference_role
+                        FROM contacts
                         WHERE email IS NOT NULL AND country IS NOT NULL AND country != 'United States'`;
       break;
     case 'government_contacts':
-      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country FROM contacts
+      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country,
+                         icsr2024_attended, icsr2024_presented, icsr2024_presentation_titles,
+                         icsr2026_registered, icsr2026_registration_type,
+                         is_funder, is_sponsor, sponsor_level, conference_role
+                        FROM contacts
                         WHERE email IS NOT NULL AND organization ILIKE '%government%'`;
       break;
     default:
-      recipientsQuery = 'SELECT id, email, first_name, last_name, organization, title, country FROM contacts WHERE email IS NOT NULL LIMIT 10';
+      recipientsQuery = `SELECT id, email, first_name, last_name, organization, title, country,
+                         icsr2024_attended, icsr2024_presented, icsr2024_presentation_titles,
+                         icsr2026_registered, icsr2026_registration_type,
+                         is_funder, is_sponsor, sponsor_level, conference_role
+                         FROM contacts WHERE email IS NOT NULL LIMIT 10`;
   }
 
   const recipientsResult = await query(recipientsQuery);

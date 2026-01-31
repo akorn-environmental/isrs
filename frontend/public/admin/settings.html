@@ -107,6 +107,99 @@
       </div>
     </div>
 
+    <!-- Email & AWS Configuration -->
+    <div class="admin-card admin-mb-lg">
+      <div class="admin-card-header">
+        <h2>Email & AWS Configuration</h2>
+        <span class="admin-badge admin-badge-warning" style="font-size: 0.75rem; margin-left: 0.5rem;">Super Admin Only</span>
+      </div>
+      <div class="admin-card-body">
+        <div class="admin-alert admin-alert-warning admin-mb-lg">
+          <strong>⚠️ Sensitive Information</strong>
+          <p class="admin-mb-0" style="font-size: var(--admin-text-sm); margin-top: 0.5rem;">This section contains sensitive AWS credentials. Do not share these with unauthorized personnel.</p>
+        </div>
+
+        <!-- AWS SES Credentials -->
+        <div style="margin-bottom: var(--admin-space-xl);">
+          <h3 style="font-size: 1.1rem; margin-bottom: var(--admin-space-md); color: var(--admin-gray-900);">AWS SES Credentials</h3>
+          <div style="background: var(--admin-gray-50); border: 1px solid var(--admin-gray-200); border-radius: 6px; padding: var(--admin-space-lg); font-family: 'Courier New', monospace; font-size: 0.85rem;">
+            <div style="margin-bottom: var(--admin-space-md);">
+              <strong>Access Key ID:</strong><br>
+              <code style="background: white; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 0.25rem;">STORED_IN_ENV</code>
+              <button onclick="alert('AWS credentials are stored in environment variables for security')" class="admin-btn admin-btn-sm" style="margin-left: 0.5rem; padding: 0.25rem 0.5rem;">ℹ Info</button>
+            </div>
+            <div style="margin-bottom: var(--admin-space-md);">
+              <strong>Secret Access Key:</strong><br>
+              <code style="background: white; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 0.25rem;">••••••••••••••••••••</code>
+              <button onclick="alert('AWS credentials are stored in environment variables for security')" class="admin-btn admin-btn-sm" style="margin-left: 0.5rem; padding: 0.25rem: 0.5rem;">ℹ Info</button>
+            </div>
+            <div style="margin-bottom: var(--admin-space-md);">
+              <strong>AWS Region:</strong> <code>us-east-1</code>
+            </div>
+            <div style="margin-bottom: var(--admin-space-md);">
+              <strong>From Email:</strong> <code>noreply@shellfish-society.org</code>
+            </div>
+            <div style="margin-bottom: 0;">
+              <strong>From Name:</strong> <code>ISRS</code>
+            </div>
+          </div>
+          <p style="font-size: var(--admin-text-sm); color: var(--admin-gray-600); margin-top: var(--admin-space-sm);">
+            <strong>Description:</strong> ISRS Email Campaigns - SES Access Key for Render Backend<br>
+            <strong>Permissions:</strong> AmazonSESFullAccess
+          </p>
+        </div>
+
+        <!-- Production Access Status -->
+        <div style="margin-bottom: var(--admin-space-xl);">
+          <h3 style="font-size: 1.1rem; margin-bottom: var(--admin-space-md); color: var(--admin-gray-900);">Production Access Status</h3>
+          <div class="admin-alert admin-alert-success">
+            <strong>✓ Production Mode Active</strong>
+            <p class="admin-mb-0" style="font-size: var(--admin-text-sm); margin-top: 0.5rem;">
+              Your AWS SES account has production access enabled. You can send emails to any recipient.<br>
+              <strong>Daily Limit:</strong> 50,000 emails per 24-hour period<br>
+              <strong>Send Rate:</strong> 14 emails per second
+            </p>
+          </div>
+          <a href="https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/account" target="_blank" rel="noopener noreferrer" class="admin-btn admin-btn-secondary" style="margin-top: var(--admin-space-md);">
+            View AWS SES Dashboard →
+          </a>
+        </div>
+
+        <!-- DMARC Configuration -->
+        <div style="margin-bottom: 0;">
+          <h3 style="font-size: 1.1rem; margin-bottom: var(--admin-space-md); color: var(--admin-gray-900);">DMARC Configuration Needed</h3>
+          <div class="admin-alert admin-alert-warning">
+            <strong>⚠️ Action Required</strong>
+            <p style="font-size: var(--admin-text-sm); margin-top: 0.5rem; margin-bottom: var(--admin-space-md);">
+              AWS recommends setting up DMARC records for <code>shellfish-society.org</code> to improve email deliverability and prevent spoofing.
+            </p>
+            <details style="margin-top: var(--admin-space-md);">
+              <summary style="cursor: pointer; font-weight: 600; margin-bottom: var(--admin-space-sm);">View DMARC Setup Instructions</summary>
+              <div style="padding-left: var(--admin-space-md); margin-top: var(--admin-space-md);">
+                <p style="font-size: var(--admin-text-sm); margin-bottom: var(--admin-space-sm);"><strong>1. Add SPF Record:</strong></p>
+                <code style="background: white; padding: 0.5rem; border-radius: 4px; display: block; margin-bottom: var(--admin-space-md); font-size: 0.8rem;">
+                  v=spf1 include:amazonses.com ~all
+                </code>
+
+                <p style="font-size: var(--admin-text-sm); margin-bottom: var(--admin-space-sm);"><strong>2. Add DMARC Record:</strong></p>
+                <code style="background: white; padding: 0.5rem; border-radius: 4px; display: block; margin-bottom: var(--admin-space-md); font-size: 0.8rem;">
+                  v=DMARC1; p=quarantine; rua=mailto:dmarc-reports@shellfish-society.org
+                </code>
+
+                <p style="font-size: var(--admin-text-sm); margin-bottom: var(--admin-space-sm);"><strong>3. Add DKIM Records:</strong></p>
+                <p style="font-size: var(--admin-text-sm); color: var(--admin-gray-600);">
+                  DKIM records are specific to AWS SES. Generate them in the <a href="https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/verified-identities/shellfish-society.org" target="_blank" rel="noopener noreferrer">AWS SES Console</a> for shellfish-society.org.
+                </p>
+              </div>
+            </details>
+          </div>
+          <a href="https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/verified-identities" target="_blank" rel="noopener noreferrer" class="admin-btn admin-btn-secondary" style="margin-top: var(--admin-space-md);">
+            Manage Verified Identities →
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- Help & Support -->
     <div class="admin-card admin-mb-lg">
       <div class="admin-card-header">
@@ -192,6 +285,51 @@
         window.location.href = '/admin/index.html';
       } else {
         alert('Tour system not available. Please refresh the page.');
+      }
+    }
+
+    // Copy to clipboard utility
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          // Show success message
+          const btn = event.target;
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.style.background = 'var(--admin-success)';
+          btn.style.color = 'white';
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 2000);
+        }).catch(err => {
+          alert('Failed to copy: ' + err);
+        });
+      } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          const btn = event.target;
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.style.background = 'var(--admin-success)';
+          btn.style.color = 'white';
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 2000);
+        } catch (err) {
+          alert('Failed to copy: ' + err);
+        }
+        document.body.removeChild(textarea);
       }
     }
   </script>

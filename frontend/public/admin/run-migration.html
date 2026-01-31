@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run Database Migration - ISRS Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .migration-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .migration-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .migration-card.ready {
+            border-color: #2e5a8a;
+            background: #f0f8ff;
+        }
+        .migration-card.completed {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+        .migration-steps {
+            margin-top: 20px;
+        }
+        .step {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #ccc;
+            border-radius: 4px;
+        }
+        .step.success {
+            border-left-color: #2e7d32;
+            background: #e8f5e9;
+        }
+        .step.failed {
+            border-left-color: #c62828;
+            background: #ffebee;
+        }
+        .btn-run-migration {
+            background: linear-gradient(135deg, #2e5a8a 0%, #4a7ab5 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-run-migration:hover {
+            opacity: 0.9;
+        }
+        .btn-run-migration:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-pending {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .status-completed {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <div class="migration-container">
+        <h1>Database Migration Runner</h1>
+        <p style="color: #666;">Run database schema migrations for the ISRS backend.</p>
+
+        <div id="migration041Card" class="migration-card">
+            <h2>Migration 041: Update Presentation Titles to Array</h2>
+            <p><strong>Purpose:</strong> Change icsr2024_presentation_title from TEXT to TEXT[] to support contacts who presented multiple times at ICSR2024.</p>
+
+            <p><strong>Status:</strong> <span id="migrationStatus" class="status-indicator status-pending">Checking...</span></p>
+
+            <div style="margin: 20px 0;">
+                <h3>Migration Details:</h3>
+                <ul>
+                    <li>Creates new <code>icsr2024_presentation_titles</code> column as TEXT[]</li>
+                    <li>Migrates existing data from old TEXT column to array format</li>
+                    <li>Drops old <code>icsr2024_presentation_title</code> column</li>
+                    <li>Creates GIN index for faster array queries</li>
+                </ul>
+            </div>
+
+            <div id="currentColumns" style="margin: 20px 0;"></div>
+
+            <button id="runMigrationBtn" class="btn-run-migration" onclick="runMigration()">
+                Run Migration 041
+            </button>
+
+            <div id="migrationSteps" class="migration-steps" style="display: none;">
+                <h3>Migration Progress:</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script src="../js/components.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:3002/api';
+
+        async function checkMigrationStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/email/migration/status`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    document.getElementById('migrationStatus').textContent = 'Error checking status';
+                    document.getElementById('migrationStatus').className = 'status-indicator status-pending';
+                    return;
+                }
+
+                const statusEl = document.getElementById('migrationStatus');
+                const btnEl = document.getElementById('runMigrationBtn');
+                const cardEl = document.getElementById('migration041Card');
+
+                if (data.migration_041_applied) {
+                    statusEl.textContent = 'Completed';
+                    statusEl.className = 'status-indicator status-completed';
+                    btnEl.disabled = true;
+                    btnEl.textContent = 'Migration Already Applied';
+                    cardEl.classList.add('completed');
+                } else {
+                    statusEl.textContent = 'Pending';
+                    statusEl.className = 'status-indicator status-pending';
+                    btnEl.disabled = false;
+                    cardEl.classList.add('ready');
+                }
+
+                // Show current columns
+                const columnsHtml = `
+                    <h4>Current Presentation Columns:</h4>
+                    <div class="code-block">
+${data.presentation_columns.map(col =>
+    `${col.column_name} | ${col.data_type}${col.is_nullable === 'YES' ? ' | NULLABLE' : ''}`
+).join('\\n')}
+                    </div>
+                `;
+                document.getElementById('currentColumns').innerHTML = columnsHtml;
+
+            } catch (error) {
+                console.error('Error checking migration status:', error);
+                document.getElementById('migrationStatus').textContent = 'Error';
+            }
+        }
+
+        async function runMigration() {
+            const btnEl = document.getElementById('runMigrationBtn');
+            const stepsEl = document.getElementById('migrationSteps');
+
+            btnEl.disabled = true;
+            btnEl.textContent = 'Running Migration...';
+            stepsEl.style.display = 'block';
+            stepsEl.innerHTML = '<h3>Migration Progress:</h3><p>Starting migration...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/email/migration/041/run`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    let stepsHtml = '<h3>Migration Progress:</h3>';
+                    data.steps.forEach(step => {
+                        const stepClass = step.status === 'success' ? 'success' : 'failed';
+                        stepsHtml += `<div class="step ${stepClass}">
+                            <strong>${step.step}:</strong> ${step.status}
+                            ${step.count !== undefined ? ` (${step.count} records)` : ''}
+                            ${step.rows_updated !== undefined ? ` (${step.rows_updated} rows updated)` : ''}
+                        </div>`;
+                    });
+                    stepsEl.innerHTML = stepsHtml;
+
+                    setTimeout(() => {
+                        alert('✅ Migration completed successfully! Refreshing status...');
+                        location.reload();
+                    }, 1000);
+                } else {
+                    stepsEl.innerHTML = `<h3>Migration Failed</h3><div class="step failed"><strong>Error:</strong> ${data.error}</div>`;
+                    btnEl.disabled = false;
+                    btnEl.textContent = 'Retry Migration';
+                }
+            } catch (error) {
+                console.error('Error running migration:', error);
+                stepsEl.innerHTML = `<h3>Migration Failed</h3><div class="step failed"><strong>Error:</strong> ${error.message}</div>`;
+                btnEl.disabled = false;
+                btnEl.textContent = 'Retry Migration';
+            }
+        }
+
+        // Check status on page load
+        checkMigrationStatus();
+    </script>
+</body>
+</html>

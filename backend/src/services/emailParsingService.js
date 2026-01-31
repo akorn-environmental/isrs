@@ -4,7 +4,7 @@ const { query } = require('../config/database');
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-5-20250929';
 
-const SYSTEM_PROMPT = `You are an intelligent email parser for the International Society for Reef Studies (ISRS).
+const SYSTEM_PROMPT = `You are an intelligent email parser for the International Shellfish Restoration Society (ISRS).
 
 Extract structured information with confidence scores. Return ONLY valid JSON with this structure:
 {
@@ -22,7 +22,7 @@ Extract structured information with confidence scores. Return ONLY valid JSON wi
   "flags": []
 }
 
-Focus on coral reef science, conservation, funding, conferences, and scientific collaboration.`;
+Focus on shellfish restoration, oyster/clam/mussel conservation, habitat restoration, water quality, aquaculture, Indigenous partnerships, coastal ecosystem science, ICSR conference planning, sponsorships, and scientific collaboration.`;
 
 async function parseEmail({ subject, fromEmail, fromName, toEmails, ccEmails, receivedDate, emailBody, context = {} }) {
   const userPrompt = `EMAIL METADATA:
@@ -35,8 +35,8 @@ EMAIL BODY:
 \${emailBody}
 
 ORGANIZATIONAL CONTEXT:
-Organization: International Society for Reef Studies (ISRS)
-Focus: Coral reef science, conservation, education
+Organization: International Shellfish Restoration Society (ISRS)
+Focus: Shellfish restoration, oyster/clam/mussel conservation, habitat restoration, aquaculture, ICSR conferences
 Known contact: \${context.isKnownContact ? 'Yes' : 'No'}
 
 Parse and return JSON.`;
@@ -111,6 +111,38 @@ Parse and return JSON.`;
     console.error('Parse error:', error);
     throw error;
   }
+}
+
+async function saveParsedEmail(data) {
+  // Extract parsed data
+  const {
+    subject, from_email, from_name, to_emails, cc_emails, received_date, email_body,
+    gmail_message_id, gmail_thread_id, source, email_date, confidence_score,
+    contacts, relationships, engagement, fundraising, action_items, scheduling,
+    topics, stakeholder_profile, metadata, summary, recommended_next_steps, flags
+  } = data;
+
+  // Save to database
+  const result = await query(`
+    INSERT INTO parsed_emails (
+      subject, from_email, from_name, to_emails, cc_emails, received_date, email_body,
+      gmail_message_id, gmail_thread_id, source, email_date, confidence_score,
+      contacts, relationships, engagement, fundraising, action_items, scheduling,
+      topics, stakeholder_profile, metadata, summary, recommended_next_steps, flags,
+      review_status
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+    RETURNING id
+  `, [
+    subject, from_email, from_name, to_emails, cc_emails, received_date, email_body,
+    gmail_message_id, gmail_thread_id, source, email_date, confidence_score,
+    JSON.stringify(contacts), JSON.stringify(relationships), JSON.stringify(engagement),
+    JSON.stringify(fundraising), JSON.stringify(action_items), JSON.stringify(scheduling),
+    JSON.stringify(topics), JSON.stringify(stakeholder_profile), JSON.stringify(metadata),
+    summary, recommended_next_steps, flags,
+    confidence_score > 0.7 ? 'approved' : 'pending'
+  ]);
+
+  return result.rows[0].id;
 }
 
 async function getParsedEmails(filters = {}) {
@@ -315,4 +347,4 @@ async function getAnalytics({ period = '30', status = 'all' }) {
   };
 }
 
-module.exports = { parseEmail, getParsedEmails, importContactsFromEmail, getAnalytics };
+module.exports = { parseEmail, saveParsedEmail, getParsedEmails, importContactsFromEmail, getAnalytics };

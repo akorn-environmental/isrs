@@ -205,6 +205,7 @@ app.use('/api/admin/abstracts', abstractReviewRoutes);  // Abstract review syste
 app.use('/api/payments', paymentRoutes);  // Stripe payment processing
 app.use('/api/ai', aiRoutes);  // AI grant writing and insights
 app.use('/api/email-parsing', emailParsingRoutes);  // Email parsing and extraction
+app.use('/api/gmail-oauth', require('./routes/gmailOAuthRoutes'));  // Gmail OAuth integration
 app.use('/api/votes', voteRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);

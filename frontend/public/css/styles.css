@@ -18,7 +18,7 @@
   --light-gray: #1a1a1a;
   --white: #2d2d2d;
   --text-dark: #e0e0e0;
-  --text-light: #b0b0b0;
+  --text-light: #d0d0d0;
   --border-color: #404040;
   --dark-gray: #1a1a1a;
   /* Accessible blue for dark backgrounds - 7:1 contrast ratio */
@@ -640,7 +640,6 @@ header {
 
 .compact-card {
   padding: 1rem;
-  cursor: pointer;
 }
 
 .compact-card:hover {
@@ -671,7 +670,6 @@ header {
   border-radius: 6px;
   padding: 1rem;
   text-align: left;
-  cursor: pointer;
   transition: all 0.3s;
 }
 
@@ -891,7 +889,6 @@ header {
   text-align: center;
   transition: all 0.3s;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
   border: 1px solid transparent;
 }
 
@@ -1142,7 +1139,7 @@ header {
 
 .dark-mode .card p,
 .dark-mode .news-card p {
-  color: #b0b0b0;
+  color: #d0d0d0;
 }
 
 /* Benefit Items - High Contrast Blue for Dark Mode */
@@ -1176,7 +1173,7 @@ header {
 /* Section Intro Text */
 .dark-mode .section-intro,
 .dark-mode .section-closing {
-  color: #b0b0b0;
+  color: #d0d0d0;
 }
 
 /* Buttons in Dark Mode */
@@ -1276,7 +1273,7 @@ header {
 }
 
 .dark-mode .stay-connected-text {
-  color: #b0b0b0;
+  color: #d0d0d0;
 }
 
 .dark-mode .form-group label {
@@ -1335,7 +1332,7 @@ header {
 }
 
 .dark-mode .value-card p {
-  color: #b0b0b0;
+  color: #d0d0d0;
 }
 
 /* Compact Cards */
@@ -1358,7 +1355,7 @@ header {
 }
 
 .dark-mode .compact-card p {
-  color: #b0b0b0;
+  color: #d0d0d0;
 }
 
 /* Community Items */
@@ -1389,7 +1386,7 @@ header {
 }
 
 .dark-mode .feature-item p {
-  color: #b0b0b0;
+  color: #d0d0d0;
 }
 
 /* Light Gray Sections (#ecf0f1) */

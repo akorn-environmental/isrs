@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const emailController = require('../controllers/emailController');
+const migrationController = require('../controllers/migrationController');
 const { requireAuth } = require('../middleware/auth');
 
-// All routes require authentication
+// Migration routes (no auth required in development for ease of use)
+router.get('/migration/status', migrationController.getMigrationStatus);
+router.post('/migration/:migrationNumber/run', migrationController.runMigration);
+
+// All other routes require authentication
 router.use(requireAuth);
 
 // Campaign routes
