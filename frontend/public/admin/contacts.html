@@ -643,7 +643,6 @@
       { id: 'phone', label: 'Phone', visible: false },
       // Social/web
       { id: 'linkedin', label: 'LinkedIn', visible: false },
-      { id: 'twitter', label: 'Twitter', visible: false },
       { id: 'website', label: 'Website', visible: false },
       { id: 'orcid', label: 'ORCID', visible: false },
       // Conference
@@ -872,7 +871,6 @@
               ${isColumnVisible('address') ? `<th>Address</th>` : ''}
               ${isColumnVisible('phone') ? `<th>Phone</th>` : ''}
               ${isColumnVisible('linkedin') ? `<th>LinkedIn</th>` : ''}
-              ${isColumnVisible('twitter') ? `<th>Twitter</th>` : ''}
               ${isColumnVisible('website') ? `<th>Website</th>` : ''}
               ${isColumnVisible('orcid') ? `<th>ORCID</th>` : ''}
               ${isColumnVisible('icsr2024') ? `<th>ICSR2024</th>` : ''}
@@ -916,7 +914,6 @@
                 ${isColumnVisible('address') ? `<td class="editable-cell" onclick="editCell(this, '${safeEmail}', 'address_line_1')" title="Click to edit">${contact.address_line_1 || '-'}</td>` : ''}
                 ${isColumnVisible('phone') ? `<td class="editable-cell" onclick="editCell(this, '${safeEmail}', 'phone')" title="Click to edit">${contact.phone || '-'}</td>` : ''}
                 ${isColumnVisible('linkedin') ? `<td>${contact.linkedin ? `<a href="${contact.linkedin}" target="_blank" rel="noopener">Profile</a>` : '-'}</td>` : ''}
-                ${isColumnVisible('twitter') ? `<td>${contact.twitter_handle ? `@${contact.twitter_handle}` : '-'}</td>` : ''}
                 ${isColumnVisible('website') ? `<td>${contact.website ? `<a href="${contact.website}" target="_blank" rel="noopener">Link</a>` : '-'}</td>` : ''}
                 ${isColumnVisible('orcid') ? `<td>${contact.orcid ? `<a href="https://orcid.org/${contact.orcid}" target="_blank" rel="noopener">${contact.orcid}</a>` : '-'}</td>` : ''}
                 ${isColumnVisible('icsr2024') ? `<td>${formatConference(contact, '2024')}</td>` : ''}
