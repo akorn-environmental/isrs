@@ -655,6 +655,13 @@ function initSidebarState() {
 // Initialize sidebar state after layout loads
 setTimeout(initSidebarState, 0);
 
+// Initialize ISRS AI Assistant for admin portal (if not already loaded)
+if (typeof window.initISRSAIAssistant === 'function' && !window.isrsAIAssistant) {
+  setTimeout(() => {
+    window.initISRSAIAssistant(true); // true = admin mode
+  }, 100);
+}
+
 // Export for use in other scripts
 window.loadAdminLayout = loadAdminLayout;
 window.logout = logout;

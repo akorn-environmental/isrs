@@ -5805,6 +5805,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initFeedbackWidget({ isAdminPortal: false });
   }
 
+  // Initialize ISRS AI Assistant for member portal (if script is loaded)
+  if (typeof window.initISRSAIAssistant === 'function' && !window.isrsAIAssistant) {
+    window.initISRSAIAssistant(false); // false = member mode
+  }
+
   // Load cookie consent banner (GDPR compliance)
   loadCookieConsent();
 

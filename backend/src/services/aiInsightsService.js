@@ -264,23 +264,54 @@ async function gatherDatabaseContext() {
   const context = {};
 
   try {
+    // Contact statistics
     const contactStats = await query(`
       SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE email IS NOT NULL) as with_email,
       COUNT(DISTINCT organization) as orgs, COUNT(DISTINCT country) as countries FROM contacts
     `);
     context.contacts = contactStats.rows[0];
 
+    // Funding statistics
     const fundingStats = await query(`
       SELECT COUNT(*) as total, SUM(estimated_amount) FILTER (WHERE status = 'funded') as funded_total
       FROM funding_prospects
     `);
     context.funding = fundingStats.rows[0];
 
+    // Email campaign statistics
     const emailStats = await query(`
       SELECT COUNT(*) as total, AVG(opened_count * 100.0 / NULLIF(sent_count, 0)) as avg_open_rate
       FROM email_campaigns WHERE status = 'sent'
     `);
     context.emails = emailStats.rows[0];
+
+    // ICSR2026 conference statistics
+    const conferenceStats = await query(`
+      SELECT COUNT(*) as total_registrations,
+      COUNT(*) FILTER (WHERE registration_type = 'full') as full_registrations,
+      COUNT(*) FILTER (WHERE registration_type = 'student') as student_registrations,
+      COUNT(*) FILTER (WHERE registration_type = 'daily') as daily_registrations
+      FROM conference_registrations WHERE conference_id = 'icsr2026'
+    `);
+    context.icsr2026 = conferenceStats.rows[0] || { total_registrations: 0 };
+
+    // Abstract submissions for ICSR2026
+    const abstractStats = await query(`
+      SELECT COUNT(*) as total_abstracts,
+      COUNT(*) FILTER (WHERE status = 'accepted') as accepted,
+      COUNT(*) FILTER (WHERE status = 'pending') as pending,
+      COUNT(*) FILTER (WHERE presentation_type = 'oral') as oral_presentations,
+      COUNT(*) FILTER (WHERE presentation_type = 'poster') as posters
+      FROM abstracts WHERE conference_id = 'icsr2026'
+    `);
+    context.abstracts = abstractStats.rows[0] || { total_abstracts: 0 };
+
+    // Board members
+    const boardStats = await query(`
+      SELECT COUNT(*) as total_board_members
+      FROM contacts WHERE is_board_member = true
+    `);
+    context.board = boardStats.rows[0] || { total_board_members: 0 };
   } catch (error) {
     console.error('Context error:', error);
   }
@@ -289,15 +320,45 @@ async function gatherDatabaseContext() {
 }
 
 function buildAssistantSystemPrompt(context) {
-  return `You are an AI assistant for ISRS database management.
+  return `You are the ISRS AI Assistant, helping with questions about the International Shellfish Restoration Society (ISRS) and the International Conference on Shellfish Restoration (ICSR).
 
-Database Stats:
-- Contacts: ${context.contacts?.total || 0} (${context.contacts?.with_email || 0} with email)
-- Organizations: ${context.contacts?.orgs || 0}
-- Funding Prospects: ${context.funding?.total || 0}
-- Email Campaigns: ${context.emails?.total || 0} (Avg open rate: ${Math.round(context.emails?.avg_open_rate || 0)}%)
+CURRENT DATABASE STATS:
+- Contacts: ${context.contacts?.total || 0} total (${context.contacts?.with_email || 0} with email)
+- Organizations: ${context.contacts?.orgs || 0} unique organizations
+- Countries: ${context.contacts?.countries || 0} represented
+- Board Members: ${context.board?.total_board_members || 0}
+- Funding Prospects: ${context.funding?.total || 0} tracked
+- Email Campaigns: ${context.emails?.total || 0} sent (Avg open rate: ${Math.round(context.emails?.avg_open_rate || 0)}%)
 
-Provide data-driven insights, trends, and actionable recommendations for ISRS administrators.`;
+ICSR2026 CONFERENCE (October 4-8, 2026 | Little Creek Casino Resort, Shelton, WA):
+- Total Registrations: ${context.icsr2026?.total_registrations || 0}
+- Full Conference: ${context.icsr2026?.full_registrations || 0}
+- Student: ${context.icsr2026?.student_registrations || 0}
+- Daily: ${context.icsr2026?.daily_registrations || 0}
+- Abstract Submissions: ${context.abstracts?.total_abstracts || 0} (${context.abstracts?.accepted || 0} accepted, ${context.abstracts?.pending || 0} pending)
+- Oral Presentations: ${context.abstracts?.oral_presentations || 0}
+- Posters: ${context.abstracts?.posters || 0}
+
+KEY INFORMATION:
+- ICSR2026 is hosted by Puget Sound Restoration Fund at Squaxin Island Tribe's Little Creek Casino Resort
+- Conference theme: "Engaging Communities, Collaborating with Knowledge Holders, and Advancing Restorative Aquaculture"
+- Registration is open at: https://www.zeffy.com/en-US/ticketing/icsr2026-international-conference-on-shellfish-restoration
+- Closest airport: Sea-Tac International Airport
+- ISRS is a 501(c)(3) nonprofit (EIN: 39-2829151)
+- Website: https://www.shellfish-society.org
+
+RESPONSE FORMAT:
+When answering questions, provide helpful, accurate information in JSON format:
+{
+  "type": "info" | "data-list" | "metrics" | "data-summary" | "analysis",
+  "title": "Response title",
+  "content": "Main answer or summary",
+  "items": [...] (optional - for lists),
+  "metrics": {...} (optional - for statistics),
+  "insight": "Key takeaway or recommendation" (optional)
+}
+
+Provide data-driven insights, answer member questions, and help both administrators and members navigate ISRS and ICSR information.`;
 }
 
 module.exports = {

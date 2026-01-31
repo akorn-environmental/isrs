@@ -1,0 +1,344 @@
+/* ISRS AI Assistant Styles - Global for Admin and Member Portals */
+
+.isrs-ai-assistant {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50; /* Below admin sidebar (z-index: 100) */
+  display: flex;
+  transition: all 0.3s ease;
+}
+
+/* Collapsed state - vertical tab */
+.isrs-ai-assistant.collapsed {
+  width: 48px;
+}
+
+.isrs-ai-assistant.collapsed .isrs-ai-tab {
+  display: flex;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  background: linear-gradient(180deg, #2c5f2d 0%, #1a3a1b 100%); /* ISRS green gradient */
+  color: white;
+  padding: 2rem 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  border-radius: 8px 0 0 8px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.isrs-ai-assistant.collapsed .isrs-ai-tab:hover {
+  background: linear-gradient(180deg, #1a3a1b 0%, #0d1f0e 100%); /* darker green */
+  padding-right: 0.875rem;
+}
+
+.isrs-ai-assistant.collapsed .isrs-ai-panel {
+  display: none;
+}
+
+/* Expanded state - full panel */
+.isrs-ai-assistant.expanded {
+  width: 450px;
+}
+
+.isrs-ai-assistant.expanded .isrs-ai-tab {
+  display: none;
+}
+
+.isrs-ai-assistant.expanded .isrs-ai-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: white;
+  border-left: 3px solid #2c5f2d; /* ISRS green */
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* Panel header */
+.isrs-ai-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
+}
+
+.isrs-ai-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.isrs-ai-panel-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2c5f2d 0%, #1a3a1b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.isrs-ai-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.isrs-ai-close-btn:hover {
+  color: #1f2937;
+}
+
+/* Panel content */
+.isrs-ai-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: #f9fafb;
+}
+
+/* Example queries */
+.isrs-ai-examples {
+  margin-bottom: 1.5rem;
+}
+
+.isrs-ai-examples-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.isrs-ai-example {
+  display: block;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.isrs-ai-example:hover {
+  background: #f8fdf8; /* light green */
+  border-color: #2c5f2d; /* ISRS green */
+  color: #1a3a1b; /* dark green */
+  transform: translateX(4px);
+}
+
+/* Response containers */
+.isrs-ai-response {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.isrs-ai-response.info {
+  background: #f8fdf8; /* light green */
+  border-left: 4px solid #2c5f2d; /* ISRS green */
+}
+
+.isrs-ai-response.error {
+  background: #fef2f2; /* red-50 */
+  border-left: 4px solid #ef4444; /* red-500 */
+}
+
+.isrs-ai-response.success {
+  background: #f0fdf4; /* green-50 */
+  border-left: 4px solid #22c55e; /* green-500 */
+}
+
+.isrs-ai-response.warning {
+  background: #fefce8; /* yellow-50 */
+  border-left: 4px solid #eab308; /* yellow-500 */
+}
+
+.isrs-ai-response-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+.isrs-ai-response-content {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.isrs-ai-response-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0 0;
+}
+
+.isrs-ai-response-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.isrs-ai-response-list li:last-child {
+  border-bottom: none;
+}
+
+/* Loading state */
+.isrs-ai-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.isrs-ai-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #2c5f2d; /* ISRS green */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.isrs-ai-loading-text {
+  margin-top: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Input form */
+.isrs-ai-input-form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+.isrs-ai-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.isrs-ai-input:focus {
+  outline: none;
+  border-color: #2c5f2d; /* ISRS green */
+  box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.1);
+}
+
+.isrs-ai-submit-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #2c5f2d; /* ISRS green - solid not gradient */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.isrs-ai-submit-btn:hover {
+  background-color: #1a3a1b; /* darker green */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
+}
+
+.isrs-ai-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.isrs-ai-new-query-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.isrs-ai-new-query-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Scrollbar styling */
+.isrs-ai-panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.isrs-ai-panel-content::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.isrs-ai-panel-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.isrs-ai-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .isrs-ai-assistant.expanded {
+    width: 100%;
+  }
+
+  .isrs-ai-assistant.collapsed {
+    width: 40px;
+  }
+
+  .isrs-ai-assistant.collapsed .isrs-ai-tab {
+    font-size: 0.75rem;
+    padding: 1.5rem 0.5rem;
+  }
+}
