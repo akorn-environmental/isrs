@@ -25,23 +25,13 @@
 
 <p>We hope this message finds you well! We're writing to share exciting updates about the International Shellfish Restoration Society (ISRS) and the upcoming International Conference on Shellfish Restoration (ICSR2026).</p>
 
-<!-- CONDITIONAL: ICSR2024 Attendees -->
-<div class="icsr2024-attendee-section">
+<!-- CONDITIONAL: ICSR2024 Participants (attendees, presenters, posters, volunteers, planning committee, sponsors, exhibitors, field trip participants) -->
+<div class="icsr2024-participant-section info-box">
 <h2>Thank You for ICSR2024!</h2>
 
-<p>We want to extend our heartfelt gratitude for your participation in ICSR2024 at Jekyll Island, Georgia. Your presence made the conference a tremendous success, bringing together researchers, practitioners, and advocates from around the world to advance shellfish restoration science.</p>
+<p>We want to extend our heartfelt gratitude for your participation in ICSR2024 at Jekyll Island, Georgia. {{icsr2024ParticipationSummary}}</p>
 
-<!-- CONDITIONAL: For presenters -->
-<p style="background: #f0f8ff; padding: 15px; border-left: 4px solid #2e5a8a; margin: 20px 0;">
-<strong>Special Recognition:</strong> Thank you for contributing to the scientific program with your {{icsr2024PresentationCount}} presentation(s): <em>{{icsr2024PresentationTitles}}</em>. Your research and insights enriched the conference and helped drive important conversations in our field.
-</p>
-</div>
-
-<!-- CONDITIONAL: For those who missed ICSR2024 -->
-<div class="icsr2024-non-attendee-section">
-<h2>We Missed You at ICSR2024</h2>
-
-<p>While we were sorry you couldn't join us for ICSR2024 in Jekyll Island, Georgia, we wanted to share some highlights from the conference. Our community came together to discuss cutting-edge research, share restoration strategies, and build partnerships that will advance shellfish restoration worldwide.</p>
+{{icsr2024RecognitionItems}}
 </div>
 
 <!-- Main Announcement - For Everyone -->
