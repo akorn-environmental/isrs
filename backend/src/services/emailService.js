@@ -564,41 +564,52 @@ async function sendMagicLink(toEmail, userName, magicLink, language = 'en') {
   const subject = t('magicLinkSubject', language);
 
   const body = `
-    <h2 style="color: #2e5a8a; font-family: 'Marcellus', Georgia, serif; font-weight: 400; margin-top: 0;">
-      ${t('magicLinkGreeting', language)} ${userName},
-    </h2>
-    <p style="font-size: 16px; line-height: 1.6;">
-      ${t('magicLinkIntro', language)}
+    <div style="text-align: center; margin-bottom: 30px;">
+      <span style="font-size: 48px;">🐚</span>
+      <h1 style="color: #2c5f2d; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
+        ${t('magicLinkGreeting', language)} ${userName}!
+      </h1>
+      <p style="color: #6c757d; font-size: 15px; margin: 8px 0 0 0;">
+        Your secure login link is ready
+      </p>
+    </div>
+
+    <p style="color: #333333; font-size: 16px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
+      ${t('magicLinkIntro', language)}<br>
+      <span style="color: #6c757d; font-size: 14px;">No password needed — it's that easy!</span>
     </p>
-    <p style="margin: 35px 0; text-align: center;">
+
+    <div style="text-align: center; margin: 30px 0;">
       <a href="${magicLink}"
-         style="background: linear-gradient(135deg, #2e5a8a 0%, #4a7ab5 100%);
+         style="background-color: #2c5f2d;
                 color: white;
-                padding: 14px 32px;
+                padding: 15px 40px;
                 text-decoration: none;
-                border-radius: 6px;
+                border-radius: 5px;
                 display: inline-block;
                 font-size: 16px;
-                font-weight: 600;
-                box-shadow: 0 4px 12px rgba(46, 90, 138, 0.3);">
+                font-weight: 600;">
         ${t('magicLinkButton', language)}
       </a>
-    </p>
-    <p style="font-size: 14px; color: #666;">
-      ${t('magicLinkExpiry', language)}
-    </p>
-    <p style="font-size: 14px; color: #666;">
-      ${t('magicLinkIgnore', language)}
-    </p>
-    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e8f5e9; background-color: #f8f9fa; padding: 20px; border-radius: 6px;">
-      <p style="font-size: 13px; color: #2e7d32; margin: 0;">
+    </div>
+
+    <div style="background-color: #fffbeb; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
+      <p style="margin: 0; font-size: 13px; color: #92400e; text-align: center;">
+        <strong>⏱️ ${t('magicLinkExpiry', language)}</strong><br>
+        <span style="color: #b45309;">${t('magicLinkIgnore', language)}</span>
+      </p>
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background-color: #f8fdf8; border-left: 4px solid #2c5f2d; border-radius: 4px;">
+      <p style="font-size: 13px; color: #2c5f2d; margin: 0;">
         <strong>${t('magicLinkSecurityTitle', language)}</strong> ${t('magicLinkSecurityText', language)}
       </p>
     </div>
-    <p style="font-size: 12px; color: #999; margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 4px;">
+
+    <p style="font-size: 12px; color: #6c757d; margin: 20px 0 0 0; text-align: center; line-height: 1.6;">
       <strong>${t('magicLinkTroubleTitle', language)}</strong><br>
       ${t('magicLinkTroubleCopy', language)}<br>
-      <span style="word-break: break-all; color: #2e5a8a; font-family: monospace; font-size: 11px;">${magicLink}</span>
+      <span style="word-break: break-all; color: #2c5f2d;">${magicLink}</span>
     </p>
   `;
 
