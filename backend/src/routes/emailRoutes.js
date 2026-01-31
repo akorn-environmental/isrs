@@ -26,4 +26,23 @@ router.post('/templates', emailController.createTemplate);
 // Utility routes
 router.get('/audience-count', emailController.getAudienceCount);
 
+// Admin testing route
+router.post('/send-sample-emails', async (req, res) => {
+  try {
+    const { exec } = require('child_process');
+    const path = require('path');
+    const scriptPath = path.join(__dirname, '../../scripts/send-sample-attendee-emails.js');
+
+    exec(`node "${scriptPath}"`, (error, stdout, stderr) => {
+      if (error) {
+        console.error('Script error:', error);
+        return res.status(500).json({ error: error.message, stderr });
+      }
+      res.json({ success: true, output: stdout, stderr });
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
