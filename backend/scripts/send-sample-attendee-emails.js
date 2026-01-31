@@ -83,7 +83,7 @@ function buildParticipationSection(attendee) {
   }
 
   if (attendee.icsr2024_field_trip) {
-    activities.push(`<p style="margin: 15px 0;">
+    activities.push(`<p style="background: #fce4ec; padding: 15px; border-left: 4px solid #c2185b; margin: 20px 0;">
 <strong>Field Trip Participant:</strong> We hope you enjoyed exploring Jekyll Island coastal ecosystems and restoration projects during the field trip!</p>`);
   }
 
@@ -116,7 +116,8 @@ async function sendTestEmail(attendee) {
   emailBody = emailBody
     .replace(/{{firstName}}/g, attendee.firstName)
     .replace(/{{lastName}}/g, attendee.lastName)
-    .replace(/{{organization}}/g, attendee.organization);
+    .replace(/{{organization}}/g, attendee.organization)
+    .replace(/{{icsr2026LogoSrc}}/g, 'cid:icsr2026Logo');
 
   // Replace participation section
   if (participationSection) {
@@ -144,6 +145,14 @@ async function sendTestEmail(attendee) {
     );
   }
 
+  // Remove standalone sponsor section if sponsor was already thanked in ICSR2024 section
+  if (attendee.icsr2024_sponsor_level) {
+    emailBody = emailBody.replace(
+      /<!-- CONDITIONAL: Sponsors & Funders -->[\s\S]*?<\/div>\s*/i,
+      ''
+    );
+  }
+
   // Wrap in template
   const htmlFull = `<!DOCTYPE html>
 <html>
@@ -163,12 +172,21 @@ async function sendTestEmail(attendee) {
     .content ul { margin: 8px 0 15px; padding-left: 20px; }
     .content li { margin-bottom: 6px; font-size: 15px; line-height: 1.4; }
     .content strong { font-weight: 600; color: #2c5f2d; }
-    .announcement { margin: 20px 0; padding: 25px; background-color: #f8fdf8; border: 2px solid #2c5f2d; border-radius: 8px; text-align: center; }
-    .announcement img { max-width: 180px; height: auto; margin-bottom: 15px; }
+    .announcement { margin: 20px 0; padding: 12px 15px; background-color: #f8fdf8; border: 2px solid #2c5f2d; border-radius: 8px; text-align: center; }
+    .announcement img { max-width: 180px; height: auto; margin-bottom: 8px; }
+    .announcement h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.2; }
+    .announcement p { margin: 3px 0; font-size: 16px; line-height: 1.3; }
     .button { display: inline-block; margin: 10px 5px; padding: 12px 24px; background-color: #2c5f2d; color: #ffffff !important; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: 600; }
     .info-box { margin: 20px 0; padding: 20px; background-color: #f8fdf8; border-left: 4px solid #2c5f2d; border-radius: 4px; }
     .footer { padding: 25px 30px; background-color: #f8f9fa; text-align: center; border-top: 2px solid #e0e0e0; margin-top: 30px; }
     .footer-box { background-color: #ffffff; border: 1px solid #d0d0d0; border-radius: 6px; padding: 20px; max-width: 500px; margin: 0 auto; }
+    .footer-title { font-size: 16px; font-weight: 600; color: #2c5f2d; margin: 0 0 12px 0; }
+    .footer-links { margin: 10px 0; font-size: 14px; }
+    .footer-links a { color: #2c5f2d; text-decoration: none; margin: 0 8px; }
+    .footer-divider { border: 0; border-top: 1px solid #e0e0e0; margin: 15px 0; }
+    .footer-small { font-size: 12px; color: #666; margin: 8px 0; line-height: 1.5; }
+    .social-links { margin: 15px 0; }
+    .social-links a { margin: 0 8px; display: inline-block; }
     a { color: #2c5f2d; text-decoration: none; }
   </style>
 </head>
@@ -176,13 +194,35 @@ async function sendTestEmail(attendee) {
   <div class='container'>
     <div class='header'>
       <img src='cid:isrsLogo' alt='ISRS Logo'>
-      <h1>International Shellfish Restoration Society</h1>
+      <h1>The International Shellfish Restoration Society</h1>
     </div>
     <div class='content'>${emailBody}</div>
     <div class='footer'>
       <div class='footer-box'>
-        <p style='font-size: 16px; font-weight: 600; color: #2c5f2d; margin: 0 0 12px 0;'>International Shellfish Restoration Society</p>
-        <p style='margin: 10px 0; font-size: 14px;'><a href='https://www.shellfish-society.org'>www.shellfish-society.org</a></p>
+        <p class='footer-title'>International Shellfish Restoration Society</p>
+        <p class='footer-links'>
+          <a href='https://www.shellfish-society.org'>www.shellfish-society.org</a> |
+          <a href='mailto:info@shellfish-society.org'>info@shellfish-society.org</a>
+        </p>
+        <div class='social-links'>
+          <a href='https://www.facebook.com/ISRSshellfish' target='_blank' rel='noopener' aria-label='Facebook'>
+            <img src='https://img.icons8.com/ios-filled/24/2c5f2d/facebook-new.png' alt='Facebook' width='24' height='24'>
+          </a>
+          <a href='https://www.linkedin.com/company/isrs-shellfish' target='_blank' rel='noopener' aria-label='LinkedIn'>
+            <img src='https://img.icons8.com/ios-filled/24/2c5f2d/linkedin.png' alt='LinkedIn' width='24' height='24'>
+          </a>
+        </div>
+        <hr class='footer-divider'>
+        <p class='footer-small'>
+          Tax ID (EIN): 39-2829151 | 501(c)(3) Nonprofit<br>
+          P.O. Box [TBD], [City], [State] [ZIP]<br>
+          <br>
+          You're receiving this email because you're a contact in the ISRS database.<br>
+          <a href='https://www.shellfish-society.org/unsubscribe'>Unsubscribe</a>
+        </p>
+        <p style='font-size: 11px; color: #999; margin-top: 15px;'>
+          © 2026 International Shellfish Restoration Society. All rights reserved.
+        </p>
       </div>
     </div>
   </div>

@@ -23,7 +23,7 @@
 ```html
 <p>Dear {{firstName}},</p>
 
-<p>We hope this message finds you well! We're writing to share exciting updates about the International Shellfish Restoration Society (ISRS) and the upcoming International Conference on Shellfish Restoration (ICSR2026).</p>
+<p>We hope this message finds you well! We're writing to share exciting updates about The International Shellfish Restoration Society (ISRS) and the upcoming International Conference on Shellfish Restoration (ICSR2026).</p>
 
 <!-- CONDITIONAL: ICSR2024 Participants (attendees, presenters, posters, volunteers, planning committee, sponsors, exhibitors, field trip participants) -->
 <div class="icsr2024-participant-section info-box">
@@ -53,7 +53,7 @@
 </p>
 </div>
 
-<p>We're thrilled to announce that ICSR2026 will be hosted by Puget Sound Restoration Fund at the Squaxin Island Tribe's Little Creek Casino Resort in Shelton, Washington. Since 1996, ICSR has been held worldwide—from the United States to Canada, Scotland, Australia, and beyond—fostering lasting collaborations among practitioners on the leading edge of molluscan shellfish restoration.</p>
+<p>We're thrilled to announce that ICSR2026 will be hosted by <a href="https://restorationfund.org" target="_blank" rel="noopener">Puget Sound Restoration Fund</a> at the <a href="https://www.squaxinisland.org" target="_blank" rel="noopener">Squaxin Island Tribe</a>'s <a href="https://www.littlecreek.com" target="_blank" rel="noopener">Little Creek Casino Resort</a> in Shelton, Washington. Since 1996, ICSR has been held worldwide—from the United States to Canada, Scotland, Australia, and beyond—fostering lasting collaborations among practitioners on the leading edge of molluscan shellfish restoration.</p>
 
 <p><strong>Conference Theme:</strong> <em>Engaging Communities, Collaborating with Knowledge Holders, and Advancing Restorative Aquaculture</em></p>
 
