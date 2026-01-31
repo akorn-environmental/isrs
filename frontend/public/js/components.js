@@ -955,9 +955,9 @@ const translations = {
 
     // ========== GALLERY PAGE ==========
     // Gallery - Header
-    galleryHeading: 'Photo Gallery',
-    gallerySubtitle: 'Explore photos from shellfish restoration projects, research, and events from ISRS and the global restoration community',
-    galleryDescription: 'Explore photos from shellfish restoration projects, research, and events from ISRS and the global restoration community',
+    galleryHeading: 'AI-Enhanced Photo Gallery',
+    gallerySubtitle: 'Explore photos from shellfish restoration projects, research, and events from ISRS and the global restoration community. Searchable by AI-generated captions and tags.',
+    galleryDescription: 'AI-enhanced photo gallery showcasing shellfish restoration projects, research, and events from ISRS and the global restoration community. Searchable by AI-generated captions and tags.',
 
     // Gallery - Search & Filters
     gallerySearchFilterHeading: '🔍 Search & Filter',
@@ -2661,9 +2661,9 @@ const translations = {
 
     // ========== PÁGINA GALERÍA ==========
     // Galería - Encabezado
-    galleryHeading: 'Galería de Fotos',
-    gallerySubtitle: 'Explore fotos de proyectos de restauración de moluscos, investigación y eventos de ISRS y la comunidad global de restauración',
-    galleryDescription: 'Explore fotos de proyectos de restauración de moluscos, investigación y eventos de ISRS y la comunidad global de restauración',
+    galleryHeading: 'Galería de Fotos Mejorada con IA',
+    gallerySubtitle: 'Explore fotos de proyectos de restauración de moluscos, investigación y eventos de ISRS y la comunidad global de restauración. Buscable por subtítulos y etiquetas generadas por IA.',
+    galleryDescription: 'Galería de fotos mejorada con IA que muestra proyectos de restauración de moluscos, investigación y eventos de ISRS y la comunidad global de restauración. Buscable por subtítulos y etiquetas generadas por IA.',
 
     // Galería - Búsqueda y Filtros
     gallerySearchFilterHeading: '🔍 Buscar y Filtrar',
@@ -4371,9 +4371,9 @@ const translations = {
 
     // ========== PAGE GALERIE ==========
     // Galerie - En-tête
-    galleryHeading: 'Galerie de Photos',
-    gallerySubtitle: 'Explorez les photos de projets de restauration des mollusques, recherches et événements d\'ISRS et de la communauté mondiale de restauration',
-    galleryDescription: 'Explorez les photos de projets de restauration des mollusques, recherches et événements d\'ISRS et de la communauté mondiale de restauration',
+    galleryHeading: 'Galerie de Photos Améliorée par IA',
+    gallerySubtitle: 'Explorez les photos de projets de restauration des mollusques, recherches et événements d\'ISRS et de la communauté mondiale de restauration. Recherchable par légendes et étiquettes générées par IA.',
+    galleryDescription: 'Galerie de photos améliorée par IA présentant des projets de restauration des mollusques, recherches et événements d\'ISRS et de la communauté mondiale de restauration. Recherchable par légendes et étiquettes générées par IA.',
 
     // Galerie - Recherche et Filtres
     gallerySearchFilterHeading: '🔍 Rechercher et Filtrer',
