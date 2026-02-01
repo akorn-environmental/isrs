@@ -5,8 +5,8 @@ from typing import Optional, Dict, List, Any
 import anthropic
 import os
 from ..database import get_db
-from ..dependencies.auth import get_current_user
-from ..models.user import User
+from .auth import get_current_user
+from ..models.attendee_profile import AttendeeProfile
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -113,7 +113,7 @@ async def get_database_context(db: Session) -> Dict[str, Any]:
 @router.post("/query", response_model=AIQueryResponse)
 async def query_ai(
     request: AIQueryRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: AttendeeProfile = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
