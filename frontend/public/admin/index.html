@@ -306,9 +306,13 @@
   <script>
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:3000'
-      : ''  // Use same-origin (relative URLs) in production;
+      : ''  // Use same-origin (relative URLs) in production
 
-    console.log('🔐 Admin Dashboard - API Backend:', API_BASE_URL);
+    const MEMBER_API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000/api/auth'
+      : 'https://isrs-python-backend.onrender.com/api/auth';
+
+    console.log('🔐 Admin Dashboard - API Backend:', API_BASE_URL || 'same-origin');
 
     let userPermissions = {};
     let userPermissionLevel = 0;
@@ -351,19 +355,51 @@
         // Get session token from localStorage
         const sessionToken = localStorage.getItem('isrs_session_token');
 
-        // Check session (try cookie-based first, fall back to token-based)
+        // Check session - try member API backend first if we have a token
         let response;
+        let data;
+
         if (sessionToken) {
-          response = await fetch(`${API_BASE_URL}/api/auth/session?sessionToken=${sessionToken}`, {
-            credentials: 'include'
-          });
+          // Try member authentication API first (Python backend)
+          try {
+            console.log('Checking member API session with token...');
+            response = await fetch(`${MEMBER_API_BASE}/me`, {
+              headers: {
+                'Authorization': `Bearer ${sessionToken}`
+              }
+            });
+            data = await response.json();
+
+            if (response.ok && data.email) {
+              console.log('✅ Authenticated via member API:', data.email);
+              // Convert member API response to expected format
+              data = {
+                success: true,
+                data: {
+                  user: data,
+                  primaryRole: { name: data.role || 'member', level: data.role === 'admin' ? 100 : 50 },
+                  roles: [data.role || 'member'],
+                  permissions: {}
+                }
+              };
+            } else {
+              throw new Error('Member API authentication failed');
+            }
+          } catch (memberApiError) {
+            console.log('Member API failed, trying legacy session API...');
+            // Fall back to legacy session check
+            response = await fetch(`${API_BASE_URL}/api/auth/session?sessionToken=${sessionToken}`, {
+              credentials: 'include'
+            });
+            data = await response.json();
+          }
         } else {
+          // No token, try cookie-based session
           response = await fetch(`${API_BASE_URL}/api/auth/session`, {
             credentials: 'include'
           });
+          data = await response.json();
         }
-
-        const data = await response.json();
 
         if (!response.ok || !data.success) {
           console.log('No active session, redirecting to login...');
