@@ -104,11 +104,12 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos
+from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai
 
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 app.include_router(feedback.router, prefix="/api/feedback", tags=["Feedback"])
+app.include_router(ai.router, tags=["AI Assistant"])  # AI router with /api/ai prefix built-in
 app.include_router(contacts.router, prefix="/api/contacts", tags=["Contacts"])
 app.include_router(votes.router, prefix="/api/votes", tags=["Board Votes"])
 app.include_router(photos.router, prefix="/api/photos", tags=["Photos"])  # Must be before /api catch-all
