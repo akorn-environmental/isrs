@@ -6,7 +6,7 @@ import anthropic
 import os
 from ..database import get_db
 from .auth import get_current_user
-from ..models.attendee_profile import AttendeeProfile
+from ..models.conference import AttendeeProfile
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
