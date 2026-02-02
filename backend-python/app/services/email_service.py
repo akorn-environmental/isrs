@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 # ISRS BRAND COLORS (from shellfish-society.org)
 # =============================================================================
 BRAND_COLORS = {
-    "primary_blue": "#2e5a8a",
+    "primary_green": "#2c5f2d",  # ISRS green - primary brand color
+    "primary_blue": "#2e5a8a",   # Legacy blue - kept for some templates
     "secondary_blue": "#4a7ab5",
     "accent_teal": "#546d7d",
     "dark_gray": "#2c3e50",
@@ -345,7 +346,7 @@ class EmailService:
         content = f"""
         <div style="text-align: center; margin-bottom: 30px;">
             <span style="font-size: 48px;">🐚</span>
-            <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
+            <h1 style="color: {BRAND_COLORS['primary_green']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
                 {greeting}
             </h1>
             <p style="color: {BRAND_COLORS['text_muted']}; font-size: 15px; margin: 8px 0 0 0;">
@@ -358,33 +359,18 @@ class EmailService:
             <span style="color: {BRAND_COLORS['text_muted']}; font-size: 14px;">No password needed — it's that easy!</span>
         </p>
 
-        {get_button_html("Sign In to ISRS", magic_link)}
-
-        <div style="background: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center;">
-            <p style="margin: 0 0 15px 0; font-size: 15px; color: {BRAND_COLORS['primary_blue']}; font-weight: 600;">
-                🌊 What's New at ISRS?
-            </p>
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
-                <tr>
-                    <td style="padding: 8px 15px;">
-                        <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['secondary_blue']}; text-decoration: none; font-size: 14px;">
-                            📅 ICSR 2026
-                        </a>
-                    </td>
-                    <td style="color: {BRAND_COLORS['border']};">|</td>
-                    <td style="padding: 8px 15px;">
-                        <a href="https://www.shellfish-society.org/gallery.html" style="color: {BRAND_COLORS['secondary_blue']}; text-decoration: none; font-size: 14px;">
-                            📸 Photo Gallery
-                        </a>
-                    </td>
-                    <td style="color: {BRAND_COLORS['border']};">|</td>
-                    <td style="padding: 8px 15px;">
-                        <a href="https://www.shellfish-society.org/member/directory.html" style="color: {BRAND_COLORS['secondary_blue']}; text-decoration: none; font-size: 14px;">
-                            👥 Directory
-                        </a>
-                    </td>
-                </tr>
-            </table>
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{magic_link}"
+               style="background-color: {BRAND_COLORS['primary_green']};
+                      color: white;
+                      padding: 15px 40px;
+                      text-decoration: none;
+                      border-radius: 5px;
+                      display: inline-block;
+                      font-size: 16px;
+                      font-weight: 600;">
+                Sign In to ISRS
+            </a>
         </div>
 
         <div style="background-color: #fffbeb; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
@@ -394,9 +380,16 @@ class EmailService:
             </p>
         </div>
 
-        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 20px 0 0 0; text-align: center; line-height: 1.6;">
-            Button not working? Copy this link into your browser:<br>
-            <span style="color: {BRAND_COLORS['secondary_blue']}; word-break: break-all;">{magic_link}</span>
+        <div style="margin-top: 30px; padding: 20px; background-color: #f8fdf8; border-left: 4px solid {BRAND_COLORS['primary_green']}; border-radius: 4px;">
+            <p style="font-size: 13px; color: {BRAND_COLORS['primary_green']}; margin: 0;">
+                <strong>🔒 Security Note:</strong> This link is unique to you and can only be used once. Never share it with anyone.
+            </p>
+        </div>
+
+        <p style="font-size: 12px; color: {BRAND_COLORS['text_muted']}; margin: 20px 0 0 0; text-align: center; line-height: 1.6;">
+            <strong>Button not working?</strong><br>
+            Copy this link into your browser:<br>
+            <span style="word-break: break-all; color: {BRAND_COLORS['primary_green']};">{magic_link}</span>
         </p>
         """
 
@@ -413,10 +406,7 @@ No password needed - it's that easy!
 
 ---
 
-What's New at ISRS?
-• ICSR 2026: https://www.shellfish-society.org/icsr2026.html
-• Photo Gallery: https://www.shellfish-society.org/gallery.html
-• Member Directory: https://www.shellfish-society.org/member/directory.html
+🔒 SECURITY NOTE: This link is unique to you and can only be used once. Never share it with anyone.
 
 ---
 
