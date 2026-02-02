@@ -1642,7 +1642,7 @@
     async function loadOrganizationsForBulkEdit() {
       try {
         const sessionToken = localStorage.getItem('isrs_session_token');
-        const response = await fetch(`${API_BASE_URL}/api/admin/organizations?limit=1000`, {
+        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations/?limit=1000`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();

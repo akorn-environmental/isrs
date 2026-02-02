@@ -233,7 +233,7 @@
     async function loadOrganizations() {
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/organizations`, {
+        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();
@@ -248,7 +248,7 @@
     async function loadAvailableLeads() {
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/funding/available-leads`, {
+        const response = await fetch(`${API_BASE_URL}/api/funding/available-leads`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();
@@ -271,7 +271,7 @@
     async function loadFunding() {
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/funding`, {
+        const response = await fetch(`${API_BASE_URL}/api/funding`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();
@@ -593,8 +593,8 @@
       const prospectId = document.getElementById('fundingId').value;
       const isEdit = prospectId !== '';
       const url = isEdit
-        ? `${API_BASE_URL}/api/admin/funding/${prospectId}`
-        : `${API_BASE_URL}/api/admin/funding`;
+        ? `${API_BASE_URL}/api/funding/${prospectId}`
+        : `${API_BASE_URL}/api/funding`;
       const method = isEdit ? 'PUT' : 'POST';
 
       try {
@@ -615,7 +615,7 @@
           // If leads were selected, assign them
           if (selectedLeads.length > 0) {
             try {
-              const leadsResponse = await fetch(`${API_BASE_URL}/api/admin/funding/${savedProspectId}/assign-leads`, {
+              const leadsResponse = await fetch(`${API_BASE_URL}/api/funding/${savedProspectId}/assign-leads`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -652,7 +652,7 @@
 
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/funding/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/funding/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
@@ -684,7 +684,7 @@
 
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/funding/${currentProspectId}/notify-leads`, {
+        const response = await fetch(`${API_BASE_URL}/api/funding/${currentProspectId}/notify-leads`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
@@ -836,7 +836,7 @@
 
         try {
           const sessionToken = localStorage.getItem('isrs_session_token');
-          const response = await fetch(`${API_BASE_URL}/api/admin/funding/${prospect.id}`, {
+          const response = await fetch(`${API_BASE_URL}/api/funding/${prospect.id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${sessionToken}`,

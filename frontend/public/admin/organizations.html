@@ -619,7 +619,7 @@
       const sessionToken = localStorage.getItem('isrs_session_token');
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/organizations`, {
+        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations`, {
           headers: {
             'Authorization': `Bearer ${sessionToken}`
           }
@@ -1057,7 +1057,7 @@
 
       try {
         const sessionToken = localStorage.getItem('isrs_session_token');
-        const response = await fetch(`${API_BASE_URL}/api/admin/organizations`, {
+        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1403,7 +1403,7 @@
 
         try {
           const sessionToken = localStorage.getItem('isrs_session_token');
-          const response = await fetch(`${API_BASE_URL}/api/admin/organizations/${org.id}`, {
+          const response = await fetch(`${API_BASE_URL}/api/contacts/organizations/${org.id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${sessionToken}`,
