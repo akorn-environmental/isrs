@@ -1,48 +1,48 @@
-/* ISRS AI Assistant Styles - Global for Admin and Member Portals */
+/* ISRS AI Assistant Styles - Floating Box on Right Side */
 
 .isrs-ai-assistant {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  bottom: 24px;
+  right: 24px;
   z-index: 50; /* Below admin sidebar (z-index: 100) */
-  display: flex;
   transition: all 0.3s ease;
 }
 
-/* Collapsed state - vertical tab */
+/* Collapsed state - small floating button */
 .isrs-ai-assistant.collapsed {
-  width: 48px;
+  width: 60px;
+  height: 60px;
 }
 
 .isrs-ai-assistant.collapsed .isrs-ai-tab {
   display: flex;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  background: linear-gradient(180deg, #2c5f2d 0%, #1a3a1b 100%); /* ISRS green gradient */
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #2c5f2d 0%, #1a3a1b 100%); /* ISRS green gradient */
   color: white;
-  padding: 2rem 0.75rem;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
-  border-radius: 8px 0 0 8px;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(44, 95, 45, 0.4);
   transition: all 0.3s ease;
+  font-size: 1.75rem;
 }
 
 .isrs-ai-assistant.collapsed .isrs-ai-tab:hover {
-  background: linear-gradient(180deg, #1a3a1b 0%, #0d1f0e 100%); /* darker green */
-  padding-right: 0.875rem;
+  background: linear-gradient(135deg, #1a3a1b 0%, #0d1f0e 100%); /* darker green */
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(44, 95, 45, 0.5);
 }
 
 .isrs-ai-assistant.collapsed .isrs-ai-panel {
   display: none;
 }
 
-/* Expanded state - full panel */
+/* Expanded state - compact floating panel */
 .isrs-ai-assistant.expanded {
-  width: 450px;
+  width: 380px;
+  max-height: 600px;
 }
 
 .isrs-ai-assistant.expanded .isrs-ai-tab {
@@ -53,10 +53,11 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   background: white;
-  border-left: 3px solid #2c5f2d; /* ISRS green */
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
-  max-height: 100vh;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 
@@ -329,16 +330,25 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+  .isrs-ai-assistant {
+    bottom: 16px;
+    right: 16px;
+  }
+
   .isrs-ai-assistant.expanded {
-    width: 100%;
+    width: calc(100vw - 32px);
+    max-width: 380px;
+    max-height: 500px;
   }
 
   .isrs-ai-assistant.collapsed {
-    width: 40px;
+    width: 56px;
+    height: 56px;
   }
 
   .isrs-ai-assistant.collapsed .isrs-ai-tab {
-    font-size: 0.75rem;
-    padding: 1.5rem 0.5rem;
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
   }
 }
