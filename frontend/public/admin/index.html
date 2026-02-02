@@ -704,7 +704,7 @@
     async function loadStats() {
       try {
         const sessionToken = localStorage.getItem('isrs_session_token');
-        const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
+        const response = await fetch(`${API_BASE_URL}/api/stats`, {
           headers: {
             'Authorization': `Bearer ${sessionToken}`
           }
