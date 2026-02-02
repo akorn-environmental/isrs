@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSR 2026 - ISRS Admin</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        .work-plan-container {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .work-plan-container h2 {
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .work-plan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .work-plan-table th,
+        .work-plan-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .work-plan-table th {
+            background-color: var(--primary-green);
+            color: white;
+            font-weight: 600;
+        }
+
+        .work-plan-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-complete {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-ongoing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-upcoming {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .highlight-date {
+            background-color: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .committee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .committee-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .committee-card h4 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .committee-card .role {
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .committee-card .org {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .sponsorship-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .sponsorship-table th,
+        .sponsorship-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sponsorship-table th {
+            background-color: var(--primary-blue);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sponsor-received {
+            background-color: #d4edda;
+        }
+
+        .sponsor-committed {
+            background-color: #fff3cd;
+        }
+
+        .sponsor-invited {
+            background-color: #f8f9fa;
+        }
+
+        .total-row {
+            font-weight: 600;
+            background-color: #e8f5e9;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a4a1b;
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1e3a5a;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <a href="../index.html">
+                    <img src="../images/isrs-logo-wide.png" alt="ISRS" style="max-width: 180px;">
+                </a>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html" class="admin-nav-item">
+                    📊 Dashboard
+                </a>
+                <a href="contacts.html" class="admin-nav-item">
+                    👥 Contacts
+                </a>
+                <a href="organizations.html" class="admin-nav-item">
+                    🏢 Organizations
+                </a>
+                <a href="icsr2026.html" class="admin-nav-item active">
+                    🦪 ICSR 2026
+                </a>
+                <a href="funding.html" class="admin-nav-item">
+                    💰 Funding
+                </a>
+                <a href="votes.html" class="admin-nav-item">
+                    🗳️ Votes
+                </a>
+                <a href="feedback.html" class="admin-nav-item">
+                    💬 Feedback
+                </a>
+                <a href="press-kit.html" class="admin-nav-item">
+                    📰 Press Kit
+                </a>
+            </nav>
+            <div class="admin-user">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>🦪 ICSR 2026 - Little Creek Casino Resort, WA</h1>
+                <p style="color: #666;">October 4-8, 2026 • Hosted by Puget Sound Restoration Fund</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number" id="stat-planning-committee">10</div>
+                    <div class="label">Planning Committee</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="stat-program-team">6</div>
+                    <div class="label">Program Team</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="stat-sponsors">11</div>
+                    <div class="label">Total Sponsors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="stat-funding">$7,000</div>
+                    <div class="label">Confirmed Funding</div>
+                </div>
+            </div>
+
+            <!-- Work Plan -->
+            <div class="work-plan-container">
+                <div class="section-header">
+                    <h2>📅 ICSR 2026 Work Plan (as of 2-2-26)</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="exportWorkPlan()">📥 Export</button>
+                    </div>
+                </div>
+
+                <table class="work-plan-table">
+                    <thead>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Timeline/Details</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>LCCR Venue Contract</strong></td>
+                            <td>Finalized January 6, 2026; deposit paid January 7</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ICSR Save the Date</strong></td>
+                            <td>Distributed starting Feb 2</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ICSR Sponsorship Prospectus</strong></td>
+                            <td>Distributed starting Feb 2</td>
+                            <td><span class="status-badge status-complete">Complete</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ISRS/ICSR Monthly Check-ins</strong></td>
+                            <td>Monthly Feb-Sept <span class="highlight-date">(12noon PST, 1st or 2nd Wed. of month)</span></td>
+                            <td><span class="status-badge status-ongoing">Ongoing</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Planning Cttee meetings</strong></td>
+                            <td>Monthly Feb-Sept (8am PST, 1st Wednesday of month)</td>
+                            <td><span class="status-badge status-ongoing">Ongoing</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Program Team meetings</strong></td>
+                            <td>Monthly Feb-Sept (7:30am PST, 2nd Wed. of month)</td>
+                            <td><span class="status-badge status-ongoing">Ongoing</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Call for Abstracts</strong></td>
+                            <td>Send February</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Abstract/Poster deadline</strong></td>
+                            <td>June 12 or 19</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Final Program posted on Website</strong></td>
+                            <td>July 10</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Early Bird Registration Closes</strong></td>
+                            <td>Sept 4</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Regular Registration</strong></td>
+                            <td>Active thru conference</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hotel reservation deadline</strong></td>
+                            <td>Sept. 4 to qualify for Bloc rooms/rates</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Field trip sign-up deadline</strong></td>
+                            <td>Sept 18</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ICSR Program printed</strong></td>
+                            <td>Week of Sept 21</td>
+                            <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Planning Committee -->
+            <div class="work-plan-container">
+                <div class="section-header">
+                    <h2>👥 Planning Committee</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="emailPlanningCommittee()">📧 Email Committee</button>
+                    </div>
+                </div>
+                <div class="committee-grid" id="planning-committee-grid">
+                    <!-- Loaded dynamically -->
+                    <p>Loading committee members...</p>
+                </div>
+            </div>
+
+            <!-- Program Team -->
+            <div class="work-plan-container">
+                <div class="section-header">
+                    <h2>📋 Program Team</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="emailProgramTeam()">📧 Email Team</button>
+                    </div>
+                </div>
+                <div class="committee-grid" id="program-team-grid">
+                    <!-- Loaded dynamically -->
+                    <p>Loading team members...</p>
+                </div>
+            </div>
+
+            <!-- Sponsorships -->
+            <div class="work-plan-container">
+                <div class="section-header">
+                    <h2>💰 Sponsorships</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="addSponsor()">➕ Add Sponsor</button>
+                        <button class="btn btn-primary" onclick="emailSponsors()">📧 Email Sponsors</button>
+                    </div>
+                </div>
+
+                <table class="sponsorship-table">
+                    <thead>
+                        <tr>
+                            <th>Organization</th>
+                            <th>Contact</th>
+                            <th>Level</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sponsorship-table-body">
+                        <!-- Loaded dynamically -->
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">Loading sponsorships...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Auth check
+        const token = localStorage.getItem('isrs_admin_token');
+        if (!token) {
+            window.location.href = '../login.html';
+        }
+
+        // Validate session
+        fetch('/api/auth/validate-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            if (!response.ok) {
+                localStorage.removeItem('isrs_admin_token');
+                window.location.href = '../login.html';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('isrs_admin_token');
+            window.location.href = '../login.html';
+        }
+
+        // Load Planning Committee
+        async function loadPlanningCommittee() {
+            try {
+                const response = await fetch('/api/contacts/?tags=Planning%20Committee&limit=100', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load planning committee');
+
+                const data = await response.json();
+                const grid = document.getElementById('planning-committee-grid');
+
+                if (data.contacts && data.contacts.length > 0) {
+                    grid.innerHTML = data.contacts.map(member => `
+                        <div class="committee-card">
+                            <h4>${member.first_name} ${member.last_name}</h4>
+                            <div class="role">${member.title || 'Planning Committee Member'}</div>
+                            <div class="org">${member.organization_name || 'ISRS'}</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #666;">
+                                📧 ${member.email}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    grid.innerHTML = '<p style="color: #666;">No planning committee members found. Run the import script on Render.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading planning committee:', error);
+                document.getElementById('planning-committee-grid').innerHTML =
+                    '<p style="color: #d32f2f;">Error loading committee members.</p>';
+            }
+        }
+
+        // Load Program Team
+        async function loadProgramTeam() {
+            try {
+                const response = await fetch('/api/contacts/?tags=Program%20Team&limit=100', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load program team');
+
+                const data = await response.json();
+                const grid = document.getElementById('program-team-grid');
+
+                if (data.contacts && data.contacts.length > 0) {
+                    grid.innerHTML = data.contacts.map(member => `
+                        <div class="committee-card">
+                            <h4>${member.first_name} ${member.last_name}</h4>
+                            <div class="role">${member.title || 'Program Team Member'}</div>
+                            <div class="org">${member.organization_name || 'ISRS'}</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #666;">
+                                📧 ${member.email}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    grid.innerHTML = '<p style="color: #666;">No program team members found. Run the import script on Render.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading program team:', error);
+                document.getElementById('program-team-grid').innerHTML =
+                    '<p style="color: #d32f2f;">Error loading team members.</p>';
+            }
+        }
+
+        // Load Sponsorships
+        async function loadSponsorships() {
+            try {
+                // First get the conference ID
+                const confResponse = await fetch('/api/conferences/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!confResponse.ok) throw new Error('Failed to load conferences');
+
+                const conferences = await confResponse.json();
+                const icsr2026 = conferences.find(c => c.year === 2026 || c.name.includes('2026'));
+
+                if (!icsr2026) {
+                    document.getElementById('sponsorship-table-body').innerHTML =
+                        '<tr><td colspan="6" style="text-align: center; color: #666;">ICSR 2026 conference not found. Run the import script on Render.</td></tr>';
+                    return;
+                }
+
+                // Load sponsorships for this conference
+                const sponsorsResponse = await fetch(`/api/conferences/${icsr2026.id}/sponsors`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!sponsorsResponse.ok) throw new Error('Failed to load sponsorships');
+
+                const sponsors = await sponsorsResponse.json();
+                const tbody = document.getElementById('sponsorship-table-body');
+
+                if (sponsors && sponsors.length > 0) {
+                    const statusIcons = {
+                        'received': '✅',
+                        'committed': '⏳',
+                        'invited': '📧'
+                    };
+
+                    const statusClass = {
+                        'received': 'sponsor-received',
+                        'committed': 'sponsor-committed',
+                        'invited': 'sponsor-invited'
+                    };
+
+                    tbody.innerHTML = sponsors.map(sponsor => `
+                        <tr class="${statusClass[sponsor.status] || ''}">
+                            <td><strong>${sponsor.organization_name}</strong></td>
+                            <td>${sponsor.contact_name || '—'}</td>
+                            <td>${sponsor.sponsor_level || '—'}</td>
+                            <td>${sponsor.amount ? '$' + sponsor.amount.toLocaleString() : 'TBD'}</td>
+                            <td>${statusIcons[sponsor.status] || ''} ${sponsor.status.toUpperCase()}</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"
+                                        onclick="editSponsor('${sponsor.id}')">Edit</button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    // Add totals row
+                    const received = sponsors.filter(s => s.status === 'received').reduce((sum, s) => sum + (s.amount || 0), 0);
+                    const committed = sponsors.filter(s => s.status === 'committed').reduce((sum, s) => sum + (s.amount || 0), 0);
+                    const total = received + committed;
+
+                    tbody.innerHTML += `
+                        <tr class="total-row">
+                            <td colspan="3"><strong>TOTAL CONFIRMED (Received + Committed)</strong></td>
+                            <td colspan="3"><strong>$${total.toLocaleString()}</strong></td>
+                        </tr>
+                    `;
+
+                    // Update stats
+                    document.getElementById('stat-funding').textContent = '$' + total.toLocaleString();
+                    document.getElementById('stat-sponsors').textContent = sponsors.length;
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666;">No sponsorships found. Run the import script on Render.</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading sponsorships:', error);
+                document.getElementById('sponsorship-table-body').innerHTML =
+                    '<tr><td colspan="6" style="text-align: center; color: #d32f2f;">Error loading sponsorships.</td></tr>';
+            }
+        }
+
+        // Action functions
+        function exportWorkPlan() {
+            alert('Export functionality coming soon! Will export work plan as CSV/PDF.');
+        }
+
+        function emailPlanningCommittee() {
+            // Navigate to contacts page with filter
+            window.location.href = 'contacts.html?tags=Planning%20Committee';
+        }
+
+        function emailProgramTeam() {
+            // Navigate to contacts page with filter
+            window.location.href = 'contacts.html?tags=Program%20Team';
+        }
+
+        function emailSponsors() {
+            alert('Email sponsor functionality coming soon!');
+        }
+
+        function addSponsor() {
+            alert('Add sponsor functionality coming soon! Will open a form to add new sponsor.');
+        }
+
+        function editSponsor(sponsorId) {
+            alert(`Edit sponsor ${sponsorId} - functionality coming soon!`);
+        }
+
+        // Load all data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPlanningCommittee();
+            loadProgramTeam();
+            loadSponsorships();
+        });
+    </script>
+</body>
+</html>
