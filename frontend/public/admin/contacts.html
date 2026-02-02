@@ -809,7 +809,7 @@
     async function loadContacts() {
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/contacts`, {
+        const response = await fetch(`${API_BASE_URL}/api/contacts/`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();
