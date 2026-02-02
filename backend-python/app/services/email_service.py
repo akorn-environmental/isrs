@@ -101,7 +101,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
 
                         <!-- Header with logo -->
                         <tr>
-                            <td style="background: linear-gradient(135deg, {BRAND_COLORS['primary_blue']} 0%, {BRAND_COLORS['secondary_blue']} 100%); padding: 30px 40px; border-radius: 12px 12px 0 0; text-align: center;">
+                            <td style="background-color: {BRAND_COLORS['primary_green']}; padding: 30px 40px; border-radius: 12px 12px 0 0; text-align: center;">
                                 <img src="https://www.shellfish-society.org/images/isrs-logo.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 10px;">
                                 <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society</p>
                             </td>
@@ -337,7 +337,7 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Your Login Link is Ready 🦪 - ISRS"
+        subject = "ISRS - Your Login Link is Ready 🦪"
         preheader = "One click to access your ISRS member account - no password needed!"
 
         # Personalized greeting
@@ -438,7 +438,7 @@ https://www.shellfish-society.org
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Welcome to ISRS - Complete Your Registration"
+        subject = "ISRS - Welcome! Complete Your Registration"
         preheader = f"Welcome {first_name}! Complete your ISRS member profile to get started."
 
         content = f"""
@@ -550,7 +550,7 @@ Website: https://www.shellfish-society.org
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "New Abstract Review Assignment - ICSR 2026"
+        subject = "ICSR 2026 - New Abstract Review Assignment"
         preheader = f"You've been assigned to review: {abstract_title[:50]}..."
 
         # Format due date
@@ -631,7 +631,7 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Review Submitted Successfully - ICSR 2026"
+        subject = "ICSR 2026 - Review Submitted Successfully"
         preheader = "Thank you! Your abstract review has been submitted."
 
         content = f"""
@@ -711,7 +711,7 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "🎉 Abstract Accepted - ICSR 2026"
+        subject = "ICSR 2026 - Abstract Accepted 🎉"
         preheader = f"Congratulations! Your abstract has been accepted for {presentation_type} presentation."
 
         content = f"""
@@ -823,7 +823,7 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Abstract Review Decision - ICSR 2026"
+        subject = "ICSR 2026 - Abstract Review Decision"
         preheader = "Thank you for your ICSR 2026 abstract submission"
 
         feedback_section = ""
@@ -928,13 +928,13 @@ ICSR 2026 Program Committee
         is_waitlist = status == "waitlist"
 
         if is_waitlist:
-            subject = f"Waitlist Confirmation - {event_name}"
+            subject = f"ICSR 2026 - Waitlist Confirmation: {event_name}"
             preheader = f"You're on the waitlist for {event_name}"
             icon = "⏳"
             title = "Added to Waitlist"
             color = BRAND_COLORS['warning_yellow']
         else:
-            subject = f"Registration Confirmed - {event_name}"
+            subject = f"ICSR 2026 - Registration Confirmed: {event_name}"
             preheader = f"You're registered for {event_name}!"
             icon = "✓"
             title = "Registration Confirmed!"
@@ -1053,7 +1053,7 @@ ICSR 2026
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"🎉 Spot Available! - {event_name}"
+        subject = f"ICSR 2026 - Spot Available: {event_name} 🎉"
         preheader = f"Great news! You've been confirmed for {event_name}"
 
         # Format event date
@@ -1170,7 +1170,7 @@ ICSR 2026
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"Registration Confirmed - {conference_name}"
+        subject = f"ICSR 2026 - Registration Confirmed"
         preheader = f"Welcome {first_name}! Your registration for {conference_name} is confirmed."
 
         # Format date
@@ -1318,7 +1318,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = "Support Shellfish Restoration Worldwide - ISRS"
+        subject = "ISRS - Support Shellfish Restoration Worldwide"
         preheader = f"{first_name}, your support helps restore shellfish ecosystems globally"
 
         # Build personalized opening based on history
@@ -1474,7 +1474,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = "Help Make ICSR 2026 Unforgettable - Bremerton, WA"
+        subject = "ICSR 2026 - Help Make It Unforgettable"
         preheader = f"{first_name}, support the 7th International Conference on Shellfish Restoration"
 
         # Build personalized content
@@ -1683,7 +1683,7 @@ International Shellfish Restoration Society
         }
         session_label = session_labels.get(session_type, "presentation")
 
-        subject = f"Invitation to Speak at ICSR 2026 - {first_name}"
+        subject = f"ICSR 2026 - Invitation to Speak"
         preheader = f"We'd love to have you present at the 7th International Conference on Shellfish Restoration"
 
         # Build personalized opening
@@ -1886,7 +1886,7 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully
         """
-        subject = f"Present Your Research at ICSR 2026 - Poster Session"
+        subject = "ICSR 2026 - Present Your Research (Poster Session)"
         preheader = f"{first_name}, share your shellfish restoration research at ICSR 2026"
 
         if icsr2024_poster and icsr2024_poster_title:
@@ -2035,7 +2035,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = "ICSR 2026 Student Invitation - Shape the Future of Shellfish Restoration"
+        subject = "ICSR 2026 - Student Invitation"
         preheader = f"{first_name}, join the next generation of shellfish restoration leaders"
 
         if icsr2024_attended:
@@ -2200,7 +2200,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = f"Exhibit at ICSR 2026 - {company_name}"
+        subject = f"ICSR 2026 - Exhibit Opportunity"
         preheader = f"Reach {expected_attendance or 300}+ shellfish restoration professionals"
 
         if icsr2024_exhibitor:
