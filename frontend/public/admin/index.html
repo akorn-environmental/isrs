@@ -388,14 +388,14 @@
           } catch (memberApiError) {
             console.log('Member API failed, trying legacy session API...');
             // Fall back to legacy session check
-            response = await fetch(`${API_BASE_URL}/api/auth/session?sessionToken=${sessionToken}`, {
+            response = await fetch(`${API_BASE_URL}/api/auth/validate-session?sessionToken=${sessionToken}`, {
               credentials: 'include'
             });
             data = await response.json();
           }
         } else {
           // No token, try cookie-based session
-          response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+          response = await fetch(`${API_BASE_URL}/api/auth/validate-session`, {
             credentials: 'include'
           });
           data = await response.json();

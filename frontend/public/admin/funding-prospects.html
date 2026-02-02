@@ -516,7 +516,7 @@
 
     async function loadUserRole() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+        const response = await fetch(`${API_BASE_URL}/api/auth/validate-session`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();

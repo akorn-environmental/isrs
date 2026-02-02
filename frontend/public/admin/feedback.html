@@ -451,7 +451,7 @@
         return;
       }
 
-      fetch(`${API_BASE_URL}/api/auth/session`, {
+      fetch(`${API_BASE_URL}/api/auth/validate-session`, {
         headers: { 'Authorization': `Bearer ${sessionToken}` }
       })
       .then(res => res.json())
