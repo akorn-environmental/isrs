@@ -48,9 +48,9 @@ class ISRSAIAssistant {
 
     const html = `
       <div class="isrs-ai-assistant collapsed">
-        <!-- Collapsed vertical tab -->
+        <!-- Collapsed floating button -->
         <div class="isrs-ai-tab" title="Open ISRS AI Assistant">
-          🤖 AI Assistant
+          🤖
         </div>
 
         <!-- Expanded panel -->
