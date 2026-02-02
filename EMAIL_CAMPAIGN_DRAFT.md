@@ -42,7 +42,7 @@
 <h3>ICSR2026 - International Conference on Shellfish Restoration</h3>
 <p><strong>📅 October 4-8, 2026</strong></p>
 <p><strong>📍 Little Creek Casino Resort, Shelton, Washington</strong></p>
-<p style="font-size: 14px; margin-top: 10px;"><em>Hosted by Puget Sound Restoration Fund at the Squaxin Island Tribe's Little Creek Casino Resort</em></p>
+<p style="font-size: 14px; margin-top: 10px;"><em>Hosted by Puget Sound Restoration Fund at Little Creek Casino Resort</em></p>
 <p>
 <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=ICSR2026+-+International+Conference+on+Shellfish+Restoration&dates=20261004/20261009&details=Join+us+for+ICSR2026+at+Little+Creek+Casino+Resort+in+Shelton%2C+Washington.+More+details+at+https://www.shellfish-society.org&location=Little+Creek+Casino+Resort%2C+Shelton%2C+WA" class="button">
    Add to Google Calendar
@@ -53,7 +53,7 @@
 </p>
 </div>
 
-<p>We're thrilled to announce that ICSR2026 will be hosted by <a href="https://restorationfund.org" target="_blank" rel="noopener">Puget Sound Restoration Fund</a> at the <a href="https://www.squaxinisland.org" target="_blank" rel="noopener">Squaxin Island Tribe</a>'s <a href="https://www.littlecreek.com" target="_blank" rel="noopener">Little Creek Casino Resort</a> in Shelton, Washington. Since 1996, ICSR has been held worldwide—from the United States to Canada, Scotland, Australia, and beyond—fostering lasting collaborations among practitioners on the leading edge of molluscan shellfish restoration.</p>
+<p>We're thrilled to announce that ICSR2026 will be hosted by <a href="https://restorationfund.org" target="_blank" rel="noopener">Puget Sound Restoration Fund</a> at <a href="https://www.littlecreek.com" target="_blank" rel="noopener">Little Creek Casino Resort</a> in Shelton, Washington. The resort is operated by the <a href="https://www.squaxinisland.org" target="_blank" rel="noopener">Squaxin Island Tribe</a>, whose ancestral territory and ongoing stewardship make this an ideal location for learning about Indigenous shellfish restoration and management. Since 1996, ICSR has been held worldwide—from the United States to Canada, Scotland, Australia, and beyond—fostering lasting collaborations among practitioners on the leading edge of molluscan shellfish restoration.</p>
 
 <p><strong>Conference Theme:</strong> <em>Engaging Communities, Collaborating with Knowledge Holders, and Advancing Restorative Aquaculture</em></p>
 
