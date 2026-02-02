@@ -148,7 +148,7 @@
     async function loadVotes() {
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/votes`, {
+        const response = await fetch(`${API_BASE_URL}/api/votes`, {
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
         const data = await response.json();
@@ -368,8 +368,8 @@
       const voteId = document.getElementById('voteId').value;
       const isEdit = voteId !== '';
       const url = isEdit
-        ? `${API_BASE_URL}/api/admin/votes/${voteId}`
-        : `${API_BASE_URL}/api/admin/votes`;
+        ? `${API_BASE_URL}/api/votes/${voteId}`
+        : `${API_BASE_URL}/api/votes`;
       const method = isEdit ? 'PUT' : 'POST';
 
       try {
@@ -404,7 +404,7 @@
 
       const sessionToken = localStorage.getItem('isrs_session_token');
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/votes/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/votes/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${sessionToken}` }
         });
