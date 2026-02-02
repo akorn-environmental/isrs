@@ -264,6 +264,7 @@ class GmailPollerService {
             ccEmails: emailData.ccEmails,
             receivedDate: emailData.date,
             emailBody: emailData.body,
+            attachments: emailData.attachments,
             context: { isKnownContact: false }
           });
 
@@ -273,7 +274,8 @@ class GmailPollerService {
             gmail_message_id: message.id,
             gmail_thread_id: fullMessage.data.threadId,
             source: 'gmail_api',
-            email_date: emailData.date
+            email_date: emailData.date,
+            attachments: emailData.attachments
           });
 
           // Mark as read if configured
@@ -336,8 +338,44 @@ class GmailPollerService {
       ccEmails: extractEmails(getHeader('Cc')),
       date: new Date(parseInt(message.internalDate)),
       body: this.getEmailBody(message.payload),
-      snippet: message.snippet
+      snippet: message.snippet,
+      attachments: this.extractAttachments(message.payload)
     };
+  }
+
+  /**
+   * Extract attachments from Gmail message payload
+   */
+  extractAttachments(payload) {
+    const attachments = [];
+
+    const processPartForAttachments = (part) => {
+      // Check if this part is an attachment
+      if (part.filename && part.body && part.body.attachmentId) {
+        attachments.push({
+          filename: part.filename,
+          content_type: part.mimeType || 'application/octet-stream',
+          size: part.body.size || 0,
+          attachment_id: part.body.attachmentId,
+          gmail_attachment_id: part.body.attachmentId
+        });
+      }
+
+      // Recursively process nested parts
+      if (part.parts) {
+        part.parts.forEach(subPart => processPartForAttachments(subPart));
+      }
+    };
+
+    // Start processing from the root payload
+    if (payload.parts) {
+      payload.parts.forEach(part => processPartForAttachments(part));
+    } else {
+      // Single-part message might still have an attachment
+      processPartForAttachments(payload);
+    }
+
+    return attachments;
   }
 
   /**

@@ -1,14 +1,14 @@
 const Anthropic = require('@anthropic-ai/sdk');
 const { query } = require('../config/database');
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY });
 const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-5-20250929';
 
 const SYSTEM_PROMPT = `You are an intelligent email parser for the International Shellfish Restoration Society (ISRS).
 
 Extract structured information with confidence scores. Return ONLY valid JSON with this structure:
 {
-  "contacts": [{"name": "", "email": "", "phone": "", "organization": "", "title": "", "confidence": 0}],
+  "contacts": [{"name": "", "email": "", "phone": "", "organization": "", "title": "", "confidence": 0, "source": "to|cc|body"}],
   "relationships": [{"person1": "", "person2": "", "relationship_type": "", "confidence": 0}],
   "engagement": {"level": "high|medium|low", "types": [], "indicators": [], "confidence": 0},
   "fundraising": {"signals": [], "capacity_indicators": [], "giving_interest": "", "confidence": 0},
@@ -16,20 +16,89 @@ Extract structured information with confidence scores. Return ONLY valid JSON wi
   "scheduling": {"dates_mentioned": [], "availability": [], "timezone": "", "preferences": "", "confidence": 0},
   "topics": [{"topic": "", "sentiment": "positive|neutral|negative", "importance": "high|medium|low", "confidence": 0}],
   "stakeholder_profile": {"primary_role": "", "influence_level": "", "expertise_areas": [], "geographic_focus": "", "constituency": "", "confidence": 0},
-  "metadata": {"urgency": "high|medium|low", "overall_sentiment": "", "formality": "", "response_needed_by": "", "confidence": 0},
+  "metadata": {"urgency": "high|medium|low", "overall_sentiment": "", "formality": "", "response_needed_by": "", "confidence": 0, "document_versions": []},
   "summary": "",
   "recommended_next_steps": [],
   "flags": []
 }
 
+CONTACT EXTRACTION RULES:
+1. Extract ALL email addresses from To/CC headers as high-confidence contacts (confidence: 90-95)
+   - Parse name from "Name <email>" format in To/CC fields
+   - Mark these contacts with source: "to" or "cc"
+2. Extract contacts mentioned in email body with medium confidence (confidence: 50-80)
+   - Mark these contacts with source: "body"
+3. For header contacts, extract organization from email domain if not explicitly stated
+
+DOCUMENT VERSIONING DETECTION:
+In metadata.document_versions, identify versioning information from:
+- Attachment filenames with "Updated", "Revised", "Final", "Draft", "v1", "v2", etc.
+- Date indicators like "(as of Feb 2)", "2026-01-21", "Jan 15 version"
+- Structure: [{"filename": "", "version_indicator": "", "date": ""}]
+
+ATTACHMENT ANALYSIS:
+When attachments are present, analyze their names and types to:
+- Identify key documents (budgets, reports, presentations)
+- Extract version/date information
+- Note important file types (PDFs, spreadsheets, presentations)
+
 Focus on shellfish restoration, oyster/clam/mussel conservation, habitat restoration, water quality, aquaculture, Indigenous partnerships, coastal ecosystem science, ICSR conference planning, sponsorships, and scientific collaboration.`;
 
-async function parseEmail({ subject, fromEmail, fromName, toEmails, ccEmails, receivedDate, emailBody, context = {} }) {
+async function parseEmail({ subject, fromEmail, fromName, toEmails, ccEmails, receivedDate, emailBody, attachments = [], context = {} }) {
+  const attachmentList = attachments.length > 0
+    ? attachments.map(a => `- ${a.filename} (${a.content_type}, ${a.size} bytes)`).join('\n')
+    : 'None';
+
+  // Pre-process To/CC contacts to ensure they're always extracted
+  const headerContacts = [];
+
+  // Extract from From field
+  headerContacts.push({
+    name: fromName || fromEmail.split('@')[0],
+    email: fromEmail,
+    organization: fromEmail.split('@')[1] || '',
+    confidence: 95,
+    source: 'from'
+  });
+
+  // Extract To recipients
+  if (toEmails && Array.isArray(toEmails)) {
+    toEmails.forEach(email => {
+      if (email) {
+        headerContacts.push({
+          name: email.split('@')[0],
+          email: email,
+          organization: email.split('@')[1] || '',
+          confidence: 90,
+          source: 'to'
+        });
+      }
+    });
+  }
+
+  // Extract CC recipients
+  if (ccEmails && Array.isArray(ccEmails)) {
+    ccEmails.forEach(email => {
+      if (email) {
+        headerContacts.push({
+          name: email.split('@')[0],
+          email: email,
+          organization: email.split('@')[1] || '',
+          confidence: 90,
+          source: 'cc'
+        });
+      }
+    });
+  }
+
   const userPrompt = `EMAIL METADATA:
 Subject: \${subject}
 From: \${fromName} <\${fromEmail}>
 To: \${toEmails ? toEmails.join(', ') : ''}
+CC: \${ccEmails ? ccEmails.join(', ') : ''}
 Date: \${receivedDate || new Date().toISOString()}
+Attachments:
+\${attachmentList}
 
 EMAIL BODY:
 \${emailBody}
@@ -38,6 +107,8 @@ ORGANIZATIONAL CONTEXT:
 Organization: International Shellfish Restoration Society (ISRS)
 Focus: Shellfish restoration, oyster/clam/mussel conservation, habitat restoration, aquaculture, ICSR conferences
 Known contact: \${context.isKnownContact ? 'Yes' : 'No'}
+
+IMPORTANT: Extract ALL contacts from To/CC headers with high confidence (90+), plus any additional contacts mentioned in the email body.
 
 Parse and return JSON.`;
 
@@ -55,6 +126,31 @@ Parse and return JSON.`;
 
     const parsed = JSON.parse(jsonMatch[0]);
 
+    // Merge pre-processed header contacts with AI-extracted contacts
+    // Remove duplicates based on email address
+    const emailSet = new Set();
+    const mergedContacts = [];
+
+    // Add header contacts first (they have priority)
+    headerContacts.forEach(contact => {
+      if (!emailSet.has(contact.email)) {
+        emailSet.add(contact.email);
+        mergedContacts.push(contact);
+      }
+    });
+
+    // Add AI-extracted contacts if not already present
+    if (parsed.contacts && Array.isArray(parsed.contacts)) {
+      parsed.contacts.forEach(contact => {
+        if (contact.email && !emailSet.has(contact.email)) {
+          emailSet.add(contact.email);
+          mergedContacts.push(contact);
+        }
+      });
+    }
+
+    parsed.contacts = mergedContacts;
+
     // Calculate overall confidence
     const confidences = [
       parsed.engagement?.confidence || 0,
@@ -69,14 +165,14 @@ Parse and return JSON.`;
     const result = await query(`
       INSERT INTO parsed_emails (
         subject, from_email, from_name, to_emails, cc_emails, received_date,
-        email_body, contacts, relationships, engagement, fundraising,
+        email_body, attachments, contacts, relationships, engagement, fundraising,
         action_items, scheduling, topics, stakeholder_profile, metadata,
         summary, recommended_next_steps, flags, overall_confidence, review_status
-      ) VALUES (\$1, \$2, \$3, \$4, \$5, \$6, \$7, \$8, \$9, \$10, \$11, \$12, \$13, \$14, \$15, \$16, \$17, \$18, \$19, \$20, \$21)
+      ) VALUES (\$1, \$2, \$3, \$4, \$5, \$6, \$7, \$8, \$9, \$10, \$11, \$12, \$13, \$14, \$15, \$16, \$17, \$18, \$19, \$20, \$21, \$22)
       RETURNING id
     `, [
       subject, fromEmail, fromName, toEmails, ccEmails, receivedDate,
-      emailBody, JSON.stringify(parsed.contacts), JSON.stringify(parsed.relationships),
+      emailBody, JSON.stringify(attachments), JSON.stringify(parsed.contacts), JSON.stringify(parsed.relationships),
       JSON.stringify(parsed.engagement), JSON.stringify(parsed.fundraising),
       JSON.stringify(parsed.action_items), JSON.stringify(parsed.scheduling),
       JSON.stringify(parsed.topics), JSON.stringify(parsed.stakeholder_profile),
@@ -118,7 +214,7 @@ async function saveParsedEmail(data) {
   const {
     subject, from_email, from_name, to_emails, cc_emails, received_date, email_body,
     gmail_message_id, gmail_thread_id, source, email_date, confidence_score,
-    contacts, relationships, engagement, fundraising, action_items, scheduling,
+    attachments, contacts, relationships, engagement, fundraising, action_items, scheduling,
     topics, stakeholder_profile, metadata, summary, recommended_next_steps, flags
   } = data;
 
@@ -127,15 +223,15 @@ async function saveParsedEmail(data) {
     INSERT INTO parsed_emails (
       subject, from_email, from_name, to_emails, cc_emails, received_date, email_body,
       gmail_message_id, gmail_thread_id, source, email_date, confidence_score,
-      contacts, relationships, engagement, fundraising, action_items, scheduling,
+      attachments, contacts, relationships, engagement, fundraising, action_items, scheduling,
       topics, stakeholder_profile, metadata, summary, recommended_next_steps, flags,
       review_status
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
     RETURNING id
   `, [
     subject, from_email, from_name, to_emails, cc_emails, received_date, email_body,
     gmail_message_id, gmail_thread_id, source, email_date, confidence_score,
-    JSON.stringify(contacts), JSON.stringify(relationships), JSON.stringify(engagement),
+    JSON.stringify(attachments || []), JSON.stringify(contacts), JSON.stringify(relationships), JSON.stringify(engagement),
     JSON.stringify(fundraising), JSON.stringify(action_items), JSON.stringify(scheduling),
     JSON.stringify(topics), JSON.stringify(stakeholder_profile), JSON.stringify(metadata),
     summary, recommended_next_steps, flags,
