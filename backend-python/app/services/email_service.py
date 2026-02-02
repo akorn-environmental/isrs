@@ -337,7 +337,7 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "Your Login Link is Ready 🐚 - ISRS"
+        subject = "Your Login Link is Ready 🦪 - ISRS"
         preheader = "One click to access your ISRS member account - no password needed!"
 
         # Personalized greeting
@@ -345,7 +345,7 @@ class EmailService:
 
         content = f"""
         <div style="text-align: center; margin-bottom: 30px;">
-            <span style="font-size: 48px;">🐚</span>
+            <span style="font-size: 48px;">🦪</span>
             <h1 style="color: {BRAND_COLORS['primary_green']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
                 {greeting}
             </h1>
@@ -489,7 +489,7 @@ https://www.shellfish-society.org
 
         {get_info_box_html(f'''
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
-                <strong>🐚 Coming up:</strong> ICSR 2026 in Bremerton, Washington! <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
+                <strong>🦪 Coming up:</strong> ICSR 2026 in Bremerton, Washington! <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
             </p>
         ''')}
 
@@ -773,7 +773,7 @@ ICSR 2026 Program Committee
         {get_button_html("Conference Details", "https://www.shellfish-society.org/icsr2026.html")}
 
         <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
-            We look forward to your presentation at ICSR 2026! 🐚
+            We look forward to your presentation at ICSR 2026! 🦪
         </p>
         """
 
@@ -1190,7 +1190,7 @@ ICSR 2026
 
         content = f"""
         <div style="text-align: center; margin-bottom: 25px;">
-            <span style="font-size: 48px;">🐚</span>
+            <span style="font-size: 48px;">🦪</span>
             <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 15px 0 0 0; font-weight: 600;">
                 You're Registered, {first_name}!
             </h1>
@@ -1353,7 +1353,7 @@ International Shellfish Restoration Society
 
         content = f"""
         <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
-            Dear {first_name}, 🐚
+            Dear {first_name}, 🦪
         </h1>
 
         {opening}
@@ -2072,7 +2072,7 @@ International Shellfish Restoration Society
 
         {get_info_box_html(f'''
             <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
-                🐚 ICSR 2026 — Bremerton, Washington
+                🦪 ICSR 2026 — Bremerton, Washington
             </p>
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
                 The 7th International Conference on Shellfish Restoration brings together researchers,

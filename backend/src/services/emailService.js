@@ -565,7 +565,7 @@ async function sendMagicLink(toEmail, userName, magicLink, language = 'en') {
 
   const body = `
     <div style="text-align: center; margin-bottom: 30px;">
-      <span style="font-size: 48px;">🐚</span>
+      <span style="font-size: 48px;">🦪</span>
       <h1 style="color: #2c5f2d; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
         ${t('magicLinkGreeting', language)} ${userName}!
       </h1>
