@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # ISRS BRAND COLORS (from shellfish-society.org)
 # =============================================================================
 BRAND_COLORS = {
-    "primary_green": "#2c5f2d",  # ISRS green - primary brand color
+    "primary_green": "#536e7d",  # ISRS logo color - primary brand color
     "primary_blue": "#2e5a8a",   # Legacy blue - kept for some templates
     "secondary_blue": "#4a7ab5",
     "accent_teal": "#546d7d",
@@ -337,7 +337,7 @@ class EmailService:
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "ISRS - Your Login Link is Ready 🐚"
+        subject = "ISRS - Your Login Link is Ready"
         preheader = "One click to access your ISRS member account - no password needed!"
 
         # Personalized greeting
@@ -345,7 +345,6 @@ class EmailService:
 
         content = f"""
         <div style="text-align: center; margin-bottom: 30px;">
-            <span style="font-size: 48px;">🐚</span>
             <h1 style="color: {BRAND_COLORS['primary_green']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
                 {greeting}
             </h1>
@@ -354,9 +353,8 @@ class EmailService:
             </p>
         </div>
 
-        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
-            Click the button below to sign in to your ISRS member account.<br>
-            <span style="color: {BRAND_COLORS['text_muted']}; font-size: 14px;">No password needed — it's that easy!</span>
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
+            No password needed!
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
@@ -375,7 +373,7 @@ class EmailService:
 
         <div style="background-color: #fffbeb; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
             <p style="margin: 0; font-size: 13px; color: #92400e; text-align: center;">
-                <strong>⏱️ This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes</strong> and can only be used once.<br>
+                <strong>This link expires in {settings.MAGIC_LINK_EXPIRY_MINUTES} minutes</strong> and can only be used once.<br>
                 <span style="color: #b45309;">Didn't request this? You can safely ignore this email.</span>
             </p>
         </div>
