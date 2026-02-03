@@ -78,7 +78,7 @@
       /* Feedback Button */
       #isrs-feedback-widget {
         position: fixed;
-        bottom: 24px;
+        bottom: 100px;
         right: 24px;
         z-index: 10001;
         background: linear-gradient(135deg, #2E5A8A 0%, #5BC0BE 100%);
