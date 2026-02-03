@@ -305,6 +305,8 @@ async def import_contacts_and_organizations(db):
         existing = result.fetchone()
 
         org_id = organizations.get(person['organization'])
+        # Format tags as PostgreSQL array literal
+        tags_array = '{' + ','.join(f'"{tag}"' for tag in person['tags']) + '}'
 
         if existing:
             # Update existing contact with new tags
@@ -313,14 +315,14 @@ async def import_contacts_and_organizations(db):
                     UPDATE contacts
                     SET organization_id = :org_id,
                         title = :title,
-                        tags = ARRAY[:tags]::text[],
+                        tags = :tags::text[],
                         updated_at = CURRENT_TIMESTAMP
                     WHERE email = :email
                 """),
                 {
                     "org_id": org_id,
                     "title": person.get('title'),
-                    "tags": person['tags'],
+                    "tags": tags_array,
                     "email": email
                 }
             )
@@ -336,7 +338,7 @@ async def import_contacts_and_organizations(db):
                         title, tags, created_at, updated_at
                     ) VALUES (
                         :id, :email, :first_name, :last_name, :org_id,
-                        :title, ARRAY[:tags]::text[], CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+                        :title, :tags::text[], CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
                     )
                 """),
                 {
@@ -346,7 +348,7 @@ async def import_contacts_and_organizations(db):
                     "last_name": person['last_name'],
                     "org_id": org_id,
                     "title": person.get('title'),
-                    "tags": person['tags']
+                    "tags": tags_array
                 }
             )
             contacts_created += 1

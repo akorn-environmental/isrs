@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 from app.database import get_db
-from app.auth import require_admin
+from app.dependencies.permissions import get_current_admin
 
 router = APIRouter(prefix="/api/stats", tags=["stats"])
 
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/stats", tags=["stats"])
 @router.get("/")
 async def get_dashboard_stats(
     db: Session = Depends(get_db),
-    admin_user: dict = Depends(require_admin)
+    current_admin = Depends(get_current_admin)
 ):
     """
     Get dashboard statistics for admin portal
