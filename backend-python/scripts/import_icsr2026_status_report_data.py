@@ -305,7 +305,7 @@ async def import_contacts_and_organizations(db):
         existing = result.fetchone()
 
         org_id = organizations.get(person['organization'])
-        tags_str = ','.join(person['tags'])
+        tags_str = '{' + ','.join(person['tags']) + '}'
 
         if existing:
             # Update existing contact with new tags
