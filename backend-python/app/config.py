@@ -54,6 +54,12 @@ class Settings(BaseSettings):
     APOLLO_API_KEY: str = Field(default=None, env="APOLLO_API_KEY")
     ANTHROPIC_API_KEY: str = Field(default=None, env="ANTHROPIC_API_KEY")
 
+    # AWS Configuration
+    AWS_REGION: str = Field(default="us-east-1", env="AWS_REGION")
+    AWS_ACCESS_KEY_ID: str = Field(default=None, env="AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY: str = Field(default=None, env="AWS_SECRET_ACCESS_KEY")
+    INBOUND_EMAIL_BUCKET: str = Field(default="isrs-inbound-emails", env="INBOUND_EMAIL_BUCKET")
+
     # File Uploads
     MAX_UPLOAD_SIZE_MB: int = 10
     UPLOAD_DIR: str = "./uploads"

@@ -83,7 +83,7 @@ async def startup_event():
         Base, Contact, Organization, BoardVote, BoardVoteDetail,
         Conference, ConferenceRegistration, ConferenceSponsor, ConferenceAbstract,
         AttendeeProfile, FundingProspect, UserSession, AuditLog, DataQualityMetric,
-        UserFeedback, Asset, AssetZone, AssetZoneAsset, Photo
+        UserFeedback, Asset, AssetZone, AssetZoneAsset, Photo, ParsedEmail
     )
 
     # Initialize database (create tables if they don't exist)

@@ -18,6 +18,7 @@ from app.models.system import AuditLog, DataQualityMetric, UserFeedback
 from app.models.asset import Asset
 from app.models.asset_zone import AssetZone, AssetZoneAsset
 from app.models.photo import Photo
+from app.models.parsed_email import ParsedEmail
 
 __all__ = [
     "Base",
@@ -40,4 +41,5 @@ __all__ = [
     "AssetZone",
     "AssetZoneAsset",
     "Photo",
+    "ParsedEmail",
 ]
