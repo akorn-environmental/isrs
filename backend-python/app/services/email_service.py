@@ -343,14 +343,10 @@ class EmailService:
             <h1 style="color: {BRAND_COLORS['primary_green']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
                 {greeting}
             </h1>
-            <p style="color: {BRAND_COLORS['text_muted']}; font-size: 15px; margin: 8px 0 0 0;">
-                Your secure login link is ready
+            <p style="color: {BRAND_COLORS['text_muted']}; font-size: 15px; margin: 8px 0 30px 0;">
+                Your secure login link is ready. No password needed!
             </p>
         </div>
-
-        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
-            No password needed!
-        </p>
 
         <div style="text-align: center; margin: 30px 0;">
             <a href="{magic_link}"
