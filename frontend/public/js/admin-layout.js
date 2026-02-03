@@ -93,6 +93,7 @@ function loadAdminLayout(currentPage, userPermissionLevel = 100) {
   const allNavItems = [
     { id: 'dashboard', section: 'Overview', icon: '📊', label: 'Dashboard', href: '/admin/index.html', page: 'dashboard', level: 50 },
     { id: 'contacts', section: 'Data Management', icon: '👥', label: 'Contacts', href: '/admin/contacts.html', page: 'contacts', level: 50 },
+    { id: 'emails', section: 'Data Management', icon: '📧', label: 'Parsed Emails', href: '/admin/emails.html', page: 'emails', level: 50 },
     { id: 'organizations', section: 'Data Management', icon: '🏢', label: 'Organizations', href: '/admin/organizations.html', page: 'organizations', level: 50 },
     { id: 'conferences', section: 'Data Management', icon: '📅', label: 'Conferences', href: '/admin/conferences.html', page: 'conferences', level: 50 },
     { id: 'photos', section: 'Content', icon: '📷', label: 'Photos', href: '/admin/photos.html', page: 'photos', level: 60 },

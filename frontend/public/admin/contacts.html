@@ -758,12 +758,6 @@
 
     // Initialize
     window.addEventListener('DOMContentLoaded', async () => {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
-        window.location.href = '/admin/';
-        return;
-      }
-
       await loadUserPermissions();
       await loadContacts();
       setupEventListeners();
@@ -771,10 +765,9 @@
     });
 
     async function loadUserPermissions() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
       try {
         const response = await fetch(`${API_BASE_URL}/api/auth/validate-session`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
+          credentials: 'include'
         });
         const data = await response.json();
         if (data.success) {
@@ -807,10 +800,9 @@
     }
 
     async function loadContacts() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
       try {
         const response = await fetch(`${API_BASE_URL}/api/contacts/`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
+          credentials: 'include'
         });
         const data = await response.json();
 
@@ -1369,11 +1361,10 @@
       }
 
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/admin/contacts/bulk-delete`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${sessionToken}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -1448,12 +1439,11 @@
       btn.textContent = 'Sending...';
 
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/admin/send-email`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ recipients, subject, body })
         });
@@ -1524,12 +1514,11 @@
       results.style.display = 'none';
 
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/admin/ai-query`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ question, includeInsights: true })
         });
@@ -1641,9 +1630,8 @@
 
     async function loadOrganizationsForBulkEdit() {
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/contacts/organizations/?limit=1000`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
+          credentials: 'include'
         });
         const data = await response.json();
 
@@ -1698,11 +1686,10 @@
       }
 
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/admin/contacts/bulk-edit`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${sessionToken}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -1775,11 +1762,10 @@
         cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
 
         try {
-          const sessionToken = localStorage.getItem('isrs_session_token');
           const response = await fetch(`${API_BASE_URL}/api/admin/contacts/${contact.id}`, {
             method: 'PUT',
+            credentials: 'include',
             headers: {
-              'Authorization': `Bearer ${sessionToken}`,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({ [field]: newValue })
@@ -1835,12 +1821,11 @@
       showToast(`Enhancing ${contact.full_name || email} with AI...`, 'info');
 
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/claude/enhance-contact`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ contact_id: contact.id, useWebSearch: true })
         });
@@ -1939,12 +1924,11 @@
         const results = await Promise.allSettled(
           batch.map(async (contact) => {
             try {
-              const sessionToken = localStorage.getItem('isrs_session_token');
               const response = await fetch(`${API_BASE_URL}/api/claude/enhance-contact`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${sessionToken}`
+                  'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ contact_id: contact.id, useWebSearch: true })
               });
@@ -2080,12 +2064,11 @@
       };
 
       try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
         const response = await fetch(`${API_BASE_URL}/api/admin/contacts`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(contactData)
         });
@@ -2108,9 +2091,9 @@
           try {
             const enhanceResponse = await fetch(`${API_BASE_URL}/api/claude/enhance-contact`, {
               method: 'POST',
+              credentials: 'include',
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${sessionToken}`
+                'Content-Type': 'application/json'
               },
               body: JSON.stringify({ contact_id: data.contact.id, useWebSearch: true })
             });
