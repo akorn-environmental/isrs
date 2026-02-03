@@ -39,6 +39,7 @@ async def get_contacts(
     role: Optional[str] = Query(None, description="Filter by role"),
     country: Optional[str] = Query(None, description="Filter by country"),
     organization_id: Optional[UUID] = Query(None, description="Filter by organization"),
+    tags: Optional[str] = Query(None, description="Filter by tags (comma-separated)"),
     db: Session = Depends(get_db),
     current_user: AttendeeProfile = Depends(get_current_user),
 ):
@@ -71,18 +72,33 @@ async def get_contacts(
     if organization_id:
         query = query.filter(Contact.organization_id == organization_id)
 
-    # Get total count
+    # Apply tags filter
+    if tags:
+        tag_list = [tag.strip() for tag in tags.split(",")]
+        query = query.filter(Contact.tags.overlap(tag_list))
+
+    # Get total count (before filtering invalid emails)
     total = query.count()
 
     # Apply pagination
     offset = (page - 1) * page_size
-    contacts = query.order_by(Contact.last_name, Contact.first_name).offset(offset).limit(page_size).all()
+    contacts_raw = query.order_by(Contact.last_name, Contact.first_name).offset(offset).limit(page_size).all()
+
+    # Filter out contacts with invalid emails to prevent Pydantic validation errors
+    # This is a workaround for legacy data with bad email formats
+    valid_contacts = []
+    for contact in contacts_raw:
+        # Check if email is valid (basic check: must contain @ sign)
+        if contact.email and '@' in contact.email:
+            valid_contacts.append(contact)
+        else:
+            logger.warning(f"Skipping contact {contact.id} with invalid email: {contact.email}")
 
     # Calculate total pages
     total_pages = (total + page_size - 1) // page_size
 
     return ContactListResponse(
-        contacts=contacts,
+        contacts=valid_contacts,
         total=total,
         page=page,
         page_size=page_size,
