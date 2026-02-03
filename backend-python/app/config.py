@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     SMTP_FROM_NAME: str = "ISRS Platform"
 
     # Magic Links
-    MAGIC_LINK_EXPIRY_MINUTES: int = 60
+    MAGIC_LINK_EXPIRY_MINUTES: int = 15
     MAGIC_LINK_BASE_URL: str = Field(..., env="MAGIC_LINK_BASE_URL")
 
     # External APIs

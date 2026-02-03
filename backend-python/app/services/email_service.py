@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # ISRS BRAND COLORS (from shellfish-society.org)
 # =============================================================================
 BRAND_COLORS = {
-    "primary_green": "#536e7d",  # ISRS logo color - primary brand color
+    "primary_green": "#2c5f2d",  # ISRS green - primary brand color
     "primary_blue": "#2e5a8a",   # Legacy blue - kept for some templates
     "secondary_blue": "#4a7ab5",
     "accent_teal": "#546d7d",
@@ -120,15 +120,15 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
                                     <tr>
                                         <td style="padding: 0 10px;">
-                                            <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS['primary_green']}; text-decoration: none; font-size: 13px;">Website</a>
+                                            <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">Website</a>
                                         </td>
                                         <td style="color: {BRAND_COLORS['border']};">|</td>
                                         <td style="padding: 0 10px;">
-                                            <a href="https://www.shellfish-society.org/gallery.html" style="color: {BRAND_COLORS['primary_green']}; text-decoration: none; font-size: 13px;">Gallery</a>
+                                            <a href="https://www.shellfish-society.org/gallery.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">Gallery</a>
                                         </td>
                                         <td style="color: {BRAND_COLORS['border']};">|</td>
                                         <td style="padding: 0 10px;">
-                                            <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['primary_green']}; text-decoration: none; font-size: 13px;">ICSR 2026</a>
+                                            <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">ICSR 2026</a>
                                         </td>
                                     </tr>
                                 </table>
@@ -354,8 +354,9 @@ class EmailService:
             </p>
         </div>
 
-        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
-            No password needed!
+        <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 30px 0; text-align: center;">
+            Click the button below to sign in to your ISRS member account.<br>
+            <span style="color: {BRAND_COLORS['text_muted']}; font-size: 14px;">No password needed — it's that easy!</span>
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
