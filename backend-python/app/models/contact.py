@@ -51,6 +51,7 @@ class Contact(Base, TimestampMixin):
     city = Column(String(100))
     expertise = Column(ARRAY(Text))  # Array of expertise areas
     interests = Column(ARRAY(Text))  # Array of interests
+    tags = Column(ARRAY(Text))  # Array of organizational tags (e.g., "Planning Committee", "ICSR2026")
     notes = Column(Text)
 
     # Relationships

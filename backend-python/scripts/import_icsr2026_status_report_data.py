@@ -305,7 +305,6 @@ async def import_contacts_and_organizations(db):
         existing = result.fetchone()
 
         org_id = organizations.get(person['organization'])
-        tags_str = '{' + ','.join(person['tags']) + '}'
 
         if existing:
             # Update existing contact with new tags
@@ -314,14 +313,14 @@ async def import_contacts_and_organizations(db):
                     UPDATE contacts
                     SET organization_id = :org_id,
                         title = :title,
-                        tags = :tags,
+                        tags = ARRAY[:tags]::text[],
                         updated_at = CURRENT_TIMESTAMP
                     WHERE email = :email
                 """),
                 {
                     "org_id": org_id,
                     "title": person.get('title'),
-                    "tags": tags_str,
+                    "tags": person['tags'],
                     "email": email
                 }
             )
@@ -334,10 +333,10 @@ async def import_contacts_and_organizations(db):
                 text("""
                     INSERT INTO contacts (
                         id, email, first_name, last_name, organization_id,
-                        title, tags, contact_type, created_at, updated_at
+                        title, tags, created_at, updated_at
                     ) VALUES (
                         :id, :email, :first_name, :last_name, :org_id,
-                        :title, :tags, 'professional', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+                        :title, ARRAY[:tags]::text[], CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
                     )
                 """),
                 {
@@ -347,7 +346,7 @@ async def import_contacts_and_organizations(db):
                     "last_name": person['last_name'],
                     "org_id": org_id,
                     "title": person.get('title'),
-                    "tags": tags_str
+                    "tags": person['tags']
                 }
             )
             contacts_created += 1
