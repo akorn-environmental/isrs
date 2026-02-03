@@ -4,6 +4,7 @@ services:
     runtime: docker
     region: oregon
     plan: starter
+    rootDirectory: backend-python
     dockerfilePath: ./Dockerfile
     envVars:
       - key: PORT
