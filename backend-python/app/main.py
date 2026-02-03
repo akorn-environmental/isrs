@@ -104,8 +104,9 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats
+from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing
 
+app.include_router(email_parsing.router, prefix="/api/email-parsing", tags=["Email Parsing"])  # Public webhook - must be before auth
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 app.include_router(stats.router, tags=["Stats"])  # Stats router with /api/stats prefix built-in
