@@ -12,6 +12,7 @@ from app.database import get_db
 from app.models.contact import Contact, Organization
 from app.models.conference import AttendeeProfile
 from app.routers.auth import get_current_user
+from app.dependencies.permissions import get_current_admin
 from app.schemas.contact import (
     ContactCreate,
     ContactUpdate,
@@ -41,7 +42,7 @@ async def get_contacts(
     organization_id: Optional[UUID] = Query(None, description="Filter by organization"),
     tags: Optional[str] = Query(None, description="Filter by tags (comma-separated)"),
     db: Session = Depends(get_db),
-    current_user: AttendeeProfile = Depends(get_current_user),
+    current_admin = Depends(get_current_admin),
 ):
     """
     Get all contacts with pagination, filtering, and search.
