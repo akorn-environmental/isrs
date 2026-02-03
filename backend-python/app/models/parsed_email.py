@@ -40,7 +40,7 @@ class ParsedEmail(Base):
     reviewed_at = Column(DateTime(timezone=True), nullable=True)
 
     # Metadata
-    metadata = Column(JSON)  # Additional metadata
+    email_metadata = Column(JSON)  # Additional metadata
     error_message = Column(Text, nullable=True)
 
     # Timestamps

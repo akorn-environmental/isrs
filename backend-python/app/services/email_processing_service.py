@@ -86,7 +86,7 @@ class EmailProcessingService:
                 overall_confidence=extracted_data.get('overall_confidence', 0),
                 status='processed',
                 requires_review=extracted_data.get('overall_confidence', 0) < 70,
-                metadata={
+                email_metadata={
                     'source': 'ses_inbound',
                     'from_name': parsed_email.get('from_name'),
                     's3_bucket': self.s3_service.bucket_name
@@ -127,7 +127,7 @@ class EmailProcessingService:
                 error_message=error_message,
                 requires_review=True,
                 overall_confidence=0,
-                metadata={'source': 'ses_inbound'}
+                email_metadata={'source': 'ses_inbound'}
             )
 
             db.add(failed_record)

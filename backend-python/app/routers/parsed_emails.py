@@ -135,7 +135,7 @@ async def get_parsed_email(
             "requires_review": email.requires_review,
             "reviewed_by": email.reviewed_by,
             "reviewed_at": email.reviewed_at.isoformat() if email.reviewed_at else None,
-            "metadata": email.metadata,
+            "email_metadata": email.email_metadata,
             "error_message": email.error_message,
             "created_at": email.created_at.isoformat() if email.created_at else None,
             "updated_at": email.updated_at.isoformat() if email.updated_at else None

@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS parsed_emails (
     reviewed_at TIMESTAMP WITH TIME ZONE,
 
     -- Metadata
-    metadata JSONB,
+    email_metadata JSONB,
     error_message TEXT,
 
     -- Timestamps
