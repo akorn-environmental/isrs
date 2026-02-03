@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parsed Emails - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    /* Page-specific styles */
+    .admin-table { min-width: 1400px; }
+
+    /* Checkbox column */
+    .checkbox-cell { width: 56px; text-align: center; padding-left: var(--admin-space-xl, 1.5rem) !important; }
+    .admin-table thead th.checkbox-cell { padding-left: var(--admin-space-xl, 1.5rem) !important; }
+
+    /* Column widths */
+    .col-from { max-width: 220px; }
+    .col-subject { max-width: 300px; }
+    .col-date { width: 150px; }
+    .col-confidence { width: 100px; text-align: center; }
+    .col-status { width: 120px; }
+    .col-review { width: 100px; text-align: center; }
+
+    /* Confidence badge */
+    .confidence-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--admin-radius-sm);
+      font-size: var(--admin-text-xs);
+      font-weight: 600;
+    }
+    .confidence-high { background: var(--admin-success-light); color: var(--admin-success-dark); }
+    .confidence-medium { background: var(--admin-warning-light); color: var(--admin-warning-dark); }
+    .confidence-low { background: var(--admin-error-light); color: var(--admin-error-dark); }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--admin-radius-sm);
+      font-size: var(--admin-text-xs);
+      font-weight: 600;
+    }
+    .status-processed { background: var(--admin-success-light); color: var(--admin-success-dark); }
+    .status-pending { background: var(--admin-warning-light); color: var(--admin-warning-dark); }
+    .status-failed { background: var(--admin-error-light); color: var(--admin-error-dark); }
+    .status-spam { background: var(--admin-gray-200); color: var(--admin-text-muted); }
+
+    /* Review indicator */
+    .review-needed {
+      color: var(--admin-error);
+      font-weight: 600;
+    }
+
+    /* Email detail modal */
+    .email-detail-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      overflow-y: auto;
+    }
+    .email-detail-modal.active { display: flex; align-items: center; justify-content: center; }
+    .email-detail-content {
+      background: var(--admin-surface);
+      border-radius: var(--admin-radius-lg);
+      max-width: 900px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--admin-shadow-xl);
+    }
+    .email-detail-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--admin-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .email-detail-body {
+      padding: 1.5rem;
+    }
+    .email-detail-section {
+      margin-bottom: 1.5rem;
+    }
+    .email-detail-section h4 {
+      margin-bottom: 0.5rem;
+      color: var(--admin-text-secondary);
+      font-size: var(--admin-text-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .email-body {
+      background: var(--admin-gray-50);
+      padding: 1rem;
+      border-radius: var(--admin-radius-md);
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: var(--admin-text-sm);
+    }
+    .extracted-data {
+      background: var(--admin-gray-50);
+      padding: 1rem;
+      border-radius: var(--admin-radius-md);
+    }
+    .contact-card, .action-item-card {
+      background: var(--admin-surface);
+      padding: 0.75rem;
+      border-radius: var(--admin-radius-sm);
+      border: 1px solid var(--admin-border);
+      margin-bottom: 0.5rem;
+    }
+    .contact-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Admin Layout -->
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <h1 class="admin-brand">
+          <a href="/admin/">ISRS Admin</a>
+        </h1>
+      </div>
+      <nav class="admin-nav">
+        <a href="/admin/" class="admin-nav-link">
+          <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="/admin/contacts.html" class="admin-nav-link">
+          <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Contacts
+        </a>
+        <a href="/admin/emails.html" class="admin-nav-link active">
+          <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Parsed Emails
+        </a>
+      </nav>
+      <div class="admin-sidebar-footer">
+        <button id="logoutBtn" class="admin-logout-btn">
+          <svg class="admin-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Header -->
+      <header class="admin-header">
+        <div class="admin-header-content">
+          <div>
+            <h2 class="admin-page-title">Parsed Emails</h2>
+            <p class="admin-page-subtitle">Emails received at admin@shellfish-society.org</p>
+          </div>
+          <div class="admin-header-actions">
+            <button id="refreshBtn" class="admin-btn admin-btn-secondary">
+              <svg class="admin-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="admin-content">
+        <!-- Toolbar -->
+        <div class="admin-toolbar">
+          <div class="admin-toolbar-left">
+            <input type="checkbox" id="selectAll" class="admin-checkbox">
+            <span id="selectedCount" class="admin-text-sm admin-text-muted">0 selected</span>
+            <div id="bulkActions" class="admin-toolbar-actions" style="display: none;">
+              <button id="bulkMarkProcessedBtn" class="admin-btn admin-btn-sm admin-btn-secondary">Mark Processed</button>
+              <button id="bulkMarkSpamBtn" class="admin-btn admin-btn-sm admin-btn-secondary">Mark as Spam</button>
+              <button id="bulkDeleteBtn" class="admin-btn admin-btn-sm admin-btn-danger">Delete</button>
+            </div>
+          </div>
+          <div class="admin-toolbar-right">
+            <input type="search" id="searchInput" class="admin-search" placeholder="Search emails...">
+            <select id="statusFilter" class="admin-select">
+              <option value="">All Status</option>
+              <option value="processed">Processed</option>
+              <option value="pending">Pending</option>
+              <option value="failed">Failed</option>
+              <option value="spam">Spam</option>
+            </select>
+            <select id="reviewFilter" class="admin-select">
+              <option value="">All Emails</option>
+              <option value="true">Needs Review</option>
+              <option value="false">Reviewed</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th class="checkbox-cell">
+                  <input type="checkbox" class="admin-checkbox">
+                </th>
+                <th class="col-from">From</th>
+                <th class="col-subject">Subject</th>
+                <th class="col-date">Date</th>
+                <th class="col-confidence">Confidence</th>
+                <th class="col-status">Status</th>
+                <th class="col-review">Review</th>
+                <th class="row-actions-cell"></th>
+              </tr>
+            </thead>
+            <tbody id="emailsTableBody">
+              <tr>
+                <td colspan="8" class="admin-text-center admin-text-muted">Loading emails...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="admin-pagination">
+          <button id="prevPage" class="admin-btn admin-btn-sm admin-btn-secondary" disabled>Previous</button>
+          <span id="pageInfo" class="admin-text-sm">Page 1 of 1</span>
+          <button id="nextPage" class="admin-btn admin-btn-sm admin-btn-secondary" disabled>Next</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Email Detail Modal -->
+  <div id="emailDetailModal" class="email-detail-modal">
+    <div class="email-detail-content">
+      <div class="email-detail-header">
+        <h3 id="modalSubject">Email Details</h3>
+        <button id="closeModal" class="admin-btn admin-btn-sm admin-btn-secondary">Close</button>
+      </div>
+      <div class="email-detail-body" id="emailDetailBody">
+        <!-- Content populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin-auth.js"></script>
+  <script src="/js/admin-emails.js"></script>
+</body>
+</html>

@@ -104,7 +104,7 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing
+from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing, parsed_emails
 
 app.include_router(email_parsing.router, prefix="/api/email-parsing", tags=["Email Parsing"])  # Public webhook - must be before auth
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
@@ -112,6 +112,7 @@ app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 app.include_router(stats.router, tags=["Stats"])  # Stats router with /api/stats prefix built-in
 app.include_router(feedback.router, prefix="/api/feedback", tags=["Feedback"])
 app.include_router(ai.router, tags=["AI Assistant"])  # AI router with /api/ai prefix built-in
+app.include_router(parsed_emails.router, prefix="/api", tags=["Parsed Emails"])  # Exposes /api/parsed-emails routes
 app.include_router(contacts.router, prefix="/api/contacts", tags=["Contacts"])
 app.include_router(votes.router, prefix="/api/votes", tags=["Board Votes"])
 app.include_router(photos.router, prefix="/api/photos", tags=["Photos"])  # Must be before /api catch-all
