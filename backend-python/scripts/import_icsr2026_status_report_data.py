@@ -237,6 +237,7 @@ SPONSORSHIPS = [
 
 async def import_contacts_and_organizations(db):
     """Import planning committee and program team as contacts"""
+    print("DEBUG: Inside import_contacts_and_organizations() - ENTRY POINT")
 
     print("=" * 80)
     print("IMPORTING PLANNING COMMITTEE & PROGRAM TEAM")
@@ -534,7 +535,9 @@ async def main():
         print()
 
         # Import contacts
+        print("DEBUG: About to call import_contacts_and_organizations()")
         await import_contacts_and_organizations(db)
+        print("DEBUG: Finished import_contacts_and_organizations()")
 
         # Import sponsorships
         await import_sponsorships(db)
