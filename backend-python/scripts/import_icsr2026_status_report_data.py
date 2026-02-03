@@ -496,7 +496,7 @@ async def import_sponsorships(db):
             SELECT
                 status,
                 COUNT(*) as count,
-                COALESCE(SUM(amount), 0) as total
+                COALESCE(SUM(amount_committed), 0) as total
             FROM conference_sponsors
             WHERE conference_id = :conf_id
             GROUP BY status
