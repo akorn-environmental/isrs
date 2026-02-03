@@ -124,18 +124,13 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                         </td>
                                         <td style="color: {BRAND_COLORS['border']};">|</td>
                                         <td style="padding: 0 10px;">
-                                            <a href="https://www.shellfish-society.org/gallery.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">Gallery</a>
-                                        </td>
-                                        <td style="color: {BRAND_COLORS['border']};">|</td>
-                                        <td style="padding: 0 10px;">
-                                            <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">ICSR 2026</a>
+                                            <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">ICSR2026</a>
                                         </td>
                                     </tr>
                                 </table>
                                 <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 0 0; line-height: 1.6;">
-                                    Restoring shellfish ecosystems worldwide<br>
-                                    <span style="color: {BRAND_COLORS['border']};">—</span><br>
-                                    © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society
+                                    © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society<br>
+                                    Tax ID (EIN): 59-2829151
                                 </p>
                             </td>
                         </tr>
@@ -413,7 +408,7 @@ Didn't request this? You can safely ignore this email.
 
 ---
 International Shellfish Restoration Society
-Restoring shellfish ecosystems worldwide
+Tax ID (EIN): 59-2829151
 https://www.shellfish-society.org
         """
 
@@ -520,7 +515,7 @@ Questions? Reply to this email or visit our website to learn more.
 
 ---
 International Shellfish Restoration Society
-Restoring shellfish ecosystems worldwide
+Tax ID (EIN): 59-2829151
 
 Website: https://www.shellfish-society.org
         """
