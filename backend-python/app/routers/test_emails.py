@@ -51,9 +51,7 @@ async def send_all_test_emails(request: SendTestEmailsRequest):
         results["review_assignment"] = await email_service.send_review_assignment_email(
             reviewer_email=test_email,
             abstract_title="Oyster Reef Restoration in Chesapeake Bay",
-            submission_id=12345,
-            due_date="March 15, 2026",
-            review_link="https://www.shellfish-society.org/admin/abstracts.html?review=12345"
+            due_date="March 15, 2026"
         )
         await asyncio.sleep(1)
         
