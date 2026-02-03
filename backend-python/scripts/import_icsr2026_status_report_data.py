@@ -437,7 +437,7 @@ async def import_sponsorships(db):
             db.execute(
                 text("""
                     UPDATE conference_sponsors
-                    SET amount = :amount,
+                    SET amount_committed = :amount,
                         sponsor_level = :level,
                         status = :status,
                         updated_at = CURRENT_TIMESTAMP
@@ -459,7 +459,7 @@ async def import_sponsorships(db):
             db.execute(
                 text("""
                     INSERT INTO conference_sponsors (
-                        id, conference_id, organization_id, amount,
+                        id, conference_id, organization_id, amount_committed,
                         sponsor_level, status, created_at, updated_at
                     ) VALUES (
                         :id, :conf_id, :org_id, :amount,
