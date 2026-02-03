@@ -1,0 +1,152 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'ISRS Email Parsing - SES Inbound Email Configuration'
+
+Parameters:
+  EmailDomain:
+    Type: String
+    Default: shellfish-society.org
+    Description: The domain for receiving emails
+
+  EmailAddress:
+    Type: String
+    Default: admin@shellfish-society.org
+    Description: The email address that will receive parsing requests
+
+  BackendWebhookURL:
+    Type: String
+    Description: The HTTPS URL of your backend webhook endpoint
+    Default: https://your-backend.onrender.com/api/email-parsing/inbound-webhook
+
+Resources:
+  # S3 Bucket for storing inbound emails
+  EmailBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'isrs-inbound-emails-${AWS::AccountId}'
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldEmails
+            Status: Enabled
+            ExpirationInDays: 7
+            NoncurrentVersionExpirationInDays: 1
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Purpose
+          Value: ISRS Email Parsing
+        - Key: Environment
+          Value: Production
+
+  # S3 Bucket Policy - Allow SES to write emails
+  EmailBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref EmailBucket
+      PolicyDocument:
+        Statement:
+          - Sid: AllowSESPuts
+            Effect: Allow
+            Principal:
+              Service: ses.amazonaws.com
+            Action:
+              - s3:PutObject
+            Resource: !Sub '${EmailBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                'aws:Referer': !Ref 'AWS::AccountId'
+
+  # SNS Topic for email notifications
+  EmailNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: isrs-email-received
+      DisplayName: ISRS Email Received Notifications
+      Tags:
+        - Key: Purpose
+          Value: ISRS Email Parsing
+
+  # SNS Topic Policy - Allow SES to publish
+  EmailNotificationTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref EmailNotificationTopic
+      PolicyDocument:
+        Statement:
+          - Sid: AllowSESPublish
+            Effect: Allow
+            Principal:
+              Service: ses.amazonaws.com
+            Action:
+              - SNS:Publish
+            Resource: !Ref EmailNotificationTopic
+            Condition:
+              StringEquals:
+                'aws:Referer': !Ref 'AWS::AccountId'
+
+  # SNS Subscription to webhook
+  EmailWebhookSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: https
+      TopicArn: !Ref EmailNotificationTopic
+      Endpoint: !Ref BackendWebhookURL
+
+  # SES Receipt Rule Set (must be created manually or activated)
+  EmailReceiptRuleSet:
+    Type: AWS::SES::ReceiptRuleSet
+    Properties:
+      RuleSetName: isrs-inbound-rules
+
+  # SES Receipt Rule
+  EmailReceiptRule:
+    Type: AWS::SES::ReceiptRule
+    DependsOn:
+      - EmailBucketPolicy
+      - EmailNotificationTopicPolicy
+    Properties:
+      RuleSetName: !Ref EmailReceiptRuleSet
+      Rule:
+        Name: ISRS-Email-Parser
+        Enabled: true
+        ScanEnabled: true
+        Recipients:
+          - !Ref EmailAddress
+        Actions:
+          - S3Action:
+              BucketName: !Ref EmailBucket
+              ObjectKeyPrefix: emails/
+          - SNSAction:
+              TopicArn: !Ref EmailNotificationTopic
+              Encoding: UTF-8
+
+Outputs:
+  S3BucketName:
+    Description: S3 bucket for storing emails
+    Value: !Ref EmailBucket
+    Export:
+      Name: ISRSEmailBucket
+
+  SNSTopicArn:
+    Description: SNS topic for email notifications
+    Value: !Ref EmailNotificationTopic
+    Export:
+      Name: ISRSEmailNotificationTopic
+
+  EmailAddress:
+    Description: Email address for parsing
+    Value: !Ref EmailAddress
+
+  NextSteps:
+    Description: Manual steps required
+    Value: |
+      1. Verify domain in SES console (shellfish-society.org)
+      2. Activate receipt rule set: aws ses set-active-receipt-rule-set --rule-set-name isrs-inbound-rules
+      3. Add MX record to DNS: 10 inbound-smtp.us-east-1.amazonaws.com
+      4. Confirm SNS subscription via webhook endpoint
+      5. Test by sending email to admin@shellfish-society.org

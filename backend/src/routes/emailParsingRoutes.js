@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const emailParsingController = require('../controllers/emailParsingController');
+const inboundEmailController = require('../controllers/inboundEmailController');
 const { requireAuth } = require('../middleware/auth');
 const gmailPoller = require('../services/gmailPollerService');
 
+// Public endpoints (no auth required for webhooks)
+router.post('/inbound-webhook', inboundEmailController.handleInboundWebhook);
+router.get('/inbound/health', inboundEmailController.healthCheck);
+
+// Protected endpoints (require authentication)
 router.use(requireAuth);
 
 router.post('/parse', emailParsingController.parseEmail);

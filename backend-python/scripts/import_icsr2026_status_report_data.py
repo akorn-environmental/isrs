@@ -315,7 +315,7 @@ async def import_contacts_and_organizations(db):
                     UPDATE contacts
                     SET organization_id = :org_id,
                         title = :title,
-                        tags = :tags::text[],
+                        tags = CAST(:tags AS text[]),
                         updated_at = CURRENT_TIMESTAMP
                     WHERE email = :email
                 """),
@@ -338,7 +338,7 @@ async def import_contacts_and_organizations(db):
                         title, tags, created_at, updated_at
                     ) VALUES (
                         :id, :email, :first_name, :last_name, :org_id,
-                        :title, :tags::text[], CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+                        :title, CAST(:tags AS text[]), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
                     )
                 """),
                 {

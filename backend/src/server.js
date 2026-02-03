@@ -34,7 +34,12 @@ const errorsRouter = require('./routes/errors');
 const grantsRoutes = require('./routes/grants');
 const contactEnrichmentRoutes = require('./routes/contactEnrichmentRoutes');
 const assetZoneRoutes = require('./routes/assetZoneRoutes');  // Asset zones for photo assignments
+const notificationRoutes = require('./routes/notificationRoutes');  // Dashboard notifications
+const weeklyDigestRoutes = require('./routes/weeklyDigestRoutes');  // Weekly digest emails
 const { errorHandler} = require('./middleware/errorHandler');
+
+// Weekly digest scheduler
+const weeklyDigestScheduler = require('./services/weeklyDigestScheduler');
 
 const app = express();
 const PORT = process.env.PORT || 3001;  // ISRS backend port - DO NOT CHANGE (AKORN uses 3000)
@@ -217,6 +222,8 @@ app.use('/api/errors', errorsRouter);  // Error logging endpoint (no auth requir
 app.use('/api/grants', grantsRoutes);  // Grants.gov API integration
 app.use('/api/contact-enrichment', contactEnrichmentRoutes);  // Apollo.io contact enrichment
 app.use('/api/asset-zones', assetZoneRoutes);  // Asset zones for photo assignments (NEW)
+app.use('/api/notifications', notificationRoutes);  // Dashboard notifications for email parsing
+app.use('/api/weekly-digest', weeklyDigestRoutes);  // Weekly digest emails
 
 // Error handling
 app.use(errorHandler);
@@ -231,6 +238,10 @@ app.listen(PORT, () => {
   console.log(`🚀 ISRS Database Backend running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🤖 Claude Model: ${process.env.CLAUDE_MODEL || 'claude-sonnet-4.5-20250929'}`);
+
+  // Start weekly digest scheduler
+  weeklyDigestScheduler.startScheduler();
+  console.log(`📧 Weekly digest scheduler started (runs every Monday at 9:00 AM)`);
 });
 
 module.exports = app;
