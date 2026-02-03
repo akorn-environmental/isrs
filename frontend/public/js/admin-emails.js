@@ -114,9 +114,7 @@ async function loadEmails() {
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails?${params}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      }
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -194,9 +192,7 @@ function renderEmailsTable(emails) {
 async function viewEmail(emailId) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      }
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -300,8 +296,8 @@ async function approveContact(emailId, contactIndex) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}/approve-contact/${contactIndex}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         'Content-Type': 'application/json'
       }
     });
@@ -343,9 +339,7 @@ async function deleteEmail(emailId) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      }
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -366,8 +360,8 @@ async function updateEmailStatus(emailId, status) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}/status`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ status })
@@ -393,8 +387,8 @@ async function bulkUpdateStatus(status) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails/bulk-status`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email_ids: emailIds, status })
@@ -420,8 +414,8 @@ async function bulkDelete() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/parsed-emails/bulk-delete`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email_ids: emailIds })
