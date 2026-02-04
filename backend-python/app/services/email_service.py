@@ -132,7 +132,8 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                 </table>
                                 <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 0 0; line-height: 1.6;">
                                     © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society<br>
-                                    Tax ID (EIN): 59-2829151
+                                    Tax ID (EIN): 59-2829151<br>
+                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['text_muted']}; text-decoration: none; font-size: 11px;">site by akorn environmental</a>
                                 </p>
                             </td>
                         </tr>
