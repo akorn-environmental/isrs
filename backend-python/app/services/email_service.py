@@ -101,15 +101,17 @@ def get_base_template(content: str, preheader: str = "") -> str:
 
                         <!-- Header with logo -->
                         <tr>
-                            <td style="padding: 30px 40px; border-radius: 12px 12px 0 0; text-align: center; background-color: {BRAND_COLORS['white']};">
-                                <img src="https://www.shellfish-society.org/images/isrs-logo-wide.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 10px;">
-                                <p style="color: {BRAND_COLORS['primary_green']}; font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society</p>
+                            <td style="padding: 20px 40px 10px; border-radius: 12px 12px 0 0; text-align: center; background-color: {BRAND_COLORS['white']};">
+                                <a href="https://www.shellfish-society.org" style="display: inline-block; text-decoration: none;">
+                                    <img src="https://www.shellfish-society.org/images/isrs-logo-wide.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 5px;">
+                                </a>
+                                <p style="color: {BRAND_COLORS['primary_green']}; font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society (ISRS)</p>
                             </td>
                         </tr>
 
                         <!-- Main content area -->
                         <tr>
-                            <td style="background-color: {BRAND_COLORS['white']}; padding: 40px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);" class="padding-mobile">
+                            <td style="background-color: {BRAND_COLORS['white']}; padding: 20px 40px 40px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);" class="padding-mobile">
                                 {content}
                             </td>
                         </tr>
@@ -478,7 +480,7 @@ https://www.shellfish-society.org
 
         {get_info_box_html(f'''
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
-                <strong>🐚 Coming up:</strong> ICSR 2026 in Bremerton, Washington! <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
+                <strong>🐚 Coming up:</strong> The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington! <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
             </p>
         ''')}
 
@@ -504,7 +506,7 @@ As an ISRS Member, You Can:
 • Access and contribute to our restoration photo gallery
 • Browse the member directory and expand your network
 
-Coming up: ICSR 2026 in Bremerton, Washington!
+Coming up: The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington!
 https://www.shellfish-society.org/icsr2026.html
 
 Questions? Reply to this email or visit our website to learn more.
@@ -539,7 +541,7 @@ Website: https://www.shellfish-society.org
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "ICSR 2026 - New Abstract Review Assignment"
+        subject = "ICSR2026 - New Abstract Review Assignment"
         preheader = f"You've been assigned to review: {abstract_title[:50]}..."
 
         # Format due date
@@ -551,7 +553,7 @@ Website: https://www.shellfish-society.org
         </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
-            You have been selected to review an abstract submission for ICSR 2026. Your expertise is invaluable in ensuring the quality of our conference program.
+            You have been selected to review an abstract submission for The International Conference on Shellfish Restoration 2026 (ICSR2026). Your expertise is invaluable in ensuring the quality of our conference program.
         </p>
 
         {get_info_box_html(f'''
@@ -573,16 +575,16 @@ Website: https://www.shellfish-society.org
         </ul>
 
         <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 25px 0 0 0; text-align: center;">
-            Thank you for contributing your expertise to ICSR 2026!
+            Thank you for contributing your expertise to ICSR2026!
         </p>
         """
 
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-New Review Assignment - ICSR 2026
+New Review Assignment - ICSR2026
 
-You have been selected to review an abstract submission for ICSR 2026.
+You have been selected to review an abstract submission for ICSR2026.
 
 Abstract Title: {abstract_title}
 Due Date: {due_date_str}
@@ -596,11 +598,11 @@ Review Guidelines:
 • Provide constructive feedback for authors
 • Submit your review before the due date
 
-Thank you for contributing your expertise to ICSR 2026!
+Thank you for contributing your expertise to ICSR2026!
 
 ---
 International Shellfish Restoration Society
-ICSR 2026 Program Committee
+ICSR2026 Program Committee
         """
 
         return await self.send_email(reviewer_email, subject, html_content, text_content)
@@ -620,7 +622,7 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "ICSR 2026 - Review Submitted Successfully"
+        subject = "ICSR2026 - Review Submitted Successfully"
         preheader = "Thank you! Your abstract review has been submitted."
 
         content = f"""
@@ -634,7 +636,7 @@ ICSR 2026 Program Committee
         </div>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
-            Thank you for completing your review. Your feedback helps ensure the quality and diversity of presentations at ICSR 2026.
+            Thank you for completing your review. Your feedback helps ensure the quality and diversity of presentations at The International Conference on Shellfish Restoration 2026 (ICSR2026).
         </p>
 
         {get_success_box_html(f'''
@@ -656,13 +658,13 @@ ICSR 2026 Program Committee
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Review Submitted Successfully - ICSR 2026
+Review Submitted Successfully - ICSR2026
 
 Thank you for completing your review!
 
 Reviewed Abstract: {abstract_title}
 
-Your feedback helps ensure the quality and diversity of presentations at ICSR 2026.
+Your feedback helps ensure the quality and diversity of presentations at ICSR2026.
 
 The organizing committee will review all feedback and communicate final decisions to authors.
 
@@ -672,7 +674,7 @@ Your contribution to the scientific program is greatly appreciated!
 
 ---
 International Shellfish Restoration Society
-ICSR 2026 Program Committee
+ICSR2026 Program Committee
         """
 
         return await self.send_email(reviewer_email, subject, html_content, text_content)
@@ -700,7 +702,7 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "ICSR 2026 - Abstract Accepted 🎉"
+        subject = "ICSR2026 - Abstract Accepted 🎉"
         preheader = f"Congratulations! Your abstract has been accepted for {presentation_type} presentation."
 
         content = f"""
@@ -712,7 +714,7 @@ ICSR 2026 Program Committee
         </div>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
-            Your abstract has been <strong>accepted</strong> for presentation at ICSR 2026 in Bremerton, Washington!
+            Your abstract has been <strong>accepted</strong> for presentation at The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington!
         </p>
 
         {get_success_box_html(f'''
@@ -762,18 +764,18 @@ ICSR 2026 Program Committee
         {get_button_html("Conference Details", "https://www.shellfish-society.org/icsr2026.html")}
 
         <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
-            We look forward to your presentation at ICSR 2026! 🐚
+            We look forward to your presentation at ICSR2026! 🐚
         </p>
         """
 
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-🎉 Abstract Accepted - ICSR 2026
+🎉 Abstract Accepted - ICSR2026
 
 Congratulations!
 
-Your abstract has been accepted for presentation at ICSR 2026 in Bremerton, Washington!
+Your abstract has been accepted for presentation at ICSR2026 in Bremerton, Washington!
 
 Abstract Title: {abstract_title}
 Presentation Type: {presentation_type}
@@ -786,11 +788,11 @@ Next Steps:
 
 Conference Details: https://www.shellfish-society.org/icsr2026.html
 
-We look forward to your presentation at ICSR 2026!
+We look forward to your presentation at ICSR2026!
 
 ---
 International Shellfish Restoration Society
-ICSR 2026 Program Committee
+ICSR2026 Program Committee
         """
 
         return await self.send_email(submitter_email, subject, html_content, text_content)
@@ -812,8 +814,8 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = "ICSR 2026 - Abstract Review Decision"
-        preheader = "Thank you for your ICSR 2026 abstract submission"
+        subject = "ICSR2026 - Abstract Review Decision"
+        preheader = "Thank you for your ICSR2026 abstract submission"
 
         feedback_section = ""
         if feedback_summary:
@@ -828,7 +830,7 @@ ICSR 2026 Program Committee
         </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-            Thank you for submitting your abstract to ICSR 2026. We appreciate your interest in contributing to the conference program.
+            Thank you for submitting your abstract to The International Conference on Shellfish Restoration 2026 (ICSR2026). We appreciate your interest in contributing to the conference program.
         </p>
 
         {get_info_box_html(f'''
@@ -846,7 +848,7 @@ ICSR 2026 Program Committee
             We encourage you to:
         </h2>
         <ul style="color: {BRAND_COLORS['text_dark']}; font-size: 15px; line-height: 1.8; padding-left: 20px; margin: 0;">
-            <li>Attend ICSR 2026 to learn about current research</li>
+            <li>Attend ICSR2026 to learn about current research</li>
             <li>Network with researchers and practitioners</li>
             <li>Consider submitting to future ISRS conferences</li>
         </ul>
@@ -861,9 +863,9 @@ ICSR 2026 Program Committee
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Abstract Review Decision - ICSR 2026
+Abstract Review Decision - ICSR2026
 
-Thank you for submitting your abstract to ICSR 2026.
+Thank you for submitting your abstract to ICSR2026.
 
 Submitted Abstract: {abstract_title}
 
@@ -872,7 +874,7 @@ After careful review by our program committee, we regret to inform you that we a
 {f'Reviewer Feedback: {feedback_summary}' if feedback_summary else ''}
 
 We encourage you to:
-• Attend ICSR 2026 to learn about current research
+• Attend ICSR2026 to learn about current research
 • Network with researchers and practitioners
 • Consider submitting to future ISRS conferences
 
@@ -882,7 +884,7 @@ Thank you for your dedication to shellfish restoration.
 
 ---
 International Shellfish Restoration Society
-ICSR 2026 Program Committee
+ICSR2026 Program Committee
         """
 
         return await self.send_email(submitter_email, subject, html_content, text_content)
@@ -917,13 +919,13 @@ ICSR 2026 Program Committee
         is_waitlist = status == "waitlist"
 
         if is_waitlist:
-            subject = f"ICSR 2026 - Waitlist Confirmation: {event_name}"
+            subject = f"ICSR2026 - Waitlist Confirmation: {event_name}"
             preheader = f"You're on the waitlist for {event_name}"
             icon = "⏳"
             title = "Added to Waitlist"
             color = BRAND_COLORS['warning_yellow']
         else:
-            subject = f"ICSR 2026 - Registration Confirmed: {event_name}"
+            subject = f"ICSR2026 - Registration Confirmed: {event_name}"
             preheader = f"You're registered for {event_name}!"
             icon = "✓"
             title = "Registration Confirmed!"
@@ -1005,7 +1007,7 @@ ICSR 2026 Program Committee
         fee_text = f"Total: {fee_str}" if total_fee > 0 else ""
 
         text_content = f"""
-{title} - ICSR 2026
+{title} - ICSR2026
 
 Event: {event_name}
 Date: {event_date_str}
@@ -1016,7 +1018,7 @@ Date: {event_date_str}
 
 ---
 International Shellfish Restoration Society
-ICSR 2026
+ICSR2026
         """
 
         return await self.send_email(user_email, subject, html_content, text_content)
@@ -1042,7 +1044,7 @@ ICSR 2026
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"ICSR 2026 - Spot Available: {event_name} 🎉"
+        subject = f"ICSR2026 - Spot Available: {event_name} 🎉"
         preheader = f"Great news! You've been confirmed for {event_name}"
 
         # Format event date
@@ -1125,7 +1127,7 @@ Your registration is now confirmed. We look forward to seeing you there!
 
 ---
 International Shellfish Restoration Society
-ICSR 2026
+ICSR2026
         """
 
         return await self.send_email(user_email, subject, html_content, text_content)
@@ -1159,7 +1161,7 @@ ICSR 2026
         Returns:
             True if sent successfully, False otherwise
         """
-        subject = f"ICSR 2026 - Registration Confirmed"
+        subject = f"ICSR2026 - Registration Confirmed"
         preheader = f"Welcome {first_name}! Your registration for {conference_name} is confirmed."
 
         # Format date
@@ -1450,7 +1452,7 @@ International Shellfish Restoration Society
         icsr2024_donation_amount: float = None,
     ) -> bool:
         """
-        Send donation solicitation email specifically for ICSR 2026 conference support.
+        Send donation solicitation email specifically for ICSR2026 conference support.
 
         Args:
             to_email: Recipient email
@@ -1463,7 +1465,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = "ICSR 2026 - Help Make It Unforgettable"
+        subject = "ICSR2026 - Help Make It Unforgettable"
         preheader = f"{first_name}, support the 7th International Conference on Shellfish Restoration"
 
         # Build personalized content
@@ -1472,7 +1474,7 @@ International Shellfish Restoration Society
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Your {'$' + f'{icsr2024_donation_amount:.0f} ' if icsr2024_donation_amount else ''}donation to ICSR 2024
                 helped make it one of our most successful conferences yet. Thank you! Now we're gearing up for
-                ICSR 2026 in beautiful Bremerton, Washington, and we hope you'll consider supporting us again.
+                ICSR2026 in beautiful Bremerton, Washington, and we hope you'll consider supporting us again.
             </p>
             """
         elif icsr2024_attended:
@@ -1485,14 +1487,14 @@ International Shellfish Restoration Society
             memory = role_memories.get(icsr2024_role, "We hope you had a great experience")
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-                {memory}! As we prepare for ICSR 2026, we're reaching out to our community
+                {memory}! As we prepare for ICSR2026, we're reaching out to our community
                 members to help make this conference even better.
             </p>
             """
         else:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-                ICSR 2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
+                ICSR2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
                 This conference brings together researchers, restoration practitioners, and advocates from around
                 the world to share knowledge and advance shellfish restoration.
             </p>
@@ -1500,7 +1502,7 @@ International Shellfish Restoration Society
 
         content = f"""
         <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
-            Support ICSR 2026! 🌊
+            Support ICSR2026! 🌊
         </h1>
 
         {opening}
@@ -1593,7 +1595,7 @@ International Shellfish Restoration Society
             </tr>
         </table>
 
-        {get_button_html("Support ICSR 2026", "https://www.shellfish-society.org/icsr2026.html#donate", BRAND_COLORS['success_green'])}
+        {get_button_html("Support ICSR2026", "https://www.shellfish-society.org/icsr2026.html#donate", BRAND_COLORS['success_green'])}
 
         <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 20px 0 0 0; text-align: center;">
             All donations are tax-deductible. ISRS EIN: [EIN NUMBER]
@@ -1603,12 +1605,12 @@ International Shellfish Restoration Society
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Support ICSR 2026!
+Support ICSR2026!
 
 {'Thank you for your donation to ICSR 2024!' if icsr2024_donated else ''}
 {'We hope you enjoyed ICSR 2024!' if icsr2024_attended else ''}
 
-ICSR 2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
+ICSR2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
 
 Your donation directly supports:
 • Student Travel Grants
@@ -1622,7 +1624,7 @@ Conference Support Levels:
 • Patron ($300-$499) - Above + reserved seating
 • Champion ($500+) - All benefits + VIP reception
 
-Support ICSR 2026: https://www.shellfish-society.org/icsr2026.html#donate
+Support ICSR2026: https://www.shellfish-society.org/icsr2026.html#donate
 
 All donations are tax-deductible.
 
@@ -1649,7 +1651,7 @@ International Shellfish Restoration Society
         travel_support_available: bool = False,
     ) -> bool:
         """
-        Send invitation to speak at ICSR 2026.
+        Send invitation to speak at ICSR2026.
 
         Args:
             to_email: Recipient email
@@ -1672,7 +1674,7 @@ International Shellfish Restoration Society
         }
         session_label = session_labels.get(session_type, "presentation")
 
-        subject = f"ICSR 2026 - Invitation to Speak"
+        subject = f"ICSR2026 - Invitation to Speak"
         preheader = f"We'd love to have you present at the 7th International Conference on Shellfish Restoration"
 
         # Build personalized opening
@@ -1681,21 +1683,21 @@ International Shellfish Restoration Society
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Your presentation at ICSR 2024 — <em>"{icsr2024_talk_title}"</em> — was a highlight of the conference
                 and generated excellent discussion among attendees. We would be honored to have you return as a
-                speaker at ICSR 2026!
+                speaker at ICSR2026!
             </p>
             """
         elif icsr2024_speaker:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Thank you for your excellent contribution to ICSR 2024! Your presentation was well-received,
-                and we would be honored to have you return as a speaker at ICSR 2026.
+                and we would be honored to have you return as a speaker at ICSR2026.
             </p>
             """
         else:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Your work in shellfish restoration has made a significant impact on our field. We would be
-                honored to have you share your expertise as a speaker at ICSR 2026.
+                honored to have you share your expertise as a speaker at ICSR2026.
             </p>
             """
 
@@ -1731,7 +1733,7 @@ International Shellfish Restoration Society
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
             We are pleased to invite you to deliver a <strong>{session_label}</strong> at the
-            7th International Conference on Shellfish Restoration (ICSR 2026) in Bremerton, Washington.
+            7th International Conference on Shellfish Restoration (ICSR2026) in Bremerton, Washington.
         </p>
 
         {topic_section}
@@ -1744,7 +1746,7 @@ International Shellfish Restoration Society
             <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
                     <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 120px;">Event:</span>
-                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">ICSR 2026</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">ICSR2026</span>
                 </td>
             </tr>
             <tr>
@@ -1819,12 +1821,12 @@ Dear Dr. {last_name},
 
 {'Your presentation at ICSR 2024 was a highlight of the conference!' if icsr2024_speaker else 'Your work in shellfish restoration has made a significant impact.'}
 
-We are pleased to invite you to deliver a {session_label} at ICSR 2026 in Bremerton, Washington.
+We are pleased to invite you to deliver a {session_label} at ICSR2026 in Bremerton, Washington.
 
 {f'Suggested Topic: {suggested_topic}' if suggested_topic else ''}
 
 Conference Details:
-• Event: ICSR 2026
+• Event: ICSR2026
 • Location: Bremerton, Washington, USA
 • Session Type: {session_label.title()}
 {f'• Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
@@ -1845,7 +1847,7 @@ We hope to welcome you to Bremerton!
 
 ---
 International Shellfish Restoration Society
-ICSR 2026 Program Committee
+ICSR2026 Program Committee
         """
 
         return await self.send_email(to_email, subject, html_content, text_content)
@@ -1861,7 +1863,7 @@ ICSR 2026 Program Committee
         student_rate_available: bool = True,
     ) -> bool:
         """
-        Send invitation to present a poster at ICSR 2026.
+        Send invitation to present a poster at ICSR2026.
 
         Args:
             to_email: Recipient email
@@ -1875,28 +1877,28 @@ ICSR 2026 Program Committee
         Returns:
             True if sent successfully
         """
-        subject = "ICSR 2026 - Present Your Research (Poster Session)"
-        preheader = f"{first_name}, share your shellfish restoration research at ICSR 2026"
+        subject = "ICSR2026 - Present Your Research (Poster Session)"
+        preheader = f"{first_name}, share your shellfish restoration research at ICSR2026"
 
         if icsr2024_poster and icsr2024_poster_title:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Your poster at ICSR 2024 — <em>"{icsr2024_poster_title}"</em> — sparked great conversations
                 and showcased important work in our field. We'd love to see you share your latest research
-                at ICSR 2026!
+                at ICSR2026!
             </p>
             """
         elif icsr2024_poster:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Thank you for presenting your research at ICSR 2024! Your poster was a valuable addition
-                to the conference. We hope you'll join us again at ICSR 2026 with your latest findings.
+                to the conference. We hope you'll join us again at ICSR2026 with your latest findings.
             </p>
             """
         else:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-                We invite you to present your shellfish restoration research at ICSR 2026! Our poster sessions
+                We invite you to present your shellfish restoration research at ICSR2026! Our poster sessions
                 are an excellent opportunity to share your work, get feedback, and connect with researchers
                 from around the world.
             </p>
@@ -1915,7 +1917,7 @@ ICSR 2026 Program Committee
 
         {get_info_box_html(f'''
             <p style="margin: 0 0 10px 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
-                <strong>ICSR 2026 Poster Session</strong>
+                <strong>ICSR2026 Poster Session</strong>
             </p>
             <p style="margin: 0 0 5px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">
                 📍 Bremerton, Washington, USA
@@ -1971,13 +1973,13 @@ ICSR 2026 Program Committee
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Call for Posters - ICSR 2026
+Call for Posters - ICSR2026
 
 Dear {first_name},
 
-{'Your poster at ICSR 2024 sparked great conversations!' if icsr2024_poster else 'We invite you to present your research at ICSR 2026!'}
+{'Your poster at ICSR 2024 sparked great conversations!' if icsr2024_poster else 'We invite you to present your research at ICSR2026!'}
 
-ICSR 2026 Poster Session
+ICSR2026 Poster Session
 📍 Bremerton, Washington, USA
 {f'Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
 
@@ -2010,7 +2012,7 @@ International Shellfish Restoration Society
         abstract_deadline: str = None,
     ) -> bool:
         """
-        Send invitation to students to attend ICSR 2026.
+        Send invitation to students to attend ICSR2026.
 
         Args:
             to_email: Recipient email
@@ -2024,7 +2026,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = "ICSR 2026 - Student Invitation"
+        subject = "ICSR2026 - Student Invitation"
         preheader = f"{first_name}, join the next generation of shellfish restoration leaders"
 
         if icsr2024_attended:
@@ -2036,14 +2038,14 @@ International Shellfish Restoration Society
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 It was great having you at ICSR 2024! Thank you for {role_text} — your energy and fresh
-                perspectives are exactly what our community needs. We hope you'll join us again at ICSR 2026!
+                perspectives are exactly what our community needs. We hope you'll join us again at ICSR2026!
             </p>
             """
         else:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 As a student{f' at {university}' if university else ''} interested in marine science and conservation,
-                you have the opportunity to help shape the future of shellfish restoration. ICSR 2026 is the
+                you have the opportunity to help shape the future of shellfish restoration. ICSR2026 is the
                 perfect place to learn from leading experts and launch your career in this vital field.
             </p>
             """
@@ -2061,7 +2063,7 @@ International Shellfish Restoration Society
 
         {get_info_box_html(f'''
             <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
-                🐚 ICSR 2026 — Bremerton, Washington
+                🐚 ICSR2026 — Bremerton, Washington
             </p>
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
                 The 7th International Conference on Shellfish Restoration brings together researchers,
@@ -2131,13 +2133,13 @@ International Shellfish Restoration Society
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Students Welcome - ICSR 2026!
+Students Welcome - ICSR2026!
 
 Dear {first_name},
 
 {'Great to have you at ICSR 2024!' if icsr2024_attended else f'As a student{f" at {university}" if university else ""}, you have the opportunity to shape the future of shellfish restoration.'}
 
-ICSR 2026 — Bremerton, Washington
+ICSR2026 — Bremerton, Washington
 The 7th International Conference on Shellfish Restoration
 
 Why Attend as a Student?
@@ -2175,7 +2177,7 @@ International Shellfish Restoration Society
         expected_attendance: int = None,
     ) -> bool:
         """
-        Send exhibitor booth invitation for ICSR 2026.
+        Send exhibitor booth invitation for ICSR2026.
 
         Args:
             to_email: Recipient email
@@ -2189,7 +2191,7 @@ International Shellfish Restoration Society
         Returns:
             True if sent successfully
         """
-        subject = f"ICSR 2026 - Exhibit Opportunity"
+        subject = f"ICSR2026 - Exhibit Opportunity"
         preheader = f"Reach {expected_attendance or 300}+ shellfish restoration professionals"
 
         if icsr2024_exhibitor:
@@ -2197,13 +2199,13 @@ International Shellfish Restoration Society
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Thank you for exhibiting at ICSR 2024! Your booth was a valuable resource for our attendees,
                 and we received positive feedback about {company_name}'s presence. We'd love to have you
-                back at ICSR 2026 in Bremerton, Washington.
+                back at ICSR2026 in Bremerton, Washington.
             </p>
             """
         else:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-                ICSR 2026 offers an excellent opportunity for {company_name} to connect with
+                ICSR2026 offers an excellent opportunity for {company_name} to connect with
                 {expected_attendance or 300}+ researchers, practitioners, and decision-makers working in
                 shellfish restoration worldwide.
             </p>
@@ -2222,7 +2224,7 @@ International Shellfish Restoration Society
 
         content = f"""
         <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600;">
-            Exhibit at ICSR 2026 🏢
+            Exhibit at ICSR2026 🏢
         </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 10px 0;">
@@ -2233,7 +2235,7 @@ International Shellfish Restoration Society
 
         {get_info_box_html(f'''
             <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
-                📍 ICSR 2026 — Bremerton, Washington
+                📍 ICSR2026 — Bremerton, Washington
             </p>
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
                 7th International Conference on Shellfish Restoration
@@ -2331,13 +2333,13 @@ International Shellfish Restoration Society
         html_content = get_base_template(content, preheader)
 
         text_content = f"""
-Exhibit at ICSR 2026
+Exhibit at ICSR2026
 
 Dear {contact_name},
 
-{'Thank you for exhibiting at ICSR 2024! We would love to have {company_name} back.' if icsr2024_exhibitor else f'ICSR 2026 offers an excellent opportunity for {company_name} to connect with {expected_attendance or 300}+ professionals.'}
+{'Thank you for exhibiting at ICSR 2024! We would love to have {company_name} back.' if icsr2024_exhibitor else f'ICSR2026 offers an excellent opportunity for {company_name} to connect with {expected_attendance or 300}+ professionals.'}
 
-ICSR 2026 — Bremerton, Washington
+ICSR2026 — Bremerton, Washington
 7th International Conference on Shellfish Restoration
 
 Exhibitor Package Includes:
