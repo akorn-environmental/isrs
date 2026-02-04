@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel, EmailStr
 import asyncio
 import logging
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +52,7 @@ async def send_all_test_emails(request: SendTestEmailsRequest):
         results["review_assignment"] = await email_service.send_review_assignment_email(
             reviewer_email=test_email,
             abstract_title="Oyster Reef Restoration in Chesapeake Bay",
-            due_date="March 15, 2026"
+            due_date=datetime(2026, 3, 15)
         )
         await asyncio.sleep(1)
         
@@ -87,7 +88,7 @@ async def send_all_test_emails(request: SendTestEmailsRequest):
             attendee_email=test_email,
             attendee_name="Test User",
             event_name="Puget Sound Field Trip",
-            event_date="October 6, 2026",
+            event_date=datetime(2026, 10, 6, 9, 0),
             event_time="9:00 AM - 4:00 PM",
             event_location="Little Creek Casino Resort, Shelton, WA"
         )
@@ -98,7 +99,7 @@ async def send_all_test_emails(request: SendTestEmailsRequest):
             attendee_email=test_email,
             attendee_name="Test User",
             event_name="Puget Sound Field Trip",
-            event_date="October 6, 2026",
+            event_date=datetime(2026, 10, 6, 9, 0),
             rsvp_link="https://www.shellfish-society.org/icsr2026.html#events"
         )
         await asyncio.sleep(1)
