@@ -184,7 +184,7 @@ const translations = {
     quickLinks: 'Quick Links',
     connect: 'Connect',
     adminPortal: 'Admin Portal',
-    copyright: '© 2026 International Shellfish Restoration Society. All rights reserved.',
+    copyright: '© 2026 International Shellfish Restoration Society. All rights reserved. | <a href="https://akornenvironmental.com/" style="color: inherit; text-decoration: none;">Site & platform by akorn environmental</a>',
     taxId: 'Tax ID (EIN): 39-2829151',
 
     // Footer
@@ -1892,7 +1892,7 @@ const translations = {
     quickLinks: 'Enlaces Rápidos',
     connect: 'Conectar',
     adminPortal: 'Portal Administrativo',
-    copyright: '© 2026 Sociedad Internacional para la Restauración de Moluscos. Todos los derechos reservados.',
+    copyright: '© 2026 Sociedad Internacional para la Restauración de Moluscos. Todos los derechos reservados. | <a href="https://akornenvironmental.com/" style="color: inherit; text-decoration: none;">Sitio y plataforma por akorn environmental</a>',
     taxId: 'Identificación Fiscal (EIN): 39-2829151',
 
     // Pie de página
@@ -3602,7 +3602,7 @@ const translations = {
     quickLinks: 'Liens Rapides',
     connect: 'Connecter',
     adminPortal: 'Portail Admin',
-    copyright: '© 2026 Société Internationale pour la Restauration des Mollusques. Tous droits réservés.',
+    copyright: '© 2026 Société Internationale pour la Restauration des Mollusques. Tous droits réservés. | <a href="https://akornenvironmental.com/" style="color: inherit; text-decoration: none;">Site et plateforme par akorn environmental</a>',
     taxId: 'Numéro fiscal (EIN): 39-2829151',
 
     // Pied de page
