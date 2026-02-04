@@ -132,6 +132,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                 </table>
                                 <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 0 0; line-height: 1.6;">
                                     © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society<br>
+                                    8070 Georgia Avenue, Silver Spring, MD 20910<br>
                                     Tax ID (EIN): 59-2829151<br>
                                     <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['text_muted']}; text-decoration: none; font-size: 11px;">Site & platform by akorn environmental</a>
                                 </p>
