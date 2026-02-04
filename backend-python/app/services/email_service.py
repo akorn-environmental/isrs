@@ -627,14 +627,9 @@ ICSR2026 Program Committee
         preheader = "Thank you! Your abstract review has been submitted."
 
         content = f"""
-        <div style="text-align: center; margin-bottom: 25px;">
-            <div style="display: inline-block; background-color: #d1fae5; border-radius: 50%; padding: 15px; margin-bottom: 15px;">
-                <span style="font-size: 32px;">✓</span>
-            </div>
-            <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 26px; margin: 0; font-weight: 600;">
-                Review Submitted!
-            </h1>
-        </div>
+        <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600; text-align: center;">
+            Review Submitted!
+        </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
             Thank you for completing your review. Your feedback helps ensure the quality and diversity of presentations at The International Conference on Shellfish Restoration 2026 (ICSR2026).
@@ -707,12 +702,9 @@ ICSR2026 Program Committee
         preheader = f"Congratulations! Your abstract has been accepted for {presentation_type} presentation."
 
         content = f"""
-        <div style="text-align: center; margin-bottom: 25px;">
-            <span style="font-size: 48px;">🎉</span>
-            <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 28px; margin: 15px 0 0 0; font-weight: 600;">
-                Congratulations!
-            </h1>
-        </div>
+        <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 28px; margin: 0 0 20px 0; font-weight: 600; text-align: center;">
+            Congratulations!
+        </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
             Your abstract has been <strong>accepted</strong> for presentation at The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington!
@@ -980,14 +972,9 @@ ICSR2026 Program Committee
             """
 
         content = f"""
-        <div style="text-align: center; margin-bottom: 25px;">
-            <div style="display: inline-block; background-color: {'#fef3c7' if is_waitlist else '#d1fae5'}; border-radius: 50%; width: 60px; height: 60px; line-height: 60px; margin-bottom: 15px;">
-                <span style="font-size: 28px;">{icon}</span>
-            </div>
-            <h1 style="color: {color}; font-size: 26px; margin: 0; font-weight: 600;">
-                {title}
-            </h1>
-        </div>
+        <h1 style="color: {color}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600; text-align: center;">
+            {title}
+        </h1>
 
         {get_info_box_html(f'''
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -1083,12 +1070,9 @@ ICSR2026
             """
 
         content = f"""
-        <div style="text-align: center; margin-bottom: 25px;">
-            <span style="font-size: 48px;">🎉</span>
-            <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 26px; margin: 15px 0 0 0; font-weight: 600;">
-                Spot Available!
-            </h1>
-        </div>
+        <h1 style="color: {BRAND_COLORS['success_green']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600; text-align: center;">
+            Spot Available!
+        </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
             Great news! A spot has opened up and you've been <strong>moved from the waitlist to confirmed</strong>!
@@ -1181,12 +1165,9 @@ ICSR2026
             """
 
         content = f"""
-        <div style="text-align: center; margin-bottom: 25px;">
-            <span style="font-size: 48px;">🐚</span>
-            <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 15px 0 0 0; font-weight: 600;">
-                You're Registered, {first_name}!
-            </h1>
-        </div>
+        <h1 style="color: {BRAND_COLORS['primary_blue']}; font-size: 26px; margin: 0 0 20px 0; font-weight: 600; text-align: center;">
+            You're Registered, {first_name}!
+        </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
             Thank you for registering for <strong>{conference_name}</strong>! We're excited to welcome you.
