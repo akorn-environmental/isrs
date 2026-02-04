@@ -101,9 +101,9 @@ def get_base_template(content: str, preheader: str = "") -> str:
 
                         <!-- Header with logo -->
                         <tr>
-                            <td style="background-color: {BRAND_COLORS['primary_green']}; padding: 30px 40px; border-radius: 12px 12px 0 0; text-align: center;">
-                                <img src="https://www.shellfish-society.org/images/logos/LOGO%20-%20ISRS%20-%20wide%20-%20white.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 10px;">
-                                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society</p>
+                            <td style="padding: 30px 40px; border-radius: 12px 12px 0 0; text-align: center; background-color: {BRAND_COLORS['white']};">
+                                <img src="https://www.shellfish-society.org/images/isrs-logo-wide.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 10px;">
+                                <p style="color: {BRAND_COLORS['primary_green']}; font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society</p>
                             </td>
                         </tr>
 
