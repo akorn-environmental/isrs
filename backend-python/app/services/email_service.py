@@ -133,7 +133,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                 <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 0 0; line-height: 1.6;">
                                     © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society<br>
                                     Tax ID (EIN): 59-2829151<br>
-                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['text_muted']}; text-decoration: none; font-size: 11px;">site by akorn environmental</a>
+                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['text_muted']}; text-decoration: none; font-size: 11px;">Site & platform by akorn environmental</a>
                                 </p>
                             </td>
                         </tr>
@@ -480,8 +480,13 @@ https://www.shellfish-society.org
         </table>
 
         {get_info_box_html(f'''
-            <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
-                <strong>🐚 Coming up:</strong> The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington! <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
+            <p style="margin: 0 0 8px 0; font-size: 14px; color: {BRAND_COLORS["primary_blue"]};">
+                <strong>🐚 Coming up:</strong> The International Conference on Shellfish Restoration 2026 (ICSR2026) in Shelton, Washington, October 4-8, 2026!
+            </p>
+            <p style="margin: 0; font-size: 13px;">
+                <a href="https://www.canva.com/design/DAG-5OvYHyI/HI5vk3E3ijxXW9C5FG4-Ng/view" style="color: {BRAND_COLORS["secondary_blue"]};">View Save the Date</a> |
+                <a href="https://www.canva.com/design/DAG-49bi8xM/C7kpD-9U_AfR3nGmuq1QQQ/view" style="color: {BRAND_COLORS["secondary_blue"]};">View Prospectus</a> |
+                <a href="https://www.shellfish-society.org/icsr2026.html" style="color: {BRAND_COLORS["secondary_blue"]};">Learn more</a>
             </p>
         ''')}
 
@@ -507,7 +512,7 @@ As an ISRS Member, You Can:
 • Access and contribute to our restoration photo gallery
 • Browse the member directory and expand your network
 
-Coming up: The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington!
+Coming up: The International Conference on Shellfish Restoration 2026 (ICSR2026) in Shelton, Washington!
 https://www.shellfish-society.org/icsr2026.html
 
 Questions? Reply to this email or visit our website to learn more.
@@ -707,7 +712,7 @@ ICSR2026 Program Committee
         </h1>
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0; text-align: center;">
-            Your abstract has been <strong>accepted</strong> for presentation at The International Conference on Shellfish Restoration 2026 (ICSR2026) in Bremerton, Washington!
+            Your abstract has been <strong>accepted</strong> for presentation at The International Conference on Shellfish Restoration 2026 (ICSR2026) in Shelton, Washington, October 4-8, 2026!
         </p>
 
         {get_success_box_html(f'''
@@ -756,7 +761,12 @@ ICSR2026 Program Committee
 
         {get_button_html("Conference Details", "https://www.shellfish-society.org/icsr2026.html")}
 
-        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0; text-align: center;">
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; margin: 20px 0 0 0; text-align: center;">
+            <a href="https://www.canva.com/design/DAG-5OvYHyI/HI5vk3E3ijxXW9C5FG4-Ng/view" style="color: {BRAND_COLORS['secondary_blue']};">Save the Date</a> |
+            <a href="https://www.canva.com/design/DAG-49bi8xM/C7kpD-9U_AfR3nGmuq1QQQ/view" style="color: {BRAND_COLORS['secondary_blue']};">View Prospectus</a>
+        </p>
+
+        <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 10px 0 0 0; text-align: center;">
             We look forward to your presentation at ICSR2026! 🐚
         </p>
         """
@@ -768,7 +778,7 @@ ICSR2026 Program Committee
 
 Congratulations!
 
-Your abstract has been accepted for presentation at ICSR2026 in Bremerton, Washington!
+Your abstract has been accepted for presentation at ICSR2026 in Shelton, Washington!
 
 Abstract Title: {abstract_title}
 Presentation Type: {presentation_type}
@@ -1215,7 +1225,7 @@ ICSR2026
             <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
                     <span style="font-size: 18px; margin-right: 10px;">✈️</span>
-                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Arrange your travel to Bremerton, WA</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Arrange your travel to Shelton, WA</span>
                 </td>
             </tr>
             <tr>
@@ -1249,7 +1259,7 @@ Amount: {fee_str}
 What's Next?
 • Add the conference dates to your calendar
 • Book your accommodations early
-• Arrange your travel to Bremerton, WA
+• Arrange your travel to Shelton, WA
 • Review the program when it's published
 
 Conference Details: https://www.shellfish-society.org/icsr2026.html
@@ -1456,7 +1466,7 @@ International Shellfish Restoration Society
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Your {'$' + f'{icsr2024_donation_amount:.0f} ' if icsr2024_donation_amount else ''}donation to ICSR 2024
                 helped make it one of our most successful conferences yet. Thank you! Now we're gearing up for
-                ICSR2026 in beautiful Bremerton, Washington, and we hope you'll consider supporting us again.
+                ICSR2026 in beautiful Shelton, Washington, and we hope you'll consider supporting us again.
             </p>
             """
         elif icsr2024_attended:
@@ -1476,7 +1486,7 @@ International Shellfish Restoration Society
         else:
             opening = f"""
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-                ICSR2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
+                ICSR2026 is coming to Shelton, Washington — the heart of Pacific Northwest shellfish country!
                 This conference brings together researchers, restoration practitioners, and advocates from around
                 the world to share knowledge and advance shellfish restoration.
             </p>
@@ -1500,7 +1510,7 @@ International Shellfish Restoration Society
                 <tr>
                     <td style="padding: 5px 0;">
                         <span style="color: {BRAND_COLORS["text_muted"]}; font-size: 13px;">Location:</span>
-                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; margin-left: 8px;">Bremerton, Washington, USA</span>
+                        <span style="color: {BRAND_COLORS["text_dark"]}; font-size: 14px; margin-left: 8px;">Shelton, Washington, USA</span>
                     </td>
                 </tr>
                 <tr>
@@ -1592,7 +1602,7 @@ Support ICSR2026!
 {'Thank you for your donation to ICSR 2024!' if icsr2024_donated else ''}
 {'We hope you enjoyed ICSR 2024!' if icsr2024_attended else ''}
 
-ICSR2026 is coming to Bremerton, Washington — the heart of Pacific Northwest shellfish country!
+ICSR2026 is coming to Shelton, Washington — the heart of Pacific Northwest shellfish country!
 
 Your donation directly supports:
 • Student Travel Grants
@@ -1715,7 +1725,7 @@ International Shellfish Restoration Society
 
         <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 25px 0;">
             We are pleased to invite you to deliver a <strong>{session_label}</strong> at the
-            7th International Conference on Shellfish Restoration (ICSR2026) in Bremerton, Washington.
+            7th International Conference on Shellfish Restoration (ICSR2026) in Shelton, Washington.
         </p>
 
         {topic_section}
@@ -1734,7 +1744,7 @@ International Shellfish Restoration Society
             <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid {BRAND_COLORS['border']};">
                     <span style="color: {BRAND_COLORS['text_muted']}; font-size: 13px; display: inline-block; width: 120px;">Location:</span>
-                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Bremerton, Washington, USA</span>
+                    <span style="color: {BRAND_COLORS['text_dark']}; font-size: 14px;">Shelton, Washington, USA</span>
                 </td>
             </tr>
             <tr>
@@ -1792,7 +1802,7 @@ International Shellfish Restoration Society
         </p>
 
         <p style="color: {BRAND_COLORS['text_muted']}; font-size: 14px; margin: 20px 0 0 0;">
-            We hope to welcome you to Bremerton!
+            We hope to welcome you to Shelton!
         </p>
         """
 
@@ -1803,13 +1813,13 @@ Dear Dr. {last_name},
 
 {'Your presentation at ICSR 2024 was a highlight of the conference!' if icsr2024_speaker else 'Your work in shellfish restoration has made a significant impact.'}
 
-We are pleased to invite you to deliver a {session_label} at ICSR2026 in Bremerton, Washington.
+We are pleased to invite you to deliver a {session_label} at ICSR2026 in Shelton, Washington.
 
 {f'Suggested Topic: {suggested_topic}' if suggested_topic else ''}
 
 Conference Details:
 • Event: ICSR2026
-• Location: Bremerton, Washington, USA
+• Location: Shelton, Washington, USA
 • Session Type: {session_label.title()}
 {f'• Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
 
@@ -1825,7 +1835,7 @@ Please reply to this email to confirm your interest or discuss details.
 
 Learn more: https://www.shellfish-society.org/icsr2026.html#speakers
 
-We hope to welcome you to Bremerton!
+We hope to welcome you to Shelton!
 
 ---
 International Shellfish Restoration Society
@@ -1902,7 +1912,7 @@ ICSR2026 Program Committee
                 <strong>ICSR2026 Poster Session</strong>
             </p>
             <p style="margin: 0 0 5px 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};">
-                📍 Bremerton, Washington, USA
+                📍 Shelton, Washington, USA
             </p>
             {f'<p style="margin: 0; font-size: 13px; color: {BRAND_COLORS["text_muted"]};"><strong>Abstract Deadline:</strong> {abstract_deadline}</p>' if abstract_deadline else ''}
         ''')}
@@ -1962,7 +1972,7 @@ Dear {first_name},
 {'Your poster at ICSR 2024 sparked great conversations!' if icsr2024_poster else 'We invite you to present your research at ICSR2026!'}
 
 ICSR2026 Poster Session
-📍 Bremerton, Washington, USA
+📍 Shelton, Washington, USA
 {f'Abstract Deadline: {abstract_deadline}' if abstract_deadline else ''}
 
 Why Present a Poster?
@@ -2045,7 +2055,7 @@ International Shellfish Restoration Society
 
         {get_info_box_html(f'''
             <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
-                🐚 ICSR2026 — Bremerton, Washington
+                🐚 ICSR2026 — Shelton, Washington
             </p>
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
                 The 7th International Conference on Shellfish Restoration brings together researchers,
@@ -2121,7 +2131,7 @@ Dear {first_name},
 
 {'Great to have you at ICSR 2024!' if icsr2024_attended else f'As a student{f" at {university}" if university else ""}, you have the opportunity to shape the future of shellfish restoration.'}
 
-ICSR2026 — Bremerton, Washington
+ICSR2026 — Shelton, Washington
 The 7th International Conference on Shellfish Restoration
 
 Why Attend as a Student?
@@ -2181,7 +2191,7 @@ International Shellfish Restoration Society
             <p style="color: {BRAND_COLORS['text_dark']}; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
                 Thank you for exhibiting at ICSR 2024! Your booth was a valuable resource for our attendees,
                 and we received positive feedback about {company_name}'s presence. We'd love to have you
-                back at ICSR2026 in Bremerton, Washington.
+                back at ICSR2026 in Shelton, Washington.
             </p>
             """
         else:
@@ -2217,7 +2227,7 @@ International Shellfish Restoration Society
 
         {get_info_box_html(f'''
             <p style="margin: 0 0 10px 0; font-size: 16px; color: {BRAND_COLORS["primary_blue"]}; font-weight: 600;">
-                📍 ICSR2026 — Bremerton, Washington
+                📍 ICSR2026 — Shelton, Washington
             </p>
             <p style="margin: 0; font-size: 14px; color: {BRAND_COLORS["text_dark"]};">
                 7th International Conference on Shellfish Restoration
@@ -2321,7 +2331,7 @@ Dear {contact_name},
 
 {'Thank you for exhibiting at ICSR 2024! We would love to have {company_name} back.' if icsr2024_exhibitor else f'ICSR2026 offers an excellent opportunity for {company_name} to connect with {expected_attendance or 300}+ professionals.'}
 
-ICSR2026 — Bremerton, Washington
+ICSR2026 — Shelton, Washington
 7th International Conference on Shellfish Restoration
 
 Exhibitor Package Includes:
