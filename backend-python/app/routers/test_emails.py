@@ -82,33 +82,34 @@ async def send_all_test_emails(request: SendTestEmailsRequest):
         
         # 7. Event Signup
         results["event_signup"] = await email_service.send_event_signup_email(
-            attendee_email=test_email,
-            attendee_name="Test User",
+            user_email=test_email,
             event_name="Puget Sound Field Trip",
             event_date=datetime(2026, 10, 6, 9, 0),
-            event_time="9:00 AM - 4:00 PM",
-            event_location="Little Creek Casino Resort, Shelton, WA"
+            guest_count=2,
+            total_fee=50.00,
+            status="confirmed"
         )
         await asyncio.sleep(1)
         
         # 8. Event Waitlist Promotion
         results["waitlist_promotion"] = await email_service.send_event_waitlist_promotion_email(
-            attendee_email=test_email,
-            attendee_name="Test User",
+            user_email=test_email,
             event_name="Puget Sound Field Trip",
             event_date=datetime(2026, 10, 6, 9, 0),
-            rsvp_link="https://www.shellfish-society.org/icsr2026.html#events"
+            guest_count=2,
+            total_fee=50.00
         )
         await asyncio.sleep(1)
         
         # 9. Conference Registration
         results["conference_registration"] = await email_service.send_conference_registration_email(
-            attendee_email=test_email,
-            attendee_name="Test User",
+            user_email=test_email,
+            first_name="Test User",
             conference_name="ICSR2026 - Puget Sound, Washington",
             registration_type="Full Conference",
-            total_amount=750.00,
-            registration_id="REG-2026-001"
+            registration_date=datetime.now(),
+            total_fee=750.00,
+            confirmation_number="REG-2026-001"
         )
         
         logger.info(f"Successfully sent all test emails to {test_email}")
