@@ -65,21 +65,18 @@ async def send_all_test_emails(request: SendTestEmailsRequest):
         
         # 5. Abstract Acceptance
         results["acceptance"] = await email_service.send_acceptance_email(
-            author_email=test_email,
-            author_name="Test User",
+            submitter_email=test_email,
             abstract_title="Oyster Reef Restoration in Chesapeake Bay",
             presentation_type="Oral Presentation",
-            conference_name="ICSR2026",
-            conference_dates="October 5-8, 2026"
+            average_score=4.2
         )
         await asyncio.sleep(1)
         
         # 6. Abstract Rejection
         results["rejection"] = await email_service.send_rejection_email(
-            author_email=test_email,
-            author_name="Test User",
+            submitter_email=test_email,
             abstract_title="Test Abstract for Rejection Email",
-            conference_name="ICSR2026"
+            feedback_summary="Thank you for your submission. Unfortunately, we are unable to accept your abstract at this time."
         )
         await asyncio.sleep(1)
         
