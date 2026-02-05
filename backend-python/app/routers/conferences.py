@@ -306,31 +306,39 @@ async def create_attendee_profile(
     Public endpoint - no authentication required for initial registration.
     Returns: {"success": bool, "data": {...}} or {"success": false, "error": "..."}
     """
-    # Check if profile with this email already exists
-    existing_profile = db.query(AttendeeProfile).filter(
-        AttendeeProfile.user_email == profile_data.user_email
-    ).first()
-
-    if existing_profile:
-        # Return existing profile instead of creating duplicate
-        logger.info(f"Attendee profile already exists for email: {profile_data.user_email}")
-        return {
-            "success": True,
-            "data": {
-                "id": str(existing_profile.id),
-                "user_email": existing_profile.user_email,
-                "first_name": existing_profile.first_name,
-                "last_name": existing_profile.last_name,
-            }
-        }
-
-    # Create new profile
-    profile = AttendeeProfile(**profile_data.model_dump())
-    db.add(profile)
-
     try:
+        # Check if profile with this email already exists
+        existing_profile = db.query(AttendeeProfile).filter(
+            AttendeeProfile.user_email == profile_data.user_email
+        ).first()
+
+        if existing_profile:
+            # Return existing profile instead of creating duplicate
+            logger.info(f"Attendee profile already exists for email: {profile_data.user_email}")
+            return {
+                "success": True,
+                "data": {
+                    "id": str(existing_profile.id),
+                    "user_email": existing_profile.user_email,
+                    "first_name": existing_profile.first_name,
+                    "last_name": existing_profile.last_name,
+                }
+            }
+
+        # Create new profile with proper field handling
+        profile_dict = profile_data.model_dump(exclude_unset=True)
+
+        # Ensure array fields are properly formatted (None or list)
+        if 'research_areas' in profile_dict and profile_dict['research_areas'] is None:
+            profile_dict['research_areas'] = []
+        if 'expertise' in profile_dict and profile_dict['expertise'] is None:
+            profile_dict['expertise'] = []
+
+        profile = AttendeeProfile(**profile_dict)
+        db.add(profile)
         db.commit()
         db.refresh(profile)
+
         logger.info(f"Attendee profile created: {profile.id}")
 
         return {
@@ -344,7 +352,7 @@ async def create_attendee_profile(
         }
     except Exception as e:
         db.rollback()
-        logger.error(f"Error creating attendee profile: {str(e)}")
+        logger.error(f"Error creating attendee profile: {str(e)}", exc_info=True)
         return {
             "success": False,
             "error": f"Failed to create profile: {str(e)}"
