@@ -26,6 +26,8 @@
   <script src="/js/analytics.js?v=2.0"></script>
   <!-- Google reCAPTCHA Enterprise -->
   <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfnNQAsAAAAALsKryyU06I6fPvdQ_-7YgHAvYeA" async defer></script>
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     body {
       background: var(--light-gray);
@@ -1112,18 +1114,51 @@
           <label><span data-i18n="confRegPaymentMethod">Payment Method</span> <span class="required">*</span></label>
           <select id="paymentMethod" required onchange="togglePaymentInstructions()">
             <option value="" data-i18n="confRegSelectPayment">Select payment method...</option>
-            <option value="zeffy" data-i18n="confRegOnlinePayment">Online Payment (Credit/Debit Card via Zeffy)</option>
+            <option value="stripe" data-i18n="confRegOnlinePayment">Online Payment (Credit/Debit Card via Stripe)</option>
             <option value="bank_transfer" data-i18n="confRegBankTransfer">Bank Transfer</option>
           </select>
         </div>
 
-        <!-- Zeffy Payment Info -->
-        <div id="zeffyInfo" style="display: none; background: #f0f9ff; border: 2px solid #3b82f6; padding: 1.5rem; border-radius: 4px; margin-top: 1rem;">
-          <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;" data-i18n="confRegZeffyTitle">💳 Online Payment via Zeffy</h4>
-          <p style="margin-bottom: 0.5rem;"><strong data-i18n="confRegZeffyDesc1">ISRS uses Zeffy, a 100% free payment platform for nonprofits.</strong></p>
-          <p style="margin-bottom: 0.5rem;" data-i18n="confRegZeffyDesc2">When you proceed to payment, you'll be redirected to Zeffy's secure checkout page.</p>
-          <p style="margin-bottom: 0.5rem; color: #1e40af;"><strong data-i18n="confRegZeffyImportant">Important:</strong> <span data-i18n="confRegZeffyTip">Zeffy may ask if you'd like to add an optional tip to help keep their platform free for nonprofits like ISRS. <strong>This tip is completely optional</strong> and goes to Zeffy, not ISRS. You can choose "$0" or any amount you wish.</span></p>
-          <p style="margin-bottom: 0;"><em data-i18n="confRegZeffyFee">Your conference registration fee goes 100% to ISRS to support the conference and our mission.</em></p>
+        <!-- Stripe Payment Info -->
+        <div id="stripeInfo" style="display: none; background: #f0f9ff; border: 2px solid #3b82f6; padding: 1.5rem; border-radius: 4px; margin-top: 1rem;">
+          <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;" data-i18n="confRegStripeTitle">💳 Secure Online Payment via Stripe</h4>
+          <p style="margin-bottom: 1rem;" data-i18n="confRegStripeDesc">Complete your payment securely using credit or debit card. Your payment information is processed directly by Stripe and never stored on our servers.</p>
+
+          <!-- Fee Coverage Option -->
+          <div style="background: #fff; border: 1px solid #3b82f6; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+            <input type="checkbox" id="coverFees" style="margin-right: 0.5rem;" onchange="updateTotalWithFees()">
+            <label for="coverFees" style="font-size: 0.95rem;">
+              <strong>Help us cover payment processing fees</strong> (adds approximately 3%)
+            </label>
+            <p style="margin: 0.5rem 0 0 1.75rem; font-size: 0.875rem; color: #64748b;">
+              Payment processing fees are <span id="feeAmount">$0.00</span>. By covering these fees, 100% of your registration fee supports ISRS.
+            </p>
+          </div>
+
+          <!-- Updated Total Display -->
+          <div style="background: #fff; border: 1px solid #3b82f6; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-weight: 600;">Registration Fee:</span>
+              <span id="baseAmountDisplay">$0.00</span>
+            </div>
+            <div id="feeLineItem" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; color: #64748b; font-size: 0.95rem;">
+              <span>Processing Fees:</span>
+              <span id="feeAmountDisplay">$0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 2px solid #e5e7eb;">
+              <span style="font-weight: 700; font-size: 1.1rem;">Total:</span>
+              <span id="finalTotalDisplay" style="font-weight: 700; font-size: 1.1rem;">$0.00</span>
+            </div>
+          </div>
+
+          <!-- Stripe Payment Element Container -->
+          <div id="payment-element" style="margin-bottom: 1rem;">
+            <!-- Stripe.js will insert the Payment Element here -->
+          </div>
+
+          <p style="margin: 0; font-size: 0.875rem; color: #64748b;">
+            <em>🔒 Powered by Stripe - Your payment information is encrypted and secure</em>
+          </p>
         </div>
 
         <!-- Bank Transfer Info -->
@@ -1199,6 +1234,7 @@
     let profileId = null;
 
     let registrationId = null;
+    let registrationFee = 0;
 
     // Fee structure (Early Bird Period)
     const FEES = {
@@ -1790,6 +1826,8 @@
 
       if (registrationType) {
         const fee = FEES[registrationType];
+        registrationFee = fee; // Store for Stripe payment
+
         document.getElementById('feeAmount').textContent = `$${fee.toFixed(2)}`;
         document.getElementById('totalAmount').textContent = `$${fee.toFixed(2)}`;
 
@@ -1798,6 +1836,11 @@
           student: 'Student Registration'
         };
         document.getElementById('feeType').textContent = typeLabels[registrationType];
+
+        // Update Stripe payment display if visible
+        if (document.getElementById('stripeInfo').style.display !== 'none') {
+          updateTotalWithFees();
+        }
       }
     }
 
@@ -1878,10 +1921,70 @@
       updateFee();
     }
 
+    // Stripe variables
+    let stripe = null;
+    let elements = null;
+    let paymentElement = null;
+
     function togglePaymentInstructions() {
       const method = document.getElementById('paymentMethod').value;
-      document.getElementById('zeffyInfo').style.display = method === 'zeffy' ? 'block' : 'none';
+      document.getElementById('stripeInfo').style.display = method === 'stripe' ? 'block' : 'none';
       document.getElementById('bankTransferInfo').style.display = method === 'bank_transfer' ? 'block' : 'none';
+
+      // Initialize Stripe when selected
+      if (method === 'stripe' && !stripe) {
+        initializeStripe();
+      }
+    }
+
+    async function initializeStripe() {
+      try {
+        // Fetch Stripe config from backend
+        const configResponse = await fetch(`${API_BASE_URL}/api/stripe/config`);
+        const config = await configResponse.json();
+
+        if (!config.publishable_key) {
+          throw new Error('Stripe not configured');
+        }
+
+        // Initialize Stripe
+        stripe = Stripe(config.publishable_key);
+
+        // Update fee display
+        updateTotalWithFees();
+
+        console.log('Stripe initialized successfully');
+      } catch (error) {
+        console.error('Error initializing Stripe:', error);
+        showError('Payment system not available. Please try bank transfer or contact us.');
+      }
+    }
+
+    function updateTotalWithFees() {
+      const coverFees = document.getElementById('coverFees')?.checked || false;
+      const baseAmount = registrationFee || 0;
+
+      // Calculate fee if covering: (amount + $0.30) / (1 - 0.029)
+      let feeAmount = 0;
+      let totalAmount = baseAmount;
+
+      if (coverFees && baseAmount > 0) {
+        const totalWithFixedFee = baseAmount + 0.30;
+        totalAmount = totalWithFixedFee / 0.971;
+        feeAmount = totalAmount - baseAmount;
+      }
+
+      // Update displays
+      document.getElementById('baseAmountDisplay').textContent = `$${baseAmount.toFixed(2)}`;
+      document.getElementById('feeAmount').textContent = `$${feeAmount.toFixed(2)}`;
+      document.getElementById('feeAmountDisplay').textContent = `$${feeAmount.toFixed(2)}`;
+      document.getElementById('finalTotalDisplay').textContent = `$${totalAmount.toFixed(2)}`;
+
+      // Show/hide fee line item
+      const feeLineItem = document.getElementById('feeLineItem');
+      if (feeLineItem) {
+        feeLineItem.style.display = coverFees ? 'flex' : 'none';
+      }
     }
 
     // Toggle state/province field based on country
@@ -2004,7 +2107,7 @@
 
         // Step 2: Create registration
         const registrationType = document.getElementById('registrationType')?.value || '';
-        const registrationFee = FEES[registrationType] || 0;
+        registrationFee = FEES[registrationType] || 0;
 
         // Calculate guest fee
         const guestCount = parseInt(document.getElementById('guestCount')?.value) || 0;
@@ -2113,30 +2216,69 @@
         }
 
         // Step 3: Handle payment based on method
-        if (paymentMethod === 'zeffy') {
-          // Create Zeffy payment checkout
-          const paymentResponse = await fetch(`${API_BASE_URL}/api/conference/payment/create`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              registration_id: registrationId,
-              amount: registrationFee
-            })
-          });
+        if (paymentMethod === 'stripe') {
+          // Process Stripe payment
+          const coverFees = document.getElementById('coverFees')?.checked || false;
 
-          const paymentResult = await paymentResponse.json();
+          try {
+            // Create Payment Intent
+            const paymentIntentResponse = await fetch(`${API_BASE_URL}/api/stripe/create-payment-intent`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount: registrationFee,
+                currency: 'usd',
+                customer_email: document.getElementById('email').value,
+                customer_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+                registration_type: document.getElementById('registrationType').selectedOptions[0].text,
+                cover_fees: coverFees,
+                metadata: {
+                  registration_id: registrationId,
+                  attendance_type: document.getElementById('attendanceType').value
+                }
+              })
+            });
 
-          if (!paymentResult.success) {
-            throw new Error(paymentResult.error || 'Failed to create payment');
+            const paymentIntent = await paymentIntentResponse.json();
+
+            if (!paymentIntent.client_secret) {
+              throw new Error('Failed to create payment');
+            }
+
+            // Create Stripe Elements with Payment Intent
+            const appearance = {
+              theme: 'stripe',
+              variables: {
+                colorPrimary: '#1e40af',
+                colorBackground: '#ffffff',
+                colorText: '#1f2937',
+                colorDanger: '#dc2626',
+                fontFamily: 'PT Serif, Georgia, serif',
+                borderRadius: '4px'
+              }
+            };
+
+            elements = stripe.elements({
+              clientSecret: paymentIntent.client_secret,
+              appearance: appearance
+            });
+
+            paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+
+            // Update the Complete Registration button to process payment
+            hideLoading();
+            showSuccess('Payment form loaded. Please enter your payment details below.');
+
+            // Change button to "Pay Now"
+            const submitButton = document.querySelector('[onclick="submitRegistration()"]');
+            submitButton.textContent = 'Pay Now';
+            submitButton.onclick = async () => await processStripePayment(registrationId, paymentIntent.client_secret);
+
+          } catch (error) {
+            console.error('Stripe payment setup error:', error);
+            throw new Error('Failed to initialize payment. Please try again.');
           }
-
-          // Redirect to Zeffy payment
-          hideLoading();
-          showSuccess('Registration created successfully! Redirecting to payment...');
-
-          setTimeout(() => {
-            window.location.href = `/conference/confirmation.html?registration=${registrationId}&checkout=${encodeURIComponent(paymentResult.data.checkout_url)}&method=zeffy`;
-          }, 2000);
         } else if (paymentMethod === 'bank_transfer') {
           // Bank transfer - just go to confirmation with instructions
           hideLoading();
@@ -2151,6 +2293,72 @@
         hideLoading();
         console.error('Registration error:', error);
         showError(error.message || 'Registration failed. Please try again.');
+      }
+    }
+
+    async function processStripePayment(registrationId, clientSecret) {
+      try {
+        showLoading();
+
+        // Confirm the payment
+        const { error, paymentIntent } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: `${window.location.origin}/conference/confirmation.html?registration=${registrationId}&method=stripe`,
+          },
+          redirect: 'if_required'
+        });
+
+        if (error) {
+          // Payment failed
+          hideLoading();
+          showError(error.message || 'Payment failed. Please try again.');
+          console.error('Stripe payment error:', error);
+          return;
+        }
+
+        // Payment succeeded
+        if (paymentIntent.status === 'succeeded') {
+          // Confirm payment with backend
+          const confirmResponse = await fetch(`${API_BASE_URL}/api/stripe/confirm-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              payment_intent_id: paymentIntent.id,
+              registration_id: registrationId
+            })
+          });
+
+          const confirmResult = await confirmResponse.json();
+
+          if (confirmResult.success) {
+            // Track successful payment
+            if (window.ISRSAnalytics) {
+              window.ISRSAnalytics.trackEvent('payment_completed', {
+                registration_id: registrationId,
+                amount: paymentIntent.amount / 100,
+                payment_method: 'stripe'
+              });
+            }
+
+            // Redirect to confirmation page
+            hideLoading();
+            showSuccess('Payment successful! Redirecting to confirmation...');
+
+            setTimeout(() => {
+              window.location.href = `/conference/confirmation.html?registration=${registrationId}&method=stripe&payment_intent=${paymentIntent.id}`;
+            }, 2000);
+          } else {
+            throw new Error('Payment confirmation failed');
+          }
+        } else {
+          throw new Error(`Unexpected payment status: ${paymentIntent.status}`);
+        }
+
+      } catch (error) {
+        hideLoading();
+        console.error('Payment processing error:', error);
+        showError(error.message || 'Payment processing failed. Please try again.');
       }
     }
 
