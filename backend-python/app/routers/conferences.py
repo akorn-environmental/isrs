@@ -30,6 +30,9 @@ from app.schemas.conference import (
     ConferenceAbstractCreate,
     ConferenceAbstractUpdate,
     ConferenceAbstractResponse,
+    AttendeeProfileCreate,
+    AttendeeProfileUpdate,
+    AttendeeProfileResponse,
 )
 from app.schemas.abstract_review import (
     AbstractReviewerCreate,
@@ -287,6 +290,65 @@ async def delete_conference(
     db.commit()
 
     logger.info(f"Conference deleted: {conference.name} {conference.year}")
+
+
+# ============================================
+# ATTENDEE PROFILE ENDPOINTS
+# ============================================
+
+@router.post("/profile", status_code=status.HTTP_201_CREATED)
+async def create_attendee_profile(
+    profile_data: AttendeeProfileCreate,
+    db: Session = Depends(get_db),
+):
+    """
+    Create a new attendee profile for conference registration.
+    Public endpoint - no authentication required for initial registration.
+    Returns: {"success": bool, "data": {...}} or {"success": false, "error": "..."}
+    """
+    # Check if profile with this email already exists
+    existing_profile = db.query(AttendeeProfile).filter(
+        AttendeeProfile.user_email == profile_data.user_email
+    ).first()
+
+    if existing_profile:
+        # Return existing profile instead of creating duplicate
+        logger.info(f"Attendee profile already exists for email: {profile_data.user_email}")
+        return {
+            "success": True,
+            "data": {
+                "id": str(existing_profile.id),
+                "user_email": existing_profile.user_email,
+                "first_name": existing_profile.first_name,
+                "last_name": existing_profile.last_name,
+            }
+        }
+
+    # Create new profile
+    profile = AttendeeProfile(**profile_data.model_dump())
+    db.add(profile)
+
+    try:
+        db.commit()
+        db.refresh(profile)
+        logger.info(f"Attendee profile created: {profile.id}")
+
+        return {
+            "success": True,
+            "data": {
+                "id": str(profile.id),
+                "user_email": profile.user_email,
+                "first_name": profile.first_name,
+                "last_name": profile.last_name,
+            }
+        }
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error creating attendee profile: {str(e)}")
+        return {
+            "success": False,
+            "error": f"Failed to create profile: {str(e)}"
+        }
 
 
 # ============================================

@@ -193,3 +193,63 @@ class ConferenceStatistics(BaseModel):
     average_attendance: float
     upcoming_conferences: int
     recent_conferences: int
+
+
+# AttendeeProfile Schemas
+class AttendeeProfileBase(BaseModel):
+    """Base schema for AttendeeProfile."""
+    user_email: str = Field(..., min_length=1, max_length=255)
+    contact_email: Optional[str] = Field(None, max_length=255)
+    first_name: str = Field(..., min_length=1, max_length=255)
+    last_name: str = Field(..., min_length=1, max_length=255)
+    organization_name: Optional[str] = Field(None, max_length=255)
+    position: Optional[str] = Field(None, max_length=255)
+    department: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=50)
+    address: Optional[str] = Field(None, max_length=500)
+    city: Optional[str] = Field(None, max_length=100)
+    state: Optional[str] = Field(None, max_length=100)
+    zip_code: Optional[str] = Field(None, max_length=20)
+    country: Optional[str] = Field(None, max_length=100)
+    bio: Optional[str] = None
+    expertise: Optional[List[str]] = None
+    website: Optional[str] = Field(None, max_length=500)
+    linkedin_url: Optional[str] = Field(None, max_length=500)
+    cv_url: Optional[str] = Field(None, max_length=500)
+    research_areas: Optional[List[str]] = None
+
+
+class AttendeeProfileCreate(AttendeeProfileBase):
+    """Schema for creating an AttendeeProfile."""
+    pass
+
+
+class AttendeeProfileUpdate(BaseModel):
+    """Schema for updating an AttendeeProfile."""
+    contact_email: Optional[str] = Field(None, max_length=255)
+    first_name: Optional[str] = Field(None, min_length=1, max_length=255)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=255)
+    organization_name: Optional[str] = Field(None, max_length=255)
+    position: Optional[str] = Field(None, max_length=255)
+    department: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=50)
+    address: Optional[str] = Field(None, max_length=500)
+    city: Optional[str] = Field(None, max_length=100)
+    state: Optional[str] = Field(None, max_length=100)
+    zip_code: Optional[str] = Field(None, max_length=20)
+    country: Optional[str] = Field(None, max_length=100)
+    bio: Optional[str] = None
+    expertise: Optional[List[str]] = None
+    website: Optional[str] = Field(None, max_length=500)
+    linkedin_url: Optional[str] = Field(None, max_length=500)
+    cv_url: Optional[str] = Field(None, max_length=500)
+    research_areas: Optional[List[str]] = None
+
+
+class AttendeeProfileResponse(AttendeeProfileBase):
+    """Schema for AttendeeProfile responses."""
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
