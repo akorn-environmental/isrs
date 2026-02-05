@@ -44,6 +44,9 @@ WORKDIR /app
 # Copy application code (changes frequently - last layer)
 COPY app/ ./app/
 
+# Copy frontend static files (required for serving the SPA)
+COPY ../frontend/public ./frontend/public
+
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser && \
     chown -R appuser:appuser /app
