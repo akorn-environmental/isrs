@@ -104,9 +104,10 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing, parsed_emails, test_emails
+from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing, parsed_emails, test_emails, stripe_payment
 
 app.include_router(email_parsing.router, prefix="/api/email-parsing", tags=["Email Parsing"])  # Public webhook - must be before auth
+app.include_router(stripe_payment.router, prefix="/api/stripe", tags=["Stripe Payments"])  # Public payment endpoints
 app.include_router(test_emails.router, prefix="/api/test", tags=["Testing"])  # Public test endpoint
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])

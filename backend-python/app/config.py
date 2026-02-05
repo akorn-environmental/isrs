@@ -54,6 +54,11 @@ class Settings(BaseSettings):
     APOLLO_API_KEY: str = Field(default=None, env="APOLLO_API_KEY")
     ANTHROPIC_API_KEY: str = Field(default=None, env="ANTHROPIC_API_KEY")
 
+    # Stripe Payment Processing
+    STRIPE_SECRET_KEY: str = Field(default=None, env="STRIPE_SECRET_KEY")
+    STRIPE_PUBLISHABLE_KEY: str = Field(default=None, env="STRIPE_PUBLISHABLE_KEY")
+    STRIPE_WEBHOOK_SECRET: str = Field(default=None, env="STRIPE_WEBHOOK_SECRET")
+
     # AWS Configuration
     AWS_REGION: str = Field(default="us-east-1", env="AWS_REGION")
     AWS_ACCESS_KEY_ID: str = Field(default=None, env="AWS_ACCESS_KEY_ID")

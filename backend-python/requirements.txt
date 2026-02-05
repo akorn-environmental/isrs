@@ -38,6 +38,7 @@ Pillow>=11.0.0
 # HTTP Clients & API Integration
 httpx==0.26.0
 anthropic==0.40.0  # Updated for AI Assistant integration
+stripe==11.2.0  # Payment processing for conference registration and memberships
 
 # Utilities
 python-dotenv==1.0.0
