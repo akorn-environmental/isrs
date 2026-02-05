@@ -16,7 +16,7 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy requirements first (this layer caches if requirements.txt unchanged)
-COPY requirements.txt .
+COPY backend-python/requirements.txt .
 
 # Install dependencies (cached layer)
 RUN pip install --no-cache-dir --upgrade pip && \
@@ -42,10 +42,10 @@ ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /app
 
 # Copy application code (changes frequently - last layer)
-COPY app/ ./app/
+COPY backend-python/app/ ./app/
 
 # Copy frontend static files (required for serving the SPA)
-COPY ../frontend/public ./frontend/public
+COPY frontend/public/ ./frontend/public/
 
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser && \
