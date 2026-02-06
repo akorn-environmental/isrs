@@ -1244,13 +1244,13 @@
    =========================================== */
 .admin-feedback-btn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 50%;
+  right: 0;
   z-index: 10001;
   background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-accent) 100%);
   color: white;
   border: none;
-  border-radius: 24px;
+  border-radius: 24px 0 0 24px;
   padding: var(--admin-space-md) var(--admin-space-xl);
   font-family: var(--admin-font-body);
   font-size: var(--admin-text-sm);
@@ -1261,6 +1261,8 @@
   display: flex;
   align-items: center;
   gap: var(--admin-space-md);
+  transform: rotate(-90deg) translateX(50%);
+  transform-origin: right center;
 }
 
 .admin-feedback-btn:hover {
