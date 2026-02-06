@@ -147,14 +147,16 @@
       loadVotes();
     });
 
-    async function loadVotes() {      try {
+    async function loadVotes() {
+      try {
         const response = await authFetch(`${API_BASE_URL}/api/votes/`);
         const data = await response.json();
-        if (response.ok && data.success) {
-          allVotes = data.data;
+        if (response.ok) {
+          // Backend returns {votes: [...], total, page, page_size, total_pages}
+          allVotes = data.votes || data.data || [];
           displayVotes(allVotes);
         } else {
-          document.getElementById('tableContent').innerHTML = `<div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">Failed to load votes: ${data.error || 'Unknown error'}</div>`;
+          document.getElementById('tableContent').innerHTML = `<div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">Failed to load votes: ${data.error || data.detail || 'Unknown error'}</div>`;
         }
       } catch (error) {
         document.getElementById('tableContent').innerHTML = `<div class="admin-alert admin-alert-danger" style="margin: var(--admin-space-lg);">Error: ${error.message}</div>`;
