@@ -105,7 +105,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                 <a href="https://www.shellfish-society.org" style="display: inline-block; text-decoration: none;">
                                     <img src="https://www.shellfish-society.org/images/isrs-logo-wide.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 5px;">
                                 </a>
-                                <p style="color: {BRAND_COLORS['primary_green']}; font-size: 14px; margin: 0; letter-spacing: 0.5px;">International Shellfish Restoration Society (ISRS)</p>
+                                <p style="color: {BRAND_COLORS['primary_green']}; font-size: 14px; margin: 0; letter-spacing: 0.5px;">The International Shellfish Restoration Society (ISRS)</p>
                             </td>
                         </tr>
 
@@ -122,7 +122,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
                                     <tr>
                                         <td style="padding: 0 10px;">
-                                            <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">Website</a>
+                                            <a href="https://www.shellfish-society.org" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: none; font-size: 13px;">ISRS</a>
                                         </td>
                                         <td style="color: {BRAND_COLORS['border']};">|</td>
                                         <td style="padding: 0 10px;">
@@ -134,7 +134,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                     © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society<br>
                                     8070 Georgia Avenue, Silver Spring, MD 20910<br>
                                     Tax ID (EIN): 59-2829151<br>
-                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['text_muted']}; text-decoration: none; font-size: 11px;">Site & platform by akorn environmental</a>
+                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: underline; font-size: 11px;">Site & platform by akorn environmental</a>
                                 </p>
                             </td>
                         </tr>

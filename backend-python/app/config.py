@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     SMTP_USER: str = Field(..., env="SMTP_USER")
     SMTP_PASSWORD: str = Field(..., env="SMTP_PASSWORD")
     SMTP_FROM_EMAIL: str = Field(..., env="SMTP_FROM_EMAIL")
-    SMTP_FROM_NAME: str = "ISRS Platform"
+    SMTP_FROM_NAME: str = Field(default="International Shellfish Restoration Society", env="SMTP_FROM_NAME")
 
     # Magic Links
     MAGIC_LINK_EXPIRY_MINUTES: int = 15
