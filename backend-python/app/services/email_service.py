@@ -84,10 +84,10 @@ def get_base_template(content: str, preheader: str = "") -> str:
             }}
         </style>
     </head>
-    <body style="margin: 0; padding: 0; background-color: #f0f4f8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+    <body style="margin: 0; padding: 0; background-color: #f0f4f8; font-family: Georgia, 'Times New Roman', serif; font-size: 16px; line-height: 1.6; color: #333333;">
 
         <!-- Preheader text (hidden preview) -->
-        <div style="display: none; font-size: 1px; color: #f0f4f8; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+        <div style="display: none; font-size: 1px; color: #f0f4f8; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;" role="presentation" aria-hidden="true">
             {preheader}
         </div>
 
@@ -130,11 +130,19 @@ def get_base_template(content: str, preheader: str = "") -> str:
                                         </td>
                                     </tr>
                                 </table>
-                                <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 0 0; line-height: 1.6;">
+                                <p style="color: {BRAND_COLORS['text_muted']}; font-size: 12px; margin: 15px 0 5px 0; line-height: 1.6; font-family: Georgia, serif;">
                                     © {__import__('datetime').datetime.now().year} International Shellfish Restoration Society<br>
                                     8070 Georgia Avenue, Silver Spring, MD 20910<br>
-                                    Tax ID (EIN): 59-2829151<br>
-                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: underline; font-size: 11px;">Site & platform by akorn environmental</a>
+                                    Tax ID (EIN): 59-2829151
+                                </p>
+                                <p style="color: {BRAND_COLORS['text_muted']}; font-size: 11px; margin: 10px 0 5px 0; line-height: 1.5; font-family: Georgia, serif;">
+                                    You are receiving this email because you are a member or subscriber of ISRS.<br>
+                                    <a href="https://www.shellfish-society.org/privacy" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: underline;">Privacy Policy</a> |
+                                    <a href="https://www.shellfish-society.org/unsubscribe" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: underline;">Unsubscribe</a> |
+                                    <a href="https://www.shellfish-society.org/contact" style="color: {BRAND_COLORS['primary_blue']}; text-decoration: underline;">Contact Us</a>
+                                </p>
+                                <p style="color: {BRAND_COLORS['text_muted']}; font-size: 10px; margin: 5px 0 0 0; font-family: Georgia, serif;">
+                                    <a href="https://akornenvironmental.com/" style="color: {BRAND_COLORS['text_muted']}; text-decoration: underline;">Site & platform by akorn environmental</a>
                                 </p>
                             </td>
                         </tr>
