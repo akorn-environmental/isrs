@@ -244,7 +244,7 @@
     }
 
     async function loadAvailableLeads() {      try {
-        const response = await authFetch(`${API_BASE_URL}/api/funding/available-leads`);
+        const response = await authFetch(`${API_BASE_URL}/api/funding/available-leads/`);
         const data = await response.json();
         if (response.ok && data.success) {
           availableLeads = data.data;
@@ -263,7 +263,7 @@
     }
 
     async function loadFunding() {      try {
-        const response = await authFetch(`${API_BASE_URL}/api/funding`);
+        const response = await authFetch(`${API_BASE_URL}/api/funding/`);
         const data = await response.json();
         if (response.ok && data.success) {
           allProspects = data.data;
@@ -582,7 +582,7 @@
       const isEdit = prospectId !== '';
       const url = isEdit
         ? `${API_BASE_URL}/api/funding/${prospectId}`
-        : `${API_BASE_URL}/api/funding`;
+        : `${API_BASE_URL}/api/funding/`;
       const method = isEdit ? 'PUT' : 'POST';
 
       try {

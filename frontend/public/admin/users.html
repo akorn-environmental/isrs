@@ -160,7 +160,7 @@
 
     async function loadRoles() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/roles`, {
+        const response = await fetch(`${API_BASE_URL}/api/admin/roles/`, {
           headers: getAuthHeaders()
         });
         const data = await response.json();

@@ -148,7 +148,7 @@
     });
 
     async function loadVotes() {      try {
-        const response = await authFetch(`${API_BASE_URL}/api/votes`);
+        const response = await authFetch(`${API_BASE_URL}/api/votes/`);
         const data = await response.json();
         if (response.ok && data.success) {
           allVotes = data.data;
@@ -365,7 +365,7 @@
       const isEdit = voteId !== '';
       const url = isEdit
         ? `${API_BASE_URL}/api/votes/${voteId}`
-        : `${API_BASE_URL}/api/votes`;
+        : `${API_BASE_URL}/api/votes/`;
       const method = isEdit ? 'PUT' : 'POST';
 
       try {
