@@ -619,24 +619,18 @@
     }
 
     async function loadOrganizations() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       try {
-        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations`, {
-          headers: {
-            'Authorization': `Bearer ${sessionToken}`
-          }
-        });
-
+        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations`);
         const data = await response.json();
 
-        if (response.ok && data.success) {
-          allOrganizations = data.data;
+        if (response.ok) {
+          // Backend returns {organizations: [...]} or direct array
+          allOrganizations = data.organizations || data.data || data;
           populateCountryFilter();
           displayOrganizations(allOrganizations);
         } else {
           document.getElementById('tableContent').innerHTML = `
-            <div class="admin-alert admin-alert-danger" style="margin: 1rem;">Failed to load organizations: ${data.error || 'Unknown error'}</div>
+            <div class="admin-alert admin-alert-danger" style="margin: 1rem;">Failed to load organizations: ${data.error || data.detail || 'Unknown error'}</div>
           `;
         }
       } catch (error) {
