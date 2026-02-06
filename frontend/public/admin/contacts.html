@@ -221,6 +221,9 @@
   <!-- Claude AI Dropdown -->
   <link rel="stylesheet" href="/admin/claude-ai-dropdown.css">
 
+  <!-- API Configuration -->
+  <script src="/js/api-config.js"></script>
+
   <!-- Error Reporter - Logs frontend errors to backend/Render -->
   <script src="/js/errorReporter.js"></script>
 </head>
@@ -617,7 +620,7 @@
   </div>
 
   <script>
-    const API_BASE_URL = ''  // Use same-origin (relative URLs) in production;
+    // API_BASE_URL is now loaded from /js/api-config.js
     let allContacts = [];
     let filteredContacts = [];
     let selectedContacts = new Set();
