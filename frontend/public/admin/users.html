@@ -142,9 +142,7 @@
     let totalUsers = 0;
     let searchTimeout = null;
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', () => {      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
@@ -153,9 +151,7 @@
       loadUsers();
     });
 
-    function getAuthHeaders() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      return {
+    function getAuthHeaders() {      return {
         'Authorization': `Bearer ${sessionToken}`,
         'Content-Type': 'application/json'
       };

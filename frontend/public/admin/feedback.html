@@ -447,16 +447,12 @@
       checkAuth();
     });
 
-    function checkAuth() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    function checkAuth() {      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
 
-      fetch(`${API_BASE_URL}/api/auth/validate-session`, {
-        headers: { 'Authorization': `Bearer ${sessionToken}` }
-      })
+      authFetch(`${API_BASE_URL}/api/auth/validate-session`)
       .then(res => res.json())
       .then(data => {
         if (!data.success) {
@@ -472,9 +468,7 @@
       });
     }
 
-    async function loadFeedback() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const filterType = document.getElementById('filterType').value;
+    async function loadFeedback() {      const filterType = document.getElementById('filterType').value;
       const filterStatus = document.getElementById('filterStatus').value;
       const filterSource = document.getElementById('filterSource').value;
 
@@ -652,17 +646,8 @@
     }
 
     async function updateStatus(id, newStatus) {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       try {
-        const response = await fetch(`${API_BASE_URL}/api/feedback/${id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify({ status: newStatus })
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/feedback/${id}`, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) });
 
         const data = await response.json();
 

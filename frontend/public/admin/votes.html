@@ -139,21 +139,15 @@
     let sortField = 'vote_date';
     let sortDirection = 'desc';
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', () => {      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
       loadVotes();
     });
 
-    async function loadVotes() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/votes`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+    async function loadVotes() {      try {
+        const response = await authFetch(`${API_BASE_URL}/api/votes`);
         const data = await response.json();
         if (response.ok && data.success) {
           allVotes = data.data;
@@ -352,9 +346,7 @@
     }
 
     async function handleSubmit(event) {
-      event.preventDefault();
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const submitBtn = document.getElementById('submitBtn');
+      event.preventDefault();      const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Saving...';
 
@@ -403,14 +395,8 @@
     }
 
     async function deleteVote(id) {
-      if (!confirm('Are you sure you want to delete this vote?')) return;
-
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/votes/${id}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+      if (!confirm('Are you sure you want to delete this vote?')) return;      try {
+        const response = await authFetch(`${API_BASE_URL}/api/votes/${id}`, { method: 'DELETE' });
 
         const data = await response.json();
 

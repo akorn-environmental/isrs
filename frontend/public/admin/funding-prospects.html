@@ -496,9 +496,7 @@
   </div>
 
   <script>
-    // API_BASE_URL is now loaded from /js/api-config.js
-    const sessionToken = localStorage.getItem('isrs_session_token');
-    
+    // API_BASE_URL is now loaded from /js/api-config.js    
     let allProspects = [];
     let filteredProspects = [];
     let paginatedProspects = [];
@@ -519,9 +517,7 @@
 
     async function loadUserRole() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/validate-session`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/auth/validate-session`);
         const data = await response.json();
         if (data.success) {
           document.getElementById('userRole').textContent = `Role: ${(data.role || 'viewer').toUpperCase()}`;
@@ -533,9 +529,7 @@
 
     async function loadProspects() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/funding-prospects`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/funding-prospects`);
         const data = await response.json();
         if (response.ok && data.success) {
           allProspects = data.data;
@@ -717,14 +711,7 @@
       };
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/funding-prospects`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify(prospectData)
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/funding-prospects`, { method: 'POST', body: JSON.stringify(prospectData) });
 
         const data = await response.json();
 
@@ -985,9 +972,7 @@
 
     async function editProspect(id) {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/funding-prospects/${id}`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/funding-prospects/${id}`);
         const data = await response.json();
         if (data.success) {
           const prospect = data.data;
@@ -1128,10 +1113,7 @@
 
       try {
         const deletePromises = Array.from(selectedProspects).map(id =>
-          fetch(`${API_BASE_URL}/api/funding-prospects/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${sessionToken}` }
-          })
+          authFetch(`${API_BASE_URL}/api/funding-prospects/${id}`, { method: 'DELETE' })
         );
 
         await Promise.all(deletePromises);

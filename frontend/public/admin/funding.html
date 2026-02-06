@@ -221,9 +221,7 @@
     let sortField = 'date_contacted';
     let sortDirection = 'desc';
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', () => {      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
@@ -233,12 +231,8 @@
       setupICSRToggle();
     });
 
-    async function loadOrganizations() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+    async function loadOrganizations() {      try {
+        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations`);
         const data = await response.json();
         if (response.ok && data.success) {
           allOrganizations = data.data;
@@ -248,12 +242,8 @@
       }
     }
 
-    async function loadAvailableLeads() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/funding/available-leads`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+    async function loadAvailableLeads() {      try {
+        const response = await authFetch(`${API_BASE_URL}/api/funding/available-leads`);
         const data = await response.json();
         if (response.ok && data.success) {
           availableLeads = data.data;
@@ -271,12 +261,8 @@
       });
     }
 
-    async function loadFunding() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/funding`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+    async function loadFunding() {      try {
+        const response = await authFetch(`${API_BASE_URL}/api/funding`);
         const data = await response.json();
         if (response.ok && data.success) {
           allProspects = data.data;
@@ -564,9 +550,7 @@
     }
 
     async function handleSubmit(event) {
-      event.preventDefault();
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const submitBtn = document.getElementById('submitBtn');
+      event.preventDefault();      const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Saving...';
 
@@ -618,14 +602,7 @@
           // If leads were selected, assign them
           if (selectedLeads.length > 0) {
             try {
-              const leadsResponse = await fetch(`${API_BASE_URL}/api/funding/${savedProspectId}/assign-leads`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${sessionToken}`
-                },
-                body: JSON.stringify({ lead_contact_ids: selectedLeads })
-              });
+              const leadsResponse = await authFetch(`${API_BASE_URL}/api/funding/${savedProspectId}/assign-leads`, { method: 'POST', body: JSON.stringify({ lead_contact_ids: selectedLeads }) });
 
               if (!leadsResponse.ok) {
                 showMessage('Prospect saved, but failed to assign leads', 'error');
@@ -651,14 +628,8 @@
     }
 
     async function deleteProspect(id) {
-      if (!confirm('Are you sure you want to delete this funding prospect?')) return;
-
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/funding/${id}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+      if (!confirm('Are you sure you want to delete this funding prospect?')) return;      try {
+        const response = await authFetch(`${API_BASE_URL}/api/funding/${id}`, { method: 'DELETE' });
 
         const data = await response.json();
 
@@ -683,14 +654,8 @@
       if (!confirm('Send email notification to all assigned leads?')) return;
 
       notifyBtn.disabled = true;
-      notifyBtn.textContent = 'Sending...';
-
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/funding/${currentProspectId}/notify-leads`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+      notifyBtn.textContent = 'Sending...';      try {
+        const response = await authFetch(`${API_BASE_URL}/api/funding/${currentProspectId}/notify-leads`, { method: 'POST' });
 
         const data = await response.json();
 
@@ -837,9 +802,7 @@
         // Show saving state
         cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
 
-        try {
-          const sessionToken = localStorage.getItem('isrs_session_token');
-          const response = await fetch(`${API_BASE_URL}/api/funding/${prospect.id}`, {
+        try {          const response = await fetch(`${API_BASE_URL}/api/funding/${prospect.id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${sessionToken}`,

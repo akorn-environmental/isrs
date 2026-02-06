@@ -872,8 +872,6 @@
       const uploadBtn = document.getElementById('uploadFromUrlBtn');
       const uploadText = document.getElementById('urlUploadText');
       const uploadSpinner = document.getElementById('urlUploadSpinner');
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       if (!sessionToken) {
         alert('Please log in to upload photos');
         return;
@@ -892,14 +890,7 @@
       uploadSpinner.style.display = 'inline';
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/photos/upload-url`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify({ urls })
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/photos/upload-url`, { method: 'POST', body: JSON.stringify({ urls }) });
 
         const data = await response.json();
 
@@ -926,8 +917,6 @@
     // Load photos from API
     async function loadPhotos() {
       const container = document.getElementById('photosContainer');
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       if (!sessionToken) {
         container.innerHTML = `
           <div class="photos-empty">
@@ -944,11 +933,7 @@
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/photos`, {
-          headers: {
-            'Authorization': `Bearer ${sessionToken}`
-          }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/photos`);
 
         const data = await response.json();
 
@@ -1004,19 +989,13 @@
     // Load pending photos
     async function loadPendingPhotos() {
       const container = document.getElementById('pendingContainer');
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       if (!sessionToken) {
         container.innerHTML = '<p>Please log in to view pending photos.</p>';
         return;
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/photos/pending`, {
-          headers: {
-            'Authorization': `Bearer ${sessionToken}`
-          }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/photos/pending`);
 
         const data = await response.json();
 
@@ -1175,9 +1154,7 @@
     }
 
     // Approve photo
-    async function approvePhoto(photoId, makePublic = true) {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    async function approvePhoto(photoId, makePublic = true) {      if (!sessionToken) {
         alert('Please log in');
         return;
       }
@@ -1213,9 +1190,7 @@
     }
 
     // Reject photo
-    async function rejectPhoto(photoId) {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    async function rejectPhoto(photoId) {      if (!sessionToken) {
         alert('Please log in');
         return;
       }
@@ -1437,10 +1412,7 @@
 
     // Toggle visibility
     document.getElementById('toggleVisibilityBtn').addEventListener('click', async () => {
-      if (!currentPhoto) return;
-
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) return;
+      if (!currentPhoto) return;      if (!sessionToken) return;
 
       try {
         const response = await fetch(`${API_BASE_URL}/api/photos/${currentPhoto.id}`, {
@@ -1475,18 +1447,10 @@
     async function deletePhoto(photoId) {
       if (!confirm('Are you sure you want to delete this photo? This cannot be undone.')) {
         return;
-      }
-
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) return;
+      }      if (!sessionToken) return;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${sessionToken}`
-          }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/photos/${photoId}`, { method: 'DELETE' });
 
         const data = await response.json();
         if (data.success) {
@@ -1550,9 +1514,7 @@
         initialX: currentPhoto.focal_point_x || 50,
         initialY: currentPhoto.focal_point_y || 50,
         altText: currentPhoto.caption || currentPhoto.alt_text || '',
-        onSave: async (x, y) => {
-          const sessionToken = localStorage.getItem('isrs_session_token');
-          if (!sessionToken) {
+        onSave: async (x, y) => {          if (!sessionToken) {
             alert('Not authenticated. Please log in again.');
             return;
           }
@@ -1601,16 +1563,10 @@
     let allZones = [];
 
     // Load zones from API (Node.js backend uses /api/asset-zones)
-    async function loadZones() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) return;
+    async function loadZones() {      if (!sessionToken) return;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/asset-zones/admin/all`, {
-          headers: {
-            'Authorization': `Bearer ${sessionToken}`
-          }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/asset-zones/admin/all`);
 
         if (response.ok) {
           const data = await response.json();
@@ -1696,9 +1652,7 @@
     });
 
     // Assign photo to zone
-    async function assignPhotoToZone() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    async function assignPhotoToZone() {      if (!sessionToken) {
         alert('Please log in');
         return;
       }

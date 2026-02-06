@@ -433,9 +433,7 @@
       document.getElementById('searchBox').addEventListener('input', filterDocuments);
     });
 
-    function checkAuth() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const userRole = localStorage.getItem('isrs_user_role');
+    function checkAuth() {      const userRole = localStorage.getItem('isrs_user_role');
 
       if (!sessionToken) {
         window.location.href = '/admin/';
@@ -452,9 +450,7 @@
       loadDocuments();
     }
 
-    async function loadDocuments() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const category = document.getElementById('categoryFilter').value;
+    async function loadDocuments() {      const category = document.getElementById('categoryFilter').value;
       const status = document.getElementById('statusFilter').value;
       const approvalStatus = document.getElementById('approvalFilter').value;
 
@@ -636,10 +632,7 @@
     }
 
     async function uploadDocument(e) {
-      e.preventDefault();
-
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const fileInput = document.getElementById('fileInput');
+      e.preventDefault();      const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
 
       if (!file) {
@@ -695,12 +688,8 @@
     }
 
     async function viewDocument(id) {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${id}`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/admin/board-documents/${id}`);
 
         const data = await response.json();
 
@@ -767,9 +756,7 @@
       currentDocument = null;
     }
 
-    async function downloadDocument(id) {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      window.open(`${API_BASE_URL}/api/admin/board-documents/${id}/download?token=${sessionToken}`, '_blank');
+    async function downloadDocument(id) {      window.open(`${API_BASE_URL}/api/admin/board-documents/${id}/download?token=${sessionToken}`, '_blank');
     }
 
     async function approveDocument(id) {
@@ -781,17 +768,8 @@
     }
 
     async function updateApproval(id, status) {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${id}/approval`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify({ approval_status: status })
-        });
+        const response = await authFetch(`${API_BASE_URL}/api/admin/board-documents/${id}/approval`, { method: 'PATCH', body: JSON.stringify({ approval_status: status }) });
 
         const data = await response.json();
 
@@ -898,9 +876,7 @@
         // Show saving state
         element.innerHTML = '<span style="color: var(--admin-primary); font-size: 0.875rem;">Saving...</span>';
 
-        try {
-          const sessionToken = localStorage.getItem('isrs_session_token');
-          const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${doc.id}`, {
+        try {          const response = await fetch(`${API_BASE_URL}/api/admin/board-documents/${doc.id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${sessionToken}`,

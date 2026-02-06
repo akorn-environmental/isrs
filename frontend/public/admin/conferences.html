@@ -100,9 +100,7 @@
     let currentConference = null;
     let currentSort = { column: null, direction: 'asc' };
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', async () => {      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
@@ -123,12 +121,8 @@
     }
 
     async function loadStats() {
-      if (!currentConference) return;
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/conference/stats?conference_id=${currentConference.id}`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+      if (!currentConference) return;      try {
+        const response = await authFetch(`${API_BASE_URL}/api/admin/conference/stats?conference_id=${currentConference.id}`);
         const data = await response.json();
         if (data.success) {
           const s = data.data;
@@ -143,9 +137,7 @@
     }
 
     async function loadRegistrations() {
-      if (!currentConference) return;
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      const paymentFilter = document.getElementById('paymentFilter').value;
+      if (!currentConference) return;      const paymentFilter = document.getElementById('paymentFilter').value;
       let url = `${API_BASE_URL}/api/admin/conference/registrations?conference_id=${currentConference.id}`;
       if (paymentFilter) url += `&payment_status=${paymentFilter}`;
 
@@ -395,9 +387,7 @@
         // Show saving state
         cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
 
-        try {
-          const sessionToken = localStorage.getItem('isrs_session_token');
-          const response = await fetch(`${API_BASE_URL}/api/admin/conference/registrations/${registration.id}`, {
+        try {          const response = await fetch(`${API_BASE_URL}/api/admin/conference/registrations/${registration.id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${sessionToken}`,

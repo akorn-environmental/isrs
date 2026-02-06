@@ -575,9 +575,7 @@
     });
 
     // Check auth
-    window.addEventListener('DOMContentLoaded', async () => {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', async () => {      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
@@ -601,12 +599,8 @@
       }
     });
 
-    async function loadUserPermissions() {
-      const sessionToken = localStorage.getItem('isrs_session_token');
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/validate-session`, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+    async function loadUserPermissions() {      try {
+        const response = await authFetch(`${API_BASE_URL}/api/auth/validate-session`);
         const data = await response.json();
         if (data.success) {
           userPermissions = data.permissions || {};
@@ -929,16 +923,7 @@
       error.style.display = 'none';
       results.style.display = 'none';
 
-      try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
-        const response = await fetch(`${API_BASE_URL}/api/admin/ai-query`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify({ question, includeInsights: true })
-        });
+      try {        const response = await authFetch(`${API_BASE_URL}/api/admin/ai-query`, { method: 'POST', body: JSON.stringify({ question, includeInsights: true }) });
 
         const data = await response.json();
         loading.style.display = 'none';
@@ -1052,16 +1037,7 @@
         notes: document.getElementById('qaoNotes').value.trim()
       };
 
-      try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
-        const response = await fetch(`${API_BASE_URL}/api/contacts/organizations`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify(orgData)
-        });
+      try {        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations`, { method: 'POST', body: JSON.stringify(orgData) });
 
         const data = await response.json();
 
@@ -1178,16 +1154,7 @@
 
       showMessage(`Enhancing ${org.name} with AI...`, 'info');
 
-      try {
-        const sessionToken = localStorage.getItem('isrs_session_token');
-        const response = await fetch(`${API_BASE_URL}/api/claude/enhance-organization`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionToken}`
-          },
-          body: JSON.stringify({ organization_id: org.id, useWebSearch: true })
-        });
+      try {        const response = await authFetch(`${API_BASE_URL}/api/claude/enhance-organization`, { method: 'POST', body: JSON.stringify({ organization_id: org.id, useWebSearch: true }) });
 
         const data = await response.json();
         console.log('AI enhance response for org', org.name, ':', data);
@@ -1278,16 +1245,7 @@
 
         const results = await Promise.allSettled(
           batch.map(async (org) => {
-            try {
-              const sessionToken = localStorage.getItem('isrs_session_token');
-              const response = await fetch(`${API_BASE_URL}/api/claude/enhance-organization`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${sessionToken}`
-                },
-                body: JSON.stringify({ organization_id: org.id, useWebSearch: true })
-              });
+            try {              const response = await authFetch(`${API_BASE_URL}/api/claude/enhance-organization`, { method: 'POST', body: JSON.stringify({ organization_id: org.id, useWebSearch: true }) });
 
               const data = await response.json();
               console.log('AI enhance response for org', org.name, ':', data);
@@ -1398,9 +1356,7 @@
         // Show saving state
         cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
 
-        try {
-          const sessionToken = localStorage.getItem('isrs_session_token');
-          const response = await fetch(`${API_BASE_URL}/api/contacts/organizations/${org.id}`, {
+        try {          const response = await fetch(`${API_BASE_URL}/api/contacts/organizations/${org.id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${sessionToken}`,
