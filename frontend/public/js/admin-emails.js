@@ -113,9 +113,7 @@ async function loadEmails() {
   if (reviewFilter) params.append('requires_review', reviewFilter);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails?${params}`, {
-      credentials: 'include'
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails?${params}`);
 
     if (!response.ok) {
       throw new Error('Failed to load emails');
@@ -191,9 +189,7 @@ function renderEmailsTable(emails) {
 // View email details
 async function viewEmail(emailId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}`, {
-      credentials: 'include'
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails/${emailId}`);
 
     if (!response.ok) {
       throw new Error('Failed to load email details');
@@ -294,13 +290,7 @@ function renderEmailDetail(email) {
 // Approve contact and add to contacts database
 async function approveContact(emailId, contactIndex) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}/approve-contact/${contactIndex}`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails/${emailId}/approve-contact/${contactIndex}`, { method: 'POST' });
 
     if (!response.ok) {
       throw new Error('Failed to approve contact');
@@ -337,10 +327,7 @@ async function deleteEmail(emailId) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}`, {
-      method: 'DELETE',
-      credentials: 'include'
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails/${emailId}`, { method: 'DELETE' });
 
     if (!response.ok) {
       throw new Error('Failed to delete email');
@@ -358,14 +345,7 @@ async function deleteEmail(emailId) {
 // Update email status
 async function updateEmailStatus(emailId, status) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails/${emailId}/status`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ status })
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails/${emailId}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
 
     if (!response.ok) {
       throw new Error('Failed to update status');
@@ -385,14 +365,7 @@ async function bulkUpdateStatus(status) {
   const emailIds = Array.from(selectedEmails);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails/bulk-status`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email_ids: emailIds, status })
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails/bulk-status`, { method: 'PATCH', body: JSON.stringify({ email_ids: emailIds, status }) });
 
     if (!response.ok) {
       throw new Error('Failed to update emails');
@@ -412,14 +385,7 @@ async function bulkDelete() {
   const emailIds = Array.from(selectedEmails);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/parsed-emails/bulk-delete`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email_ids: emailIds })
-    });
+    const response = await authFetch(`${API_BASE_URL}/api/parsed-emails/bulk-delete`, { method: 'DELETE', body: JSON.stringify({ email_ids: emailIds }) });
 
     if (!response.ok) {
       throw new Error('Failed to delete emails');
