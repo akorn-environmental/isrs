@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollo.io Enrichment - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    .apollo-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--admin-border);
+      margin-bottom: var(--admin-space-2xl);
+      gap: var(--admin-space-lg);
+    }
+
+    .apollo-tab {
+      padding: var(--admin-space-md) var(--admin-space-xl);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      font-weight: 500;
+      color: var(--admin-text-muted);
+    }
+
+    .apollo-tab:hover {
+      color: var(--admin-text);
+    }
+
+    .apollo-tab.active {
+      color: var(--admin-primary);
+      border-bottom-color: var(--admin-primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .credits-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--admin-space-lg);
+      margin-bottom: var(--admin-space-2xl);
+    }
+
+    .credit-card {
+      background: linear-gradient(135deg, var(--admin-primary), var(--admin-primary-dark));
+      color: white;
+      padding: var(--admin-space-2xl);
+      border-radius: var(--admin-radius-lg);
+      box-shadow: var(--admin-shadow-md);
+    }
+
+    .credit-value {
+      font-size: var(--admin-text-4xl);
+      font-weight: 700;
+      margin: var(--admin-space-md) 0;
+    }
+
+    .credit-label {
+      font-size: var(--admin-text-sm);
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .search-form {
+      background: var(--admin-surface);
+      padding: var(--admin-space-xl);
+      border-radius: var(--admin-radius-lg);
+      border: 1px solid var(--admin-border);
+      margin-bottom: var(--admin-space-2xl);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--admin-space-md);
+      margin-bottom: var(--admin-space-md);
+    }
+
+    .prospects-grid {
+      display: grid;
+      gap: var(--admin-space-lg);
+    }
+
+    .prospect-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-md);
+      padding: var(--admin-space-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .prospect-card:hover {
+      box-shadow: var(--admin-shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .prospect-card.selected {
+      border-color: var(--admin-primary);
+      background: var(--admin-primary-light);
+    }
+
+    .prospect-info h3 {
+      margin: 0 0 var(--admin-space-xs) 0;
+      color: var(--admin-text);
+    }
+
+    .prospect-meta {
+      display: flex;
+      gap: var(--admin-space-lg);
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+      margin-top: var(--admin-space-xs);
+    }
+
+    .prospect-actions {
+      display: flex;
+      gap: var(--admin-space-sm);
+    }
+
+    .bulk-actions-bar {
+      position: sticky;
+      bottom: 0;
+      background: var(--admin-primary);
+      color: white;
+      padding: var(--admin-space-lg);
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--admin-shadow-lg);
+      border-radius: var(--admin-radius-md);
+      margin-top: var(--admin-space-xl);
+    }
+
+    .bulk-actions-bar.show {
+      display: flex;
+    }
+
+    .enrichment-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: var(--admin-text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .enrichment-status.enriched {
+      background: var(--admin-success-light);
+      color: var(--admin-success);
+    }
+
+    .enrichment-status.pending {
+      background: var(--admin-warning-light);
+      color: var(--admin-warning);
+    }
+
+    .enrichment-status.failed {
+      background: var(--admin-danger-light);
+      color: var(--admin-danger);
+    }
+
+    .stats-row {
+      display: flex;
+      gap: var(--admin-space-xl);
+      margin-bottom: var(--admin-space-xl);
+      padding: var(--admin-space-lg);
+      background: var(--admin-gray-50);
+      border-radius: var(--admin-radius-md);
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-item-value {
+      font-size: var(--admin-text-2xl);
+      font-weight: 700;
+      color: var(--admin-primary);
+    }
+
+    .stat-item-label {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+      margin-top: var(--admin-space-xs);
+    }
+  </style>
+  <script src="/js/errorReporter.js"></script>
+  <script src="/js/api-config.js"></script>
+  <script src="/js/admin-auth.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <!-- Page Header -->
+    <div class="admin-page-header">
+      <div>
+        <h1>🚀 Apollo.io Enrichment</h1>
+        <p style="color: var(--admin-text-muted); margin-top: var(--admin-space-xs);">
+          Enrich contacts, search prospects, and manage campaigns
+        </p>
+      </div>
+      <div class="admin-page-header-actions">
+        <button class="admin-btn admin-btn-secondary" onclick="refreshCredits()">
+          🔄 Refresh Credits
+        </button>
+      </div>
+    </div>
+
+    <!-- Credits Dashboard -->
+    <div class="credits-dashboard" id="creditsDashboard">
+      <div class="credit-card">
+        <div class="credit-label">Email Credits</div>
+        <div class="credit-value" id="emailCredits">-</div>
+        <div class="credit-label">Remaining This Month</div>
+      </div>
+      <div class="credit-card">
+        <div class="credit-label">Export Credits</div>
+        <div class="credit-value" id="exportCredits">-</div>
+        <div class="credit-label">Remaining This Month</div>
+      </div>
+      <div class="credit-card">
+        <div class="credit-label">Daily Requests</div>
+        <div class="credit-value" id="dailyRequests">-</div>
+        <div class="credit-label">Remaining Today</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="apollo-tabs">
+      <div class="apollo-tab active" onclick="switchTab('enrich')">
+        Enrich Contacts
+      </div>
+      <div class="apollo-tab" onclick="switchTab('search')">
+        Search Prospects
+      </div>
+      <div class="apollo-tab" onclick="switchTab('campaigns')">
+        Campaigns
+      </div>
+    </div>
+
+    <!-- Enrich Contacts Tab -->
+    <div id="enrichTab" class="tab-content active">
+      <div class="admin-card">
+        <h2>Bulk Enrichment</h2>
+        <p style="color: var(--admin-text-muted); margin-bottom: var(--admin-space-lg);">
+          Automatically enrich contacts that are missing phone numbers, job titles, or social profiles
+        </p>
+
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-item-value" id="totalContacts">0</div>
+            <div class="stat-item-label">Total Contacts</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item-value" id="needsEnrichment">0</div>
+            <div class="stat-item-label">Need Enrichment</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item-value" id="enrichedToday">0</div>
+            <div class="stat-item-label">Enriched Today</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--admin-space-md); margin-bottom: var(--admin-space-lg);">
+          <input type="number" id="bulkLimit" class="admin-input" value="100" min="1" max="1000" style="width: 150px;" placeholder="Limit">
+          <button class="admin-btn admin-btn-primary" onclick="runBulkEnrichment()">
+            🚀 Start Bulk Enrichment
+          </button>
+          <button class="admin-btn admin-btn-secondary" onclick="loadEnrichmentStats()">
+            📊 Refresh Stats
+          </button>
+        </div>
+
+        <div id="enrichmentProgress" style="display: none;">
+          <div class="admin-alert admin-alert-info">
+            <strong>Enrichment in progress...</strong>
+            <p id="progressMessage">Processing contacts in background</p>
+          </div>
+        </div>
+
+        <div id="enrichmentResults"></div>
+      </div>
+    </div>
+
+    <!-- Search Prospects Tab -->
+    <div id="searchTab" class="tab-content">
+      <div class="admin-card">
+        <h2>Search for Prospects</h2>
+        <p style="color: var(--admin-text-muted); margin-bottom: var(--admin-space-lg);">
+          Find marine scientists, conservation professionals, and potential members
+        </p>
+
+        <div class="search-form">
+          <div class="form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label">Keywords</label>
+              <input type="text" id="searchKeywords" class="admin-input" placeholder="e.g., marine biology, restoration">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label">Job Titles</label>
+              <input type="text" id="searchTitles" class="admin-input" placeholder="e.g., Professor, Director">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label">Organization Type</label>
+              <select id="searchOrgType" class="admin-select">
+                <option value="">All Types</option>
+                <option value="educational">Educational</option>
+                <option value="government">Government</option>
+                <option value="nonprofit">Nonprofit</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label">Results Per Page</label>
+              <input type="number" id="searchPerPage" class="admin-input" value="25" min="10" max="100">
+            </div>
+          </div>
+
+          <button class="admin-btn admin-btn-primary" onclick="searchProspects()">
+            🔍 Search Prospects
+          </button>
+        </div>
+
+        <div id="searchResults"></div>
+
+        <div class="bulk-actions-bar" id="bulkActionsBar">
+          <div>
+            <strong id="selectedCount">0</strong> prospects selected
+          </div>
+          <div style="display: flex; gap: var(--admin-space-md);">
+            <button class="admin-btn admin-btn-secondary" onclick="clearSelection()">
+              Clear Selection
+            </button>
+            <button class="admin-btn admin-btn-success" onclick="importSelected()">
+              Import to ISRS
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campaigns Tab -->
+    <div id="campaignsTab" class="tab-content">
+      <div class="admin-card">
+        <h2>Campaign Templates</h2>
+        <p style="color: var(--admin-text-muted); margin-bottom: var(--admin-space-xl);">
+          Pre-configured searches for common outreach campaigns
+        </p>
+
+        <div class="prospects-grid">
+          <!-- ICSR 2026 Conference -->
+          <div class="prospect-card" style="background: var(--admin-primary-light); border-color: var(--admin-primary);">
+            <div class="prospect-info">
+              <h3>🎓 ICSR 2026 Conference Registration</h3>
+              <p style="color: var(--admin-text-muted); margin: var(--admin-space-sm) 0;">
+                Target: Marine scientists, restoration researchers, and ocean conservation professionals
+              </p>
+              <div class="prospect-meta">
+                <span>Keywords: marine biology, shellfish, restoration</span>
+                <span>Titles: Professor, Research Scientist, Director</span>
+              </div>
+            </div>
+            <button class="admin-btn admin-btn-primary" onclick="loadCampaignTemplate('conference')">
+              Use Template
+            </button>
+          </div>
+
+          <!-- Fundraising -->
+          <div class="prospect-card" style="background: var(--admin-success-light); border-color: var(--admin-success);">
+            <div class="prospect-info">
+              <h3>💰 Fundraising Campaign</h3>
+              <p style="color: var(--admin-text-muted); margin: var(--admin-space-sm) 0;">
+                Target: Foundation program officers, grant managers, and philanthropists
+              </p>
+              <div class="prospect-meta">
+                <span>Keywords: marine conservation grants, ocean funding</span>
+                <span>Titles: Program Officer, Director of Grants</span>
+              </div>
+            </div>
+            <button class="admin-btn admin-btn-success" onclick="loadCampaignTemplate('fundraising')">
+              Use Template
+            </button>
+          </div>
+
+          <!-- Membership -->
+          <div class="prospect-card" style="background: var(--admin-warning-light); border-color: var(--admin-warning);">
+            <div class="prospect-info">
+              <h3>👥 Membership Recruitment</h3>
+              <p style="color: var(--admin-text-muted); margin: var(--admin-space-sm) 0;">
+                Target: Researchers, consultants, and practitioners in shellfish restoration
+              </p>
+              <div class="prospect-meta">
+                <span>Keywords: shellfish aquaculture, coastal ecology</span>
+                <span>Titles: Researcher, Consultant, Biologist</span>
+              </div>
+            </div>
+            <button class="admin-btn admin-btn-warning" onclick="loadCampaignTemplate('membership')">
+              Use Template
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedProspects = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      loadCredits();
+      loadEnrichmentStats();
+    });
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.apollo-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      if (tabName === 'enrich') {
+        document.getElementById('enrichTab').classList.add('active');
+      } else if (tabName === 'search') {
+        document.getElementById('searchTab').classList.add('active');
+      } else if (tabName === 'campaigns') {
+        document.getElementById('campaignsTab').classList.add('active');
+      }
+    }
+
+    async function loadCredits() {
+      try {
+        const response = await authFetch(`${API_BASE_URL}/api/apollo/credits`);
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById('emailCredits').textContent = data.email_credits?.toLocaleString() || 'N/A';
+          document.getElementById('exportCredits').textContent = data.export_credits?.toLocaleString() || 'N/A';
+          document.getElementById('dailyRequests').textContent = data.requests_remaining?.toLocaleString() || 'N/A';
+        } else {
+          console.error('Failed to load credits:', data);
+          document.getElementById('emailCredits').textContent = 'Error';
+          document.getElementById('exportCredits').textContent = 'Error';
+          document.getElementById('dailyRequests').textContent = 'Error';
+        }
+      } catch (error) {
+        console.error('Error loading credits:', error);
+      }
+    }
+
+    function refreshCredits() {
+      loadCredits();
+    }
+
+    async function loadEnrichmentStats() {
+      // This would call an endpoint to get stats
+      // For now, placeholder
+      document.getElementById('totalContacts').textContent = '1,234';
+      document.getElementById('needsEnrichment').textContent = '456';
+      document.getElementById('enrichedToday').textContent = '23';
+    }
+
+    async function runBulkEnrichment() {
+      const limit = document.getElementById('bulkLimit').value;
+
+      if (!confirm(`Start bulk enrichment for up to ${limit} contacts?\n\nThis will use Apollo.io credits.`)) {
+        return;
+      }
+
+      document.getElementById('enrichmentProgress').style.display = 'block';
+      document.getElementById('progressMessage').textContent = `Queuing ${limit} contacts for enrichment...`;
+
+      try {
+        const response = await authFetch(`${API_BASE_URL}/api/apollo/contacts/bulk-enrich?limit=${limit}`, {
+          method: 'POST'
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          document.getElementById('progressMessage').textContent = `✅ ${result.message || 'Enrichment started!'}`;
+          setTimeout(() => {
+            document.getElementById('enrichmentProgress').style.display = 'none';
+            loadEnrichmentStats();
+            loadCredits();
+          }, 3000);
+        } else {
+          document.getElementById('progressMessage').textContent = `❌ Error: ${result.detail || 'Failed to start enrichment'}`;
+        }
+      } catch (error) {
+        console.error('Bulk enrichment error:', error);
+        document.getElementById('progressMessage').textContent = `❌ Error: ${error.message}`;
+      }
+    }
+
+    async function searchProspects() {
+      const keywords = document.getElementById('searchKeywords').value.split(',').map(k => k.trim()).filter(k => k);
+      const titles = document.getElementById('searchTitles').value.split(',').map(t => t.trim()).filter(t => t);
+      const orgType = document.getElementById('searchOrgType').value;
+      const perPage = parseInt(document.getElementById('searchPerPage').value);
+
+      const payload = {
+        keywords: keywords.length ? keywords : null,
+        job_titles: titles.length ? titles : null,
+        organization_types: orgType ? [orgType] : null,
+        per_page: perPage,
+        page: 1
+      };
+
+      document.getElementById('searchResults').innerHTML = `
+        <div class="admin-loading">
+          <span class="admin-spinner"></span>
+          Searching Apollo.io...
+        </div>
+      `;
+
+      try {
+        const response = await authFetch(`${API_BASE_URL}/api/apollo/prospects/search`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          renderProspects(result.prospects);
+        } else {
+          document.getElementById('searchResults').innerHTML = `
+            <div class="admin-alert admin-alert-danger">
+              Error: ${result.error || result.detail || 'Search failed'}
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        document.getElementById('searchResults').innerHTML = `
+          <div class="admin-alert admin-alert-danger">
+            Error: ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    function renderProspects(prospects) {
+      if (!prospects || prospects.length === 0) {
+        document.getElementById('searchResults').innerHTML = `
+          <div class="admin-alert admin-alert-info">
+            No prospects found. Try different search criteria.
+          </div>
+        `;
+        return;
+      }
+
+      const html = `
+        <h3 style="margin-top: var(--admin-space-xl);">Found ${prospects.length} prospects</h3>
+        <div class="prospects-grid">
+          ${prospects.map((p, index) => `
+            <div class="prospect-card" data-prospect-index="${index}" onclick="toggleProspectSelection(${index})">
+              <div class="prospect-info">
+                <h3>${p.name || 'Unknown'}</h3>
+                <div class="prospect-meta">
+                  ${p.title ? `<span>📋 ${p.title}</span>` : ''}
+                  ${p.organization_name ? `<span>🏢 ${p.organization_name}</span>` : ''}
+                  ${p.email ? `<span>📧 ${p.email}</span>` : ''}
+                  ${p.phone ? `<span>📞 ${p.phone}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      document.getElementById('searchResults').innerHTML = html;
+      window.currentProspects = prospects;
+    }
+
+    function toggleProspectSelection(index) {
+      const card = document.querySelector(`[data-prospect-index="${index}"]`);
+      card.classList.toggle('selected');
+
+      const prospect = window.currentProspects[index];
+      const existingIndex = selectedProspects.findIndex(p => p.apollo_id === prospect.apollo_id);
+
+      if (existingIndex >= 0) {
+        selectedProspects.splice(existingIndex, 1);
+      } else {
+        selectedProspects.push(prospect);
+      }
+
+      updateBulkActionsBar();
+    }
+
+    function updateBulkActionsBar() {
+      const bar = document.getElementById('bulkActionsBar');
+      const count = document.getElementById('selectedCount');
+
+      count.textContent = selectedProspects.length;
+
+      if (selectedProspects.length > 0) {
+        bar.classList.add('show');
+      } else {
+        bar.classList.remove('show');
+      }
+    }
+
+    function clearSelection() {
+      selectedProspects = [];
+      document.querySelectorAll('.prospect-card').forEach(card => card.classList.remove('selected'));
+      updateBulkActionsBar();
+    }
+
+    async function importSelected() {
+      if (selectedProspects.length === 0) {
+        alert('No prospects selected');
+        return;
+      }
+
+      if (!confirm(`Import ${selectedProspects.length} prospects to ISRS contacts database?`)) {
+        return;
+      }
+
+      try {
+        const apolloIds = selectedProspects.map(p => p.apollo_id);
+
+        const response = await authFetch(`${API_BASE_URL}/api/apollo/prospects/import`, {
+          method: 'POST',
+          body: JSON.stringify({
+            apollo_ids: apolloIds,
+            source: 'apollo_search'
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          alert(`✅ ${result.message}\n\nImported: ${result.imported_count}\nSkipped: ${result.skipped_count}`);
+          clearSelection();
+        } else {
+          alert(`❌ Error: ${result.error || result.detail || 'Import failed'}`);
+        }
+      } catch (error) {
+        console.error('Import error:', error);
+        alert(`❌ Error: ${error.message}`);
+      }
+    }
+
+    function loadCampaignTemplate(campaignType) {
+      switchTab('search');
+
+      const templates = {
+        conference: {
+          keywords: 'marine biology, shellfish, restoration',
+          titles: 'Professor, Research Scientist, Director',
+          orgType: 'educational'
+        },
+        fundraising: {
+          keywords: 'marine conservation grants, ocean funding',
+          titles: 'Program Officer, Director of Grants',
+          orgType: 'nonprofit'
+        },
+        membership: {
+          keywords: 'shellfish aquaculture, coastal ecology',
+          titles: 'Researcher, Consultant, Biologist',
+          orgType: ''
+        }
+      };
+
+      const template = templates[campaignType];
+      if (template) {
+        document.getElementById('searchKeywords').value = template.keywords;
+        document.getElementById('searchTitles').value = template.titles;
+        document.getElementById('searchOrgType').value = template.orgType;
+      }
+    }
+  </script>
+</body>
+</html>
