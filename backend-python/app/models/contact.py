@@ -44,6 +44,7 @@ class Contact(Base, TimestampMixin):
     last_name = Column(String(100))
     full_name = Column(String(255))
     organization_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="SET NULL"), index=True)
+    primary_contact_id = Column(UUID(as_uuid=True), ForeignKey("contacts.id", ondelete="SET NULL"), index=True)  # Owner/primary contact for this contact
     role = Column(String(255), index=True)  # Board Chair, Board Member, Steering Committee, etc.
     title = Column(String(255))  # Job title
     phone = Column(String(50))
@@ -57,6 +58,7 @@ class Contact(Base, TimestampMixin):
 
     # Relationships
     organization = relationship("Organization", back_populates="contacts")
+    primary_contact = relationship("Contact", remote_side=[id], foreign_keys=[primary_contact_id])  # Self-referential relationship
     conference_registrations = relationship("ConferenceRegistration", back_populates="contact")
     conference_abstracts = relationship("ConferenceAbstract", back_populates="submitter")
     funding_prospects = relationship("FundingProspect", back_populates="contact")
