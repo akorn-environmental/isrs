@@ -10,6 +10,7 @@ from app.services.s3_email_service import S3EmailService
 from app.services.email_parser_service import EmailParserService
 from app.services.ai_extraction_service import AIExtractionService
 from app.services.contact_enrichment_service import ContactEnrichmentService
+from app.services.bounceback_handler import BouncebackHandler
 from app.models.parsed_email import ParsedEmail
 from app.models.vote import BoardVote
 from app.models.funding import FundingProspect
@@ -66,6 +67,37 @@ class EmailProcessingService:
             # Step 2: Parse MIME email
             logger.info(f"[Email Processing] Step 2: Parsing MIME email")
             parsed_email = self.parser_service.parse_email(email_content)
+
+            # Step 2.5: Check for bounceback and handle it
+            if BouncebackHandler.is_bounceback(parsed_email):
+                logger.info(f"[Email Processing] Detected bounceback notification")
+                bounceback_result = BouncebackHandler.process_bounceback(db, parsed_email)
+                logger.info(f"[Email Processing] Bounceback result: {bounceback_result}")
+
+                # Store bounceback email record for audit trail
+                parsed_email_record = ParsedEmail(
+                    message_id=message_id,
+                    s3_key=s3_key,
+                    from_email=parsed_email.get('from_email'),
+                    to_emails=parsed_email.get('to_emails'),
+                    cc_emails=parsed_email.get('cc_emails'),
+                    subject=parsed_email.get('subject'),
+                    date=parsed_email.get('date'),
+                    body_text=parsed_email.get('body_text'),
+                    body_html=parsed_email.get('body_html'),
+                    attachments=parsed_email.get('attachments'),
+                    status='bounceback_processed',
+                    requires_review=False,
+                    email_metadata={
+                        'source': 'ses_inbound',
+                        'email_type': 'bounceback',
+                        'bounceback_result': bounceback_result
+                    }
+                )
+                db.add(parsed_email_record)
+                db.commit()
+                logger.info(f"[Email Processing] Bounceback processed and logged")
+                return parsed_email_record
 
             # Step 3: AI extraction
             logger.info(f"[Email Processing] Step 3: AI extraction")
