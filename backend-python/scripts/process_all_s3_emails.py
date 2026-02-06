@@ -4,6 +4,7 @@ Run this script to backfill emails that were sent before the backend was deploye
 """
 import asyncio
 import boto3
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.services.email_processing_service import EmailProcessingService
@@ -37,7 +38,7 @@ async def process_all_s3_emails():
     db = SessionLocal()
     try:
         processed_keys = set()
-        result = db.execute("SELECT message_id FROM parsed_emails")
+        result = db.execute(text("SELECT message_id FROM parsed_emails"))
         for row in result:
             processed_keys.add(row[0])
 
