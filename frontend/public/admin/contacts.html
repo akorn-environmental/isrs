@@ -836,14 +836,15 @@
         });
         const data = await response.json();
 
-        if (response.ok && data.success) {
-          allContacts = data.data;
+        if (response.ok) {
+          // Backend returns {contacts: [...], total, page, page_size, total_pages}
+          allContacts = data.contacts || [];
           filteredContacts = [...allContacts];
           populateCountryFilter();
           updatePagination(); // This will call displayContacts() after setting paginatedContacts
           updateStats();
         } else {
-          showError('Failed to load contacts: ' + (data.error || 'Unknown error'));
+          showError('Failed to load contacts: ' + (data.error || data.detail || 'Unknown error'));
         }
       } catch (error) {
         showError('Error connecting to server: ' + error.message);
