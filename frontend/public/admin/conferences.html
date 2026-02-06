@@ -138,14 +138,13 @@
     }
 
     async function loadRegistrations() {
-      if (!currentConference) return;      const paymentFilter = document.getElementById('paymentFilter').value;
+      if (!currentConference) return;
+      const paymentFilter = document.getElementById('paymentFilter').value;
       let url = `${API_BASE_URL}/api/admin/conference/registrations?conference_id=${currentConference.id}`;
       if (paymentFilter) url += `&payment_status=${paymentFilter}`;
 
       try {
-        const response = await fetch(url, {
-          headers: { 'Authorization': `Bearer ${sessionToken}` }
-        });
+        const response = await authFetch(url);
         const data = await response.json();
         if (data.success) {
           allRegistrations = data.data;
