@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 from app.database import get_db
 from app.dependencies.permissions import get_current_admin
+from app.models import Contact, ParsedEmail
+from datetime import datetime
+import calendar
 
 router = APIRouter(prefix="/api/stats", tags=["stats"])
 
@@ -109,5 +112,117 @@ async def get_dashboard_stats(
                 "total_funding": 0,
                 "recent_contacts": [],
                 "active_conferences": []
+            }
+        }
+
+
+@router.get("/contacts")
+async def get_contact_statistics(
+    db: Session = Depends(get_db),
+    current_admin = Depends(get_current_admin)
+):
+    """
+    Get contact statistics for dashboard cards
+    """
+    try:
+        # Get current month/year
+        now = datetime.utcnow()
+        current_month = now.month
+        current_year = now.year
+
+        # Calculate previous month
+        if current_month == 1:
+            prev_month = 12
+            prev_year = current_year - 1
+        else:
+            prev_month = current_month - 1
+            prev_year = current_year
+
+        # Total contacts
+        total_contacts = db.query(func.count(Contact.id)).scalar() or 0
+
+        # Total contacts last month (for comparison)
+        last_day_prev_month = calendar.monthrange(prev_year, prev_month)[1]
+        end_of_prev_month = datetime(prev_year, prev_month, last_day_prev_month, 23, 59, 59)
+        total_contacts_prev_month = db.query(func.count(Contact.id)).filter(
+            Contact.created_at <= end_of_prev_month
+        ).scalar() or 0
+
+        # Calculate percentage change
+        if total_contacts_prev_month > 0:
+            total_contacts_change = round(
+                ((total_contacts - total_contacts_prev_month) / total_contacts_prev_month) * 100, 1
+            )
+        else:
+            total_contacts_change = 100.0 if total_contacts > 0 else 0.0
+
+        # New contacts this month
+        first_day_current_month = datetime(current_year, current_month, 1)
+        new_this_month = db.query(func.count(Contact.id)).filter(
+            Contact.created_at >= first_day_current_month
+        ).scalar() or 0
+
+        # New contacts last month (for comparison)
+        first_day_prev_month = datetime(prev_year, prev_month, 1)
+        new_last_month = db.query(func.count(Contact.id)).filter(
+            Contact.created_at >= first_day_prev_month,
+            Contact.created_at <= end_of_prev_month
+        ).scalar() or 0
+
+        # Calculate percentage change
+        if new_last_month > 0:
+            new_contacts_change = round(((new_this_month - new_last_month) / new_last_month) * 100, 1)
+        else:
+            new_contacts_change = 100.0 if new_this_month > 0 else 0.0
+
+        # Unique tags/groups
+        contacts_with_tags = db.query(Contact.tags).filter(Contact.tags.isnot(None)).all()
+        unique_tags = set()
+        for (tags,) in contacts_with_tags:
+            if tags:
+                unique_tags.update(tags)
+        unique_tags_count = len(unique_tags)
+
+        # Emails parsed (total)
+        emails_parsed = db.query(func.count(ParsedEmail.id)).scalar() or 0
+
+        # Emails parsed last month (for comparison)
+        emails_parsed_prev_month = db.query(func.count(ParsedEmail.id)).filter(
+            ParsedEmail.received_at <= end_of_prev_month
+        ).scalar() or 0
+
+        # Calculate percentage change
+        if emails_parsed_prev_month > 0:
+            emails_parsed_change = round(
+                ((emails_parsed - emails_parsed_prev_month) / emails_parsed_prev_month) * 100, 1
+            )
+        else:
+            emails_parsed_change = 100.0 if emails_parsed > 0 else 0.0
+
+        return {
+            "success": True,
+            "stats": {
+                "total_contacts": total_contacts,
+                "total_contacts_change": total_contacts_change,
+                "new_this_month": new_this_month,
+                "new_contacts_change": new_contacts_change,
+                "unique_tags": unique_tags_count,
+                "emails_parsed": emails_parsed,
+                "emails_parsed_change": emails_parsed_change,
+            }
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "stats": {
+                "total_contacts": 0,
+                "total_contacts_change": 0.0,
+                "new_this_month": 0,
+                "new_contacts_change": 0.0,
+                "unique_tags": 0,
+                "emails_parsed": 0,
+                "emails_parsed_change": 0.0,
             }
         }

@@ -253,6 +253,83 @@
         </div>
       </div>
 
+      <!-- Statistics Cards -->
+      <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+        <!-- Total Contacts -->
+        <div class="stat-card" style="background: linear-gradient(135deg, #2c5f2d 0%, #1e4020 100%); color: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(44, 95, 45, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.875rem; font-family: Georgia, serif; opacity: 0.9; font-weight: 600;">Total Contacts</div>
+            <svg style="width: 24px; height: 24px; opacity: 0.8;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <div style="font-size: 2.25rem; font-family: Georgia, serif; font-weight: bold; margin-bottom: 0.5rem;" id="stat-total-contacts">-</div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.813rem; font-family: Georgia, serif;">
+            <span id="stat-total-trend" style="display: flex; align-items: center; gap: 0.25rem;">
+              <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+              <span>--</span>
+            </span>
+            <span style="opacity: 0.8;">from last month</span>
+          </div>
+        </div>
+
+        <!-- New Contacts This Month -->
+        <div class="stat-card" style="background: linear-gradient(135deg, #1e5a8e 0%, #2980b9 100%); color: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(30, 90, 142, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.875rem; font-family: Georgia, serif; opacity: 0.9; font-weight: 600;">New This Month</div>
+            <svg style="width: 24px; height: 24px; opacity: 0.8;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+            </svg>
+          </div>
+          <div style="font-size: 2.25rem; font-family: Georgia, serif; font-weight: bold; margin-bottom: 0.5rem;" id="stat-new-contacts">-</div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.813rem; font-family: Georgia, serif;">
+            <span id="stat-new-trend" style="display: flex; align-items: center; gap: 0.25rem;">
+              <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+              <span>--</span>
+            </span>
+            <span style="opacity: 0.8;">vs last month</span>
+          </div>
+        </div>
+
+        <!-- Contact Groups -->
+        <div class="stat-card" style="background: linear-gradient(135deg, #5BC0BE 0%, #3A9694 100%); color: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(91, 192, 190, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.875rem; font-family: Georgia, serif; opacity: 0.9; font-weight: 600;">Contact Groups</div>
+            <svg style="width: 24px; height: 24px; opacity: 0.8;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+          </div>
+          <div style="font-size: 2.25rem; font-family: Georgia, serif; font-weight: bold; margin-bottom: 0.5rem;" id="stat-groups">-</div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.813rem; font-family: Georgia, serif;">
+            <span style="opacity: 0.8;">unique tags/categories</span>
+          </div>
+        </div>
+
+        <!-- Emails Parsed -->
+        <div class="stat-card" style="background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%); color: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.875rem; font-family: Georgia, serif; opacity: 0.9; font-weight: 600;">Emails Parsed</div>
+            <svg style="width: 24px; height: 24px; opacity: 0.8;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div style="font-size: 2.25rem; font-family: Georgia, serif; font-weight: bold; margin-bottom: 0.5rem;" id="stat-emails-parsed">-</div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.813rem; font-family: Georgia, serif;">
+            <span id="stat-emails-trend" style="display: flex; align-items: center; gap: 0.25rem;">
+              <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+              <span>--</span>
+            </span>
+            <span style="opacity: 0.8;">from last month</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Filter Toolbar - Full Width -->
       <div class="admin-toolbar" style="gap: var(--admin-space-md);">
         <input type="text" class="admin-input" id="searchBox" placeholder="Search contacts..." style="flex: 1; min-width: 200px;">
@@ -787,6 +864,7 @@
     window.addEventListener('DOMContentLoaded', async () => {
       await loadUserPermissions();
       await loadContacts();
+      await loadStatistics();
       setupEventListeners();
       updatePagination();
     });
@@ -850,6 +928,53 @@
       } catch (error) {
         showError('Error connecting to server: ' + error.message);
       }
+    }
+
+    async function loadStatistics() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/stats/contacts`, {
+          method: 'GET',
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          const stats = data.stats;
+
+          // Total Contacts
+          document.getElementById('stat-total-contacts').textContent = stats.total_contacts?.toLocaleString() || '0';
+          updateTrend('stat-total-trend', stats.total_contacts_change);
+
+          // New Contacts This Month
+          document.getElementById('stat-new-contacts').textContent = stats.new_this_month?.toLocaleString() || '0';
+          updateTrend('stat-new-trend', stats.new_contacts_change);
+
+          // Contact Groups/Tags
+          document.getElementById('stat-groups').textContent = stats.unique_tags?.toLocaleString() || '0';
+
+          // Emails Parsed
+          document.getElementById('stat-emails-parsed').textContent = stats.emails_parsed?.toLocaleString() || '0';
+          updateTrend('stat-emails-trend', stats.emails_parsed_change);
+        } else {
+          console.error('Failed to load statistics:', data.error || data.detail);
+        }
+      } catch (error) {
+        console.error('Error loading statistics:', error);
+      }
+    }
+
+    function updateTrend(elementId, changePercent) {
+      const trendEl = document.getElementById(elementId);
+      if (!trendEl || changePercent === undefined || changePercent === null) return;
+
+      const isPositive = changePercent >= 0;
+      const arrow = isPositive ?
+        `<svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>` :
+        `<svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"/></svg>`;
+
+      const sign = isPositive ? '+' : '';
+      trendEl.innerHTML = `${arrow}<span>${sign}${changePercent}%</span>`;
     }
 
     function calculateDataQuality(contact) {
