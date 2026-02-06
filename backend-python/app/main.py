@@ -150,12 +150,29 @@ if frontend_path.exists():
         # Serve specific file if it exists
         file_path = frontend_path / full_path
         if file_path.is_file():
+            # Set cache headers - no cache for HTML files to ensure updates are seen
+            if file_path.suffix == '.html':
+                return FileResponse(
+                    file_path,
+                    headers={
+                        "Cache-Control": "no-cache, no-store, must-revalidate",
+                        "Pragma": "no-cache",
+                        "Expires": "0"
+                    }
+                )
             return FileResponse(file_path)
 
         # Otherwise serve index.html (SPA routing)
         index_path = frontend_path / "index.html"
         if index_path.exists():
-            return FileResponse(index_path)
+            return FileResponse(
+                index_path,
+                headers={
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0"
+                }
+            )
 
         return JSONResponse({"error": "Frontend not found"}, status_code=404)
 else:
