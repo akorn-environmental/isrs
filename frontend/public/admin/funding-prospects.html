@@ -506,6 +506,7 @@
     let pageSize = 20;
 
     window.addEventListener('DOMContentLoaded', async () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
       if (!sessionToken) {
         window.location.href = '/admin/';
         return;

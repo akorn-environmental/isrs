@@ -221,7 +221,8 @@
     let sortField = 'date_contacted';
     let sortDirection = 'desc';
 
-    window.addEventListener('DOMContentLoaded', () => {      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', () => {      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }

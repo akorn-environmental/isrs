@@ -435,6 +435,7 @@
 
     function checkAuth() {      const userRole = localStorage.getItem('isrs_user_role');
 
+      const sessionToken = localStorage.getItem('isrs_session_token');
       if (!sessionToken) {
         window.location.href = '/admin/';
         return;

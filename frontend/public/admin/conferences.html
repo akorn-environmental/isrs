@@ -100,7 +100,8 @@
     let currentConference = null;
     let currentSort = { column: null, direction: 'asc' };
 
-    window.addEventListener('DOMContentLoaded', async () => {      if (!sessionToken) {
+    window.addEventListener('DOMContentLoaded', async () => {      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }

@@ -447,7 +447,8 @@
       checkAuth();
     });
 
-    function checkAuth() {      if (!sessionToken) {
+    function checkAuth() {      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }

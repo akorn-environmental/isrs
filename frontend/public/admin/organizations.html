@@ -574,8 +574,10 @@
       }
     });
 
-    // Check auth
-    window.addEventListener('DOMContentLoaded', async () => {      if (!sessionToken) {
+    // Check auth and load data
+    window.addEventListener('DOMContentLoaded', async () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
         window.location.href = '/admin/';
         return;
       }
