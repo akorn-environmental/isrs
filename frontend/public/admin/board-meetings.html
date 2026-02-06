@@ -640,7 +640,7 @@
         </div>
 
         <div class="tab-content" data-tab="transcripts">
-          ${renderTranscripts(meeting.transcripts)}
+          ${renderTranscripts(meeting.transcripts, meeting.date)}
         </div>
       `;
     }
@@ -730,21 +730,40 @@
       `;
     }
 
-    function renderTranscripts(transcripts) {
+    function renderTranscripts(transcripts, meetingDate) {
+      if (transcripts && transcripts.length > 0) {
+        return `
+          <div class="transcript-list">
+            ${transcripts.map(t => `
+              <div class="transcript-item">
+                <div class="transcript-info">
+                  <h4>${t.title || 'Meeting Transcript'}</h4>
+                  <p>${t.summary || 'No summary available'}</p>
+                </div>
+                <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="viewTranscript('${t.id}')">
+                  View Transcript
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
       return `
         <div class="transcript-placeholder">
           <div class="transcript-icon-large">🎤</div>
           <h3>Meeting Transcripts</h3>
-          <p>Upload audio recordings or Otter.ai transcripts</p>
-          <div class="transcript-upload-area" onclick="uploadTranscript()">
+          <p>Upload Otter.ai transcripts or text files</p>
+          <input type="file" id="transcriptFile_${meetingDate}" accept=".txt,.docx,.pdf" style="display: none;" onchange="handleTranscriptUpload('${meetingDate}', event)">
+          <div class="transcript-upload-area" onclick="document.getElementById('transcriptFile_${meetingDate}').click()">
             <div style="font-size: 2rem; margin-bottom: var(--admin-space-sm);">⬆️</div>
-            <div>Click to upload audio file or paste Otter.ai link</div>
+            <div>Click to upload transcript file</div>
             <div style="font-size: var(--admin-text-sm); color: var(--admin-text-muted); margin-top: var(--admin-space-xs);">
-              Supports MP3, WAV, M4A, or Otter.ai URLs
+              Supports .txt, .docx, .pdf (Otter.ai exports)
             </div>
           </div>
           <p style="margin-top: var(--admin-space-lg); font-size: var(--admin-text-sm);">
-            <em>Transcript parsing and AI summarization coming soon</em>
+            <em>AI-powered speaker detection and action item extraction</em>
           </p>
         </div>
       `;
@@ -834,8 +853,57 @@
       alert('Vote creation: Navigate to original Board Votes page');
     }
 
-    function uploadTranscript() {
-      alert('Transcript upload feature coming soon - will integrate with Otter.ai');
+    async function handleTranscriptUpload(meetingDate, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        // Show loading state
+        const uploadArea = event.target.parentElement;
+        uploadArea.innerHTML = `
+          <div class="admin-loading">
+            <span class="admin-spinner"></span>
+            Uploading and processing transcript...
+          </div>
+        `;
+
+        // Create FormData
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('meeting_date', meetingDate);
+
+        // Upload transcript
+        const response = await authFetch(`${API_BASE_URL}/api/transcripts/upload/`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            // Don't set Content-Type - browser will set it with boundary for multipart/form-data
+            'Authorization': `Bearer ${localStorage.getItem('isrs_session_token')}`
+          }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          alert(`Transcript uploaded successfully!\n\nSpeakers detected: ${result.speakers?.length || 0}\nAction items: ${result.action_items?.length || 0}`);
+          // Reload meetings to show new transcript
+          loadAllData();
+        } else {
+          const error = await response.json();
+          alert(`Upload failed: ${error.detail || 'Unknown error'}`);
+          // Reset upload area
+          loadAllData();
+        }
+
+      } catch (error) {
+        console.error('Transcript upload error:', error);
+        alert(`Error uploading transcript: ${error.message}`);
+        // Reset upload area
+        loadAllData();
+      }
+    }
+
+    function viewTranscript(transcriptId) {
+      window.open(`${API_BASE_URL}/api/transcripts/${transcriptId}`, '_blank');
     }
 
     function exportData() {

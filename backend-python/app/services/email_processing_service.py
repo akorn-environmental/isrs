@@ -4,11 +4,14 @@ Orchestrates email download, parsing, AI extraction, and database storage
 """
 import logging
 from typing import Dict, Any, Optional
+from datetime import datetime, date
 from sqlalchemy.orm import Session
 from app.services.s3_email_service import S3EmailService
 from app.services.email_parser_service import EmailParserService
 from app.services.ai_extraction_service import AIExtractionService
 from app.models.parsed_email import ParsedEmail
+from app.models.vote import BoardVote
+from app.models.funding import FundingProspect
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +72,30 @@ class EmailProcessingService:
 
             # Step 4: Store in database
             logger.info(f"[Email Processing] Step 4: Storing in database")
+
+            # Store email type in metadata
+            email_type = extracted_data.get('email_type', 'general')
+            email_metadata = {
+                'source': 'ses_inbound',
+                'from_name': parsed_email.get('from_name'),
+                's3_bucket': self.s3_service.bucket_name,
+                'email_type': email_type
+            }
+
+            # Add specialized extraction data to metadata
+            if extracted_data.get('board_vote'):
+                email_metadata['board_vote'] = extracted_data['board_vote']
+            if extracted_data.get('meeting_info'):
+                email_metadata['meeting_info'] = extracted_data['meeting_info']
+            if extracted_data.get('funding_info'):
+                email_metadata['funding_info'] = extracted_data['funding_info']
+            if extracted_data.get('abstract_info'):
+                email_metadata['abstract_info'] = extracted_data['abstract_info']
+            if extracted_data.get('partnership_info'):
+                email_metadata['partnership_info'] = extracted_data['partnership_info']
+            if extracted_data.get('grant_progress'):
+                email_metadata['grant_progress'] = extracted_data['grant_progress']
+
             parsed_email_record = ParsedEmail(
                 message_id=message_id,
                 s3_key=s3_key,
@@ -86,11 +113,7 @@ class EmailProcessingService:
                 overall_confidence=extracted_data.get('overall_confidence', 0),
                 status='processed',
                 requires_review=extracted_data.get('overall_confidence', 0) < 70,
-                email_metadata={
-                    'source': 'ses_inbound',
-                    'from_name': parsed_email.get('from_name'),
-                    's3_bucket': self.s3_service.bucket_name
-                }
+                email_metadata=email_metadata
             )
 
             db.add(parsed_email_record)
@@ -98,7 +121,13 @@ class EmailProcessingService:
             db.refresh(parsed_email_record)
 
             logger.info(f"[Email Processing] Successfully processed email ID: {parsed_email_record.id}")
-            logger.info(f"[Email Processing] Confidence: {parsed_email_record.overall_confidence}%, Requires review: {parsed_email_record.requires_review}")
+            logger.info(f"[Email Processing] Email type: {email_type}, Confidence: {parsed_email_record.overall_confidence}%, Requires review: {parsed_email_record.requires_review}")
+
+            # Step 5: Auto-link to specialized tables (if confidence is high enough)
+            if extracted_data.get('overall_confidence', 0) >= 70:
+                await self._auto_link_specialized_data(parsed_email_record, extracted_data, db)
+            else:
+                logger.info(f"[Email Processing] Skipping auto-link due to low confidence ({extracted_data.get('overall_confidence', 0)}%)")
 
             return parsed_email_record
 
@@ -106,6 +135,102 @@ class EmailProcessingService:
             logger.error(f"[Email Processing] Failed to process email: {str(e)}", exc_info=True)
             db.rollback()
             return self._create_failed_record(s3_key, message_id, str(e), db)
+
+    async def _auto_link_specialized_data(
+        self,
+        parsed_email: ParsedEmail,
+        extracted_data: Dict[str, Any],
+        db: Session
+    ) -> None:
+        """
+        Auto-link extracted data to specialized tables (BoardVote, FundingProspect, etc.)
+        Only creates records if confidence is high enough
+        """
+        try:
+            email_type = extracted_data.get('email_type', 'general')
+
+            # Board Vote Auto-Creation
+            if email_type == 'board_vote' and extracted_data.get('board_vote'):
+                vote_data = extracted_data['board_vote']
+                if vote_data.get('confidence', 0) >= 70:
+                    logger.info(f"[Auto-Link] Creating BoardVote record from email {parsed_email.id}")
+
+                    # Parse vote date
+                    vote_date_str = vote_data.get('vote_date')
+                    vote_date = None
+                    if vote_date_str:
+                        try:
+                            vote_date = datetime.strptime(vote_date_str, '%Y-%m-%d').date()
+                        except:
+                            vote_date = date.today()
+
+                    # Create vote record
+                    vote_record = BoardVote(
+                        vote_id=f"EMAIL_{parsed_email.message_id[:20]}",
+                        motion_title=vote_data.get('motion_title', ''),
+                        motion_description=vote_data.get('motion_description'),
+                        vote_date=vote_date or date.today(),
+                        vote_method=vote_data.get('vote_method', 'email'),
+                        result=vote_data.get('result', 'pending'),
+                        yes_count=vote_data.get('yes_count', 0),
+                        no_count=vote_data.get('no_count', 0),
+                        abstain_count=vote_data.get('abstain_count', 0),
+                        total_votes=vote_data.get('total_votes', 0),
+                        quorum_met=vote_data.get('quorum_met', False),
+                        email_content=parsed_email.body_text,
+                        processed_by='AI-CLAUDE',
+                        processed_method='AI-CLAUDE',
+                        notes=f"Auto-created from email {parsed_email.subject}"
+                    )
+
+                    db.add(vote_record)
+                    db.commit()
+                    logger.info(f"[Auto-Link] Created BoardVote ID: {vote_record.id}")
+
+            # Funding Opportunity Auto-Creation
+            elif email_type == 'funding_opportunity' and extracted_data.get('funding_info'):
+                funding_data = extracted_data['funding_info']
+                if funding_data.get('confidence', 0) >= 70:
+                    logger.info(f"[Auto-Link] Creating FundingProspect record from email {parsed_email.id}")
+
+                    # Parse deadline
+                    deadline_str = funding_data.get('deadline')
+                    deadline = None
+                    if deadline_str:
+                        try:
+                            deadline = datetime.strptime(deadline_str, '%Y-%m-%d').date()
+                        except:
+                            pass
+
+                    # Create funding record
+                    funding_record = FundingProspect(
+                        organization_name=funding_data.get('funder_name', 'Unknown Funder'),
+                        program_name=funding_data.get('program_name'),
+                        amount=funding_data.get('amount'),
+                        amount_numeric=funding_data.get('amount_numeric'),
+                        deadline=deadline,
+                        url=funding_data.get('url'),
+                        description=funding_data.get('description'),
+                        eligibility_criteria=funding_data.get('eligibility'),
+                        status='open',
+                        source='email_parsed',
+                        notes=f"Auto-created from email: {parsed_email.subject}"
+                    )
+
+                    db.add(funding_record)
+                    db.commit()
+                    logger.info(f"[Auto-Link] Created FundingProspect ID: {funding_record.id}")
+
+            # TODO: Add auto-linking for:
+            # - meeting_info -> Create meeting record (requires board_meetings table)
+            # - abstract_info -> Create conference abstract
+            # - partnership_info -> Create partnership record
+            # - grant_progress -> Update existing grant record
+
+        except Exception as e:
+            logger.error(f"[Auto-Link] Failed to auto-link specialized data: {str(e)}", exc_info=True)
+            # Don't fail the entire email processing if auto-linking fails
+            db.rollback()
 
     @staticmethod
     def _create_failed_record(

@@ -93,13 +93,14 @@ EMAIL BODY:
 Analyze the email and extract the following information in JSON format:
 
 {
+  "email_type": "board_vote|meeting_minutes|funding_opportunity|abstract_submission|partnership|grant_progress|contact_info|general",
   "contacts": [
     {
       "name": "Full name",
       "email": "email@example.com",
       "organization": "Organization name (if mentioned)",
       "role": "Role or title (if mentioned)",
-      "confidence": 85  // 0-100, confidence in this extraction
+      "confidence": 85
     }
   ],
   "action_items": [
@@ -107,41 +108,152 @@ Analyze the email and extract the following information in JSON format:
       "task": "Description of action item",
       "owner": "Person responsible (if mentioned)",
       "deadline": "YYYY-MM-DD or null",
-      "priority": "high/medium/low or null"
+      "priority": "high|medium|low|null"
     }
   ],
-  "topics": ["keyword1", "keyword2"],  // Key topics, themes, or categories
-  "overall_confidence": 85  // 0-100, overall confidence in all extractions
+  "topics": ["keyword1", "keyword2"],
+  "board_vote": {
+    "motion_title": "Budget approval for Q2 2025",
+    "motion_description": "Approve operating budget of $125,000 for Q2 2025",
+    "vote_date": "2025-01-15",
+    "vote_method": "email|meeting|survey|unanimous",
+    "yes_count": 8,
+    "no_count": 1,
+    "abstain_count": 0,
+    "total_votes": 9,
+    "quorum_met": true,
+    "result": "passed|failed|pending",
+    "confidence": 85
+  },
+  "meeting_info": {
+    "meeting_date": "2025-01-15",
+    "meeting_type": "Board Meeting|Executive Committee|Special Meeting|Annual Meeting",
+    "attendees": ["John Doe", "Jane Smith"],
+    "decisions": ["Approved budget", "Postponed venue decision"],
+    "notes": "General meeting summary",
+    "confidence": 80
+  },
+  "funding_info": {
+    "funder_name": "National Science Foundation",
+    "program_name": "Ocean Sciences Research",
+    "amount": "$500,000",
+    "amount_numeric": 500000,
+    "deadline": "2025-03-15",
+    "url": "https://nsf.gov/funding/...",
+    "description": "Funding for coastal restoration research",
+    "eligibility": "3-year project, academic partnership required",
+    "confidence": 75
+  },
+  "abstract_info": {
+    "title": "Restoration of Oyster Reefs in Chesapeake Bay",
+    "authors": ["Dr. John Smith", "Dr. Jane Doe"],
+    "abstract_text": "Full abstract text...",
+    "keywords": ["oyster", "restoration", "Chesapeake Bay"],
+    "submission_date": "2025-02-01",
+    "conference_name": "ICSR 2025",
+    "confidence": 90
+  },
+  "partnership_info": {
+    "partner_organization": "NOAA Fisheries",
+    "project_name": "Coastal Habitat Restoration Initiative",
+    "contact_person": "Dr. Smith",
+    "scope": "Multi-year partnership for habitat monitoring",
+    "timeline": "2025-2028",
+    "confidence": 70
+  },
+  "grant_progress": {
+    "grant_name": "NSF Coastal Ecosystems Award #12345",
+    "milestone": "Year 2 Progress Report",
+    "completion_percentage": 65,
+    "next_deadline": "2025-04-01",
+    "deliverable": "Annual report and data submission",
+    "confidence": 80
+  },
+  "overall_confidence": 85
 }
 
 EXTRACTION RULES:
-1. Contacts: Extract all people mentioned in the email
-   - From/To/CC headers get 90-95% confidence automatically
-   - People mentioned in body get confidence based on context (50-85%)
-   - Include organization if mentioned nearby the person's name
-   - Include role/title if explicitly stated
 
-2. Action Items: Extract tasks, requests, or follow-ups
-   - Look for phrases like "please...", "can you...", "need to...", "by [date]"
-   - Extract deadlines in YYYY-MM-DD format when possible
-   - Assign priority based on urgency indicators
+1. Email Type Detection (REQUIRED):
+   - "board_vote": Contains vote tallies, motions, voting results
+   - "meeting_minutes": Contains meeting notes, attendees, decisions
+   - "funding_opportunity": Grant announcements, RFPs, funding deadlines
+   - "abstract_submission": Conference abstract submissions or calls
+   - "partnership": MOU discussions, collaboration proposals
+   - "grant_progress": Grant milestone updates, progress reports
+   - "contact_info": Primarily contact information sharing
+   - "general": Default if no specific type matches
 
-3. Topics: Extract 3-10 relevant keywords
-   - Focus on: organizations, projects, events, locations, research areas
-   - Include: conference names, grant programs, species names, geographic locations
+2. Contacts: Extract all people mentioned
+   - From/To/CC headers: 90-95% confidence
+   - Body mentions: 50-85% confidence based on context
+   - Include organization and role if mentioned
 
-4. Confidence Scoring:
-   - 90-100%: Explicitly stated in email headers or clear mentions
-   - 70-89%: Strong context clues, likely correct
-   - 50-69%: Some ambiguity, may need review
-   - Below 50%: Uncertain, definitely needs review
+3. Action Items: Extract tasks and follow-ups
+   - Look for: "please...", "can you...", "need to...", "by [date]"
+   - Extract deadlines in YYYY-MM-DD format
+   - Assign priority based on urgency
 
-5. Overall Confidence: Average of all individual confidences, adjusted down if:
-   - Email is very short or vague
-   - Multiple ambiguous extractions
-   - Conflicting information
+4. Topics: Extract 3-10 relevant keywords
+   - Organizations, projects, events, locations, research areas
+   - Conference names, grant programs, species, geographic locations
 
-Return ONLY valid JSON, no additional text."""
+5. Board Vote (only if email_type is "board_vote"):
+   - Extract motion title and description
+   - Count votes: yes/no/abstain
+   - Determine if quorum was met
+   - Result: passed/failed/pending
+   - Vote method: email, meeting, survey, unanimous
+
+6. Meeting Info (only if email_type is "meeting_minutes"):
+   - Extract meeting date and type
+   - List all attendees mentioned
+   - Extract key decisions made
+   - Capture general notes/summary
+
+7. Funding Info (only if email_type is "funding_opportunity"):
+   - Funder name and program
+   - Amount (both text "$500K" and numeric 500000)
+   - Application deadline
+   - URL to application
+   - Eligibility requirements
+
+8. Abstract Info (only if email_type is "abstract_submission"):
+   - Paper/presentation title
+   - All authors listed
+   - Full abstract text
+   - Keywords/topics
+   - Conference name
+
+9. Partnership Info (only if email_type is "partnership"):
+   - Partner organization name
+   - Project or initiative name
+   - Key contact person
+   - Scope and timeline
+
+10. Grant Progress (only if email_type is "grant_progress"):
+    - Grant name/number
+    - Current milestone
+    - Completion percentage if mentioned
+    - Next deadline
+    - Upcoming deliverable
+
+11. Confidence Scoring:
+    - 90-100%: Explicitly stated, clear evidence
+    - 70-89%: Strong context clues
+    - 50-69%: Some ambiguity
+    - <50%: Uncertain, needs review
+
+12. Overall Confidence: Average of all confidences, adjusted for:
+    - Email clarity and completeness
+    - Ambiguous or conflicting information
+    - Missing key details
+
+IMPORTANT:
+- Always include email_type
+- Only include specialized objects (board_vote, meeting_info, etc.) if that email_type is detected
+- Return ONLY valid JSON, no additional text
+- Use null for missing optional fields"""
 
     @staticmethod
     def _create_default_extraction(email_data: Dict[str, Any], error: str = None) -> Dict[str, Any]:
@@ -180,6 +292,7 @@ Return ONLY valid JSON, no additional text."""
             })
 
         return {
+            'email_type': 'general',
             'contacts': contacts,
             'action_items': [],
             'topics': [],
