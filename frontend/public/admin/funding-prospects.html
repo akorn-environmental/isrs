@@ -161,6 +161,8 @@
   </style>
   <!-- Error Reporter - Logs frontend errors to backend/Render -->
   <script src="/js/errorReporter.js"></script>
+  <!-- API Configuration -->
+  <script src="/js/api-config.js"></script>
 </head>
 <body>
   <div class="admin-nav">
@@ -493,7 +495,7 @@
   </div>
 
   <script>
-    const API_BASE_URL = ''  // Use same-origin (relative URLs) in production;
+    // API_BASE_URL is now loaded from /js/api-config.js
     const sessionToken = localStorage.getItem('isrs_session_token');
     
     let allProspects = [];
@@ -947,6 +949,8 @@
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
         <head><meta charset="UTF-8">  <!-- Error Reporter - Logs frontend errors to backend/Render -->
   <script src="/js/errorReporter.js"></script>
+  <!-- API Configuration -->
+  <script src="/js/api-config.js"></script>
 </head>
         <body>
           <table>

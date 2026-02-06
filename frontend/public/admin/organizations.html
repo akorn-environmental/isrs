@@ -287,6 +287,8 @@
   </style>
   <!-- Error Reporter - Logs frontend errors to backend/Render -->
   <script src="/js/errorReporter.js"></script>
+  <!-- API Configuration -->
+  <script src="/js/api-config.js"></script>
 </head>
 <body class="admin-page">
   <div class="admin-content-padded">
@@ -475,7 +477,7 @@
   </div>
 
   <script>
-    const API_BASE_URL = ''  // Use same-origin (relative URLs) in production;
+    // API_BASE_URL is now loaded from /js/api-config.js
     let userPermissions = null;
     let allOrganizations = [];
     let filteredOrganizations = [];
