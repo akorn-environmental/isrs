@@ -136,18 +136,26 @@ echo ""
 #############################################
 echo -e "${BLUE}[3/8] Checking translation completeness...${NC}"
 
-TRANSLATION_CHECKER="$PROJECT_ROOT/check-translations.js"
+# Use the accurate analyzer if available, fallback to old checker
+if [ -f "$PROJECT_ROOT/analyze_translations.js" ]; then
+    TRANS_OUTPUT=$(node "$PROJECT_ROOT/analyze_translations.js" 2>&1 | grep -A 4 "KEY COUNTS:")
+    EN_KEYS=$(echo "$TRANS_OUTPUT" | grep "English" | grep -o '[0-9]\+' | head -1)
+    ES_KEYS=$(echo "$TRANS_OUTPUT" | grep "Spanish" | grep -o '[0-9]\+' | head -1)
+    FR_KEYS=$(echo "$TRANS_OUTPUT" | grep "French" | grep -o '[0-9]\+' | head -1)
 
-if [ -f "$TRANSLATION_CHECKER" ]; then
-    # Run the dedicated translation checker
-    if node "$TRANSLATION_CHECKER" 2>&1 | head -20; then
+    if [ "$EN_KEYS" = "$ES_KEYS" ] && [ "$EN_KEYS" = "$FR_KEYS" ] && [ -n "$FR_KEYS" ]; then
+        print_status 0 "All 3 languages synchronized ($EN_KEYS keys each)"
+    else
+        print_warning "Translation mismatch: EN=$EN_KEYS, ES=$ES_KEYS, FR=$FR_KEYS"
+    fi
+elif [ -f "$PROJECT_ROOT/check-translations.js" ]; then
+    if node "$PROJECT_ROOT/check-translations.js" 2>&1 | head -20; then
         print_status 0 "Translation check passed"
     else
         print_warning "Translation check found issues (see above)"
     fi
 else
-    print_warning "Translation checker script not found: $TRANSLATION_CHECKER"
-    print_info "Run: ./check-translations.js to verify translation completeness"
+    print_warning "Translation checker script not found"
 fi
 echo ""
 
