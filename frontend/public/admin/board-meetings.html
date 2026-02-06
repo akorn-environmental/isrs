@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Meetings - ISRS Admin</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin-unified.css">
+  <style>
+    .meeting-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--admin-space-xl);
+    }
+
+    .meeting-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      overflow: hidden;
+    }
+
+    .meeting-header {
+      background: linear-gradient(135deg, var(--admin-primary), var(--admin-primary-dark));
+      color: white;
+      padding: var(--admin-space-xl);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .meeting-header:hover {
+      background: linear-gradient(135deg, var(--admin-primary-dark), var(--admin-primary));
+    }
+
+    .meeting-header-left {
+      flex: 1;
+    }
+
+    .meeting-date {
+      font-size: var(--admin-text-2xl);
+      font-weight: 700;
+      margin-bottom: var(--admin-space-xs);
+    }
+
+    .meeting-type {
+      font-size: var(--admin-text-sm);
+      opacity: 0.9;
+    }
+
+    .meeting-stats {
+      display: flex;
+      gap: var(--admin-space-xl);
+      font-size: var(--admin-text-sm);
+    }
+
+    .meeting-stat {
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-xs);
+    }
+
+    .meeting-stat-icon {
+      font-size: 1.2rem;
+    }
+
+    .expand-icon {
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+
+    .meeting-card.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+
+    .meeting-content {
+      display: none;
+      padding: var(--admin-space-xl);
+    }
+
+    .meeting-card.expanded .meeting-content {
+      display: block;
+    }
+
+    .meeting-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--admin-border);
+      margin-bottom: var(--admin-space-xl);
+      gap: var(--admin-space-lg);
+    }
+
+    .meeting-tab {
+      padding: var(--admin-space-md) var(--admin-space-lg);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-sm);
+      color: var(--admin-text-muted);
+      font-weight: 500;
+    }
+
+    .meeting-tab:hover {
+      color: var(--admin-text);
+    }
+
+    .meeting-tab.active {
+      color: var(--admin-primary);
+      border-bottom-color: var(--admin-primary);
+    }
+
+    .tab-badge {
+      background: var(--admin-gray-200);
+      color: var(--admin-text);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: var(--admin-text-xs);
+      font-weight: 600;
+    }
+
+    .meeting-tab.active .tab-badge {
+      background: var(--admin-primary);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Documents Tab */
+    .documents-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--admin-space-md);
+    }
+
+    .document-item {
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-md);
+      padding: var(--admin-space-md);
+      background: var(--admin-gray-50);
+      border-radius: var(--admin-radius-md);
+      transition: all 0.2s;
+    }
+
+    .document-item:hover {
+      background: var(--admin-gray-100);
+      transform: translateX(4px);
+    }
+
+    .document-icon {
+      font-size: 2rem;
+      color: var(--admin-primary);
+    }
+
+    .document-info {
+      flex: 1;
+    }
+
+    .document-name {
+      font-weight: 600;
+      color: var(--admin-text);
+      margin-bottom: 4px;
+    }
+
+    .document-meta {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+    }
+
+    .document-actions {
+      display: flex;
+      gap: var(--admin-space-sm);
+    }
+
+    /* Votes Tab */
+    .votes-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--admin-space-lg);
+    }
+
+    .vote-item {
+      padding: var(--admin-space-lg);
+      background: var(--admin-gray-50);
+      border-radius: var(--admin-radius-md);
+      border-left: 4px solid var(--admin-gray-400);
+    }
+
+    .vote-item.passed {
+      border-left-color: var(--admin-success);
+    }
+
+    .vote-item.failed {
+      border-left-color: var(--admin-danger);
+    }
+
+    .vote-item.pending {
+      border-left-color: var(--admin-warning);
+    }
+
+    .vote-motion {
+      font-weight: 600;
+      color: var(--admin-text);
+      margin-bottom: var(--admin-space-sm);
+      line-height: 1.5;
+    }
+
+    .vote-results {
+      display: flex;
+      gap: var(--admin-space-xl);
+      margin-top: var(--admin-space-md);
+      font-size: var(--admin-text-sm);
+    }
+
+    .vote-result-item {
+      display: flex;
+      align-items: center;
+      gap: var(--admin-space-xs);
+    }
+
+    .vote-result-label {
+      color: var(--admin-text-muted);
+    }
+
+    .vote-result-value {
+      font-weight: 700;
+      color: var(--admin-text);
+    }
+
+    .vote-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: var(--admin-text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: var(--admin-space-sm);
+    }
+
+    .vote-status.passed {
+      background: var(--admin-success-light);
+      color: var(--admin-success);
+    }
+
+    .vote-status.failed {
+      background: var(--admin-danger-light);
+      color: var(--admin-danger);
+    }
+
+    .vote-status.pending {
+      background: var(--admin-warning-light);
+      color: var(--admin-warning);
+    }
+
+    /* Transcripts Tab */
+    .transcript-placeholder {
+      text-align: center;
+      padding: var(--admin-space-4xl);
+      color: var(--admin-text-muted);
+    }
+
+    .transcript-icon-large {
+      font-size: 4rem;
+      margin-bottom: var(--admin-space-lg);
+      opacity: 0.3;
+    }
+
+    .transcript-upload-area {
+      margin-top: var(--admin-space-xl);
+      padding: var(--admin-space-2xl);
+      border: 2px dashed var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .transcript-upload-area:hover {
+      border-color: var(--admin-primary);
+      background: var(--admin-primary-light);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--admin-space-3xl);
+      color: var(--admin-text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--admin-space-md);
+      opacity: 0.3;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: var(--admin-space-md);
+      margin-bottom: var(--admin-space-2xl);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--admin-space-lg);
+      margin-bottom: var(--admin-space-2xl);
+    }
+
+    .stat-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-lg);
+      padding: var(--admin-space-xl);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: var(--admin-text-3xl);
+      font-weight: 700;
+      color: var(--admin-text);
+    }
+
+    .stat-label {
+      font-size: var(--admin-text-sm);
+      color: var(--admin-text-muted);
+      margin-top: var(--admin-space-xs);
+    }
+
+    @media (max-width: 768px) {
+      .meeting-stats {
+        flex-direction: column;
+        gap: var(--admin-space-sm);
+      }
+
+      .meeting-tabs {
+        overflow-x: auto;
+      }
+
+      .vote-results {
+        flex-direction: column;
+        gap: var(--admin-space-sm);
+      }
+    }
+  </style>
+  <!-- Error Reporter -->
+  <script src="/js/errorReporter.js"></script>
+  <!-- API Configuration -->
+  <script src="/js/api-config.js"></script>
+  <script src="/js/admin-auth.js"></script>
+</head>
+<body class="admin-page">
+  <div class="admin-content-padded">
+    <!-- Page Header -->
+    <div class="admin-page-header">
+      <div>
+        <h1>Board Meetings</h1>
+        <p style="color: var(--admin-text-muted); margin-top: var(--admin-space-xs);">
+          Complete record of board meetings, documents, votes, and transcripts
+        </p>
+      </div>
+      <div class="admin-page-header-actions">
+        <button class="admin-btn admin-btn-secondary" onclick="exportData()">
+          📊 Export Data
+        </button>
+        <button class="admin-btn admin-btn-primary" onclick="showAddMeetingModal()">
+          + New Meeting
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="stats-summary">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalMeetings">0</div>
+        <div class="stat-label">Total Meetings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalVotes">0</div>
+        <div class="stat-label">Total Votes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalDocuments">0</div>
+        <div class="stat-label">Documents</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalTranscripts">0</div>
+        <div class="stat-label">Transcripts</div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input type="text" class="admin-input" id="searchInput" placeholder="Search meetings..." style="flex: 1; max-width: 400px;" oninput="filterMeetings()">
+      <select class="admin-select" id="yearFilter" onchange="filterMeetings()" style="width: 150px;">
+        <option value="">All Years</option>
+      </select>
+      <select class="admin-select" id="typeFilter" onchange="filterMeetings()" style="width: 200px;">
+        <option value="">All Meeting Types</option>
+        <option value="Board Meeting">Board Meeting</option>
+        <option value="Executive Committee">Executive Committee</option>
+        <option value="Special Meeting">Special Meeting</option>
+        <option value="Annual Meeting">Annual Meeting</option>
+      </select>
+      <button class="admin-btn admin-btn-secondary" onclick="resetFilters()">Reset</button>
+    </div>
+
+    <!-- Meetings List -->
+    <div id="meetingsContainer">
+      <div class="admin-loading">
+        <span class="admin-spinner"></span>
+        Loading board meetings...
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Meeting Modal -->
+  <div id="addMeetingModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2>Add Board Meeting</h2>
+        <button class="admin-modal-close" onclick="closeAddMeetingModal()">&times;</button>
+      </div>
+      <form id="addMeetingForm" onsubmit="handleAddMeeting(event)">
+        <div class="admin-modal-body">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="meetingDate">Meeting Date *</label>
+            <input type="date" class="admin-input" id="meetingDate" required style="width: 100%;">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="meetingType">Meeting Type *</label>
+            <select class="admin-select" id="meetingType" required style="width: 100%;">
+              <option value="">Select type...</option>
+              <option value="Board Meeting">Board Meeting</option>
+              <option value="Executive Committee">Executive Committee</option>
+              <option value="Special Meeting">Special Meeting</option>
+              <option value="Annual Meeting">Annual Meeting</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="meetingNotes">Notes (Optional)</label>
+            <textarea class="admin-textarea" id="meetingNotes" style="width: 100%;" rows="4"></textarea>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAddMeetingModal()">Cancel</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Create Meeting</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let allMeetings = [];
+    let allVotes = [];
+    let allDocuments = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      if (!sessionToken) {
+        window.location.href = '/admin/';
+        return;
+      }
+      loadAllData();
+      populateYearFilter();
+    });
+
+    async function loadAllData() {
+      try {
+        // Load votes and documents in parallel
+        const [votesResponse, documentsResponse] = await Promise.all([
+          authFetch(`${API_BASE_URL}/api/votes/`),
+          authFetch(`${API_BASE_URL}/api/admin/board-documents/`)
+        ]);
+
+        if (votesResponse.ok) {
+          const votesData = await votesResponse.json();
+          allVotes = votesData.votes || [];
+        }
+
+        if (documentsResponse.ok) {
+          const docsData = await documentsResponse.json();
+          allDocuments = docsData.documents || docsData.data || [];
+        }
+
+        // Group by meeting date
+        groupByMeeting();
+        updateStats();
+        renderMeetings();
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+        document.getElementById('meetingsContainer').innerHTML = `
+          <div class="admin-alert admin-alert-danger">
+            Error loading board meetings data: ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    function groupByMeeting() {
+      // Create a map of meetings by date
+      const meetingMap = new Map();
+
+      // Add votes to meetings
+      allVotes.forEach(vote => {
+        const dateKey = vote.vote_date;
+        if (!meetingMap.has(dateKey)) {
+          meetingMap.set(dateKey, {
+            date: dateKey,
+            type: 'Board Meeting', // Default type
+            votes: [],
+            documents: [],
+            transcripts: []
+          });
+        }
+        meetingMap.get(dateKey).votes.push(vote);
+      });
+
+      // Add documents to meetings (match by date if available)
+      allDocuments.forEach(doc => {
+        if (doc.meeting_date) {
+          const dateKey = doc.meeting_date;
+          if (!meetingMap.has(dateKey)) {
+            meetingMap.set(dateKey, {
+              date: dateKey,
+              type: doc.category || 'Board Meeting',
+              votes: [],
+              documents: [],
+              transcripts: []
+            });
+          }
+          meetingMap.get(dateKey).documents.push(doc);
+        }
+      });
+
+      // Convert map to sorted array
+      allMeetings = Array.from(meetingMap.values()).sort((a, b) =>
+        new Date(b.date) - new Date(a.date)
+      );
+    }
+
+    function renderMeetings() {
+      const container = document.getElementById('meetingsContainer');
+
+      if (allMeetings.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <h3>No Board Meetings Yet</h3>
+            <p>Click "New Meeting" to add your first board meeting record</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = `
+        <div class="meeting-list">
+          ${allMeetings.map(meeting => renderMeeting(meeting)).join('')}
+        </div>
+      `;
+      container.innerHTML = html;
+    }
+
+    function renderMeeting(meeting) {
+      const formattedDate = new Date(meeting.date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      return `
+        <div class="meeting-card" data-meeting-date="${meeting.date}">
+          <div class="meeting-header" onclick="toggleMeeting('${meeting.date}')">
+            <div class="meeting-header-left">
+              <div class="meeting-date">${formattedDate}</div>
+              <div class="meeting-type">${meeting.type}</div>
+            </div>
+            <div class="meeting-stats">
+              <div class="meeting-stat">
+                <span class="meeting-stat-icon">📄</span>
+                <span>${meeting.documents.length} docs</span>
+              </div>
+              <div class="meeting-stat">
+                <span class="meeting-stat-icon">✅</span>
+                <span>${meeting.votes.length} votes</span>
+              </div>
+              <div class="meeting-stat">
+                <span class="meeting-stat-icon">🎤</span>
+                <span>${meeting.transcripts.length} transcripts</span>
+              </div>
+              <span class="expand-icon">▼</span>
+            </div>
+          </div>
+          <div class="meeting-content">
+            ${renderMeetingContent(meeting)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMeetingContent(meeting) {
+      return `
+        <div class="meeting-tabs">
+          <div class="meeting-tab active" onclick="switchTab(event, '${meeting.date}', 'documents')">
+            📄 Documents
+            <span class="tab-badge">${meeting.documents.length}</span>
+          </div>
+          <div class="meeting-tab" onclick="switchTab(event, '${meeting.date}', 'votes')">
+            ✅ Votes
+            <span class="tab-badge">${meeting.votes.length}</span>
+          </div>
+          <div class="meeting-tab" onclick="switchTab(event, '${meeting.date}', 'transcripts')">
+            🎤 Transcripts
+            <span class="tab-badge">${meeting.transcripts.length}</span>
+          </div>
+        </div>
+
+        <div class="tab-content active" data-tab="documents">
+          ${renderDocuments(meeting.documents)}
+        </div>
+
+        <div class="tab-content" data-tab="votes">
+          ${renderVotes(meeting.votes)}
+        </div>
+
+        <div class="tab-content" data-tab="transcripts">
+          ${renderTranscripts(meeting.transcripts)}
+        </div>
+      `;
+    }
+
+    function renderDocuments(documents) {
+      if (documents.length === 0) {
+        return `
+          <div class="empty-state">
+            <div class="empty-state-icon">📄</div>
+            <p>No documents for this meeting</p>
+            <button class="admin-btn admin-btn-sm admin-btn-primary" onclick="uploadDocument()">
+              Upload Document
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="documents-list">
+          ${documents.map(doc => `
+            <div class="document-item">
+              <div class="document-icon">📄</div>
+              <div class="document-info">
+                <div class="document-name">${doc.title || doc.filename}</div>
+                <div class="document-meta">
+                  ${doc.category || 'Uncategorized'} • ${formatFileSize(doc.file_size)}
+                </div>
+              </div>
+              <div class="document-actions">
+                <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="downloadDocument('${doc.id}')">
+                  Download
+                </button>
+                <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="viewDocument('${doc.id}')">
+                  View
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderVotes(votes) {
+      if (votes.length === 0) {
+        return `
+          <div class="empty-state">
+            <div class="empty-state-icon">✅</div>
+            <p>No votes recorded for this meeting</p>
+            <button class="admin-btn admin-btn-sm admin-btn-primary" onclick="addVote()">
+              Add Vote
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="votes-list">
+          ${votes.map(vote => {
+            const status = vote.result?.toLowerCase() || vote.status || 'pending';
+            return `
+              <div class="vote-item ${status}">
+                <div class="vote-motion">${vote.motion_title || vote.motion}</div>
+                ${vote.motion_description ? `<p style="color: var(--admin-text-muted); margin-top: var(--admin-space-sm);">${vote.motion_description}</p>` : ''}
+                <div class="vote-results">
+                  <div class="vote-result-item">
+                    <span class="vote-result-label">Yes:</span>
+                    <span class="vote-result-value">${vote.yes_count || 0}</span>
+                  </div>
+                  <div class="vote-result-item">
+                    <span class="vote-result-label">No:</span>
+                    <span class="vote-result-value">${vote.no_count || 0}</span>
+                  </div>
+                  <div class="vote-result-item">
+                    <span class="vote-result-label">Abstain:</span>
+                    <span class="vote-result-value">${vote.abstain_count || 0}</span>
+                  </div>
+                  <div class="vote-result-item">
+                    <span class="vote-result-label">Quorum:</span>
+                    <span class="vote-result-value">${vote.quorum_met ? 'Met' : 'Not Met'}</span>
+                  </div>
+                </div>
+                <span class="vote-status ${status}">${status}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderTranscripts(transcripts) {
+      return `
+        <div class="transcript-placeholder">
+          <div class="transcript-icon-large">🎤</div>
+          <h3>Meeting Transcripts</h3>
+          <p>Upload audio recordings or Otter.ai transcripts</p>
+          <div class="transcript-upload-area" onclick="uploadTranscript()">
+            <div style="font-size: 2rem; margin-bottom: var(--admin-space-sm);">⬆️</div>
+            <div>Click to upload audio file or paste Otter.ai link</div>
+            <div style="font-size: var(--admin-text-sm); color: var(--admin-text-muted); margin-top: var(--admin-space-xs);">
+              Supports MP3, WAV, M4A, or Otter.ai URLs
+            </div>
+          </div>
+          <p style="margin-top: var(--admin-space-lg); font-size: var(--admin-text-sm);">
+            <em>Transcript parsing and AI summarization coming soon</em>
+          </p>
+        </div>
+      `;
+    }
+
+    function toggleMeeting(date) {
+      const card = document.querySelector(`.meeting-card[data-meeting-date="${date}"]`);
+      card.classList.toggle('expanded');
+    }
+
+    function switchTab(event, meetingDate, tabName) {
+      const card = document.querySelector(`.meeting-card[data-meeting-date="${meetingDate}"]`);
+
+      // Update tab buttons
+      card.querySelectorAll('.meeting-tab').forEach(tab => tab.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      // Update tab content
+      card.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      card.querySelector(`.tab-content[data-tab="${tabName}"]`).classList.add('active');
+    }
+
+    function updateStats() {
+      document.getElementById('statTotalMeetings').textContent = allMeetings.length;
+      document.getElementById('statTotalVotes').textContent = allVotes.length;
+      document.getElementById('statTotalDocuments').textContent = allDocuments.length;
+      document.getElementById('statTotalTranscripts').textContent = 0; // Placeholder
+    }
+
+    function populateYearFilter() {
+      const years = new Set();
+      allMeetings.forEach(meeting => {
+        const year = new Date(meeting.date).getFullYear();
+        years.add(year);
+      });
+
+      const yearFilter = document.getElementById('yearFilter');
+      Array.from(years).sort((a, b) => b - a).forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      });
+    }
+
+    function filterMeetings() {
+      // TODO: Implement filtering
+      console.log('Filtering meetings...');
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('yearFilter').value = '';
+      document.getElementById('typeFilter').value = '';
+      renderMeetings();
+    }
+
+    function showAddMeetingModal() {
+      document.getElementById('addMeetingModal').style.display = 'flex';
+    }
+
+    function closeAddMeetingModal() {
+      document.getElementById('addMeetingModal').style.display = 'none';
+      document.getElementById('addMeetingForm').reset();
+    }
+
+    function handleAddMeeting(event) {
+      event.preventDefault();
+      // TODO: Implement meeting creation
+      alert('Meeting creation will be implemented once backend endpoint is created');
+      closeAddMeetingModal();
+    }
+
+    function uploadDocument() {
+      alert('Document upload: Navigate to original Board Documents page');
+    }
+
+    function downloadDocument(id) {
+      window.open(`${API_BASE_URL}/api/admin/board-documents/${id}/download`, '_blank');
+    }
+
+    function viewDocument(id) {
+      window.open(`${API_BASE_URL}/api/admin/board-documents/${id}`, '_blank');
+    }
+
+    function addVote() {
+      alert('Vote creation: Navigate to original Board Votes page');
+    }
+
+    function uploadTranscript() {
+      alert('Transcript upload feature coming soon - will integrate with Otter.ai');
+    }
+
+    function exportData() {
+      alert('Export functionality coming soon');
+    }
+
+    function formatFileSize(bytes) {
+      if (!bytes) return 'Unknown size';
+      const kb = bytes / 1024;
+      if (kb < 1024) return `${kb.toFixed(1)} KB`;
+      return `${(kb / 1024).toFixed(1)} MB`;
+    }
+  </script>
+</body>
+</html>
