@@ -457,9 +457,10 @@
         const data = await response.json();
 
         if (response.ok) {
-          document.getElementById('emailCredits').textContent = data.email_credits?.toLocaleString() || 'N/A';
-          document.getElementById('exportCredits').textContent = data.export_credits?.toLocaleString() || 'N/A';
-          document.getElementById('dailyRequests').textContent = data.requests_remaining?.toLocaleString() || 'N/A';
+          document.getElementById('emailCredits').textContent = data.email_credits || 'N/A';
+          document.getElementById('exportCredits').textContent = data.export_credits || 'N/A';
+          const remaining = data.daily_request_limit - (data.requests_made_today || 0);
+          document.getElementById('dailyRequests').textContent = remaining.toLocaleString() || 'N/A';
         } else {
           console.error('Failed to load credits:', data);
           document.getElementById('emailCredits').textContent = 'Error';
