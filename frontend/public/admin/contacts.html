@@ -621,6 +621,29 @@
 
   <script>
     // API_BASE_URL is now loaded from /js/api-config.js
+
+    // Helper function to get auth headers with session token
+    function getAuthHeaders(additionalHeaders = {}) {
+      const sessionToken = localStorage.getItem('isrs_session_token');
+      const headers = {
+        'Content-Type': 'application/json',
+        ...additionalHeaders
+      };
+      if (sessionToken) {
+        headers['Authorization'] = `Bearer ${sessionToken}`;
+      }
+      return headers;
+    }
+
+    // Helper function for authenticated fetch requests
+    async function authFetch(url, options = {}) {
+      const defaultOptions = {
+        credentials: 'include',
+        headers: getAuthHeaders(options.headers || {})
+      };
+      return fetch(url, { ...defaultOptions, ...options, headers: defaultOptions.headers });
+    }
+
     let allContacts = [];
     let filteredContacts = [];
     let selectedContacts = new Set();
@@ -770,6 +793,8 @@
     async function loadUserPermissions() {
       try {
         const response = await fetch(`${API_BASE_URL}/api/auth/validate-session`, {
+          method: 'GET',
+          headers: getAuthHeaders(),
           credentials: 'include'
         });
         const data = await response.json();
@@ -805,6 +830,8 @@
     async function loadContacts() {
       try {
         const response = await fetch(`${API_BASE_URL}/api/contacts/`, {
+          method: 'GET',
+          headers: getAuthHeaders(),
           credentials: 'include'
         });
         const data = await response.json();
