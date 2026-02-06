@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Send ICSR2026 Save the Date email to aaron.kornbluth@gmail.com for testing
+Uses the branded ISRS email template for consistent design
 """
 import sys
 import os
@@ -10,7 +11,7 @@ from datetime import datetime
 # Add parent directory to path to import from app
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from app.services.email_service import EmailService
+from app.services.email_service import EmailService, get_base_template, get_button_html
 
 async def main():
     """Send ICSR2026 Save the Date email"""
@@ -26,103 +27,118 @@ async def main():
     print()
 
     # Email content
-    subject = "ICSR 2026 - Save the Date: October 4-8, Washington State 🦪"
+    subject = "Save the Date: ICSR2026 - October 4-8, Washington State"
 
-    html_content = """
-    <h2 style="color: #2c5f2d; margin-bottom: 1rem;">🗓️ Save the Date</h2>
+    # Build email content using the same structure as abstract acceptance
+    content = """
+    <h1 style="color: #2c5f2d; font-size: 28px; margin: 0 0 20px 0; text-align: center;">Save the Date!</h1>
 
-    <div style="background: linear-gradient(135deg, #f8fdf8 0%, #e8f4f8 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center; border: 2px solid #2c5f2d;">
-        <h1 style="color: #2c5f2d; font-size: 2rem; margin: 0 0 0.5rem 0;">ICSR 2026</h1>
-        <p style="font-size: 1.1rem; font-weight: 600; margin: 0.5rem 0;">International Conference on Shellfish Restoration</p>
-        <p style="font-size: 1.5rem; font-weight: bold; color: #2c5f2d; margin: 1rem 0;">October 4-8, 2026</p>
-        <p style="font-size: 1.1rem; margin: 0.5rem 0;">Little Creek Resort and Conference Center</p>
-        <p style="font-size: 1rem; margin: 0.5rem 0;">Shelton, Washington</p>
-        <p style="font-size: 0.9rem; margin: 1rem 0 0 0; font-style: italic;">Hosted by Puget Sound Restoration Fund</p>
-    </div>
-
-    <h3 style="color: #2c5f2d;">📍 Location</h3>
-    <p>The conference will be held at <a href="https://littlecreek.com/" style="color: #2c5f2d;">Little Creek Resort and Conference Center</a> in Shelton, Washington, operated by the Squaxin Island Tribe. Set in the spectacular Puget Sound region, this location offers a unique opportunity to engage with Indigenous knowledge and shellfish restoration in the Pacific Northwest.</p>
-
-    <h3 style="color: #2c5f2d;">🎯 Conference Themes</h3>
-    <ul style="line-height: 1.8;">
-        <li><strong>Engaging Communities</strong> - Building partnerships for restoration success</li>
-        <li><strong>Collaborating with Knowledge Holders</strong> - Learning from Indigenous wisdom and Traditional Ecological Knowledge</li>
-        <li><strong>Advancing Restorative Aquaculture</strong> - Integrating aquaculture and restoration for ecosystem recovery</li>
-    </ul>
-
-    <h3 style="color: #2c5f2d;">🎤 Confirmed Keynote Speakers</h3>
-    <div style="background: #f8fdf8; padding: 1rem; border-left: 4px solid #2c5f2d; margin: 1rem 0;">
-        <p style="margin: 0.5rem 0;"><strong>Chairman Kris Peters</strong>, Squaxin Island Tribe<br><em>Welcoming Address - Monday, October 5</em></p>
-        <p style="margin: 0.5rem 0;"><strong>Chairman Leonard Forsman</strong>, Suquamish Tribe<br><em>Keynote Address - Tuesday, October 6</em></p>
-    </div>
-
-    <h3 style="color: #2c5f2d;">🌊 What to Expect</h3>
-    <ul style="line-height: 1.8;">
-        <li><strong>300+ participants</strong> from 20+ countries</li>
-        <li><strong>Scientific presentations</strong> and poster sessions</li>
-        <li><strong>Traditional Salmon & Clam Bake</strong> - Experience coastal Indigenous cuisine and traditions</li>
-        <li><strong>Field trips</strong> to shellfish facilities, restoration sites, hatcheries, and cultural locations</li>
-        <li><strong>Networking events</strong> including a "Lessons Learned" panel and happy hour</li>
-        <li><strong>Post-conference working groups</strong> (NOOC Roundtable, Global Ostrea Working Meeting)</li>
-    </ul>
-
-    <h3 style="color: #2c5f2d;">📊 Preliminary Session Topics</h3>
-    <p>The program is being developed by our Program Team, led by <strong>Julieta Martinelli</strong> (WA Department of Fish & Wildlife). Topics include:</p>
-    <ul style="line-height: 1.6;">
-        <li>Ostrea Session (NOOC, NORA, Australia) - Global perspectives on native oyster restoration</li>
-        <li>Urban Shellfish Restoration</li>
-        <li>Indigenous Partners Session</li>
-        <li>Grower Partners Session</li>
-        <li>Hatcheries (Conservation & Tribal)</li>
-        <li>Abalone Recovery</li>
-        <li>Freshwater Mussels</li>
-        <li>Resilience Building to mitigate ocean acidification</li>
-        <li>Archaeology - Learning from fossils and archaeological records</li>
-    </ul>
-
-    <h3 style="color: #2c5f2d;">📅 Registration & Abstract Submission</h3>
-    <p><strong>Registration:</strong> Early bird registration will open in <strong>Spring 2026</strong>. Details coming soon!</p>
-    <p><strong>Abstract Submissions:</strong> Call for abstracts will be announced in <strong>Spring 2026</strong>. Start thinking about your research to share!</p>
-
-    <div style="text-align: center; margin: 2rem 0;">
-        <a href="https://www.shellfish-society.org/icsr2026.html" style="background-color: #2c5f2d; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; display: inline-block; font-size: 16px; font-weight: 600;">
-            Learn More About ICSR2026
-        </a>
-    </div>
-
-    <h3 style="color: #2c5f2d;">🤝 Planning Committee</h3>
-    <p>This conference is being organized by an exceptional planning committee, chaired by <strong>Betsy Peabody</strong> (Puget Sound Restoration Fund), with members from:</p>
-    <ul style="line-height: 1.6;">
-        <li>Puget Sound Restoration Fund</li>
-        <li>International Shellfish Restoration Society (ISRS)</li>
-        <li>Taylor Shellfish</li>
-        <li>Suquamish Tribe</li>
-        <li>Washington Department of Fish & Wildlife</li>
-        <li>The Nature Conservancy</li>
-        <li>Elkhorn Slough National Research Reserve / NOOC</li>
-    </ul>
-
-    <div style="background: #fffbeb; border-radius: 8px; padding: 15px 20px; margin: 25px 0;">
-        <p style="margin: 0; font-size: 14px; color: #8b5e00;">
-            <strong>📧 Stay Connected:</strong> We'll be sharing more details in the coming months about registration rates, abstract submission guidelines, accommodation information, field trip details, and sponsorship opportunities.
-        </p>
-    </div>
-
-    <p style="font-size: 0.9rem; color: #666; margin-top: 2rem;">
-        <strong>Questions?</strong> Contact us at <a href="mailto:info@shellfish-society.org" style="color: #2c5f2d;">info@shellfish-society.org</a>
+    <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 20px;">
+        Mark your calendars! The <strong>International Conference on Shellfish Restoration 2026 (ICSR2026)</strong> will be held in Shelton, Washington, October 4–8, 2026.
     </p>
 
-    <p style="margin-top: 2rem;">We look forward to gathering with you in Washington State this October to advance shellfish restoration globally!</p>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 30px 0;">
+        <tr>
+            <td style="background: #ffffff; border: 3px solid #2c5f2d; border-radius: 16px; padding: 0; overflow: hidden; box-shadow: 0 6px 24px rgba(44, 95, 45, 0.12);">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <!-- Logo section with gradient background -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #2c5f2d 0%, #1e4020 100%); padding: 40px 30px; text-align: center;">
+                            <img src="https://www.shellfish-society.org/images/logos/LOGO%20-%20ICSR2026.png" alt="ICSR2026 Logo" style="max-width: 320px; height: auto; display: block; margin: 0 auto;">
+                        </td>
+                    </tr>
+                    <!-- Content section -->
+                    <tr>
+                        <td style="background: #ffffff; padding: 35px 30px; text-align: center;">
+                            <h2 style="color: #2c5f2d; font-size: 22px; font-weight: 700; margin: 0 0 20px 0; line-height: 1.3;">International Conference on Shellfish Restoration</h2>
 
-    <p style="margin-top: 1.5rem;"><strong>The ISRS and ICSR2026 Teams</strong></p>
+                            <div style="background: linear-gradient(135deg, #f0f8f0 0%, #e8f4f8 100%); border-radius: 8px; padding: 20px; margin: 20px 0;">
+                                <p style="font-size: 24px; font-weight: 700; color: #2c5f2d; margin: 0 0 5px 0; letter-spacing: 0.5px;">October 4–8, 2026</p>
+                            </div>
+
+                            <p style="font-size: 17px; color: #333; margin: 15px 0 5px 0; font-weight: 600;">Little Creek Resort and Conference Center</p>
+                            <p style="font-size: 17px; color: #333; margin: 5px 0 20px 0; font-weight: 600;">Shelton, Washington</p>
+
+                            <p style="font-size: 14px; margin: 20px 0 0 0; color: #666; font-style: italic; border-top: 1px solid #e0e0e0; padding-top: 20px;">Hosted by Puget Sound Restoration Fund</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <h3 style="color: #2c5f2d; font-size: 20px; margin-top: 30px; margin-bottom: 15px;">Conference Themes</h3>
+    <ul style="line-height: 1.8; color: #333; margin: 0 0 25px 20px; padding-left: 0;">
+        <li style="margin-bottom: 10px;"><strong>Engaging Communities</strong> - Building partnerships for restoration success</li>
+        <li style="margin-bottom: 10px;"><strong>Collaborating with Knowledge Holders</strong> - Learning from Indigenous wisdom and Traditional Ecological Knowledge</li>
+        <li style="margin-bottom: 10px;"><strong>Advancing Restorative Aquaculture</strong> - Integrating aquaculture and restoration for ecosystem recovery</li>
+    </ul>
+
+    <h3 style="color: #2c5f2d; font-size: 20px; margin-top: 30px; margin-bottom: 15px;">Confirmed Keynote Speakers</h3>
+    <div style="background: #f8fdf8; padding: 20px; border-left: 4px solid #2c5f2d; margin: 20px 0; border-radius: 4px;">
+        <p style="margin: 10px 0;"><strong>Chairman Kris Peters</strong>, Squaxin Island Tribe<br><em>Welcoming Address - Monday, October 5</em></p>
+        <p style="margin: 10px 0;"><strong>Chairman Leonard Forsman</strong>, Suquamish Tribe<br><em>Keynote Address - Tuesday, October 6</em></p>
+    </div>
+
+    <h3 style="color: #2c5f2d; font-size: 20px; margin-top: 30px; margin-bottom: 15px;">What to Expect</h3>
+    <ul style="line-height: 1.8; color: #333; margin: 0 0 25px 20px; padding-left: 0;">
+        <li style="margin-bottom: 10px;"><strong>300+ participants</strong> from 20+ countries</li>
+        <li style="margin-bottom: 10px;"><strong>Scientific presentations</strong> and poster sessions</li>
+        <li style="margin-bottom: 10px;"><strong>Traditional Salmon & Clam Bake</strong> - Experience coastal Indigenous cuisine and traditions</li>
+        <li style="margin-bottom: 10px;"><strong>Field trips</strong> to shellfish restoration sites, hatcheries, and cultural locations</li>
+        <li style="margin-bottom: 10px;"><strong>Networking events</strong> including panel discussions and social gatherings</li>
+        <li style="margin-bottom: 10px;"><strong>Post-conference working groups</strong> (NOOC Roundtable, Global Ostrea Working Meeting)</li>
+    </ul>
+
+    <h3 style="color: #2c5f2d; font-size: 20px; margin-top: 30px; margin-bottom: 15px;">Session Topics</h3>
+    <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 10px;">
+        The program is being developed by our Program Team, led by <strong>Julieta Martinelli</strong> (WA Department of Fish & Wildlife). Preliminary topics include:
+    </p>
+    <ul style="line-height: 1.8; color: #333; margin: 0 0 25px 20px; padding-left: 0;">
+        <li style="margin-bottom: 8px;">Native Oyster Restoration (NOOC, NORA, Australia)</li>
+        <li style="margin-bottom: 8px;">Urban Shellfish Restoration</li>
+        <li style="margin-bottom: 8px;">Indigenous Partners & Traditional Ecological Knowledge</li>
+        <li style="margin-bottom: 8px;">Grower Partnerships & Restorative Aquaculture</li>
+        <li style="margin-bottom: 8px;">Conservation & Tribal Hatcheries</li>
+        <li style="margin-bottom: 8px;">Abalone Recovery & Freshwater Mussels</li>
+        <li style="margin-bottom: 8px;">Climate Resilience & Ocean Acidification</li>
+        <li style="margin-bottom: 8px;">Archaeological Perspectives on Shellfish Ecosystems</li>
+    </ul>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 30px auto;" width="100%">
+        <tr>
+            <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td style="padding: 0 10px;">
+                            <a href="https://www.shellfish-society.org/icsr2026.html" target="_blank" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #2e5a8a 0%, #1e4a6a 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">Save the Date</a>
+                        </td>
+                        <td style="padding: 0 10px;">
+                            <a href="https://www.shellfish-society.org/icsr2026.html" target="_blank" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #2e5a8a 0%, #1e4a6a 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">View Prospectus</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #333; margin-top: 30px; text-align: center;">
+        We look forward to your participation at ICSR2026!
+    </p>
     """
+
+    # Wrap in base template
+    html_content = get_base_template(
+        content=content,
+        preheader="Join us October 4-8, 2026 in Shelton, Washington for ICSR2026"
+    )
 
     text_content = """
 ICSR 2026 - SAVE THE DATE
 
 Dear Aaron,
 
-We're excited to announce the dates for the 7th International Conference on Shellfish Restoration (ICSR 2026)!
+Mark your calendars! The International Conference on Shellfish Restoration 2026 (ICSR2026) will be held in Shelton, Washington, October 4-8, 2026!
 
 DATES: October 4-8, 2026
 LOCATION: Little Creek Resort and Conference Center, Shelton, Washington
@@ -144,27 +160,9 @@ WHAT TO EXPECT:
 • Field trips to restoration sites and cultural locations
 • Networking and working group sessions
 
-PRELIMINARY SESSION TOPICS:
-• Ostrea Session (NOOC, NORA, Australia)
-• Urban Shellfish Restoration
-• Indigenous Partners Session
-• Grower Partners Session
-• Hatcheries (Conservation & Tribal)
-• Abalone Recovery, Freshwater Mussels
-• Resilience Building, Archaeology
-
-REGISTRATION: Opens Spring 2026
-ABSTRACT SUBMISSIONS: Call opens Spring 2026
-
 Learn more: https://www.shellfish-society.org/icsr2026.html
 
-PLANNING COMMITTEE:
-Chaired by Betsy Peabody (Puget Sound Restoration Fund)
-Program Team led by Julieta Martinelli (WA Dept Fish & Wildlife)
-
-Questions? Contact info@shellfish-society.org
-
-We look forward to seeing you in Washington State!
+We look forward to your participation at ICSR2026!
 
 The ISRS and ICSR2026 Teams
     """
@@ -182,7 +180,7 @@ The ISRS and ICSR2026 Teams
             print("✅ SUCCESS! Save the Date email sent to aaron.kornbluth@gmail.com")
             print()
             print("Check your inbox for:")
-            print("  Subject: ICSR 2026 - Save the Date: October 4-8, Washington State 🦪")
+            print(f"  Subject: {subject}")
             print("  From: noreply@shellfish-society.org")
             print()
         else:

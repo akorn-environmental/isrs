@@ -193,7 +193,7 @@ class EmailService:
 
     def __init__(self):
         # Email service selection (smtp or ses)
-        self.email_service = os.getenv("EMAIL_SERVICE", "smtp").lower()
+        self.email_service = settings.EMAIL_SERVICE.lower()
 
         # SMTP settings
         self.smtp_host = settings.SMTP_HOST
@@ -204,8 +204,8 @@ class EmailService:
         self.from_name = settings.SMTP_FROM_NAME
 
         # AWS SES settings
-        self.ses_from_email = os.getenv("SES_FROM_EMAIL", "noreply@shellfish-society.org")
-        self.aws_region = os.getenv("AWS_SES_REGION", "us-east-1")
+        self.ses_from_email = settings.SES_FROM_EMAIL or "noreply@shellfish-society.org"
+        self.aws_region = settings.AWS_SES_REGION or settings.AWS_REGION
 
         logger.info(f"Email service initialized with: {self.email_service}")
         if self.email_service == "ses":
@@ -244,6 +244,8 @@ class EmailService:
     ) -> bool:
         """Send email via SMTP (Gmail)."""
         try:
+            import ssl
+
             # Create message
             message = MIMEMultipart("alternative")
             message["From"] = f"{self.from_name} <{self.from_email}>"
@@ -259,6 +261,12 @@ class EmailService:
             html_part = MIMEText(html_content, "html")
             message.attach(html_part)
 
+            # Create SSL context that doesn't verify certificates (for development)
+            # In production, use proper certificates
+            tls_context = ssl.create_default_context()
+            tls_context.check_hostname = False
+            tls_context.verify_mode = ssl.CERT_NONE
+
             # Send via SMTP
             await aiosmtplib.send(
                 message,
@@ -267,6 +275,7 @@ class EmailService:
                 username=self.smtp_user,
                 password=self.smtp_password,
                 start_tls=True,
+                tls_context=tls_context,
             )
 
             logger.info(f"Email sent successfully via SMTP to {to_email}")
@@ -288,8 +297,13 @@ class EmailService:
             import boto3
             from botocore.exceptions import ClientError
 
-            # Create SES client
-            ses_client = boto3.client('ses', region_name=self.aws_region)
+            # Create SES client with explicit credentials
+            ses_client = boto3.client(
+                'ses',
+                region_name=self.aws_region,
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+            )
 
             # Prepare email
             email_message = {

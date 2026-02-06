@@ -60,10 +60,13 @@ class Settings(BaseSettings):
     STRIPE_WEBHOOK_SECRET: str = Field(default=None, env="STRIPE_WEBHOOK_SECRET")
 
     # AWS Configuration
+    EMAIL_SERVICE: str = Field(default="smtp", env="EMAIL_SERVICE")
     AWS_REGION: str = Field(default="us-east-1", env="AWS_REGION")
-    AWS_ACCESS_KEY_ID: str = Field(default=None, env="AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY: str = Field(default=None, env="AWS_SECRET_ACCESS_KEY")
+    AWS_SES_REGION: str = Field(default="us-east-1", env="AWS_SES_REGION")
+    AWS_ACCESS_KEY_ID: Optional[str] = Field(default=None, env="AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY: Optional[str] = Field(default=None, env="AWS_SECRET_ACCESS_KEY")
     INBOUND_EMAIL_BUCKET: str = Field(default="isrs-inbound-emails", env="INBOUND_EMAIL_BUCKET")
+    SES_FROM_EMAIL: Optional[str] = Field(default=None, env="SES_FROM_EMAIL")
 
     # File Uploads
     MAX_UPLOAD_SIZE_MB: int = 10
