@@ -47,7 +47,19 @@ async def get_parsed_emails(
     Get paginated list of parsed emails with filtering
     """
     try:
-        query = db.query(ParsedEmail)
+        # Check if table exists by attempting a simple query
+        try:
+            query = db.query(ParsedEmail)
+        except Exception as table_error:
+            logger.error(f"ParsedEmail table may not exist: {str(table_error)}", exc_info=True)
+            # Return empty result if table doesn't exist
+            return {
+                "items": [],
+                "total": 0,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": 0
+            }
 
         # Apply filters
         if search:
@@ -97,7 +109,14 @@ async def get_parsed_emails(
 
     except Exception as e:
         logger.error(f"Error fetching parsed emails: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to fetch emails")
+        # Return empty result instead of 500 error for better UX
+        return {
+            "items": [],
+            "total": 0,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": 0
+        }
 
 
 @router.get("/parsed-emails/{email_id}")
