@@ -93,7 +93,6 @@ function loadAdminLayout(currentPage, userPermissionLevel = 100) {
   const allNavItems = [
     { id: 'dashboard', section: 'Overview', icon: '📊', label: 'Dashboard', href: '/admin/index.html', page: 'dashboard', level: 50 },
     { id: 'contacts', section: 'Data Management', icon: '👥', label: 'Contacts', href: '/admin/contacts.html', page: 'contacts', level: 50 },
-    { id: 'emails', section: 'Data Management', icon: '📧', label: 'Parsed Emails', href: '/admin/emails.html', page: 'emails', level: 50 },
     { id: 'organizations', section: 'Data Management', icon: '🏢', label: 'Organizations', href: '/admin/organizations.html', page: 'organizations', level: 50 },
     { id: 'conferences', section: 'Data Management', icon: '📅', label: 'Conferences', href: '/admin/conferences.html', page: 'conferences', level: 50 },
     { id: 'photos', section: 'Content', icon: '📷', label: 'Photos', href: '/admin/photos.html', page: 'photos', level: 60 },
@@ -101,6 +100,7 @@ function loadAdminLayout(currentPage, userPermissionLevel = 100) {
     { id: 'board-documents', section: 'Governance', icon: '📁', label: 'Board Documents', href: '/admin/board-documents.html', page: 'board-documents', level: 70 },
     { id: 'votes', section: 'Governance', icon: '🗳️', label: 'Board Votes', href: '/admin/votes.html', page: 'votes', level: 70 },
     { id: 'funding', section: 'Governance', icon: '💰', label: 'Funding', href: '/admin/funding.html', page: 'funding', level: 70 },
+    { id: 'emails', section: 'System', icon: '📧', label: 'Parsed Emails', href: '/admin/emails.html', page: 'emails', level: 80 },
     { id: 'feedback', section: 'System', icon: '💬', label: 'User Feedback', href: '/admin/feedback.html', page: 'feedback', level: 80 },
     { id: 'import', section: 'System', icon: '📥', label: 'Import Data', href: '/admin/import.html', page: 'import', level: 80 },
     { id: 'settings', section: 'System', icon: '⚙️', label: 'Settings', href: '/admin/settings.html', page: 'settings', level: 80 },
