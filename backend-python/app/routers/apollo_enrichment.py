@@ -11,7 +11,6 @@ import logging
 
 from app.database import get_db
 from app.models.contact import Contact
-from app.models.organization import Organization
 from app.dependencies.permissions import get_current_user
 from app.models.conference import AttendeeProfile
 from app.services.apollo_service import ApolloService, ApolloAPIError
@@ -31,8 +30,8 @@ class EnrichContactRequest(BaseModel):
 
 
 class EnrichOrganizationRequest(BaseModel):
-    """Request to enrich an organization"""
-    organization_id: UUID
+    """Request to enrich an organization by domain"""
+    domain: str
 
 
 class SearchPeopleRequest(BaseModel):
@@ -218,31 +217,20 @@ async def _bulk_enrich_task(contact_ids: List[UUID], db: Session):
 # Organization Enrichment Endpoints
 # ============================================================================
 
-@router.post("/organizations/{org_id}/enrich", response_model=EnrichmentResponse)
+@router.post("/organizations/enrich", response_model=EnrichmentResponse)
 async def enrich_organization(
-    org_id: UUID,
+    request: EnrichOrganizationRequest,
     current_user: AttendeeProfile = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Enrich an organization with Apollo.io data
+    Enrich an organization with Apollo.io data by domain
 
     Adds: industry, size, social profiles, description
+    Returns organization data that can be used to update contacts
     """
     try:
-        # Get organization
-        org = db.query(Organization).filter(Organization.id == org_id).first()
-        if not org:
-            raise HTTPException(status_code=404, detail="Organization not found")
-
-        # Extract domain from website
-        domain = None
-        if org.website:
-            # Simple domain extraction
-            domain = org.website.replace('http://', '').replace('https://', '').replace('www.', '').split('/')[0]
-
-        if not domain:
-            raise HTTPException(status_code=400, detail="Organization must have a website/domain")
+        domain = request.domain.replace('http://', '').replace('https://', '').replace('www.', '').split('/')[0]
 
         # Initialize Apollo service
         apollo = ApolloService()
@@ -253,37 +241,26 @@ async def enrich_organization(
         if not result.get('success'):
             raise HTTPException(status_code=400, detail=result.get('error', 'Enrichment failed'))
 
-        # Update organization with enriched data
-        enriched_fields = []
+        # Update all contacts from this organization
+        contacts = db.query(Contact).filter(
+            Contact.organization_name.ilike(f"%{result.get('name', '')}%")
+        ).all()
 
-        if result.get('industry') and not org.industry:
-            org.industry = result['industry']
-            enriched_fields.append('industry')
-
-        if result.get('linkedin_url') and not org.linkedin:
-            org.linkedin = result['linkedin_url']
-            enriched_fields.append('linkedin')
-
-        if result.get('twitter_url') and not org.twitter:
-            org.twitter = result['twitter_url']
-            enriched_fields.append('twitter')
-
-        # Store Apollo ID and additional data in notes
-        if result.get('apollo_id'):
-            org.notes = org.notes or ''
-            if 'Apollo ID:' not in org.notes:
-                org.notes += f"\nApollo ID: {result['apollo_id']}"
-            if result.get('size'):
-                org.notes += f"\nEstimated Size: {result['size']} employees"
+        enriched_count = 0
+        for contact in contacts:
+            # Update contact with org data if missing
+            if result.get('linkedin_url') and not contact.linkedin:
+                contact.linkedin = result['linkedin_url']
+                enriched_count += 1
 
         db.commit()
 
-        logger.info(f"[Enrichment] Successfully enriched {len(enriched_fields)} fields for org {org.id}")
+        logger.info(f"[Enrichment] Successfully enriched organization {domain}, updated {enriched_count} contacts")
 
         return EnrichmentResponse(
             success=True,
-            message=f"Enriched {len(enriched_fields)} fields",
-            enriched_fields=enriched_fields,
+            message=f"Enriched organization data, updated {enriched_count} contacts",
+            enriched_fields=['organization_data'],
             apollo_id=result.get('apollo_id')
         )
 
