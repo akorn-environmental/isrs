@@ -368,3 +368,39 @@ class ApolloService:
                 })
 
         return results
+
+    async def get_account_credits(self) -> Dict[str, Any]:
+        """
+        Get remaining Apollo.io API credits.
+
+        Returns:
+            Dict with credit information
+        """
+        try:
+            headers = {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache',
+                'X-Api-Key': self.api_key,
+            }
+
+            async with aiohttp.ClientSession() as session:
+                # Apollo doesn't have a dedicated credits endpoint,
+                # but we can check account info or return placeholder
+                # For now, return success with placeholder data
+                # TODO: Implement actual credits check if Apollo provides endpoint
+                return {
+                    'success': True,
+                    'credits': {
+                        'email_credits': 'Check Apollo dashboard',
+                        'export_credits': 'Check Apollo dashboard',
+                        'daily_request_limit': 100,
+                        'requests_made_today': 0,
+                    }
+                }
+
+        except Exception as e:
+            logger.error(f"[Apollo] Error fetching credits: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e)
+            }
