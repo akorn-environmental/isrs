@@ -38,7 +38,8 @@ class Contact(Base, TimestampMixin):
     __tablename__ = "contacts"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    email = Column(String(255), unique=True, nullable=False, index=True)
+    email = Column(String(255), unique=True, nullable=False, index=True)  # Primary email
+    alternate_emails = Column(ARRAY(String(255)))  # Additional email addresses
     first_name = Column(String(100))
     last_name = Column(String(100))
     full_name = Column(String(255))
