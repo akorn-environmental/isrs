@@ -175,7 +175,7 @@ if [ -f "$BACKEND_DIR/.env" ]; then
     print_status 0 "Backend .env exists"
 
     # Check for critical variables
-    CRITICAL_VARS=("DATABASE_URL" "SECRET_KEY" "EMAIL_HOST")
+    CRITICAL_VARS=("DATABASE_URL" "SECRET_KEY" "SMTP_HOST")
     for var in "${CRITICAL_VARS[@]}"; do
         if grep -q "$var" "$BACKEND_DIR/.env" 2>/dev/null; then
             print_status 0 "$var configured"
