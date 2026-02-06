@@ -59,3 +59,7 @@ pandas==2.2.0
 
 # AWS S3 Storage
 boto3==1.35.95
+
+# Contact Enrichment & Fuzzy Matching
+rapidfuzz==3.10.1  # Fast string matching for contact/org deduplication
+nameparser==1.1.3  # Intelligent name parsing (handles prefixes, suffixes, compound names)

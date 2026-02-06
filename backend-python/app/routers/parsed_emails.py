@@ -8,6 +8,7 @@ from sqlalchemy import or_, desc
 from typing import List, Optional
 from pydantic import BaseModel
 import logging
+from nameparser import HumanName
 
 from app.database import get_db
 from app.models.parsed_email import ParsedEmail
@@ -315,12 +316,36 @@ async def approve_contact(
                 status_code=200
             )
 
+        # Find or create organization first
+        organization_id = None
+        if contact_data.get('organization'):
+            org_name = contact_data.get('organization')
+
+            # Check if organization exists
+            org = db.query(Organization).filter(
+                Organization.name == org_name
+            ).first()
+
+            if not org:
+                # Create new organization
+                org = Organization(name=org_name)
+                db.add(org)
+                db.commit()
+                db.refresh(org)
+
+            organization_id = org.id
+
+        # Parse name intelligently using nameparser
+        full_name = contact_data.get('name', '')
+        parsed_name = HumanName(full_name) if full_name else HumanName('')
+
         # Create new contact
         new_contact = Contact(
-            first_name=contact_data.get('name', '').split()[0] if contact_data.get('name') else '',
-            last_name=' '.join(contact_data.get('name', '').split()[1:]) if contact_data.get('name') and len(contact_data.get('name', '').split()) > 1 else '',
+            first_name=parsed_name.first,
+            last_name=parsed_name.last,
+            full_name=full_name,
             email=contact_data.get('email'),
-            organization_name=contact_data.get('organization'),
+            organization_id=organization_id,  # FIXED: Use organization_id instead of organization_name
             title=contact_data.get('role'),
             notes=f"Added from parsed email ID {email_id} with {contact_data.get('confidence', 0)}% confidence"
         )

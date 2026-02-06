@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.services.s3_email_service import S3EmailService
 from app.services.email_parser_service import EmailParserService
 from app.services.ai_extraction_service import AIExtractionService
+from app.services.contact_enrichment_service import ContactEnrichmentService
 from app.models.parsed_email import ParsedEmail
 from app.models.vote import BoardVote
 from app.models.funding import FundingProspect
@@ -148,6 +149,44 @@ class EmailProcessingService:
         """
         try:
             email_type = extracted_data.get('email_type', 'general')
+
+            # === Contact Enrichment Processing ===
+            # Process contacts if overall confidence >= 60% (lower threshold than specialized data)
+            if extracted_data.get('overall_confidence', 0) >= 60:
+                try:
+                    contact_service = ContactEnrichmentService(confidence_threshold=60.0)
+
+                    logger.info(f"[Contact Enrichment] Processing contacts from email {parsed_email.id}")
+
+                    enrichment_result = await contact_service.process_email_contacts(
+                        parsed_email=parsed_email,
+                        extracted_data=extracted_data,
+                        db=db
+                    )
+
+                    logger.info(
+                        f"[Contact Enrichment] Results: "
+                        f"Created={enrichment_result['contacts_created']}, "
+                        f"Updated={enrichment_result['contacts_updated']}, "
+                        f"Skipped={enrichment_result['contacts_skipped']}, "
+                        f"Orgs Created={enrichment_result['organizations_created']}, "
+                        f"Orgs Matched={enrichment_result['organizations_matched']}"
+                    )
+
+                    # Store primary contact in email metadata
+                    if enrichment_result.get('primary_contact'):
+                        if not parsed_email.email_metadata:
+                            parsed_email.email_metadata = {}
+                        parsed_email.email_metadata['primary_contact'] = enrichment_result['primary_contact']
+                        db.commit()
+
+                except Exception as enrichment_error:
+                    logger.error(
+                        f"[Contact Enrichment] Failed to enrich contacts: {str(enrichment_error)}",
+                        exc_info=True
+                    )
+                    # Don't fail email processing if contact enrichment fails
+                    db.rollback()
 
             # Board Vote Auto-Creation
             if email_type == 'board_vote' and extracted_data.get('board_vote'):
