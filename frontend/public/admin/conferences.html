@@ -387,12 +387,9 @@
         // Show saving state
         cell.innerHTML = '<span style="color: var(--admin-primary);">Saving...</span>';
 
-        try {          const response = await fetch(`${API_BASE_URL}/api/admin/conference/registrations/${registration.id}`, {
+        try {
+          const response = await authFetch(`${API_BASE_URL}/api/admin/conference/registrations/${registration.id}`, {
             method: 'PUT',
-            headers: {
-              'Authorization': `Bearer ${sessionToken}`,
-              'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ [field]: newValue })
           });
 
