@@ -103,7 +103,7 @@ def get_base_template(content: str, preheader: str = "") -> str:
                         <tr>
                             <td style="padding: 20px 40px 10px; border-radius: 12px 12px 0 0; text-align: center; background-color: {BRAND_COLORS['white']};">
                                 <a href="https://www.shellfish-society.org" style="display: inline-block; text-decoration: none;">
-                                    <img src="https://www.shellfish-society.org/images/isrs-logo-wide.png" alt="ISRS" width="180" style="height: auto; max-width: 180px; margin-bottom: 5px;">
+                                    <img src="https://www.shellfish-society.org/images/isrs-logo-wide.png" alt="ISRS" width="240" style="height: auto; max-width: 240px; margin-bottom: 5px;">
                                 </a>
                                 <p style="color: {BRAND_COLORS['primary_green']}; font-size: 14px; margin: 0; letter-spacing: 0.5px;">The International Shellfish Restoration Society (ISRS)</p>
                             </td>

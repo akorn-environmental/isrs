@@ -43,8 +43,8 @@ async def main():
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                     <!-- Logo section with gradient background -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #2c5f2d 0%, #1e4020 100%); padding: 40px 30px; text-align: center;">
-                            <img src="https://www.shellfish-society.org/images/logos/LOGO%20-%20ICSR2026.png" alt="ICSR2026 Logo" style="max-width: 320px; height: auto; display: block; margin: 0 auto;">
+                        <td style="background: linear-gradient(135deg, #2c5f2d 0%, #1e4020 100%); padding: 25px 20px; text-align: center;">
+                            <img src="https://www.shellfish-society.org/images/logos/LOGO%20-%20ICSR2026.png" alt="ICSR2026 Logo" style="max-width: 240px; height: auto; display: block; margin: 0 auto;">
                         </td>
                     </tr>
                     <!-- Content section -->
@@ -111,34 +111,16 @@ async def main():
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                     <tr>
                         <td style="padding: 0 10px;">
-                            <a href="https://www.shellfish-society.org/icsr2026.html#conference-materials" target="_blank" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #2e5a8a 0%, #1e4a6a 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">📄 Conference Materials</a>
+                            <a href="https://www.shellfish-society.org/icsr2026.html#conference-materials" target="_blank" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #2c5f2d 0%, #1e4020 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">📄 Sponsor Prospectus</a>
                         </td>
                         <td style="padding: 0 10px;">
-                            <a href="https://www.shellfish-society.org/icsr2026.html" target="_blank" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #2c5f2d 0%, #1e4020 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">📅 Save the Date</a>
+                            <a href="https://www.shellfish-society.org/icsr2026.html" target="_blank" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #2e5a8a 0%, #1e4a6a 100%); color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">📅 Save the Date</a>
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
-
-    <!-- Quick share links after CTA buttons -->
-    <div style="text-align: center; margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-        <p style="font-size: 14px; color: #666; margin: 0 0 10px 0;">📢 Help us spread the word!</p>
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
-            <tr>
-                <td style="padding: 0 8px;">
-                    <a href="mailto:?subject=Save%20the%20Date%3A%20ICSR2026%20-%20October%204-8%2C%20Washington%20State&body=I%20wanted%20to%20share%20this%20exciting%20announcement%20about%20ICSR2026!%0A%0AThe%20International%20Conference%20on%20Shellfish%20Restoration%202026%20will%20be%20held%20October%204-8%2C%202026%20in%20Shelton%2C%20Washington.%0A%0ALearn%20more%3A%20https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" style="color: #2e5a8a; text-decoration: underline; font-size: 13px;">✉️ Forward via Email</a>
-                </td>
-                <td style="padding: 0 8px;">
-                    <a href="https://twitter.com/intent/tweet?text=Save%20the%20Date%20for%20ICSR2026!%20October%204-8%2C%202026%20in%20Shelton%2C%20WA.%20Join%20us%20for%20the%20International%20Conference%20on%20Shellfish%20Restoration.&url=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="color: #2e5a8a; text-decoration: underline; font-size: 13px;">🐦 Share on Twitter</a>
-                </td>
-                <td style="padding: 0 8px;">
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="color: #2e5a8a; text-decoration: underline; font-size: 13px;">💼 Share on LinkedIn</a>
-                </td>
-            </tr>
-        </table>
-    </div>
 
     <p style="font-size: 16px; line-height: 1.6; color: #333; margin-top: 30px; text-align: center;">
         We look forward to your participation at ICSR2026!
@@ -153,17 +135,17 @@ async def main():
 
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
             <tr>
-                <td style="padding: 8px;">
-                    <a href="mailto:?subject=Save%20the%20Date%3A%20ICSR2026%20-%20October%204-8%2C%20Washington%20State&body=I%20wanted%20to%20share%20this%20exciting%20announcement%20about%20ICSR2026!%0A%0AThe%20International%20Conference%20on%20Shellfish%20Restoration%202026%20will%20be%20held%20October%204-8%2C%202026%20in%20Shelton%2C%20Washington.%0A%0ALearn%20more%3A%20https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" style="display: inline-block; padding: 12px 24px; background: #2e5a8a; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 6px;">✉️ Email to Colleagues</a>
+                <td style="padding: 10px;">
+                    <a href="mailto:?subject=Save%20the%20Date%3A%20ICSR2026%20-%20October%204-8%2C%20Washington%20State&body=I%20wanted%20to%20share%20this%20exciting%20announcement%20about%20ICSR2026!%0A%0AThe%20International%20Conference%20on%20Shellfish%20Restoration%202026%20will%20be%20held%20October%204-8%2C%202026%20in%20Shelton%2C%20Washington.%0A%0ALearn%20more%3A%20https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" style="display: inline-block; padding: 14px 28px; background: #2e5a8a; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(46, 90, 138, 0.25); letter-spacing: 0.3px;">✉️ Email to Colleagues</a>
                 </td>
-                <td style="padding: 8px;">
-                    <a href="https://twitter.com/intent/tweet?text=Save%20the%20Date%20for%20ICSR2026!%20October%204-8%2C%202026%20in%20Shelton%2C%20WA.%20Join%20us%20for%20the%20International%20Conference%20on%20Shellfish%20Restoration.&url=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="display: inline-block; padding: 12px 24px; background: #1DA1F2; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 6px;">🐦 Twitter</a>
+                <td style="padding: 10px;">
+                    <a href="https://twitter.com/intent/tweet?text=Save%20the%20Date%20for%20ICSR2026!%20October%204-8%2C%202026%20in%20Shelton%2C%20WA.%20Join%20us%20for%20the%20International%20Conference%20on%20Shellfish%20Restoration.&url=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="display: inline-block; padding: 14px 28px; background: #1DA1F2; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(29, 161, 242, 0.25); letter-spacing: 0.3px;">🐦 Twitter</a>
                 </td>
-                <td style="padding: 8px;">
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="display: inline-block; padding: 12px 24px; background: #0077B5; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 6px;">💼 LinkedIn</a>
+                <td style="padding: 10px;">
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="display: inline-block; padding: 14px 28px; background: #0077B5; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 119, 181, 0.25); letter-spacing: 0.3px;">💼 LinkedIn</a>
                 </td>
-                <td style="padding: 8px;">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="display: inline-block; padding: 12px 24px; background: #1877F2; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 6px;">👥 Facebook</a>
+                <td style="padding: 10px;">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.shellfish-society.org%2Ficsr2026.html" target="_blank" style="display: inline-block; padding: 14px 28px; background: #1877F2; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(24, 119, 242, 0.25); letter-spacing: 0.3px;">👥 Facebook</a>
                 </td>
             </tr>
         </table>
