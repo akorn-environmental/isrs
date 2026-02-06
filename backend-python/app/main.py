@@ -104,7 +104,7 @@ async def shutdown_event():
 
 
 # Import and include routers
-from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing, parsed_emails, test_emails, stripe_payment
+from app.routers import auth, contacts, votes, conferences, events, funding, documents, enrichment, assets, asset_zones, admin, feedback, photos, ai, stats, email_parsing, parsed_emails, test_emails, stripe_payment, apollo_enrichment
 
 app.include_router(email_parsing.router, prefix="/api/email-parsing", tags=["Email Parsing"])  # Public webhook - must be before auth
 app.include_router(stripe_payment.router, prefix="/api/stripe", tags=["Stripe Payments"])  # Public payment endpoints
@@ -115,6 +115,7 @@ app.include_router(stats.router, tags=["Stats"])  # Stats router with /api/stats
 app.include_router(feedback.router, prefix="/api/feedback", tags=["Feedback"])
 app.include_router(ai.router, tags=["AI Assistant"])  # AI router with /api/ai prefix built-in
 app.include_router(parsed_emails.router, prefix="/api", tags=["Parsed Emails"])  # Exposes /api/parsed-emails routes
+app.include_router(apollo_enrichment.router, prefix="/api/apollo", tags=["Apollo.io"])  # Apollo enrichment and prospecting
 app.include_router(contacts.router, prefix="/api/contacts", tags=["Contacts"])
 app.include_router(votes.router, prefix="/api/votes", tags=["Board Votes"])
 app.include_router(photos.router, prefix="/api/photos", tags=["Photos"])  # Must be before /api catch-all
