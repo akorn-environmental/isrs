@@ -2,7 +2,7 @@
 Application Configuration using Pydantic Settings.
 Loads environment variables from .env file.
 """
-from typing import List
+from typing import List, Optional
 from pydantic_settings import BaseSettings
 from pydantic import Field, field_validator
 
@@ -51,12 +51,12 @@ class Settings(BaseSettings):
     MAGIC_LINK_BASE_URL: str = Field(..., env="MAGIC_LINK_BASE_URL")
 
     # External APIs
-    APOLLO_API_KEY: str = Field(default=None, env="APOLLO_API_KEY")
-    ANTHROPIC_API_KEY: str = Field(default=None, env="ANTHROPIC_API_KEY")
+    APOLLO_API_KEY: Optional[str] = Field(default=None, env="APOLLO_API_KEY")
+    ANTHROPIC_API_KEY: Optional[str] = Field(default=None, env="ANTHROPIC_API_KEY")
 
     # Stripe Payment Processing
-    STRIPE_SECRET_KEY: str = Field(default=None, env="STRIPE_SECRET_KEY")
-    STRIPE_PUBLISHABLE_KEY: str = Field(default=None, env="STRIPE_PUBLISHABLE_KEY")
+    STRIPE_SECRET_KEY: Optional[str] = Field(default=None, env="STRIPE_SECRET_KEY")
+    STRIPE_PUBLISHABLE_KEY: Optional[str] = Field(default=None, env="STRIPE_PUBLISHABLE_KEY")
     STRIPE_WEBHOOK_SECRET: str = Field(default=None, env="STRIPE_WEBHOOK_SECRET")
 
     # AWS Configuration
