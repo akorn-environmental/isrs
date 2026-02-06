@@ -616,7 +616,7 @@
 
     async function loadOrganizations() {
       try {
-        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations`);
+        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations/`);
         const data = await response.json();
 
         if (response.ok) {
@@ -1039,7 +1039,7 @@
         notes: document.getElementById('qaoNotes').value.trim()
       };
 
-      try {        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations`, { method: 'POST', body: JSON.stringify(orgData) });
+      try {        const response = await authFetch(`${API_BASE_URL}/api/contacts/organizations/`, { method: 'POST', body: JSON.stringify(orgData) });
 
         const data = await response.json();
 
