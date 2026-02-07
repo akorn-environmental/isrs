@@ -939,13 +939,24 @@
                 method: 'GET',
                 headers: getAuthHeaders(),
                 credentials: 'include'
-              }).then(r => r.json())
+              })
+              .then(r => {
+                if (!r.ok) {
+                  console.warn(`Failed to load page ${p}: ${r.status}`);
+                  return null;
+                }
+                return r.json();
+              })
+              .catch(err => {
+                console.warn(`Error loading page ${p}:`, err);
+                return null;
+              })
             );
           }
 
           const remainingPages = await Promise.all(pagePromises);
           remainingPages.forEach(data => {
-            if (data.contacts) {
+            if (data && data.contacts) {
               allContacts = allContacts.concat(data.contacts);
             }
           });
