@@ -406,3 +406,51 @@ async def delete_organization(
     db.commit()
 
     logger.info(f"Organization deleted: {organization.name} (ID: {organization_id})")
+
+
+# ============================================
+# STATS ENDPOINTS
+# ============================================
+
+@router.get("/stats")
+async def get_contact_stats(
+    db: Session = Depends(get_db),
+    current_admin = Depends(get_current_admin),
+):
+    """
+    Get aggregate statistics about contacts in the database.
+    Useful for dashboards and enrichment tracking.
+    """
+    # Total contacts
+    total_contacts = db.query(func.count(Contact.id)).scalar()
+
+    # Contacts with email
+    contacts_with_email = db.query(func.count(Contact.id)).filter(Contact.email != None).scalar()
+
+    # Contacts with phone
+    contacts_with_phone = db.query(func.count(Contact.id)).filter(Contact.phone != None).scalar()
+
+    # Contacts with title
+    contacts_with_title = db.query(func.count(Contact.id)).filter(Contact.title != None).scalar()
+
+    # Contacts with both phone and title
+    contacts_with_phone_and_title = db.query(func.count(Contact.id)).filter(
+        Contact.phone != None,
+        Contact.title != None
+    ).scalar()
+
+    # Contacts needing enrichment (have email but missing phone or title)
+    contacts_needing_enrichment = db.query(func.count(Contact.id)).filter(
+        Contact.email != None,
+        or_(Contact.phone == None, Contact.title == None)
+    ).scalar()
+
+    return {
+        "total_contacts": total_contacts,
+        "contacts_with_email": contacts_with_email,
+        "contacts_with_phone": contacts_with_phone,
+        "contacts_with_title": contacts_with_title,
+        "contacts_with_phone_and_title": contacts_with_phone_and_title,
+        "contacts_needing_enrichment": contacts_needing_enrichment,
+        "enrichment_completion_rate": round((contacts_with_phone_and_title / contacts_with_email * 100), 1) if contacts_with_email > 0 else 0
+    }

@@ -477,11 +477,23 @@
     }
 
     async function loadEnrichmentStats() {
-      // This would call an endpoint to get stats
-      // For now, placeholder
-      document.getElementById('totalContacts').textContent = '1,234';
-      document.getElementById('needsEnrichment').textContent = '456';
-      document.getElementById('enrichedToday').textContent = '23';
+      try {
+        const response = await authFetch(`${API_BASE_URL}/api/contacts/stats`);
+        const stats = await response.json();
+
+        // Update stats display
+        document.getElementById('totalContacts').textContent = stats.total_contacts.toLocaleString();
+        document.getElementById('needsEnrichment').textContent = stats.contacts_needing_enrichment.toLocaleString();
+
+        // Show enrichment completion rate (contacts with both phone and title)
+        document.getElementById('enrichedToday').textContent = stats.contacts_with_phone_and_title.toLocaleString();
+      } catch (error) {
+        console.error('Error loading stats:', error);
+        // Fallback to showing question marks if API fails
+        document.getElementById('totalContacts').textContent = '—';
+        document.getElementById('needsEnrichment').textContent = '—';
+        document.getElementById('enrichedToday').textContent = '—';
+      }
     }
 
     async function runBulkEnrichment() {
