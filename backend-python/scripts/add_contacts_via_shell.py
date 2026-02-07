@@ -32,22 +32,31 @@ def run_sql_script():
         print("=" * 80)
         print()
 
-        # Execute the SQL script
-        print("Executing SQL script...")
-        result = db.execute(text(sql_script))
+        # Split SQL into statements - execute INSERT/UPDATE, then SELECT
+        statements = sql_script.split(';')
 
-        # Fetch summary results
-        summary = result.fetchall()
-
-        if summary:
-            print("\n✓ SQL Script Executed Successfully!")
-            print("\nSummary:")
-            print("-" * 80)
-            row = summary[0]
-            print(f"  Total contacts in query: {row[0]}")
-            print(f"  ICSR2024 tagged: {row[1]}")
-            print(f"  Planning committee: {row[2]}")
-            print(f"  ICSR2026 interested: {row[3]}")
+        # Execute all statements except the last empty one
+        print("Executing INSERT statements...")
+        for i, stmt in enumerate(statements[:-1]):  # Skip last empty statement
+            stmt = stmt.strip()
+            if stmt and not stmt.startswith('--'):
+                if stmt.upper().startswith('SELECT'):
+                    # This is the summary query
+                    print("\nFetching summary...")
+                    result = db.execute(text(stmt))
+                    summary = result.fetchall()
+                    if summary:
+                        print("\n✓ Contacts Added Successfully!")
+                        print("\nSummary:")
+                        print("-" * 80)
+                        row = summary[0]
+                        print(f"  Total contacts: {row[0]}")
+                        print(f"  ICSR2024 tagged: {row[1]}")
+                        print(f"  Planning committee: {row[2]}")
+                        print(f"  ICSR2026 interested: {row[3]}")
+                else:
+                    # Execute INSERT/UPDATE/COMMIT statements
+                    db.execute(text(stmt))
 
         db.commit()
         print("\n✓ Changes committed to database")
