@@ -908,23 +908,53 @@
 
     async function loadContacts() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/contacts/`, {
+        // Load all contacts by fetching all pages
+        allContacts = [];
+        let page = 1;
+        let totalPages = 1;
+
+        // Fetch first page to get total_pages
+        const firstResponse = await fetch(`${API_BASE_URL}/api/contacts/?page=1&page_size=100`, {
           method: 'GET',
           headers: getAuthHeaders(),
           credentials: 'include'
         });
-        const data = await response.json();
+        const firstData = await firstResponse.json();
 
-        if (response.ok) {
-          // Backend returns {contacts: [...], total, page, page_size, total_pages}
-          allContacts = data.contacts || [];
-          filteredContacts = [...allContacts];
-          populateCountryFilter();
-          updatePagination(); // This will call displayContacts() after setting paginatedContacts
-          updateStats();
-        } else {
-          showError('Failed to load contacts: ' + (data.error || data.detail || 'Unknown error'));
+        if (!firstResponse.ok) {
+          showError('Failed to load contacts: ' + (firstData.error || firstData.detail || 'Unknown error'));
+          return;
         }
+
+        // Backend returns {contacts: [...], total, page, page_size, total_pages}
+        allContacts = firstData.contacts || [];
+        totalPages = firstData.total_pages || 1;
+
+        // Fetch remaining pages if any
+        if (totalPages > 1) {
+          const pagePromises = [];
+          for (let p = 2; p <= totalPages; p++) {
+            pagePromises.push(
+              fetch(`${API_BASE_URL}/api/contacts/?page=${p}&page_size=100`, {
+                method: 'GET',
+                headers: getAuthHeaders(),
+                credentials: 'include'
+              }).then(r => r.json())
+            );
+          }
+
+          const remainingPages = await Promise.all(pagePromises);
+          remainingPages.forEach(data => {
+            if (data.contacts) {
+              allContacts = allContacts.concat(data.contacts);
+            }
+          });
+        }
+
+        filteredContacts = [...allContacts];
+        populateCountryFilter();
+        updatePagination(); // This will call displayContacts() after setting paginatedContacts
+        updateStats();
       } catch (error) {
         showError('Error connecting to server: ' + error.message);
       }
