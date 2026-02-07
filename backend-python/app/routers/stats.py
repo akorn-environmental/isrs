@@ -188,7 +188,7 @@ async def get_contact_statistics(
 
         # Emails parsed last month (for comparison)
         emails_parsed_prev_month = db.query(func.count(ParsedEmail.id)).filter(
-            ParsedEmail.received_at <= end_of_prev_month
+            ParsedEmail.date <= end_of_prev_month
         ).scalar() or 0
 
         # Calculate percentage change
