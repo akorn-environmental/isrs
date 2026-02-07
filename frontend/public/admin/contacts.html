@@ -930,36 +930,50 @@
         allContacts = firstData.contacts || [];
         totalPages = firstData.total_pages || 1;
 
-        // Fetch remaining pages if any
+        // Fetch remaining pages if any - Load in batches to avoid overwhelming backend
         if (totalPages > 1) {
-          const pagePromises = [];
-          for (let p = 2; p <= totalPages; p++) {
-            pagePromises.push(
-              fetch(`${API_BASE_URL}/api/contacts/?page=${p}&page_size=100`, {
-                method: 'GET',
-                headers: getAuthHeaders(),
-                credentials: 'include'
-              })
-              .then(r => {
-                if (!r.ok) {
-                  console.warn(`Failed to load page ${p}: ${r.status}`);
-                  return null;
-                }
-                return r.json();
-              })
-              .catch(err => {
-                console.warn(`Error loading page ${p}:`, err);
-                return null;
-              })
-            );
-          }
+          const BATCH_SIZE = 5; // Load 5 pages at a time
+          const BATCH_DELAY = 100; // 100ms delay between batches
 
-          const remainingPages = await Promise.all(pagePromises);
-          remainingPages.forEach(data => {
-            if (data && data.contacts) {
-              allContacts = allContacts.concat(data.contacts);
+          for (let batchStart = 2; batchStart <= totalPages; batchStart += BATCH_SIZE) {
+            const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, totalPages);
+            const batchPromises = [];
+
+            // Create batch of promises
+            for (let p = batchStart; p <= batchEnd; p++) {
+              batchPromises.push(
+                fetch(`${API_BASE_URL}/api/contacts/?page=${p}&page_size=100`, {
+                  method: 'GET',
+                  headers: getAuthHeaders(),
+                  credentials: 'include'
+                })
+                .then(r => {
+                  if (!r.ok) {
+                    console.warn(`Failed to load page ${p}: ${r.status}`);
+                    return null;
+                  }
+                  return r.json();
+                })
+                .catch(err => {
+                  console.warn(`Error loading page ${p}:`, err);
+                  return null;
+                })
+              );
             }
-          });
+
+            // Load this batch
+            const batchResults = await Promise.all(batchPromises);
+            batchResults.forEach(data => {
+              if (data && data.contacts) {
+                allContacts = allContacts.concat(data.contacts);
+              }
+            });
+
+            // Small delay before next batch (except for last batch)
+            if (batchEnd < totalPages) {
+              await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
+            }
+          }
         }
 
         filteredContacts = [...allContacts];
